@@ -166,6 +166,14 @@ responsibility to check presence of certain fields and convert types as necessar
 
 The example will skip no rows, potentially there could be empty row entirely.
 
+## Further reading
+
+To learn more about DataSets - go over documentation of `vantage-dataset` crate:
+
+- All DataSet / ValueSet traits
+- Implementing DataSet and related traits under Vantages idempotency rules
+- List of DataSet mocks and implementation in Vantage
+
 # Type System
 
 Vantage assumes that each persistence will use a slightly different type structure. With CSV we only
@@ -219,30 +227,60 @@ is only one variant - `String`. Only 2 Rust native types can be used - `String` 
 will also be `AnyCsvType` which is a type-erased variant capable of holding any-type with type
 variant safety, but since there is only `String` variant, it's not very useful to us.
 
-## Mermaid Tests
-
 <div class="mermaid">
-graph TB
-    A[Your Code] --> C[DataSet]
-    B[Business Logic] --> C
-    C --> D[CSV Files]
-    C --> E[JSON Files]
-    C --> F[Database]
-    C --> G[REST API]
+graph LR
+    A[struct User] <--> B[Record⟨AnyCsvType⟩] <--> C[CSV Persistence]
 </div>
 
----
+This means - if you want to add add `gender` property to `User` struct - you can use your own enum
+or a custom type - as long as you `impl CsvType` for it — it can be read by CSV persistence.
 
-<div class="mermaid">
-sequenceDiagram
-    Code->>DataSet: get_users()
-    DataSet->>CSV: read users.csv
-    CSV-->>DataSet: raw CSV data
-    DataSet->>DataSet: parse & validate
-    DataSet-->>Code: User objects
-    Code->>DataSet: save_user(user)
-    DataSet->>DataSet: serialize user
-    DataSet->>CSV: append to users.csv
-    CSV-->>DataSet: success
-    DataSet-->>Code: confirmation
-</div>
+## Documentation for further reading
+
+If you plan to implement your own DataSet or persistences - you would need to do furhter reading
+about Vantage Type system.
+
+- Vantage Type System and type variant safety
+- `Record<T>` and entity macro
+
+# REST Endpoints as a DataSet
+
+Vantage can use REST endpoints as a regular Data Source as long as you implement necessary DataSet
+traits for it. As the next exercise, we will implement DataSet for listing Github projects of a
+specified user.
+
+We want our users to enjoy familiar DataSet interface:
+
+```rust
+let ds = Gitlab::public(); //
+let user_projects = ProjectSet::new(ds, "romaninsh");
+
+// next list projects
+for (id, project) in users.list_values().await? {
+    println!("  - {} ({})", project.name, project.web_url);
+}
+```
+
+We will need to implement `ReadableDataSet` and `ReadableValueSet` tarits, since we are only using
+API's GET endpoints.
+
+## Using `serde_json::Value` type system
+
+There are several ways how Rust can store arbitrary types and the most popular is
+`serde_json::Value`. Vantage respects it for the entity and if your struct implements Serialize and
+Deserialize traits - you don't need to implement `Entity<Value>` - it is auto-implemented.
+
+Serde does not support type boundaries, which means this technically is possible:
+
+```rust
+let d = Duration::new(5, 0);
+let x = serde_json::to_value(d).unwrap();
+let num: i64 = serde_json::from_value(x).unwrap();
+```
+
+More sophisticated type systems (such as CBOR) can enforce type boundaries, but for REST API's
+`serde_json::Value` is the most practical choice.
+
+## TODO implement
+
+## TODO - Export as Python objects
