@@ -2,6 +2,9 @@
 title = "Patterns"
 description = "Design patterns and best practices for the Vantage Framework"
 weight = 10
+
+[extra]
+show_hero = false
 +++
 
 # Patterns

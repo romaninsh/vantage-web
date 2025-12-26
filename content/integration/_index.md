@@ -2,6 +2,9 @@
 title = "Integration"
 description = "Integration guides and API documentation for the Vantage Framework"
 weight = 20
+
+[extra]
+show_hero = false
 +++
 
 # Integration

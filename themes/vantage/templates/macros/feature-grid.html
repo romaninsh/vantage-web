@@ -1,0 +1,34 @@
+{% macro feature_grid(features, title="Why use Vantage?", subtitle="Create unified data abstraction and access interface for all the languages you use in your company") %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold mb-3">{{ title }}</h2>
+                    <p class="lead text-muted">{{ subtitle }}</p>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    {% for feature in features %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body p-4 text-center">
+                                <span class="material-symbols-outlined {{ feature.color | default(value="text-primary") }} fs-1 mb-3 d-block">{{ feature.icon }}</span>
+                                <h5 class="card-title">{{ feature.title }}</h5>
+                                <p class="card-text text-muted">{{ feature.description }}</p>
+                                {% if feature.link %}
+                                <a href="{{ feature.link }}" class="btn btn-outline-{{ feature.color | default(value="primary") | replace(from="text-", to="") }} btn-sm">
+                                    Learn More
+                                    <span class="material-symbols-outlined ms-1" style="font-size: 1rem;">arrow_forward</span>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endmacro %}

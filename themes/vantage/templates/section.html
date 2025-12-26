@@ -1,0 +1,79 @@
+{% extends "index.html" %}
+
+{% block title %}{{ section.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <header class="mb-5">
+            <h1>{{ section.title }}</h1>
+            {% if section.description %}
+                <p class="lead text-muted">{{ section.description }}</p>
+            {% endif %}
+        </header>
+
+        {% if section.content %}
+            <div class="mb-5">
+                {{ section.content | safe }}
+            </div>
+        {% endif %}
+
+        {% if section.pages %}
+            <div class="row g-4">
+                {% for page in section.pages %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ page.permalink }}" class="text-decoration-none">
+                                        {{ page.title }}
+                                    </a>
+                                </h5>
+                                {% if page.description %}
+                                    <p class="card-text text-muted">{{ page.description }}</p>
+                                {% endif %}
+                                {% if page.date %}
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <span class="material-symbols-outlined align-middle">calendar_today</span>
+                                            {{ page.date | date(format="%B %d, %Y") }}
+                                        </small>
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if section.subsections %}
+            <div class="mt-5">
+                <h2>Sections</h2>
+                <div class="row g-4">
+                    {% for subsection_path in section.subsections %}
+                        {% set subsection = get_section(path=subsection_path) %}
+                        <div class="col-md-6">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{{ subsection.permalink }}" class="text-decoration-none">
+                                            {{ subsection.title }}
+                                        </a>
+                                    </h5>
+                                    {% if subsection.description %}
+                                        <p class="card-text text-muted">{{ subsection.description }}</p>
+                                    {% endif %}
+                                    <p class="card-text">
+                                        <small class="text-muted">{{ subsection.pages | length }} pages</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

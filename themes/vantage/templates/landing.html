@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% import "macros/feature-grid.html" as components %}
+{% import "macros/tabs.html" as tabs_macro %}
+
+{% block content %}
+<!-- Header Start -->
+<header id="topnav">
+    <div class="container d-flex justify-content-between align-items-center py-3">
+        <!-- Logo container-->
+        <a class="logo" aria-label="Home" href="/">
+            <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage Framework" height="40">
+        </a>
+        <!-- End Logo container-->
+
+        <div class="d-flex align-items-center">
+            <div id="navigation">
+                <!-- Navigation Menu -->
+                <ul class="navigation-menu nav-right list-unstyled d-flex mb-0">
+                    <li class="me-4"><a href="/patterns/" class="text-decoration-none">Patterns</a></li>
+                    <li class="me-4"><a href="/integration/" class="text-decoration-none">Integration</a></li>
+                    <li><a href="/docs/" class="text-decoration-none">Docs</a></li>
+                </ul>
+                <!--end navigation menu-->
+            </div>
+            <!--end navigation-->
+
+            <div class="menu-extras ms-3 me-2">
+                <div class="menu-item">
+                    <!-- Mobile menu toggle-->
+                    <button
+                        class="navbar-toggle btn btn-outline-secondary d-md-none"
+                        id="isToggle"
+                        aria-label="toggleMenu"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navigation"
+                    >
+                        <div class="lines">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
+                    <!-- End mobile menu toggle-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end container-->
+</header>
+<!--end header-->
+
+<!-- Hero Start -->
+<section id="hero" class="d-table w-100 overflow-hidden hero">
+    <div class="container">
+        <div class="row mt-5 align-items-center">
+            <div class="col-lg-6 col-md-6">
+                <div class="title-heading">
+                    <span class="badge rounded-pill btn-soft-primary mb-3">{{ section.extra.version | default(value="v0.4.0") }}</span>
+                    <h1 class="heading mt-0 mb-3">Vantage Framework</h1>
+                    <p class="para-desc text-muted mb-0"><strong>Business logic</strong> and <strong>persistence abstraction</strong> framework written in Rust. Enterprise grade, strong <strong>type safety</strong>, multiple <strong>databases</strong>, multiple <strong>languages</strong>.</p>
+
+                    <div class="mt-4">
+                        <a href="/patterns/" class="btn btn-lg btn-primary me-2 mt-2">
+                            <span class="material-symbols-outlined align-middle me-1">rocket_launch</span>
+                            Get Started
+                        </a>
+                        <a href="https://github.com/colinwilson/lotusdocs" class="btn btn-lg btn-outline-primary mt-2" target="_blank">
+                            <span class="material-symbols-outlined align-middle me-1">construction</span>
+                            In Development
+                        </a>
+                    </div>
+
+                    <p class="text-muted mb-0 mt-3"><strong>Open Source</strong> MIT Licensed.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 mt-4 pt-4 mt-sm-0 pt-sm-0">
+                <div class="ms-lg-4">
+                    <div class="classic-hero-image">
+                        <!-- Placeholder hero image -->
+                        <div class="bg-light rounded shadow-lg p-5 text-center">
+                            <span class="material-symbols-outlined display-1 text-primary">layers</span>
+                            <p class="text-muted mt-3">Vantage Framework Architecture</p>
+                        </div>
+                    </div>
+                </div>
+            </div><!--end col-->
+        </div><!--end row-->
+    </div> <!--end container-->
+</section><!--end section-->
+<!-- Hero End -->
+
+<!-- Feature Grid Section -->
+{{ components::feature_grid(
+    features=section.extra.features,
+    title="Why use Vantage?",
+    subtitle="Create unified data abstraction and access interface for all the languages you use in your company (Rust, Java, Swift, TypeScript, Python, PHP etc). Never worry about entity caching, live-reload or eventual consistency."
+) }}
+
+<!-- Data Abstraction Patterns Section -->
+{{ tabs_macro::tabs(
+    tab_configs=section.extra.pattern_tabs,
+    section_title="Data Abstraction Patterns",
+    section_subtitle="If you have heard about ORM or Active Record - those are data abstraction patterns. Developers have different preferences when it comes to pattern use, so Vantage has 5 powerful use patterns that can all be combined and used in unison."
+) }}
+
+<!-- Footer Start -->
+<footer class="bg-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="footer-py-60">
+                    <div class="row">
+                        <div class="col-lg-4 col-12 mb-0 mb-md-4 pb-0 pb-md-2">
+                            <a href="/" class="logo-footer">
+                                <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage Framework" height="24" style="filter: brightness(0) invert(1);">
+                            </a>
+                            <p class="mt-4 text-foot">Business logic and persistence abstraction framework written in Rust. Enterprise grade with strong type safety.</p>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                            <h5 class="text-light footer-head">Framework</h5>
+                            <ul class="list-unstyled footer-list mt-4">
+                                <li><a href="/patterns/" class="text-foot">Patterns</a></li>
+                                <li><a href="/integration/" class="text-foot">Integration</a></li>
+                                <li><a href="/docs/" class="text-foot">Documentation</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                            <h5 class="text-light footer-head">Resources</h5>
+                            <ul class="list-unstyled footer-list mt-4">
+                                <li><a href="https://github.com/colinwilson/lotusdocs" class="text-foot" target="_blank">GitHub</a></li>
+                                <li><a href="/docs/" class="text-foot">Documentation</a></li>
+                                <li><a href="/patterns/" class="text-foot">Examples</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                            <h5 class="text-light footer-head">Get Started</h5>
+                            <p class="mt-4 text-foot">Ready to build enterprise applications with Rust?</p>
+                            <a href="/patterns/" class="btn btn-soft-primary">
+                                <span class="material-symbols-outlined me-1" style="font-size: 1rem;">rocket_launch</span>
+                                Start Building
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-py-30 footer-bar">
+        <div class="container text-center">
+            <div class="row align-items-center">
+                <div class="col-sm-12">
+                    <div class="text-sm-center">
+                        <p class="mb-0 text-foot">© {{ now() | date(format="%Y") }} Vantage Framework. <strong>Open Source</strong> MIT Licensed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer End -->
+{% endblock content %}
