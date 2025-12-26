@@ -5,6 +5,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -13,7 +17,7 @@ jobs:
         env:
           # Target branch
           PAGES_BRANCH: gh-pages
-          # Provide personal access token
-          TOKEN: ${{ secrets.TOKEN }}
-          # Or if publishing to the same repo, use the automatic token
-          #TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use the automatic GitHub token
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Or if publishing to the same repo, use personal access token
+          #TOKEN: ${{ secrets.TOKEN }}
