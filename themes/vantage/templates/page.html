@@ -1,28 +1,36 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
 
 {% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8 col-md-10 mx-auto">
-        <article>
-            <header class="mb-4">
-                <h1>{{ page.title }}</h1>
-                {% if page.description %}
-                    <p class="lead text-muted">{{ page.description }}</p>
-                {% endif %}
-                {% if page.date %}
-                    <p class="text-muted small">
-                        <span class="material-symbols-outlined align-middle">calendar_today</span>
-                        {{ page.date | date(format="%B %d, %Y") }}
-                    </p>
-                {% endif %}
-            </header>
+{{ nav::header() }}
 
-            <div class="content">
-                {{ page.content | safe }}
-            </div>
-        </article>
+<!-- Main Content -->
+<main class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <article>
+                <header class="mb-4">
+                    <h1>{{ page.title }}</h1>
+                    {% if page.description %}
+                        <p class="lead text-muted">{{ page.description }}</p>
+                    {% endif %}
+                    {% if page.date %}
+                        <p class="text-muted small">
+                            <span class="material-symbols-outlined align-middle">calendar_today</span>
+                            {{ page.date | date(format="%B %d, %Y") }}
+                        </p>
+                    {% endif %}
+                </header>
+
+                <div class="content">
+                    {{ page.content | safe }}
+                </div>
+            </article>
+        </div>
     </div>
-</div>
+</main>
+
+{{ nav::footer() }}
 {% endblock content %}

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title></title>
+        <title>Integration | </title>
 
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,32 +23,39 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet">
     </head>
 
-    <body>
+    <body class="">
         
-<!-- Header Start -->
+
 <header id="topnav">
     <div class="container d-flex justify-content-between align-items-center py-3">
-        <!-- Logo container-->
         <a class="logo" aria-label="Home" href="/">
             <img src="https://vantage-framework.rs/vantage-logo.svg" alt="Vantage Framework" height="40">
         </a>
-        <!-- End Logo container-->
 
         <div class="d-flex align-items-center">
             <div id="navigation">
-                <!-- Navigation Menu -->
                 <ul class="navigation-menu nav-right list-unstyled d-flex mb-0">
-                    <li class="me-4"><a href="/patterns/" class="text-decoration-none">Patterns</a></li>
+                    <li class="dropdown me-4">
+                        <a href="/patterns/" class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Patterns
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/patterns/expressions/">Expressions</a></li>
+                            <li><a class="dropdown-item" href="/patterns/query-builder/">Query Builder</a></li>
+                            <li><a class="dropdown-item" href="/patterns/table-entity/">Table&lt;Entity&gt;</a></li>
+                            <li><a class="dropdown-item" href="/patterns/dataset/">DataSet</a></li>
+                            <li><a class="dropdown-item" href="/patterns/entity/">Entity</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/patterns/">View All Patterns</a></li>
+                        </ul>
+                    </li>
                     <li class="me-4"><a href="/integration/" class="text-decoration-none">Integration</a></li>
                     <li><a href="/docs/" class="text-decoration-none">Docs</a></li>
                 </ul>
-                <!--end navigation menu-->
             </div>
-            <!--end navigation-->
 
             <div class="menu-extras ms-3 me-2">
                 <div class="menu-item">
-                    <!-- Mobile menu toggle-->
                     <button
                         class="navbar-toggle btn btn-outline-secondary d-md-none"
                         id="isToggle"
@@ -57,43 +64,43 @@
                         data-bs-toggle="collapse"
                         data-bs-target="#navigation"
                     >
-                        <span class="navbar-toggler-icon"></span>
+                        <div class="lines">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
                     </button>
-                    <!-- End mobile menu toggle-->
                 </div>
             </div>
         </div>
     </div>
-    <!--end container-->
 </header>
-<!--end header-->
 
-<!-- Hero Start (Optional) -->
 
-<!-- Simple Header for non-hero pages -->
-<section class="py-5" style="margin-top: 70px;">
+<!-- Page Header -->
+<section class="py-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-xl-8 col-lg-9 col-md-10">
-                <div class="text-center py-4 mb-4">
-                    <h1 class="display-4 fw-bold mb-3">Integration</h1>
+            <div class="col-lg-10 mx-auto">
+                <header class="mb-5 text-center">
+                    <h1>Integration</h1>
                     
-                    <p class="lead text-muted mb-4">Integration guides and API documentation for the Vantage Framework</p>
+                        <p class="lead text-muted">Integration guides and API documentation for the Vantage Framework</p>
                     
-                </div>
+                </header>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Hero End -->
-
 <!-- Content Section -->
 <section class="py-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-xl-8 col-lg-9 col-md-10">
-                <h1 id="integration">Integration</h1>
+            <div class="col-lg-10 mx-auto">
+                
+                    <div class="mb-5">
+                        <h1 id="integration">Integration</h1>
 <p>This section provides comprehensive guides for integrating with the Vantage Framework.</p>
 <h2 id="overview">Overview</h2>
 <p>Learn how to integrate Vantage Framework with your existing systems, third-party services, and
@@ -108,13 +115,93 @@ development workflows.</p>
 <hr />
 <p><em>More content coming soon...</em></p>
 
+                    </div>
+                
+
+                
+
+                
             </div>
         </div>
     </div>
 </section>
 
 
+<footer class="bg-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="footer-py-60">
+                    <div class="row">
+                        <div class="col-lg-4 col-12 mb-0 mb-md-4 pb-0 pb-md-2">
+                            <a href="/" class="logo-footer">
+                                <img src="https://vantage-framework.rs/vantage-logo.svg" alt="Vantage Framework" height="24" style="filter: brightness(0) invert(1);">
+                            </a>
+                            <p class="mt-4 text-foot">Business logic and persistence abstraction framework written in Rust. Enterprise grade with strong type safety.</p>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                            <h5 class="text-light footer-head">Framework</h5>
+                            <ul class="list-unstyled footer-list mt-4">
+                                <li><a href="/patterns/" class="text-foot">Patterns</a></li>
+                                <li><a href="/integration/" class="text-foot">Integration</a></li>
+                                <li><a href="/docs/" class="text-foot">Documentation</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                            <h5 class="text-light footer-head">Resources</h5>
+                            <ul class="list-unstyled footer-list mt-4">
+                                <li><a href="https://github.com/colinwilson/lotusdocs" class="text-foot" target="_blank">GitHub</a></li>
+                                <li><a href="/docs/" class="text-foot">Documentation</a></li>
+                                <li><a href="/patterns/" class="text-foot">Examples</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                            <h5 class="text-light footer-head">Get Started</h5>
+                            <p class="mt-4 text-foot">Ready to build enterprise applications with Rust?</p>
+                            <a href="/patterns/" class="btn btn-soft-primary">
+                                <span class="material-symbols-outlined me-1" style="font-size: 1rem;">rocket_launch</span>
+                                Start Building
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-py-30 footer-bar">
+        <div class="container text-center">
+            <div class="row align-items-center">
+                <div class="col-sm-12">
+                    <div class="text-sm-center">
+                        <p class="mb-0 text-foot">© 2025 Vantage Framework. <strong>Open Source</strong> MIT Licensed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
         <!-- Bootstrap 5 JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+        <!-- Scroll-based navigation shadow -->
+        <script>
+            window.addEventListener('scroll', function() {
+                const topnav = document.getElementById('topnav');
+                if (topnav) {
+                    if (window.scrollY > 0) {
+                        topnav.classList.add('topnav-scrolled');
+                    } else {
+                        topnav.classList.remove('topnav-scrolled');
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

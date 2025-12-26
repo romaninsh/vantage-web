@@ -10,6 +10,21 @@
         <loc>https://vantage-framework.rs/patterns/</loc>
     </url>
     <url>
+        <loc>https://vantage-framework.rs/patterns/dataset/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/patterns/entity/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/patterns/expressions/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/patterns/query-builder/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/patterns/table-entity/</loc>
+    </url>
+    <url>
         <loc>https://vantage-framework.rs/tabs/</loc>
     </url>
     <url>

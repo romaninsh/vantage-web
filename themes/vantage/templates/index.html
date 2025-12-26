@@ -1,89 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+{% extends "base.html" %}
+{% import "macros/feature-grid.html" as components %}
+{% import "macros/tabs.html" as tabs_macro %}
+{% import "macros/navigation.html" as nav %}
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+{% block body_class %}hero-page{% endblock body_class %}
 
-    <!-- Material Symbols -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+{% block content %}
+{{ nav::header() }}
 
-    <!-- Google Fonts - Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-
-    {% if config.extra.favicon %}
-        <link rel="icon" href="{{ config.extra.favicon }}">
-    {% endif %}
-
-    {% block extra_head %}{% endblock extra_head %}
-</head>
-<body>
-    {% block nav %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="{{ config.base_url }}">
-                {% if config.extra.logo %}
-                    <img src="{{ config.extra.logo }}" alt="{{ config.title }}" height="30">
-                {% else %}
-                    {{ config.title }}
-                {% endif %}
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    {% if config.extra.nav_links %}
-                        {% for link in config.extra.nav_links %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ link.url }}">{{ link.name }}</a>
-                            </li>
-                        {% endfor %}
+<!-- Hero Start -->
+<section id="hero" class="d-table w-100 overflow-hidden hero">
+    <div class="container">
+        <div class="row mt-5 align-items-center">
+            <div class="col-lg-6 col-md-6">
+                <div class="title-heading">
+                    <span class="badge rounded-pill bg-primary mb-3">{{ section.extra.version | default(value="v0.4.0") }}</span>
+                    <h1 class="heading mt-0 mb-3">{{ section.title | default(value="Vantage Framework") }}</h1>
+                    {% if section.description %}
+                    <p class="para-desc text-muted mb-0">{{ section.description }}</p>
+                    {% else %}
+                    <p class="para-desc text-muted mb-0"><strong>Business logic</strong> and <strong>persistence abstraction</strong> framework written in Rust. Enterprise grade, strong <strong>type safety</strong>, multiple <strong>databases</strong>, multiple <strong>languages</strong>.</p>
                     {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-    {% endblock nav %}
 
-    <main class="container my-5">
-        {% block content %}
-            {{ section.content | safe }}
-        {% endblock content %}
-    </main>
+                    <div class="mt-4">
+                        <a href="/patterns/" class="btn btn-lg btn-primary me-2 mt-2">
+                            <span class="material-symbols-outlined align-middle me-1">rocket_launch</span>
+                            Get Started
+                        </a>
+                        <a href="https://github.com/colinwilson/lotusdocs" class="btn btn-lg btn-outline-primary mt-2" target="_blank">
+                            <span class="material-symbols-outlined align-middle me-1">construction</span>
+                            In Development
+                        </a>
+                    </div>
 
-    {% block footer %}
-    <footer class="bg-light py-4 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0 text-muted">
-                        © {{ now() | date(format="%Y") }} {{ config.title }}
-                        {% if config.extra.footer_text %} | {{ config.extra.footer_text }}{% endif %}
-                    </p>
+                    <p class="text-muted mb-0 mt-3"><strong>Open Source</strong> MIT Licensed.</p>
                 </div>
             </div>
-        </div>
-    </footer>
-    {% endblock footer %}
 
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+            <div class="col-lg-6 col-md-6 mt-4 pt-4 mt-sm-0 pt-sm-0">
+                <div class="ms-lg-4">
+                    <div class="classic-hero-image">
+                        <!-- Placeholder hero image -->
+                        <div class="bg-light rounded shadow-lg p-5 text-center">
+                            <span class="material-symbols-outlined display-1 text-primary">layers</span>
+                            <p class="text-muted mt-3">Vantage Framework Architecture</p>
+                        </div>
+                    </div>
+                </div>
+            </div><!--end col-->
+        </div><!--end row-->
+    </div> <!--end container-->
+</section><!--end section-->
+<!-- Hero End -->
 
-    {% block extra_scripts %}{% endblock extra_scripts %}
-</body>
-</html>
+<!-- Feature Grid Section -->
+{% if section.extra.features %}
+{{ components::feature_grid(
+    features=section.extra.features,
+    title="Why use Vantage?",
+    subtitle="Create unified data abstraction and access interface for all the languages you use in your company (Rust, Java, Swift, TypeScript, Python, PHP etc). Never worry about entity caching, live-reload or eventual consistency."
+) }}
+{% endif %}
+
+<!-- Data Abstraction Patterns Section -->
+{% if section.extra.pattern_tabs %}
+{{ tabs_macro::tabs(
+    tab_configs=section.extra.pattern_tabs,
+    section_title="Data Abstraction Patterns",
+    section_subtitle="If you have heard about ORM or Active Record - those are data abstraction patterns. Developers have different preferences when it comes to pattern use, so Vantage has 5 powerful use patterns that can all be combined and used in unison."
+) }}
+{% endif %}
+
+<!-- Main Content -->
+<main class="container my-5">
+    {{ section.content | safe }}
+</main>
+
+{{ nav::footer() }}
+{% endblock content %}

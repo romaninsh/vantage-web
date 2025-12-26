@@ -1,7 +1,7 @@
 +++
 title = "Vantage Framework"
 description = "Business logic and persistence abstraction framework written in Rust"
-template = "landing.html"
+template = "index.html"
 
 [extra]
 version = "v0.4.0"
