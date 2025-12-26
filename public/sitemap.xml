@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://vantage-framework.rs/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/integration/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/patterns/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/tabs/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/tabs/dataset/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/tabs/entity-any/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/tabs/expressions/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/tabs/querybuilder/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/tabs/table-entity/</loc>
+    </url>
+    <url>
+        <loc>https://vantage-framework.rs/test/</loc>
+    </url>
+</urlset>
