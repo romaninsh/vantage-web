@@ -35,6 +35,25 @@
         <!-- Bootstrap 5 JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
+        <!-- Mermaid.js for diagrams -->
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                mermaid.initialize({
+                    startOnLoad: true,
+                    theme: 'base',
+                    themeVariables: {
+                        primaryColor: '#0d6efd',
+                        primaryTextColor: '#3c4858',
+                        primaryBorderColor: '#dee2e6',
+                        lineColor: '#6c757d',
+                        background: '#ffffff',
+                        mainBkg: '#ffffff'
+                    }
+                });
+            });
+        </script>
+
         <!-- Scroll-based navigation shadow -->
         <script>
             window.addEventListener('scroll', function() {
