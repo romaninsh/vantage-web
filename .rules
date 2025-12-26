@@ -1,0 +1,22 @@
+## Phase 1: Features & Third-Party Plugins
+- [x] Enable Zola syntax highlighting (already configured)
+- [ ] Add Bootstrap 5 via CDN
+- [ ] Add Material Symbols icons via CDN
+- [ ] Add Google Fonts integration
+- [ ] Migrate custom Chroma syntax highlighting theme to Zola
+
+## Phase 2: Base Layout Logic
+- [ ] Create base.html template with Bootstrap structure
+- [ ] Create section.html for list pages (patterns, integration, etc)
+- [ ] Create page.html for single content pages
+- [ ] Create macros.html for reusable components
+- [ ] Migrate navigation header with logo positioning
+- [ ] Implement card-based content grid system
+- [ ] Add footer with copyright
+
+## Phase 3: Content Migration
+- [ ] Copy patterns/ content from Hugo to Zola
+- [ ] Copy integration/ content from Hugo to Zola
+- [ ] Copy docs/ content (if needed)
+- [ ] Update frontmatter format (Hugo +++ to Zola +++)
+- [ ] Test all internal links and navigation

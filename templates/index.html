@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-9 col-md-10">
+        <!-- Bootstrap CSS Loading Test -->
+        <div class="alert alert-success text-center mb-4" role="alert">
+            <strong>Bootstrap Test:</strong> If you see this green alert box, Bootstrap CSS is loaded!
+        </div>
+
+
+
+        <!-- Main Content -->
+        <div class="mb-5">
+            {{ section.content | safe }}
+        </div>
+
+        <!-- Feature Test Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body p-4 text-center">
+                        <span class="material-symbols-outlined text-primary fs-1 mb-3 d-block">grid_view</span>
+                        <h5 class="card-title">Bootstrap 5</h5>
+                        <p class="card-text text-muted">Modern CSS framework with responsive grid</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body p-4 text-center">
+                        <span class="material-symbols-outlined text-success fs-1 mb-3 d-block">favorite</span>
+                        <h5 class="card-title">Material Symbols</h5>
+                        <p class="card-text text-muted">Beautiful icons for modern web apps</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body p-4 text-center">
+                        <span class="material-symbols-outlined text-info fs-1 mb-3 d-block">font_download</span>
+                        <h5 class="card-title">Google Fonts</h5>
+                        <p class="card-text text-muted">Inter font family with multiple weights</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Font Weight Samples -->
+        <div class="row justify-content-center">
+            <div class="col-xl-8">
+                <div class="card border-0 bg-light">
+                    <div class="card-body p-4 text-center">
+                        <h6 class="text-muted mb-3">Google Fonts - Inter Family</h6>
+                        <div class="mb-2" style="font-family: 'Inter', sans-serif; font-weight: 300;">Inter Light (300)</div>
+                        <div class="mb-2" style="font-family: 'Inter', sans-serif; font-weight: 400;">Inter Regular (400)</div>
+                        <div class="mb-2" style="font-family: 'Inter', sans-serif; font-weight: 500;">Inter Medium (500)</div>
+                        <div class="mb-2" style="font-family: 'Inter', sans-serif; font-weight: 600;">Inter Semi-Bold (600)</div>
+                        <div class="mb-0" style="font-family: 'Inter', sans-serif; font-weight: 700;">Inter Bold (700)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
