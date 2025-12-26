@@ -1,0 +1,23 @@
+menu:
+  - title: "Patterns"
+    url: "/patterns/"
+    dropdown:
+      - title: "DataSet"
+        url: "/patterns/dataset/"
+      - title: "Table<Entity>"
+        url: "/patterns/table-entity/"
+      - title: "Expressions"
+        url: "/patterns/expressions/"
+      - title: "Query Builder"
+        url: "/patterns/query-builder/"
+      - title: "Entity"
+        url: "/patterns/entity/"
+      - divider: true
+      - title: "Combination Examples"
+        url: "/patterns/"
+
+  - title: "Integration"
+    url: "/integration/"
+
+  - title: "Docs"
+    url: "/docs/"

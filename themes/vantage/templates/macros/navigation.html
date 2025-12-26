@@ -1,4 +1,5 @@
 {% macro header() %}
+{% set nav_data = load_data(path="content/navigation.yaml") %}
 <header id="topnav">
     <div class="container d-flex justify-content-between align-items-center py-3">
         <a class="logo" aria-label="Home" href="/">
@@ -8,22 +9,26 @@
         <div class="d-flex align-items-center">
             <div id="navigation">
                 <ul class="navigation-menu nav-right list-unstyled d-flex mb-0">
+                    {% for item in nav_data.menu %}
+                    {% if item.dropdown %}
                     <li class="dropdown me-4">
-                        <a href="/patterns/" class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            Patterns
+                        <a href="{{ item.url }}" class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ item.title }}
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/patterns/expressions/">Expressions</a></li>
-                            <li><a class="dropdown-item" href="/patterns/query-builder/">Query Builder</a></li>
-                            <li><a class="dropdown-item" href="/patterns/table-entity/">Table&lt;Entity&gt;</a></li>
-                            <li><a class="dropdown-item" href="/patterns/dataset/">DataSet</a></li>
-                            <li><a class="dropdown-item" href="/patterns/entity/">Entity</a></li>
+                            {% for sub_item in item.dropdown %}
+                            {% if sub_item.divider %}
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/patterns/">View All Patterns</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{{ sub_item.url }}">{{ sub_item.title }}</a></li>
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                     </li>
-                    <li class="me-4"><a href="/integration/" class="text-decoration-none">Integration</a></li>
-                    <li><a href="/docs/" class="text-decoration-none">Docs</a></li>
+                    {% else %}
+                    <li class="{% if not loop.last %}me-4{% endif %}"><a href="{{ item.url }}" class="text-decoration-none">{{ item.title }}</a></li>
+                    {% endif %}
+                    {% endfor %}
                 </ul>
             </div>
 
