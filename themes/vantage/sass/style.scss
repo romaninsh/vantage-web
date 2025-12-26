@@ -259,7 +259,7 @@ p {
 // ===== Hero Section =====
 
 .hero {
-    background: var(--hero-bg-image, url('/images/gradient-desktop.webp'));
+    background: url('images/gradient-desktop.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
