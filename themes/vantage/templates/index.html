@@ -15,25 +15,22 @@
             <div class="col-lg-6 col-md-6">
                 <div class="title-heading">
                     <span class="badge rounded-pill bg-primary mb-3">{{ section.extra.version | default(value="v0.4.0") }}</span>
-                    <h1 class="heading mt-0 mb-3">{{ section.title | default(value="Vantage Framework") }}</h1>
-                    {% if section.description %}
-                    <p class="para-desc text-muted mb-0">{{ section.description }}</p>
-                    {% else %}
-                    <p class="para-desc text-muted mb-0"><strong>Business logic</strong> and <strong>persistence abstraction</strong> framework written in Rust. Enterprise grade, strong <strong>type safety</strong>, multiple <strong>databases</strong>, multiple <strong>languages</strong>.</p>
-                    {% endif %}
+                    <div class="para-desc text-muted mb-0">{{ section.content | safe }}</div>
 
                     <div class="mt-4">
                         <a href="/patterns/" class="btn btn-lg btn-primary me-2 mt-2">
                             <span class="material-symbols-outlined align-middle me-1">rocket_launch</span>
                             Get Started
                         </a>
-                        <a href="https://github.com/colinwilson/lotusdocs" class="btn btn-lg btn-outline-primary mt-2" target="_blank">
+                        <a href="https://github.com/romaninsh/vantage" class="btn btn-lg btn-outline-primary mt-2" target="_blank">
                             <span class="material-symbols-outlined align-middle me-1">construction</span>
                             In Development
                         </a>
                     </div>
 
-                    <p class="text-muted mb-0 mt-3"><strong>Open Source</strong> MIT Licensed.</p>
+
+                    <hr/>
+                    {{ section.extra.license | markdown | safe }}
                 </div>
             </div>
 

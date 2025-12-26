@@ -1,10 +1,9 @@
 +++
 title = "Vantage Framework"
-description = "Business logic and persistence abstraction framework written in Rust"
 template = "index.html"
-
 [extra]
 version = "v0.4.0"
+license = "**Open Source** MIT Licensed. Still in **rapid development**."
 
 [[extra.features]]
 title = "Full Abstraction"
@@ -95,3 +94,13 @@ content_file = "tabs/entity-any.md"
 icon = "dynamic_form"
 active = false
 +++
+
+# Vantage Framework
+
+Rust framework for **Business logic** and **persistence abstraction**. Designed for **enterprise**
+use, it uses strong **type safety**, works with multiple **databases** simultaniously, offers
+**five** abstraction patterns across all popular programming languages.
+
+Aimed at larger organisations - Vantage deals with operational complexity in accessing
+SQL/Events/APIs, large-scale database migrations, data decentralisation patterns such as regional
+caches and helps to establish consistent usage patterns throughout entire organisation.
