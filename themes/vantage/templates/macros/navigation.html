@@ -2,7 +2,7 @@
 {% set nav_data = load_data(path="content/navigation.yaml") %}
 <header id="topnav">
     <div class="container d-flex justify-content-between align-items-center py-3">
-        <a class="logo" aria-label="Home" href="/">
+        <a class="logo" aria-label="Home" href="{{ get_url(path='') }}">
             <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage Framework" height="40">
         </a>
 
@@ -12,7 +12,7 @@
                     {% for item in nav_data.menu %}
                     {% if item.dropdown %}
                     <li class="dropdown me-4">
-                        <a href="{{ item.url }}" class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a href="{{ get_url(path=item.url) }}" class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ item.title }}
                         </a>
                         <ul class="dropdown-menu">
@@ -20,13 +20,13 @@
                             {% if sub_item.divider %}
                             <li><hr class="dropdown-divider"></li>
                             {% else %}
-                            <li><a class="dropdown-item" href="{{ sub_item.url }}">{{ sub_item.title }}</a></li>
+                            <li><a class="dropdown-item" href="{{ get_url(path=sub_item.url) }}">{{ sub_item.title }}</a></li>
                             {% endif %}
                             {% endfor %}
                         </ul>
                     </li>
                     {% else %}
-                    <li class="{% if not loop.last %}me-4{% endif %}"><a href="{{ item.url }}" class="text-decoration-none">{{ item.title }}</a></li>
+                    <li class="{% if not loop.last %}me-4{% endif %}"><a href="{{ get_url(path=item.url) }}" class="text-decoration-none">{{ item.title }}</a></li>
                     {% endif %}
                     {% endfor %}
                 </ul>
@@ -63,7 +63,7 @@
                 <div class="footer-py-60">
                     <div class="row">
                         <div class="col-lg-4 col-12 mb-0 mb-md-4 pb-0 pb-md-2">
-                            <a href="/" class="logo-footer">
+                            <a href="{{ get_url(path='') }}" class="logo-footer">
                                 <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage Framework" height="24" style="filter: brightness(0) invert(1);">
                             </a>
                             <p class="mt-4 text-foot">Business logic and persistence abstraction framework written in Rust. Enterprise grade with strong type safety.</p>
@@ -72,9 +72,9 @@
                         <div class="col-lg-2 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
                             <h5 class="text-light footer-head">Framework</h5>
                             <ul class="list-unstyled footer-list mt-4">
-                                <li><a href="/patterns/" class="text-foot">Patterns</a></li>
-                                <li><a href="/integration/" class="text-foot">Integration</a></li>
-                                <li><a href="/docs/" class="text-foot">Documentation</a></li>
+                                <li><a href="{{ get_url(path='patterns/') }}" class="text-foot">Patterns</a></li>
+                                <li><a href="{{ get_url(path='integration/') }}" class="text-foot">Integration</a></li>
+                                <li><a href="{{ get_url(path='docs/') }}" class="text-foot">Documentation</a></li>
                             </ul>
                         </div>
 
@@ -82,15 +82,15 @@
                             <h5 class="text-light footer-head">Resources</h5>
                             <ul class="list-unstyled footer-list mt-4">
                                 <li><a href="https://github.com/romaninsh/vantage" class="text-foot" target="_blank">GitHub</a></li>
-                                <li><a href="/docs/" class="text-foot">Documentation</a></li>
-                                <li><a href="/patterns/" class="text-foot">Examples</a></li>
+                                <li><a href="{{ get_url(path='docs/') }}" class="text-foot">Documentation</a></li>
+                                <li><a href="{{ get_url(path='patterns/') }}" class="text-foot">Examples</a></li>
                             </ul>
                         </div>
 
                         <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
                             <h5 class="text-light footer-head">Get Started</h5>
                             <p class="mt-4 text-foot">Ready to build enterprise applications with Rust?</p>
-                            <a href="/patterns/" class="btn btn-soft-primary">
+                            <a href="{{ get_url(path='patterns/') }}" class="btn btn-soft-primary">
                                 <span class="material-symbols-outlined me-1" style="font-size: 1rem;">rocket_launch</span>
                                 Start Building
                             </a>
