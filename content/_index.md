@@ -104,3 +104,21 @@ use, it uses strong **type safety**, works with multiple **databases** simultani
 Aimed at larger organisations - Vantage deals with operational complexity in accessing
 SQL/Events/APIs, large-scale database migrations, data decentralisation patterns such as regional
 caches and helps to establish consistent usage patterns throughout entire organisation.
+
+SECTION_BREAK
+
+## Why use Vantage?
+
+Create unified data abstraction and access interface for all the languages you use in your company
+(Rust, Java, Swift, TypeScript, Python, PHP etc). Never worry about entity caching, live-reload or
+eventual consistency.
+
+SECTION_BREAK
+
+## Data Abstraction Patterns
+
+If you have heard about ORM or Active Record - those are data abstraction patterns. Developers have
+different preferences when it comes to pattern use, so Vantage has 5 powerful use patterns that can
+all be combined and used in unison.
+
+SECTION_BREAK

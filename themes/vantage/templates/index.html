@@ -6,6 +6,11 @@
 {% block body_class %}hero-page{% endblock body_class %}
 
 {% block content %}
+{% set content_parts = section.content | split(pat="SECTION_BREAK") %}
+{% set hero_content = content_parts[0] %}
+{% set feature_content = content_parts[1] %}
+{% set tabs_content = content_parts[2] %}
+
 {{ nav::header() }}
 
 <!-- Hero Start -->
@@ -15,7 +20,7 @@
             <div class="col-lg-6 col-md-6">
                 <div class="title-heading">
                     <span class="badge rounded-pill bg-primary mb-3">{{ section.extra.version | default(value="v0.4.0") }}</span>
-                    <div class="para-desc text-muted mb-0">{{ section.content | safe }}</div>
+                    <div class="para-desc text-muted mb-0">{{ hero_content | safe }}</div>
 
                     <div class="mt-4">
                         <a href="/patterns/" class="btn btn-lg btn-primary me-2 mt-2">
@@ -37,11 +42,7 @@
             <div class="col-lg-6 col-md-6 mt-4 pt-4 mt-sm-0 pt-sm-0">
                 <div class="ms-lg-4">
                     <div class="classic-hero-image">
-                        <!-- Placeholder hero image -->
-                        <div class="bg-light rounded shadow-lg p-5 text-center">
-                            <span class="material-symbols-outlined display-1 text-primary">layers</span>
-                            <p class="text-muted mt-3">Vantage Framework Architecture</p>
-                        </div>
+                        <img src="/images/screenshot.webp" class="shadow-lg d-block rounded-top-4" width="1349" height="768" alt="Vantage Framework Screenshot">
                     </div>
                 </div>
             </div><!--end col-->
@@ -51,27 +52,16 @@
 <!-- Hero End -->
 
 <!-- Feature Grid Section -->
-{% if section.extra.features %}
 {{ components::feature_grid(
     features=section.extra.features,
-    title="Why use Vantage?",
-    subtitle="Create unified data abstraction and access interface for all the languages you use in your company (Rust, Java, Swift, TypeScript, Python, PHP etc). Never worry about entity caching, live-reload or eventual consistency."
+    content=feature_content
 ) }}
-{% endif %}
 
 <!-- Data Abstraction Patterns Section -->
-{% if section.extra.pattern_tabs %}
 {{ tabs_macro::tabs(
     tab_configs=section.extra.pattern_tabs,
-    section_title="Data Abstraction Patterns",
-    section_subtitle="If you have heard about ORM or Active Record - those are data abstraction patterns. Developers have different preferences when it comes to pattern use, so Vantage has 5 powerful use patterns that can all be combined and used in unison."
+    content=tabs_content
 ) }}
-{% endif %}
-
-<!-- Main Content -->
-<main class="container my-5">
-    {{ section.content | safe }}
-</main>
 
 {{ nav::footer() }}
 {% endblock content %}

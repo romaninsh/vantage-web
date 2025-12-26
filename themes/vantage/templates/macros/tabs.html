@@ -1,11 +1,10 @@
-{% macro tabs(tab_configs, section_title="Data Abstraction Patterns", section_subtitle="If you have heard about ORM or Active Record - those are data abstraction patterns.") %}
+{% macro tabs(tab_configs, content) %}
 <section class="py-5 bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 col-lg-11">
-                <div class="text-center mb-5">
-                    <h2 class="fw-bold mb-3">{{ section_title }}</h2>
-                    <p class="lead text-muted">{{ section_subtitle }}</p>
+                <div class="text-center mb-5 index-section">
+                    {{ content | safe }}
                 </div>
 
                 <!-- Tabs Navigation -->

@@ -1,11 +1,10 @@
-{% macro feature_grid(features, title="Why use Vantage?", subtitle="Create unified data abstraction and access interface for all the languages you use in your company") %}
+{% macro feature_grid(features, content) %}
 <section class="py-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 col-lg-11">
-                <div class="text-center mb-5">
-                    <h2 class="fw-bold mb-3">{{ title }}</h2>
-                    <p class="lead text-muted">{{ subtitle }}</p>
+                <div class="text-center mb-5 index-section">
+                    {{ content | safe }}
                 </div>
 
                 <div class="row g-4 mb-5">

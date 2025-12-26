@@ -253,8 +253,10 @@ p {
 // ===== Hero Section =====
 
 .hero {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: url('/images/gradient-desktop.webp');
     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     padding-top: 60px; // Just extra hero spacing (59px body padding + 60px = 119px total)
     padding-bottom: 70px;
     min-height: 60vh;
@@ -282,9 +284,8 @@ p {
     }
 
     .classic-hero-image {
-        .bg-light {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
+        img {
+            box-shadow: $shadow-lg;
         }
     }
 }
@@ -588,5 +589,20 @@ section {
 
     .text-light {
         color: $white;
+    }
+}
+
+// ===== Index Section Styles =====
+
+.index-section {
+    h2 {
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.25rem;
+        color: $muted;
+        margin-bottom: 0;
     }
 }
