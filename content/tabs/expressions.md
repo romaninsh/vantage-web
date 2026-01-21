@@ -5,87 +5,27 @@ weight = 1
 
 ## Execute Raw queries while retaining type safety
 
-Similar to `SQLx`, Vantage offers a powerful expression and query engine. Unlike other frameworks,
-the number of vendors is not limited to the trio of MySQL, SQLite and PostgreSQL - you can query any
-vendor that is **integrated** with Vantage.
+Similar to `SQLx`, Expressions enable developer to execute any raw queries using supported database
+type. Vantage Expressions have some unique qualities:
 
-### Raw SQL with Type Safety
+- Expressions are **composable**, meaning your expression can consist of other expressions.
+- Expression parameters will use **strong type conversion** to prevent accidental type-casting from
+  the native type of your language into a type-system of your database engine.
+- Expression parameters can be **deferred**. You may use async closure as argument to your
+  expression.
 
-Execute raw SQL queries while maintaining compile-time type checking:
+Sub-expressions therefore can cross databases boundaries, fetching data from one database (or API),
+type-casting then using result as a parameter in another query.
 
-```rust
-use vantage::{Database, Value, Row};
+### Basic Example
 
-async fn get_active_users(db: &Database) -> Result<Vec<User>, VantageError> {
-    let result = db.execute(
-        "SELECT id, name, email, created_at FROM users WHERE active = ? AND age > ?",
-        &[Value::Bool(true), Value::Int(18)]
-    ).await?;
-
-    let mut users = Vec::new();
-    for row in result {
-        let user = User {
-            id: row.get::<i64>("id")?,
-            name: row.get::<String>("name")?,
-            email: row.get::<String>("email")?,
-            created_at: row.get::<DateTime<Utc>>("created_at")?,
-        };
-        users.push(user);
-    }
-
-    Ok(users)
-}
-```
-
-### Cross-Database Compatibility
-
-The same expression works across different database vendors:
+Expressions are very simple to use with `expr!` macro and `execute()` method.
 
 ```rust
-// Works with PostgreSQL
-let pg_result = pg_db.execute(
-    "SELECT * FROM orders WHERE status = ?",
-    &[Value::String("pending".to_string())]
-).await?;
+let where_expr = expr!("age > {} AND status = {}", 21, "active");
+let query_expr = expr!("SELECT * FROM users WHERE {}", where_expr);
 
-// Works with MySQL
-let mysql_result = mysql_db.execute(
-    "SELECT * FROM orders WHERE status = ?",
-    &[Value::String("pending".to_string())]
-).await?;
-
-// Works with SQLite
-let sqlite_result = sqlite_db.execute(
-    "SELECT * FROM orders WHERE status = ?",
-    &[Value::String("pending".to_string())]
-).await?;
+let result: serde_json::Value = db.execute(&query_expr).await?;
 ```
 
-### Dynamic Query Building
-
-Build queries dynamically while maintaining type safety:
-
-```rust
-let mut query = String::from("SELECT * FROM products WHERE 1=1");
-let mut params = Vec::new();
-
-if let Some(category) = filter.category {
-    query.push_str(" AND category = ?");
-    params.push(Value::String(category));
-}
-
-if let Some(min_price) = filter.min_price {
-    query.push_str(" AND price >= ?");
-    params.push(Value::Decimal(min_price));
-}
-
-let products = db.execute(&query, &params).await?;
-```
-
-### Advanced Features
-
-- **Prepared statements** for performance
-- **Transaction support** with rollback
-- **Streaming results** for large datasets
-- **Custom type mapping** for domain objects
-- **SQL injection protection** built-in
+[Further information on Expressions and Advanced Examples](../patterns/expressions).

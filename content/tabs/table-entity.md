@@ -3,7 +3,20 @@ title = "Table<Entity>"
 weight = 3
 +++
 
-## Table<Entity> Pattern
+## Table&lt;Entity&gt; Pattern
+
+Table is a higher-level abstraction allowing you to define your entities.
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct User {
+    id: Option<String>,
+    name: String,
+    email: String,
+    active: bool,
+}
+
+```
 
 Work with strongly-typed table representations that provide CRUD operations and relationship
 management. The Table<Entity> pattern offers a clean abstraction over database tables while
