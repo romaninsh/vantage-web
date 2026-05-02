@@ -3,9 +3,11 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 col-lg-11">
+                {% if content %}
                 <div class="text-center mb-5 index-section">
                     {{ content | safe }}
                 </div>
+                {% endif %}
 
                 <div class="row g-4 mb-5">
                     {% for feature in features %}
@@ -13,7 +15,14 @@
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body p-4 text-center">
                                 <span class="material-symbols-outlined {{ feature.color | default(value="text-primary") }} fs-1 mb-3 d-block">{{ feature.icon }}</span>
-                                <h5 class="card-title">{{ feature.title }}</h5>
+                                <h5 class="card-title">
+                                    {{ feature.title }}
+                                    {% if feature.status == "soon" %}
+                                        <span class="badge rounded-pill bg-secondary ms-1 align-middle" style="font-size: 0.6rem; vertical-align: middle;">Coming soon</span>
+                                    {% elif feature.status == "now" %}
+                                        <span class="badge rounded-pill bg-success ms-1 align-middle" style="font-size: 0.6rem; vertical-align: middle;">Now</span>
+                                    {% endif %}
+                                </h5>
                                 <p class="card-text text-muted">{{ feature.description }}</p>
                                 {% if feature.link %}
                                 <a href="{{ feature.link }}" class="btn btn-outline-{{ feature.color | default(value="primary") | replace(from="text-", to="") }} btn-sm">

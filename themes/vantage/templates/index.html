@@ -1,16 +1,10 @@
 {% extends "base.html" %}
 {% import "macros/feature-grid.html" as components %}
-{% import "macros/tabs.html" as tabs_macro %}
 {% import "macros/navigation.html" as nav %}
 
 {% block body_class %}hero-page{% endblock body_class %}
 
 {% block content %}
-{% set content_parts = section.content | split(pat="SECTION_BREAK") %}
-{% set hero_content = content_parts[0] %}
-{% set feature_content = content_parts[1] %}
-{% set tabs_content = content_parts[2] %}
-
 {{ nav::header() }}
 
 <!-- Hero Start -->
@@ -19,20 +13,19 @@
         <div class="row mt-5 align-items-center">
             <div class="col-lg-6 col-md-6">
                 <div class="title-heading">
-                    <span class="badge rounded-pill bg-primary mb-3">{{ section.extra.version | default(value="v0.4.0") }}</span>
-                    <div class="para-desc text-muted mb-0">{{ hero_content | safe }}</div>
+                    <span class="badge rounded-pill bg-primary mb-3">{{ section.extra.version | default(value="v0.1.0 — pre-alpha") }}</span>
+                    <div class="para-desc text-muted mb-0">{{ section.content | safe }}</div>
 
                     <div class="mt-4">
-                        <a href="/patterns/" class="btn btn-lg btn-primary me-2 mt-2">
-                            <span class="material-symbols-outlined align-middle me-1">rocket_launch</span>
-                            Get Started
+                        <a href="{{ get_url(path='download/') }}" class="btn btn-lg btn-primary me-2 mt-2">
+                            <span class="material-symbols-outlined align-middle me-1">download</span>
+                            Download
                         </a>
-                        <a href="https://github.com/romaninsh/vantage" class="btn btn-lg btn-outline-primary mt-2" target="_blank">
+                        <a href="{{ get_url(path='framework/') }}" class="btn btn-lg btn-outline-primary mt-2">
                             <span class="material-symbols-outlined align-middle me-1">construction</span>
-                            In Development
+                            Framework
                         </a>
                     </div>
-
 
                     <hr/>
                     {{ section.extra.license | markdown | safe }}
@@ -42,26 +35,75 @@
             <div class="col-lg-6 col-md-6 mt-4 pt-4 mt-sm-0 pt-sm-0">
                 <div class="ms-lg-4">
                     <div class="classic-hero-image">
-                        <img src="{{ get_url(path='images/screenshot.webp') }}" class="shadow-lg d-block rounded-top-4" width="884" height="768" alt="Vantage Framework Screenshot">
+                        <img src="{{ get_url(path='images/vantage-ui-app.png') }}" class="shadow-lg d-block rounded-top-4" width="884" height="768" alt="Vantage UI Screenshot">
                     </div>
                 </div>
-            </div><!--end col-->
-        </div><!--end row-->
-    </div> <!--end container-->
-</section><!--end section-->
+            </div>
+        </div>
+    </div>
+</section>
 <!-- Hero End -->
 
-<!-- Feature Grid Section -->
-{{ components::feature_grid(
-    features=section.extra.features,
-    content=feature_content
-) }}
+<!-- What Vantage UI Does -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="text-center mb-5 index-section">
+                    <h2>{{ section.extra.features_intro.heading }}</h2>
+                    <p>{{ section.extra.features_intro.body }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<!-- Data Abstraction Patterns Section -->
-{{ tabs_macro::tabs(
-    tab_configs=section.extra.pattern_tabs,
-    content=tabs_content
-) }}
+{{ components::feature_grid(features=section.extra.features, content="") }}
+
+<!-- How It Works -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="text-center mb-5 index-section">
+                    <h2>{{ section.extra.howitworks.heading }}</h2>
+                    <p>{{ section.extra.howitworks.body }}</p>
+                </div>
+
+                <div class="row g-4">
+                    {% for step in section.extra.howitworks_steps %}
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <span class="material-symbols-outlined text-primary mb-3 d-block" style="font-size: 3rem;">{{ step.icon }}</span>
+                            <h5>{{ step.title }}</h5>
+                            <p class="text-muted">{{ step.body }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Built on Vantage Framework -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-9 col-lg-10 text-center">
+                <span class="material-symbols-outlined text-primary mb-3 d-block" style="font-size: 3rem;">layers</span>
+                <h2 class="mb-3">{{ section.extra.framework_callout.heading }}</h2>
+                <div class="text-muted mb-4" style="font-size: 1.15rem;">
+                    {{ section.extra.framework_callout.body | markdown | safe }}
+                </div>
+                <a href="{{ get_url(path='framework/') }}" class="btn btn-primary">
+                    <span class="material-symbols-outlined align-middle me-1">menu_book</span>
+                    Vantage Framework Overview
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
 {{ nav::footer() }}
 {% endblock content %}

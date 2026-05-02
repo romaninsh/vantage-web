@@ -3,7 +3,7 @@
 <header id="topnav">
     <div class="container d-flex justify-content-between align-items-center py-3">
         <a class="logo" aria-label="Home" href="{{ get_url(path='') }}">
-            <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage Framework" height="40">
+            <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage" height="40">
         </a>
 
         <div class="d-flex align-items-center">
@@ -12,7 +12,7 @@
                     {% for item in nav_data.menu %}
                     {% if item.dropdown %}
                     <li class="dropdown me-4">
-                        <a href="{{ get_url(path=item.url) }}" class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a href="{% if item.external %}{{ item.url }}{% else %}{{ get_url(path=item.url) }}{% endif %}" class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ item.title }}
                         </a>
                         <ul class="dropdown-menu">
@@ -20,13 +20,21 @@
                             {% if sub_item.divider %}
                             <li><hr class="dropdown-divider"></li>
                             {% else %}
-                            <li><a class="dropdown-item" href="{{ get_url(path=sub_item.url) }}">{{ sub_item.title }}</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% if sub_item.external %}{{ sub_item.url }}{% else %}{{ get_url(path=sub_item.url) }}{% endif %}"{% if sub_item.external %} target="_blank" rel="noopener"{% endif %}>
+                                    {{ sub_item.title }}
+                                </a>
+                            </li>
                             {% endif %}
                             {% endfor %}
                         </ul>
                     </li>
                     {% else %}
-                    <li class="{% if not loop.last %}me-4{% endif %}"><a href="{{ get_url(path=item.url) }}" class="text-decoration-none">{{ item.title }}</a></li>
+                    <li class="{% if not loop.last %}me-4{% endif %}">
+                        <a href="{% if item.external %}{{ item.url }}{% else %}{{ get_url(path=item.url) }}{% endif %}" class="text-decoration-none"{% if item.external %} target="_blank" rel="noopener"{% endif %}>
+                            {{ item.title }}
+                        </a>
+                    </li>
                     {% endif %}
                     {% endfor %}
                 </ul>
@@ -56,45 +64,38 @@
 {% endmacro %}
 
 {% macro footer() %}
+{% set nav_data = load_data(path="content/navigation.yaml") %}
 <footer class="bg-footer">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="footer-py-60">
                     <div class="row">
-                        <div class="col-lg-4 col-12 mb-0 mb-md-4 pb-0 pb-md-2">
+                        <div class="col-lg-5 col-12 mb-0 mb-md-4 pb-0 pb-md-2">
                             <a href="{{ get_url(path='') }}" class="logo-footer">
-                                <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage Framework" height="24" style="filter: brightness(0) invert(1);">
+                                <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage" height="24" style="filter: brightness(0) invert(1);">
                             </a>
-                            <p class="mt-4 text-foot">Business logic and persistence abstraction framework written in Rust. Enterprise grade with strong type safety.</p>
-                        </div>
-
-                        <div class="col-lg-2 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                            <h5 class="text-light footer-head">Framework</h5>
-                            <ul class="list-unstyled footer-list mt-4">
-                                <li><a href="{{ get_url(path='patterns/') }}" class="text-foot">Patterns</a></li>
-                                <li><a href="{{ get_url(path='integration/') }}" class="text-foot">Integration</a></li>
-                                <li><a href="{{ get_url(path='docs/') }}" class="text-foot">Documentation</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                            <h5 class="text-light footer-head">Resources</h5>
-                            <ul class="list-unstyled footer-list mt-4">
-                                <li><a href="https://github.com/romaninsh/vantage" class="text-foot" target="_blank">GitHub</a></li>
-                                <li><a href="{{ get_url(path='docs/') }}" class="text-foot">Documentation</a></li>
-                                <li><a href="{{ get_url(path='patterns/') }}" class="text-foot">Examples</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                            <h5 class="text-light footer-head">Get Started</h5>
-                            <p class="mt-4 text-foot">Ready to build enterprise applications with Rust?</p>
-                            <a href="{{ get_url(path='patterns/') }}" class="btn btn-soft-primary">
-                                <span class="material-symbols-outlined me-1" style="font-size: 1rem;">rocket_launch</span>
-                                Start Building
+                            <p class="mt-4 text-foot">A native macOS app for navigating your databases, APIs and infrastructure — built on the open-source Vantage Framework.</p>
+                            <a href="{{ get_url(path='download/') }}" class="btn btn-soft-primary mt-2">
+                                <span class="material-symbols-outlined me-1" style="font-size: 1rem;">download</span>
+                                Download for Mac
                             </a>
                         </div>
+
+                        {% for col in nav_data.footer %}
+                        <div class="col-lg-2 col-md-4 col-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                            <h5 class="text-light footer-head">{{ col.title }}</h5>
+                            <ul class="list-unstyled footer-list mt-4">
+                                {% for link in col.links %}
+                                <li>
+                                    <a href="{% if link.external %}{{ link.url }}{% else %}{{ get_url(path=link.url) }}{% endif %}" class="text-foot"{% if link.external %} target="_blank" rel="noopener"{% endif %}>
+                                        {{ link.title }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -106,7 +107,7 @@
             <div class="row align-items-center">
                 <div class="col-sm-12">
                     <div class="text-sm-center">
-                        <p class="mb-0 text-foot">© {{ now() | date(format="%Y") }} Vantage Framework. <strong>Open Source</strong> MIT Licensed.</p>
+                        <p class="mb-0 text-foot">© {{ now() | date(format="%Y") }} Vantage. <a href="https://github.com/romaninsh/vantage" class="text-foot" target="_blank" rel="noopener"><strong>Vantage Framework</strong> is open source, MIT licensed</a>.</p>
                     </div>
                 </div>
             </div>

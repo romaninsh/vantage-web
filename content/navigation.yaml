@@ -1,23 +1,59 @@
 menu:
-  - title: "Learn"
-    url: "/patterns/"
+  - title: "Download"
+    url: "/download/"
+
+  - title: "Use Cases"
+    url: "/use-cases/"
+
+  - title: "Framework"
+    url: "/framework/"
     dropdown:
-      - title: "DataSet"
-        url: "/patterns/dataset/"
-      - title: "Table<Entity>"
-        url: "/patterns/table-entity/"
-      - title: "Expressions"
-        url: "/patterns/expressions/"
-      - title: "Query Builder"
-        url: "/patterns/query-builder/"
-      - title: "Entity"
-        url: "/patterns/entity/"
+      - title: "Overview"
+        url: "/framework/"
+      - title: "The Book"
+        url: "https://romaninsh.github.io/vantage/"
+        external: true
+      - title: "crates.io"
+        url: "https://crates.io/search?q=vantage-"
+        external: true
       - divider: true
-      - title: "Combination Examples"
-        url: "/patterns/"
+      - title: "GitHub"
+        url: "https://github.com/romaninsh/vantage"
+        external: true
 
-  - title: "Integration"
-    url: "/integration/"
+  - title: "Roadmap"
+    url: "/roadmap/"
 
-  - title: "Docs"
-    url: "/docs/"
+  - title: "GitHub"
+    url: "https://github.com/romaninsh/vantage"
+    external: true
+
+footer:
+  - title: "Product"
+    links:
+      - title: "Download for Mac"
+        url: "/download/"
+      - title: "Use Cases"
+        url: "/use-cases/"
+      - title: "Roadmap"
+        url: "/roadmap/"
+
+  - title: "Framework"
+    links:
+      - title: "Overview"
+        url: "/framework/"
+      - title: "The Book"
+        url: "https://romaninsh.github.io/vantage/"
+        external: true
+      - title: "crates.io"
+        url: "https://crates.io/search?q=vantage-"
+        external: true
+
+  - title: "Project"
+    links:
+      - title: "GitHub"
+        url: "https://github.com/romaninsh/vantage"
+        external: true
+      - title: "Issues"
+        url: "https://github.com/romaninsh/vantage/issues"
+        external: true
