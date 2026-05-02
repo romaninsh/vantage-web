@@ -1,130 +1,83 @@
 +++
-title = "Vantage Framework"
+title = "Vantage UI"
 template = "index.html"
+
 [extra]
 version = "v0.4.0"
-license = "**Open Source** MIT Licensed. Still in **rapid development**."
+license = "**Free download** for macOS. Built on the open-source, MIT-licensed [Vantage Framework](/framework/)."
+
+[extra.features_intro]
+heading = "What Vantage UI does"
+body = "Point Vantage UI at a folder of YAML config — or let an AI agent author it for you over a local MCP server — and it renders a native, multi-database admin interface. SQL, SurrealDB, MongoDB, REST, AWS infrastructure: all browsable from one sidebar. Local-first; no web server, no data leaves your machine."
 
 [[extra.features]]
-title = "Full Abstraction"
-icon = "layers"
+title = "Multi-Database Sidebar"
+icon = "database"
 color = "text-primary"
-description = "Vantage hides persistence detail (SQL, API, Facade, CSV, etc) from your apps. Devs operate with data as if would be in-memory and infallable."
+status = "now"
+description = "Point at SQLite, Postgres, MySQL, SurrealDB, MongoDB and REST endpoints from one config. Each datasource shows up as its own group in the sidebar."
 
 [[extra.features]]
-title = "Five Use Patterns"
-icon = "category"
+title = "Native macOS App"
+icon = "desktop_mac"
 color = "text-success"
-description = "Tired of ORM vs RAW QUERY debate? Vantage supports 5 ways to interract with data, each suitable for the right kind of task - fully interoperable"
+status = "now"
+description = "Built on GPUI for GPU-accelerated rendering. Virtualised tables handle hundreds of thousands of rows without breaking a sweat."
 
 [[extra.features]]
-title = "Type Mapping"
-icon = "transform"
+title = "Local-First & Private"
+icon = "lock"
 color = "text-info"
-description = "Vantage converts VARCHAR2 or GeoSpatial json into Native type of your language transparently using strong type system"
+status = "now"
+description = "Everything runs on your machine: the app, your databases, your config. No telemetry, no cloud round-trip, no shared backend."
 
 [[extra.features]]
-title = "Async + Streaming"
-icon = "sync"
+title = "YAML-Configured Pages"
+icon = "description"
 color = "text-warning"
-description = "Simple 'foreach' block can become locally-cached, rate-limited, high-performance multi-threaded progressive pre-fetch stream with automatic retries built in"
+status = "now"
+description = "Pages, tables, forms and menus are described as YAML in a folder you control. Version it in git. Hand it off. Diff it on review."
 
 [[extra.features]]
-title = "Cross-Database Operations"
-icon = "hub"
+title = "AWS Infrastructure as Data"
+icon = "cloud"
 color = "text-secondary"
-description = "Migrate to a new Database Engine or resolve parts of query through RestAPI without changing your code thanks to multi-db relations traversal and joins and async query parameters"
-
+status = "now"
+description = "Browse S3 buckets, Lambdas and CloudWatch log groups as if they were database tables. Your infrastructure becomes navigable like any other dataset."
 
 [[extra.features]]
-title = "Custom Actions & Hooks"
-icon = "extension"
+title = "Agent-Driven (MCP)"
+icon = "smart_toy"
 color = "text-danger"
-description = "Vantage has extensions for implementing ACL, Audit, Pagination and aggregation in a composable way. Build a vantage-powered Facade layer while keeping client code unchanged"
+status = "soon"
+description = "A local MCP server lets coding agents introspect your data, propose YAML, and build UI for you. You stay in the loop; the agent does the typing."
 
-[[extra.features]]
-title = "Expose APIs"
-icon = "api"
-color = "text-primary"
-description = "With Vantage, building RestAPIs and RPC is as simple as consuming. Use Axum or Warp with Vantage endpoint builders for creating high-performance API layer"
+[extra.howitworks]
+heading = "How it works"
+body = "Three steps from a fresh database to a working admin UI."
 
-[[extra.features]]
-title = "Consume APIs"
-icon = "cloud_download"
-color = "text-success"
-description = "Vantage runs on your mobile device/web app ensuring reliable, cacheable communication, conflict resolution and guaranteed delayed write operations over your own APIs"
+[[extra.howitworks_steps]]
+icon = "link"
+title = "1. Connect"
+body = "Point Vantage UI at a config folder. Datasources are described as YAML — connection strings, schemas, tables."
 
-[[extra.features]]
-title = "Multi-Language Interface"
-icon = "code"
-color = "text-info"
-description = "Vantage data access patterns and your own model schemas are available in Rust with/without type-erasure, WASM as well as wide range of languages supporting Rusts FFI"
+[[extra.howitworks_steps]]
+icon = "edit_note"
+title = "2. Configure"
+body = "Write the YAML by hand, or (coming soon) let an AI agent generate it for you over the local MCP server."
 
-[[extra.pattern_tabs]]
-id = "expressions"
-title = "Expressions"
-content_file = "tabs/expressions.md"
-icon = "code"
-active = true
+[[extra.howitworks_steps]]
+icon = "explore"
+title = "3. Navigate"
+body = "Browse, search, filter and edit records natively. Edit your YAML and the UI updates in place (hot reload — coming soon)."
 
-[[extra.pattern_tabs]]
-id = "querybuilder"
-title = "QueryBuilder"
-content_file = "tabs/querybuilder.md"
-icon = "build"
-active = false
-
-[[extra.pattern_tabs]]
-id = "table"
-title = "Table<Entity>"
-content_file = "tabs/table-entity.md"
-icon = "table_view"
-active = false
-
-[[extra.pattern_tabs]]
-id = "dataset"
-title = "DataSet"
-content_file = "tabs/dataset.md"
-icon = "dataset"
-active = false
-
-[[extra.pattern_tabs]]
-id = "entity"
-title = "Entity"
-content_file = "tabs/entity-any.md"
-icon = "dynamic_form"
-active = false
+[extra.framework_callout]
+heading = "Built on the Vantage Framework"
+body = "Vantage UI is powered by the open-source [Vantage Framework](/framework/) — a set of Rust crates for data abstraction across databases, APIs and infrastructure. Use the framework directly to build facade services, middleware or your own apps. Published on crates.io with a full mdBook covering every layer."
 +++
 
-# Vantage Framework
+A native **macOS app** for navigating your **databases**, **APIs** and **infrastructure** — from a single sidebar. Open SQL, SurrealDB, MongoDB, REST endpoints and AWS resources side by side, browse and edit records with a fast, GPU-accelerated UI.
 
-A Rust framework for **Business logic** and **persistence abstraction** designed for **enterprise**
-use with strong **type safety**. Vantage is unique, because persistences can span across multiple
-**databases** or **APIs**.
+Vantage UI is **agent-driven**: pages, tables and forms are described in **YAML** that you (or your AI coding agent) author. A local **MCP server** lets agents introspect your data and build the UI for you, while everything stays on your machine.
 
-Vanage provides **five** patterns to interract with structured data for Rust native apps and other
-languages like Python, Node or Mobile Apps over FFI.
-
-Aimed at larger organisations - Vantage reduces operational complexity, abstracting away specifics
-of your SQL/API/Event interfaces across microservices and legacy apps. Vantage supports server-side
-data aggregation and client-side in-memory caching.
-
-SECTION_BREAK
-
-## What kind of challenges Vantage is designed to solve?
-
-As engineering teams grow adopting new database systems and introduce multi-regional deployment,
-interaction between Apps and Databases/APIs becomes more and more complex and fragmented. Mergers or
-technological transitions will further scatter operational data. Network layer introduces latency
-and possible failure your code must account for.
-
-SECTION_BREAK
-
-## Data Abstraction Patterns
-
-Queries, ORM or ActiveRecord? Vantage supports those and 2 other patterns when it comes to
-interracting with data - making it suitable for any developers personal taste. Those patterns can
-also be combined - `Expression` can be part of `Query` or other way around. Lets explore how to use
-those patterns in Rust:
-
-SECTION_BREAK
+Built on the open-source **Vantage Framework** — a Rust data-abstraction layer running on **crates.io** with a comprehensive mdBook. Use the UI as a desktop client, or use the framework directly to power facade services, middleware or your own apps.

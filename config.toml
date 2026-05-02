@@ -1,3 +1,6 @@
+# The site title
+title = "Vantage"
+
 # The URL the site will be built for
 base_url = "https://romaninsh.github.io/vantage-web/"
 
