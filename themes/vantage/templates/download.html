@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+{{ nav::header() }}
+
+{% set manifest = load_data(
+    url="https://vantage-releases.s3.eu-west-2.amazonaws.com/stable/latest.json",
+    format="json",
+    required=false
+) %}
+
+<main class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <article>
+                <div class="content">
+                    <h1>{{ page.title }}</h1>
+
+                    <div class="text-center my-5">
+                        {% if manifest %}
+                        <a href="{{ manifest.url | safe }}" class="btn btn-lg btn-primary">
+                            <span class="material-symbols-outlined align-middle me-1">download</span>
+                            Download for Mac
+                        </a>
+                        <p class="text-muted mt-3 mb-0">
+                            v{{ manifest.version }} &middot; Apple Silicon &middot; macOS 13+
+                        </p>
+                        <p class="text-muted small mb-0">
+                            <code>sha256: {{ manifest.sha256 | truncate(length=16, end="…") }}</code>
+                        </p>
+                        {% else %}
+                        <a href="#" class="btn btn-lg btn-primary disabled" aria-disabled="true">
+                            <span class="material-symbols-outlined align-middle me-1">download</span>
+                            Download unavailable
+                        </a>
+                        <p class="text-muted mt-3 mb-0">Release manifest could not be loaded at build time.</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="alert alert-warning small">
+                        <strong>First launch:</strong> the build is ad-hoc signed (no Apple
+                        Developer ID yet), so macOS will warn that it's from an unidentified
+                        developer. After dragging into <em>Applications</em>, run this once:
+                        <pre class="mb-1 mt-2"><code>xattr -cr "/Applications/Vantage Admin.app"</code></pre>
+                        then open it normally. Proper code signing &amp; notarization are coming
+                        with the next release.
+                    </div>
+
+                    {{ page.content | safe }}
+                </div>
+            </article>
+        </div>
+    </div>
+</main>
+
+{{ nav::footer() }}
+{% endblock content %}
