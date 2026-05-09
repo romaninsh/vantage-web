@@ -1,18 +1,8 @@
 +++
 title = "Download Vantage UI"
-description = "Native macOS build, free download. Latest release: v0.4.0."
-template = "page.html"
+description = "Native macOS build, free download. Latest release pulled from the live manifest at build time."
+template = "download.html"
 +++
-
-# Download Vantage UI
-
-<div class="text-center my-5">
-    <a href="https://github.com/romaninsh/vantage-ui/releases/latest" class="btn btn-lg btn-primary" target="_blank" rel="noopener">
-        <span class="material-symbols-outlined align-middle me-1">download</span>
-        Download for Mac
-    </a>
-    <p class="text-muted mt-3 mb-0">v0.4.0 · Apple Silicon · macOS 13+</p>
-</div>
 
 ## Vantage 0.4 — What's new
 
