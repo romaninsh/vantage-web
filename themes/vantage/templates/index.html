@@ -7,13 +7,24 @@
 {% block content %}
 {{ nav::header() }}
 
+{% set manifest = load_data(
+    url="https://vantage-releases.s3.eu-west-2.amazonaws.com/stable/latest.json",
+    format="json",
+    required=false
+) %}
+{% if manifest %}
+    {% set hero_version = "v" ~ manifest.version %}
+{% else %}
+    {% set hero_version = section.extra.version | default(value="v0.1.0 — pre-alpha") %}
+{% endif %}
+
 <!-- Hero Start -->
 <section id="hero" class="d-table w-100 overflow-hidden hero">
     <div class="container">
         <div class="row mt-5 align-items-center">
             <div class="col-lg-6 col-md-6">
                 <div class="title-heading">
-                    <span class="badge rounded-pill bg-primary mb-3">{{ section.extra.version | default(value="v0.1.0 — pre-alpha") }}</span>
+                    <span class="badge rounded-pill bg-primary mb-3">{{ hero_version }}</span>
                     <div class="para-desc text-muted mb-0">{{ section.content | safe }}</div>
 
                     <div class="mt-4">

@@ -40,15 +40,6 @@
                         {% endif %}
                     </div>
 
-                    <div class="alert alert-warning small">
-                        <strong>First launch:</strong> the build is ad-hoc signed (no Apple
-                        Developer ID yet), so macOS will warn that it's from an unidentified
-                        developer. After dragging into <em>Applications</em>, run this once:
-                        <pre class="mb-1 mt-2"><code>xattr -cr "/Applications/Vantage Admin.app"</code></pre>
-                        then open it normally. Proper code signing &amp; notarization are coming
-                        with the next release.
-                    </div>
-
                     {{ page.content | safe }}
                 </div>
             </article>
