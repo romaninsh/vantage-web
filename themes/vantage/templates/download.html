@@ -11,6 +11,11 @@
     format="json",
     required=false
 ) %}
+{% set nightly = load_data(
+    url="https://vantage-releases.s3.eu-west-2.amazonaws.com/main/latest.json",
+    format="json",
+    required=false
+) %}
 
 <main class="container my-5">
     <div class="row">
@@ -41,6 +46,28 @@
                     </div>
 
                     {{ page.content | safe }}
+
+                    {% if nightly %}
+                    <hr class="my-5">
+                    <div class="text-center">
+                        <h2 class="h5">Living on the edge?</h2>
+                        <p class="text-muted">
+                            Nightly builds track <code>main</code> — every commit is signed,
+                            notarized, and shipped. Expect rough edges; the in-app updater
+                            keeps you on the nightly channel automatically.
+                        </p>
+                        <a href="{{ nightly.url | safe }}" class="btn btn-outline-secondary">
+                            <span class="material-symbols-outlined align-middle me-1">science</span>
+                            Download nightly
+                        </a>
+                        <p class="text-muted small mt-2 mb-0">
+                            v{{ nightly.version }} &middot; Apple Silicon
+                        </p>
+                        <p class="text-muted small mb-0">
+                            <code>sha256: {{ nightly.sha256 | truncate(length=16, end="…") }}</code>
+                        </p>
+                    </div>
+                    {% endif %}
                 </div>
             </article>
         </div>
