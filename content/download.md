@@ -22,5 +22,5 @@ Curated highlights from this release line. Sourced from the PR history of `vanta
 - **Inventory viewer & scaffolding** — A built-in viewer to inspect catalog state, plus auto-scaffolding so a fresh folder turns into a usable inventory project on first launch.
 
 <p class="text-muted mt-4">
-    Raw changelog file: <a href="/changelog-0.4.1.md"><code>changelog-0.4.1.md</code></a>
+    Raw changelog file: <a href="/changelog-0.4.2.md"><code>changelog-0.4.1.md</code></a>
 </p>
