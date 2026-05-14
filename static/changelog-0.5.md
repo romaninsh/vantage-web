@@ -11,44 +11,34 @@ them, with logs, in one click).
   through scaffolding a new project, dropping bundled *skills*
   (markdown instructions plus YAML schemas) that teach any agent
   following the [agentskills.io](https://agentskills.io) convention
-  how to author Vantage configs
-  ([vantage-ui#28](https://github.com/romaninsh/vantage-ui/pull/28)).
+  how to author Vantage configs.
 - **Embedded MCP server.** Vantage UI exposes a local MCP endpoint
   so coding agents (Claude Code, Cursor, anything that speaks MCP)
   can introspect your project's datasources and config without
-  leaving the editor
-  ([vantage-ui#24](https://github.com/romaninsh/vantage-ui/pull/24)).
+  leaving the editor.
 - **Log viewer + one-click feedback.** Browse the app's structured
   logs in-app and attach them to a "Send feedback…" message so bug
-  reports don't need a separate `tail -f`
-  ([vantage-ui#24](https://github.com/romaninsh/vantage-ui/pull/24)).
+  reports don't need a separate `tail -f`.
 - **Datasource hot-reload.** Edit a YAML datasource and the
-  connection rebuilds in place — no app restart
-  ([vantage-ui#43](https://github.com/romaninsh/vantage-ui/pull/43)).
+  connection rebuilds in place — no app restart.
 - **Update channels behave properly.** Stable builds offer stable
   updates; nightly builds offer nightly updates. The auto-updater
   uses the version reported by the running binary instead of
-  guessing
-  ([vantage-ui#36](https://github.com/romaninsh/vantage-ui/pull/36),
-  [vantage-ui#33](https://github.com/romaninsh/vantage-ui/pull/33)).
+  guessing.
 - **Nightly icon variant.** Nightly builds get a distinct icon so
-  they don't get confused with stable in your dock
-  ([vantage-ui#40](https://github.com/romaninsh/vantage-ui/pull/40)).
+  they don't get confused with stable in your dock.
 - **Privacy: error reports redact datasource credentials.** Sentry
   reports no longer carry connection strings, hostnames or
-  credentials from your datasources
-  ([vantage-ui#46](https://github.com/romaninsh/vantage-ui/pull/46)).
+  credentials from your datasources.
 - **Fix: SurrealDB form values round-trip cleanly.** Forms backed
   by SurrealDB no longer fail deserialization for tagged CBOR
-  values
-  ([vantage-ui#45](https://github.com/romaninsh/vantage-ui/pull/45)).
+  values.
 
 ## 0.5.1
 
 - SurrealDB option in the "Set up with AI" wizard, with a bundled
   skill that walks the agent through `INFO FOR DB` / `INFO FOR TABLE`
-  introspection and the YAML mappings for record-link relations
-  ([vantage-ui#42](https://github.com/romaninsh/vantage-ui/pull/42)).
+  introspection and the YAML mappings for record-link relations.
 
 ## 0.5.2
 
@@ -69,5 +59,4 @@ them, with logs, in one click).
   folders for datasources you added by hand. Gated on `AGENTS.md`
   being present at the project root, so projects that never ran the
   wizard stay untouched. Skills you've edited are left alone; on-disk
-  versions newer than embedded are never downgraded
-  ([vantage-ui#47](https://github.com/romaninsh/vantage-ui/pull/47)).
+  versions newer than embedded are never downgraded.
