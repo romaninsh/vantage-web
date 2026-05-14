@@ -47,6 +47,17 @@
 
                     {{ page.content | safe }}
 
+                    {% if manifest %}
+                        {% set minor = manifest.version | split(pat=".") | slice(end=2) | join(sep=".") %}
+                        {% set changelog = load_data(path="static/changelog-" ~ minor ~ ".md", format="plain", required=false) %}
+                        {% if changelog %}
+                        {{ changelog | markdown | safe }}
+                        <p class="text-muted mt-4">
+                            Raw changelog file: <a href="/changelog-{{ minor }}.md"><code>changelog-{{ minor }}.md</code></a>
+                        </p>
+                        {% endif %}
+                    {% endif %}
+
                     {% if nightly %}
                     <hr class="my-5">
                     <div class="text-center">
