@@ -47,16 +47,19 @@
 
                     {{ page.content | safe }}
 
-                    {% if manifest %}
-                        {% set minor = manifest.version | split(pat=".") | slice(end=2) | join(sep=".") %}
+                    {% set minors = page.extra.changelog_minors | default(value=[]) %}
+                    {% for minor in minors %}
                         {% set changelog = load_data(path="static/changelog-" ~ minor ~ ".md", format="plain", required=false) %}
                         {% if changelog %}
-                        {{ changelog | markdown | safe }}
-                        <p class="text-muted mt-4">
-                            Raw changelog file: <a href="/changelog-{{ minor }}.md"><code>changelog-{{ minor }}.md</code></a>
-                        </p>
+                        <article class="changelog-entry mb-5">
+                            {{ changelog | markdown | safe }}
+                            <p class="text-muted small mt-3">
+                                Raw file: <a href="/changelog-{{ minor }}.md"><code>changelog-{{ minor }}.md</code></a>
+                            </p>
+                        </article>
+                        {% if not loop.last %}<hr class="my-5">{% endif %}
                         {% endif %}
-                    {% endif %}
+                    {% endfor %}
 
                     {% if nightly %}
                     <hr class="my-5">

@@ -1,11 +1,48 @@
 # Vantage 0.7
 
-<!--
-  TODO: write the user-facing release notes for the 0.7 line here.
-  One file per minor — append patch-level bullets to this same
-  file as 0.7.x ships. The auto-generated CHANGELOG.md (root
-  of repo) has the commit-derived list — use it as a prompt, but
-  write for users, not engineers.
--->
+Two stacked features that turn Vantage UI from a one-page-at-a-time
+admin into something you can actually navigate: **tabs**, and
+**Rhai-driven drilldowns** that make context-menu entries open
+related records in a new tab.
 
-- Replace this with a real bullet
+## What's new
+
+- **Tabs.** Open multiple data-table pages at once. The left
+  sidebar owns one nav slot — clicking a different sidebar item
+  rebuilds that slot's tab in place, so any child tabs you
+  spawned from it stay live.
+- **Open-in-new-tab from link cells.** Click a link cell and the
+  related record opens in a child tab owned by the current page.
+  Subsequent clicks in the same parent reuse the child tab —
+  unless you've **pinned** it, in which case new tabs slide in
+  immediately to the left and take focus.
+- **Pin tabs.** Star a tab to keep it around; opens-from-the-same-parent
+  go beside it instead of replacing it. (Star icon is a stand-in
+  until a custom Pin glyph ships.)
+- **Rhai-driven context-menu drilldowns.** `context_menu` entries
+  in a page's YAML can now declare an `open_page` plus a
+  `model:` Rhai expression that returns the table to show. The
+  expression sees the clicked row's columns, the full `row`, and
+  the page's master `model` (with a `get_ref(relation, id)`
+  helper for chasing `has_many` relations). Chain it for
+  multi-hop drilldowns like
+  `model.get_ref("albums", row.id).get_ref("photos", album_id)`.
+- **Page title in the CRUD toolbar.** The toolbar grew a header
+  band to the right of the Refresh button showing the active
+  page's title (or a breadcrumb path for drill-down tabs).
+- **`vantage-ui-builder` skill 1.4.0.** Bundled agent skill
+  picks up a "Drilling into related pages from a context menu"
+  section and an updated Rhai scope table.
+
+## Known cuts in 0.7.0
+
+These are intentional follow-ups, not regressions:
+
+- The conditions readout in the toolbar header is a placeholder
+  ("(no conditions)") for now.
+- Tabs are in-memory only — they don't persist across app
+  restart.
+- No drag-to-reorder, no middle-click to close, and the pin
+  icon is the standard star.
+- Drill-down tabs lose their condition chain on YAML hot-reload
+  and rebuild from defaults.
