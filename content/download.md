@@ -8,5 +8,5 @@ template = "download.html"
 # `static/changelog-<minor>.md` and is rendered inline on this page.
 # The vantage-ui release workflow prepends a new minor here whenever it
 # syncs `static/changelog-<minor>.md` for a release in a new line.
-changelog_minors = ["0.6", "0.5", "0.4"]
+changelog_minors = ["0.7", "0.6", "0.5", "0.4"]
 +++
