@@ -24,15 +24,6 @@ related records in a new tab.
 - **`vantage-ui-builder` skill 1.4.0.** Bundled agent skill picks up a "Drilling into related pages
   from a context menu" section and an updated Rhai scope table.
 
-## Known cuts in 0.7.0
-
-These are intentional follow-ups, not regressions:
-
-- The conditions readout in the toolbar header is a placeholder ("(no conditions)") for now.
-- Tabs are in-memory only — they don't persist across app restart.
-- No drag-to-reorder, no middle-click to close, and the pin icon is the standard star.
-- Drill-down tabs lose their condition chain on YAML hot-reload and rebuild from defaults.
-
 ## 0.7.1
 
 - Fix: the dashboard's "Recent Changes" panel shows the real notes for 0.5, 0.6 and 0.7 instead of
