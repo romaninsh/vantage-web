@@ -6,6 +6,18 @@
 {% block content %}
 {{ nav::header() }}
 
+<!-- Page hero -->
+<section class="page-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 text-center">
+                <p class="page-kicker">{{ page.extra.kicker }}</p>
+                <h1>{{ page.title }}</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% set manifest = load_data(
     url="https://vantage-releases.s3.eu-west-2.amazonaws.com/stable/latest.json",
     format="json",
@@ -17,14 +29,12 @@
     required=false
 ) %}
 
-<main class="container my-5">
+<main class="container mb-5">
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
             <article>
                 <div class="content">
-                    <h1>{{ page.title }}</h1>
-
-                    <div class="text-center my-5">
+                    <div class="text-center mb-5">
                         {% if manifest %}
                         <a href="{{ manifest.url | safe }}" class="btn btn-lg btn-primary">
                             <span class="material-symbols-outlined align-middle me-1">download</span>
@@ -52,6 +62,8 @@
                         {% set changelog = load_data(path="static/changelog-" ~ minor ~ ".md", format="plain", required=false) %}
                         {% if changelog %}
                         <article class="changelog-entry mb-5">
+                            {% set released = page.extra.changelog_dates[minor] | default(value="") %}
+                            {% if released %}<p class="changelog-date text-muted small mb-1">{{ released }}</p>{% endif %}
                             {{ changelog | markdown | safe }}
                             <p class="text-muted small mt-3">
                                 Raw file: <a href="/changelog-{{ minor }}.md"><code>changelog-{{ minor }}.md</code></a>

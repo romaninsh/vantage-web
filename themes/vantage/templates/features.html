@@ -1,0 +1,348 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+{{ nav::header() }}
+
+<!-- Page hero -->
+<section class="page-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 text-center">
+                <p class="page-kicker">{{ page.extra.kicker }}</p>
+                <h1>{{ page.title }}</h1>
+                <p class="lead">{{ page.description }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 1. Two languages, one config -->
+<section class="pb-2">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="feature-head mb-4">
+                    <h2>Two languages, one config</h2>
+                    <p>Config in Vantage is two first-class languages, not one with an escape hatch. <strong>YAML</strong> declares the shape; <strong>Rhai</strong> carries the logic. Both live in the same git folder — and your agent writes both.</p>
+                </div>
+                <div class="row g-3 align-items-stretch">
+                    <div class="col-md-6">
+                        <div class="code-card h-100">
+                            <div class="code-card-head"><span class="dot yaml"></span>YAML — structure</div>
+<pre class="code-card-body"><code class="language-yaml"># table/clients.yaml
+title: Clients
+source: main_db
+columns: [name, email, balance]
+has_many:
+  - orders
+context_menu:
+  - title: View orders
+    open_page: orders
+    model: model.get_ref("orders", row.id)</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="code-card h-100">
+                            <div class="code-card-head"><span class="dot rhai"></span>Rhai — logic</div>
+<pre class="code-card-body"><code class="language-rust">// a computed label for each row
+let label = row.name;
+if row.balance &lt; 0 {
+    label += "  •  owes " + row.balance;
+}
+label
+
+// drill two hops, in one expression
+model.get_ref("clients", row.id)
+     .get_ref("orders", client_id)</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-muted small mt-2 mb-0">Queries, drill-downs, actions, computed fields and visibility are all real, diffable code.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 2. Connect anything -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="feature-head mb-4">
+                    <h2>Connect anything</h2>
+                    <p>One sidebar over every system you run. <strong>Reading and listing rows is baseline — every source does it.</strong> Beyond that, each driver advertises an honest capability contract, and the UI renders only the controls a backend really supports. Pick one to see what it can do.</p>
+                </div>
+
+                <div class="backend-explorer">
+                    <div class="backend-list" role="tablist">
+                        {% for b in page.extra.backends %}
+                        <button type="button" class="backend-item{% if loop.first %} active{% endif %}" data-backend="{{ b.slug }}" role="tab">
+                            <span class="material-symbols-outlined">{{ b.icon }}</span>
+                            <span class="backend-name">{{ b.name }}</span>
+                            <span class="backend-mode">{{ b.mode }}</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+
+                    <div class="backend-panels">
+                        {% for b in page.extra.backends %}
+                        <div class="backend-panel{% if loop.first %} active{% endif %}" id="bp-{{ b.slug }}">
+                            <div class="backend-panel-head">
+                                <h4>{{ b.name }}</h4>
+                                <span class="badge rounded-pill {% if b.mode == 'Read-only' or b.mode == 'Read-focused' or b.mode == 'Append-only' %}text-bg-light{% else %}text-bg-success{% endif %}">{{ b.mode }}</span>
+                                <span class="badge rounded-pill backend-wire">{{ b.wire }}</span>
+                            </div>
+                            <p class="backend-note text-muted">{{ b.note }}</p>
+                            <p class="cap-group-label">Retrieving data</p>
+                            <table class="cap-table">
+                                <tbody>
+                                {% for r in page.extra.retrieve_rows %}
+                                    <tr>
+                                        <td class="cap-label">{{ r.label }}</td>
+                                        <td class="cap-val">
+                                            {% if b.caps[r.key] %}
+                                            <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
+                                            {% else %}
+                                            <span class="material-symbols-outlined cap-no" title="Not supported">remove</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <p class="cap-group-label mt-3">Editing data</p>
+                            <table class="cap-table">
+                                <tbody>
+                                {% for r in page.extra.edit_rows %}
+                                    <tr>
+                                        <td class="cap-label">{{ r.label }}</td>
+                                        <td class="cap-val">
+                                            {% if b.caps[r.key] %}
+                                            <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
+                                            {% else %}
+                                            <span class="material-symbols-outlined cap-no" title="Not supported">remove</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <p class="text-muted small mt-3 mb-0">Create / update / delete also depend on whether the source is writable — a query-sourced (Rhai) table is read-only by design. You can also read from one backend and write through another.</p>
+
+                <script>
+                    document.querySelectorAll('.backend-item').forEach(function (btn) {
+                        btn.addEventListener('click', function () {
+                            var slug = btn.getAttribute('data-backend');
+                            document.querySelectorAll('.backend-item').forEach(function (b) { b.classList.remove('active'); });
+                            document.querySelectorAll('.backend-panel').forEach(function (p) { p.classList.remove('active'); });
+                            btn.classList.add('active');
+                            var panel = document.getElementById('bp-' + slug);
+                            if (panel) panel.classList.add('active');
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3. Build a real console -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="feature-head mb-4">
+                    <h2>Build a real console — not just a grid</h2>
+                    <p>Everything you'd expect from an operational tool, described in config and rendered natively.</p>
+                </div>
+                <div class="row g-4 ui-gallery">
+                    {% for item in page.extra.gallery %}
+                    <div class="col-md-6">
+                        <figure class="gallery-card h-100">
+                            <div class="gallery-shot">
+                                <img src="{{ get_url(path=item.image) }}" alt="{{ item.title }}">
+                            </div>
+                            <figcaption>
+                                <h5>{{ item.title }}</h5>
+                                <ul>
+                                    {% for n in item.notes %}<li>{{ n }}</li>{% endfor %}
+                                </ul>
+                            </figcaption>
+                        </figure>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Your agent does the typing -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="feature-head mb-4">
+                    <h2>Your agent does the typing</h2>
+                    <p>Vantage UI embeds a local <strong>MCP server</strong>, so the coding agent you already use — Claude Code, Cursor, any MCP client — builds your console without leaving the editor.</p>
+                </div>
+
+                <div class="agent-flow mb-4">
+                    <div class="agent-step"><span class="material-symbols-outlined">chat</span><span>Describe the tool</span></div>
+                    <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
+                    <div class="agent-step"><span class="material-symbols-outlined">travel_explore</span><span>Agent introspects over MCP</span></div>
+                    <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
+                    <div class="agent-step"><span class="material-symbols-outlined">data_object</span><span>Writes YAML + Rhai</span></div>
+                    <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
+                    <div class="agent-step"><span class="material-symbols-outlined">bolt</span><span>App hot-reloads</span></div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-7">
+                        <div class="agent-panel h-100">
+                            <h6 class="mb-3">Read-only tools the agent gets</h6>
+                            <div class="tool-chips">
+                                <code>list_data_sources</code>
+                                <code>introspect_schema</code>
+                                <code>sample_records</code>
+                                <code>current_project_layout</code>
+                                <code>get_json_schema</code>
+                                <code>validate_config</code>
+                                <code>list_logs</code>
+                            </div>
+                            <p class="text-muted small mt-3 mb-0">The agent writes config to disk via plain file I/O; the tools only read and validate. You review and commit — it's early and gets better every release.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="agent-panel h-100">
+                            <h6 class="mb-2">Bundled skills</h6>
+                            <p class="text-muted small mb-0">Vantage ships <a href="https://agentskills.io" target="_blank" rel="noopener">agentskills.io</a>-style skills (<code>vantage-ui-builder</code>) that teach any agent how to author pages, charts, Rhai expressions and drill-downs — no extra subscription, kept in sync with the app.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Native, local-first, reactive -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="row g-4 text-center">
+                    <div class="col-md-3 col-6">
+                        <span class="material-symbols-outlined text-primary mb-2 d-block" style="font-size: 2.4rem;">speed</span>
+                        <h6 class="mb-1">Native &amp; GPU-accelerated</h6>
+                        <p class="text-muted small mb-0">Built on GPUI, not a web view.</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <span class="material-symbols-outlined text-primary mb-2 d-block" style="font-size: 2.4rem;">sync</span>
+                        <h6 class="mb-1">Reactive, no refresh</h6>
+                        <p class="text-muted small mb-0">Edit YAML or data — the UI updates in place.</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <span class="material-symbols-outlined text-primary mb-2 d-block" style="font-size: 2.4rem;">lock</span>
+                        <h6 class="mb-1">Local &amp; private</h6>
+                        <p class="text-muted small mb-0">Your app, data and config never leave the box.</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <span class="material-symbols-outlined text-primary mb-2 d-block" style="font-size: 2.4rem;">code</span>
+                        <h6 class="mb-1">Config-as-code</h6>
+                        <p class="text-muted small mb-0">YAML + Rhai you version, diff and hand off.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Coming next — roadmap deck -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="feature-head text-center mb-4">
+                    <h2 class="mx-auto">On the roadmap</h2>
+                    <p class="mx-auto">Where Vantage is heading. Tap the deck to flip through.</p>
+                </div>
+                <div class="roadmap-deck" id="roadmapDeck" role="button" tabindex="0" aria-label="Roadmap cards — activate to see the next">
+                    {% for r in page.extra.roadmap %}
+                    <article class="roadmap-card">
+                        <span class="badge rounded-pill bg-secondary deck-badge">Roadmap</span>
+                        <span class="material-symbols-outlined deck-icon">{{ r.icon }}</span>
+                        <h4>{{ r.title }}</h4>
+                        <p>{{ r.body }}</p>
+                    </article>
+                    {% endfor %}
+                </div>
+                <p class="deck-hint text-center text-muted">
+                    <span class="material-symbols-outlined align-middle me-1" style="font-size: 1rem;">touch_app</span>
+                    Click to deal the next card
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+    var deck = document.getElementById('roadmapDeck');
+    if (!deck) return;
+    var cards = Array.prototype.slice.call(deck.querySelectorAll('.roadmap-card'));
+    var OFFSET = 16, SCALE = 0.05, MAX_VISIBLE = 3, animating = false;
+
+    function render() {
+        cards.forEach(function (card, i) {
+            card.style.zIndex = String(cards.length - i);
+            card.style.transform = 'translateY(' + (i * OFFSET) + 'px) scale(' + (1 - i * SCALE) + ')';
+            card.style.opacity = i > MAX_VISIBLE ? '0' : '1';
+            card.classList.toggle('is-front', i === 0);
+        });
+    }
+
+    function cycle() {
+        if (animating || cards.length < 2) return;
+        animating = true;
+        var front = cards[0];
+        front.classList.add('leaving');
+        setTimeout(function () {
+            cards.push(cards.shift());
+            front.classList.remove('leaving');
+            render();
+            animating = false;
+        }, 240);
+    }
+
+    deck.addEventListener('click', cycle);
+    deck.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cycle(); }
+    });
+    render();
+})();
+</script>
+
+<!-- CTA -->
+<section class="pb-5">
+    <div class="container text-center">
+        <a href="/download/" class="btn btn-lg btn-primary me-2">
+            <span class="material-symbols-outlined align-middle me-1">download</span>
+            Download for Mac — free
+        </a>
+        <a href="/examples/" class="btn btn-lg btn-outline-primary">
+            <span class="material-symbols-outlined align-middle me-1">apps</span>
+            See example apps
+        </a>
+    </div>
+</section>
+
+{{ nav::footer() }}
+{% endblock content %}

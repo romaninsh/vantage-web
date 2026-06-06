@@ -1,0 +1,723 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+{{ nav::header() }}
+
+<!-- Page hero -->
+<section class="page-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 text-center">
+                <p class="page-kicker">{{ page.extra.kicker }}</p>
+                <h1>{{ page.title }}</h1>
+                <p class="lead">{{ page.description }}</p>
+                <div class="mt-4">
+                    <a href="https://romaninsh.github.io/vantage/" class="btn btn-lg btn-primary me-2" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined align-middle me-1">menu_book</span>
+                        Read the Book
+                    </a>
+                    <a href="https://crates.io/search?q=vantage-" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined align-middle me-1">deployed_code</span>
+                        crates.io
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Intro -->
+<section class="pb-2">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <p class="fs-5 text-center text-muted mb-0">
+                    The <strong>Vantage framework</strong> is the open-source Rust data layer that powers Vantage&nbsp;UI.
+                    It is shipping on crates.io at <code>0.5.x</code>, with per-crate docs on docs.rs and a full mdBook.
+                    The API is still evolving — expected at 0.x — but it is production code: it builds Vantage&nbsp;UI itself.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- The abstraction stack -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="feature-head text-center mb-5">
+                    <h2 class="mx-auto">Nine layers — go as far as you need</h2>
+                    <p class="mx-auto">A stack of thin abstractions, built from the foundation up. They're not independent — <code>Table</code> stands on the DataSource and DataSet crates beneath it — but you climb only as far as your app needs and ignore the rest. In plenty of cases, <code>Table</code> is the whole job.</p>
+                </div>
+
+                <div class="layer-map">
+                    <div class="lm-step">
+                        <div class="lm-num">1</div>
+                        <div class="lm-body">
+                            <h4>Data source <a class="lm-crate" href="https://docs.rs/vantage-sql" target="_blank" rel="noopener">vantage-sql</a> <a class="lm-crate" href="https://docs.rs/vantage-surrealdb" target="_blank" rel="noopener">vantage-surrealdb</a> <a class="lm-crate" href="https://docs.rs/vantage-mongodb" target="_blank" rel="noopener">vantage-mongodb</a> <a class="lm-crate" href="https://docs.rs/vantage-csv" target="_blank" rel="noopener">vantage-csv</a></h4>
+                            <p>Any backend — SQL, SurrealDB, MongoDB, a REST or GraphQL API, CSV, an append-only log, the AWS CLI — implements a small set of source traits.</p>
+                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> A <a href="https://romaninsh.github.io/vantage/new-persistence.html" target="_blank" rel="noopener">comprehensive guide</a> walks you through building a data source for any new datasource (e.g. Oracle, a message queue or your internal store). Code it yourself, or hand the guide to your AI coding agent.</span></p>
+                        </div>
+                    </div>
+
+                    <div class="lm-step">
+                        <div class="lm-num">2</div>
+                        <div class="lm-body">
+                            <h4>DataSet traits &amp; Core <a class="lm-crate" href="https://docs.rs/vantage-dataset" target="_blank" rel="noopener">vantage-dataset</a> <a class="lm-crate" href="https://docs.rs/vantage-core" target="_blank" rel="noopener">vantage-core</a> <a class="lm-crate" href="https://docs.rs/vantage-types" target="_blank" rel="noopener">vantage-types</a> <a class="lm-crate" href="https://docs.rs/vantage-expressions" target="_blank" rel="noopener">vantage-expressions</a></h4>
+                            <p>Readable, Writable, Insertable and ActiveEntity — the contract for listing, reading and changing rows. Underneath sit the shared foundations: the error model, the persistence-aligned type system, and the database-agnostic expression layer.</p>
+                        </div>
+                    </div>
+
+                    <div class="lm-step">
+                        <div class="lm-num">3</div>
+                        <div class="lm-body">
+                            <h4>Table <a class="lm-crate" href="https://docs.rs/vantage-table" target="_blank" rel="noopener">vantage-table</a></h4>
+                            <p><code>Table&lt;Source, Entity&gt;</code> plugs an arbitrary data source into those traits, then adds typed columns, composable conditions, relations and computed expressions.</p>
+                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> This is where you model your business entities as a compile-time type system — typed columns, relations and expressions. It's what earns you real compile-time safety in Rust across a large codebase.</span></p>
+                        </div>
+                    </div>
+
+                    <div class="lm-step">
+                        <div class="lm-num">4</div>
+                        <div class="lm-body">
+                            <h4>Vista <a class="lm-crate" href="https://docs.rs/vantage-vista" target="_blank" rel="noopener">vantage-vista</a></h4>
+                            <p>Erases both the backend and the entity type into one universal, schema-bearing handle. Everything below this line talks to a Vista — never to your database directly.</p>
+                        </div>
+                    </div>
+
+                    <div class="lm-step">
+                        <div class="lm-num">5</div>
+                        <div class="lm-body">
+                            <h4>Vista from a Table — or from YAML <a class="lm-crate" href="https://docs.rs/vantage-vista-factory" target="_blank" rel="noopener">vantage-vista-factory</a></h4>
+                            <p>Build a Vista straight from a typed <code>Table</code>, or from a YAML spec. Go through the YAML root and the factory catalog resolves references <em>across different persistences</em> — a Postgres row linked to a Mongo collection.</p>
+                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> The YAML path is itself the no-Rust route — declare a source, its schema and references entirely in config, and the factory builds the Vista.</span></p>
+                        </div>
+                    </div>
+
+                    <div class="lm-step">
+                        <div class="lm-num">6</div>
+                        <div class="lm-body">
+                            <h4>Diorama <a class="lm-crate" href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></h4>
+                            <p>A bare Vista has only the capabilities of its source. Diorama wraps it with a local cache so a read-only CSV can count, paginate, search and sort — and it pushes real-time updates out to the UI elements bound to it (and to connected live clients, once a WebSocket connector lands).</p>
+                        </div>
+                    </div>
+
+                    <div class="lm-step">
+                        <div class="lm-num">7</div>
+                        <div class="lm-body">
+                            <h4>Lens <a class="lm-crate" href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></h4>
+                            <p>The Lens decides caching <em>strategy</em>: which backend holds the cache (usually ReDB), how much to pre-fetch, and how to invalidate it.</p>
+                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> The Lens is where you own that strategy — set the pre-fetch window and invalidation rules, and route writes and events through your own callbacks.</span></p>
+                        </div>
+                    </div>
+
+                    <div class="lm-step">
+                        <div class="lm-num">8</div>
+                        <div class="lm-body">
+                            <h4>Scenery <a class="lm-crate" href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></h4>
+                            <p>Table, Record and Value sceneries drive a reactive UI. Each bumps a generation counter when its data moves, and the interface re-renders — no manual state-sync.</p>
+                        </div>
+                    </div>
+
+                    <div class="lm-step">
+                        <div class="lm-num">9</div>
+                        <div class="lm-body">
+                            <h4>Your integration <a class="lm-crate" href="https://docs.rs/vantage-cli-util" target="_blank" rel="noopener">vantage-cli-util</a> <span class="lm-crate">vantage-ui-adapters</span></h4>
+                            <p>The top of the stack is yours — an API server, a command-line tool, a bespoke UI. You write it, but you don't start cold: Vantage ships connectors, including an axum server integration, DataGrid adapters for six Rust UI toolkits, and CLI helpers.</p>
+                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> Wrap any layer below in your own API or CLI. The connectors are a head start, not a cage — your surface, your logic.</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-center text-muted mt-4 mb-0">It's all modular — depend only on the crates you need. Most data-source crates expose an optional <code>vista</code> feature, and an optional <code>rhai</code> feature layers scripting on top. Rolling your own tables? You generally need neither.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Code gallery -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-9 col-lg-10">
+                <div class="feature-head text-center mb-5">
+                    <h2 class="mx-auto">What the code feels like</h2>
+                    <p class="mx-auto">Real snippets from the book. Step through them.</p>
+                </div>
+
+                <div class="snip-gallery" id="snipGallery">
+                    <div class="snip-stage">
+                        <figure class="snip active">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Your first Vantage app</h3>
+                                <p>The minimum Vantage gives you — construct a SQL query, execute it, and map the rows. It also shows <code>VantageError</code> handling in practice: should the query fail, <code>e.report()</code> prints a lovely, readable error message.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-rust">use vantage_sql::prelude::*;
+use vantage_types::prelude::*;
+
+#[entity(SqliteType)]
+struct Product {
+    name: String,
+    price: i64,
+}
+
+#[tokio::main]
+async fn main() {
+    if let Err(e) = run().await {
+        e.report();
+    }
+}
+
+async fn run() -> VantageResult&lt;()&gt; {
+    let db = SqliteDB::connect("sqlite:products.db?mode=ro")
+        .await
+        .context("Failed to connect to products.db")?;
+
+    let select = SqliteSelect::new()
+        .with_source("product")
+        .with_field("name")
+        .with_field("price")
+        .with_condition(Column::&lt;bool&gt;::new("is_deleted").eq(false));
+
+    let raw = db.execute(&amp;select.expr()).await?;
+    let records = Vec::&lt;Record&lt;AnySqliteType&gt;&gt;::try_from(raw)?;
+
+    for rec in records {
+        let p = Product::from_record(rec)?;
+        println!("{:&lt;12} {:&gt;3} cents", p.name, p.price);
+    }
+
+    Ok(())
+}</code></pre>
+                                <figcaption class="snip-note"><strong>no SQL hardcoding ever</strong>Expressions and query builders are at the heart of all SQL data sources — designed not to limit you, but to make full use of your SQL server. <a href="https://github.com/romaninsh/vantage/blob/main/vantage-sql/tests/sqlite/3_complex_queries.rs" target="_blank" rel="noopener">See more complex example →</a></figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Business entity is your new Rust type</h3>
+                                <p>In Vantage a business entity is a first-class citizen, so <code>Table&lt;MysqlDB, Client&gt;</code> is a legit type too. Here are two constructors for the same <code>Client</code> — one over SQL on MySQL, the other over SurrealDB's own, incompatible <code>SurrealQL</code>.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-rust">pub fn mysql_table(db: MysqlDB) -> Table&lt;MysqlDB, Client&gt; {
+    Table::new("client", db)
+        .with_id_column("id")
+        .with_column_of::&lt;String&gt;("name")
+        .with_column_of::&lt;String&gt;("email")
+        .with_column_of::&lt;String&gt;("contact_details")
+        .with_column_of::&lt;bool&gt;("is_paying_client")
+        .with_column_of::&lt;String&gt;("bakery_id")
+        .with_one("bakery", "bakery_id", Bakery::mysql_table)
+        .with_many("orders", "client_id", Order::mysql_table)
+        .with_expression("order_count", |t| {
+            let orders = t.get_subquery_as::&lt;Order&gt;("orders").unwrap();
+            orders.get_count_query()
+        })
+}
+
+pub fn surreal_table(db: SurrealDB) -> Table&lt;SurrealDB, Client&gt; {
+    Table::new("client", db)
+        .with_id_column("id")
+        .with_column_of::&lt;String&gt;("name")
+        .with_column_of::&lt;String&gt;("email")
+        .with_column_of::&lt;String&gt;("contact_details")
+        .with_column_of::&lt;bool&gt;("is_paying_client")
+        .with_one("bakery", "bakery", Bakery::surreal_table)
+        .with_many("orders", "client", Order::surreal_table)
+        .with_expression("order_count", |t| {
+            let orders = t.get_subquery_as::&lt;Order&gt;("orders").unwrap();
+            orders.get_count_query()
+        })
+}</code></pre>
+                                <figcaption class="snip-note"><strong>What is SurrealDB?</strong>A new multi-modal, Rust-based DB engine with graph support. Never heard of it? Not a problem — your Vantage app can already use it.</figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Build a query at runtime with Rhai</h3>
+                                <p>The full query builder is scriptable. Drive joins, aggregates and ordering from a <code>Rhai</code> script evaluated at runtime — same primitives as Rust, no recompile. Here, an order-detail view across three tables.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-rust">// Q7: Order Detail View (all orders with totals)
+// INNER JOIN + LEFT JOIN, COUNT/SUM aggregates, GROUP BY
+
+let o = table("client_order").alias("o");
+let c = table("client").alias("c");
+let ol = table("order_line").alias("ol");
+
+select()
+    .from(o)
+    .expression(o["id"].alias("order_id"))
+    .expression(c["name"].alias("client"))
+    .expression(o["created_at"].alias("placed"))
+    .expression(count(ol["id"]).alias("lines"))
+    .expression(sum(mul(ol["quantity"], ol["price"])).alias("order_total"))
+    .expression(sum(ol["quantity"]).alias("total_items"))
+    .inner_join("client", "c", c["id"] == o["client_id"])
+    .left_join("order_line", "ol", ol["order_id"] == o["id"])
+    .group_by(o["id"])
+    .group_by(c["name"])
+    .group_by(o["created_at"])
+    .order_by(o["created_at"], "asc")</code></pre>
+                                <figcaption class="snip-note"><strong>queries as data</strong>Operators, joins and aggregates all live in the script — change the report without touching the binary. <a href="https://github.com/romaninsh/vantage/tree/main/vantage-sql/tests/rhai-tests" target="_blank" rel="noopener">More Rhai queries →</a></figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Turn a CLI into a typed table</h3>
+                                <p>A whole datasource in one YAML file: declare the columns, then let a <code>Rhai</code> <code>cmd</code> block shell out to the AWS CLI. Vantage pushes your <code>WHERE</code> conditions and <code>limit</code> straight into the command's arguments.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-yaml">name: s3.objects
+columns:
+  Key:          { type: string, flags: [id, title, searchable] }
+  Bucket:       { type: string, flags: [hidden] }
+  Size:         { type: int }
+  LastModified: { type: string }
+  StorageClass: { type: string }
+cmd:
+  rhai: |
+    let args = ["s3api", "list-objects-v2", "--output", "json"];
+    let bucket = "";
+    for c in conditions {
+        if c.field == "Bucket" { args += ["--bucket", c.value]; bucket = c.value; }
+    }
+    if type_of(limit) != "()" {
+        args += ["--max-items", limit.to_string()];
+    }
+    let out = run(args);
+    if out.exit_code != 0 { throw out.stderr; }
+    let parsed = parse_json(out.stdout);
+    // `Contents` is absent for an empty bucket.
+    let contents = if type_of(parsed.Contents) == "array" { parsed.Contents } else { [] };
+    for r in contents { r.Bucket = bucket; }
+    contents</code></pre>
+                                <figcaption class="snip-note"><strong>anything can be a table</strong>Wire up your own CLI scripts to feed data into your UI — and transform both the input and the output on the way through.</figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Teach your table new tricks</h3>
+                                <p>A <code>Table&lt;SqliteDB, User&gt;</code> is your own type — so a plain trait lets you bolt domain logic straight onto it. Define <code>reset_password</code> once and every <code>User</code> table in your codebase has it.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-rust">// A domain trait, implemented directly on the typed table.
+#[async_trait]
+pub trait UserOps {
+    async fn reset_password(&amp;self, id: &amp;str, new_password: &amp;str) -> VantageResult&lt;()&gt;;
+}
+
+#[async_trait]
+impl UserOps for Table&lt;SqliteDB, User&gt; {
+    async fn reset_password(&amp;self, id: &amp;str, new_password: &amp;str) -> VantageResult&lt;()&gt; {
+        let mut user = self
+            .get_record(id)
+            .await?
+            .ok_or_else(|| vantage_error!("no such user: {id}"))?;
+
+        // `Record` derefs to `User`, so mutate it like the struct it is.
+        user.password_hash = hash_password(new_password);
+        user.reset_token = None;
+        user.save().await
+    }
+}
+
+// ...then anywhere in your code, it reads like a method on the entity:
+let users = User::sqlite_table(db);
+users.reset_password("42", "hunter2").await?;</code></pre>
+                                <figcaption class="snip-note"><strong>your type, your methods</strong>No service layer, no repository boilerplate — domain behaviour lives right where the data does, and the compiler keeps it honest.</figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>One function, any backend</h3>
+                                <p>A Vista hides both the entity type and the database. This summary printer runs against SQLite, MongoDB or AWS — unchanged.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-rust">use vantage_vista::Vista;
+
+// A typed Table&lt;SqliteDB, Product&gt;
+// collapses into a backend-blind Vista:
+let vista = db
+    .vista_factory()
+    .from_table(Product::sqlite_table(db))?;
+print_vista(&amp;vista).await?;
+
+// ...and print_vista neither knows nor cares what's underneath:
+async fn print_vista(vista: &amp;Vista) -> VantageResult&lt;()&gt; {
+    let columns = vista.get_column_names();
+    let caps = vista.capabilities();
+
+    print!("  {:&gt;12} ", vista.get_id_column().unwrap_or("id"));
+    for col in &amp;columns {
+        print!("{:&gt;16} ", col);
+    }
+    println!();
+
+    if caps.can_count {
+        println!("  ({} rows)", vista.get_count().await?);
+    }
+
+    let rows = vista.list_values().await?;
+    for (id, record) in &amp;rows {
+        print!("  {:&gt;12} ", id);
+        for col in &amp;columns {
+            let val = record.get(col)
+                .map(|v| format!("{:?}", v))
+                .unwrap_or_default();
+            print!("{:&gt;16} ", val);
+        }
+        println!();
+    }
+    Ok(())
+}</code></pre>
+                                <figcaption class="snip-note"><strong>your boundary to other languages</strong>Rust generics can't cross an FFI or serialization boundary. A Vista erases them into a schema plus plain <code>CBOR</code> records — the form a Python or TypeScript SDK would consume. Want your <code>Table</code> reachable from another language? Wrap it in a Vista first.</figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Wire up a cache with a Lens</h3>
+                                <p>Lens and Diorama implement sophisticated local caching capabilities that you control. Here is a simple local cache that refreshes itself automatically.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-rust">use std::sync::Arc;
+use std::time::Duration;
+use vantage_diorama::Lens;
+
+let lens = Arc::new(
+    Lens::new()
+        .cache_at("./cache.redb")
+        .on_start(|dio| {
+            let dio = dio.clone();
+            async move {
+                let rows = dio.master().list_values().await?;
+                dio.cache().insert_values(rows).await?;
+                Ok(())
+            }
+        })
+        .refresh_every(Duration::from_secs(300))
+        .build()?,
+);</code></pre>
+                                <figcaption class="snip-note"><strong>UI, Edge, Mobile</strong>Each location needs a different caching strategy — it's up to you to fine-tune your cache.</figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Drive a reactive UI with Scenery</h3>
+                                <p>Lens and Diorama run on a separate local thread, coordinating data in and out of your datasource. A Scenery is a "window" into that local cache.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-rust">use vantage_diorama::scenery::SortDir;
+
+// Table view — ordered, paginated
+let table = dio
+    .table_scenery()
+    .sort("name", SortDir::Asc)
+    .page_size(50)
+    .open()
+    .await?;
+
+println!("{} rows loaded", table.row_count());
+
+// Single record
+let rec = dio.record_scenery("42").await?;
+
+// Live counter
+let count = dio.value_scenery().count().open().await?;
+let mut rx = count.subscribe();
+loop {
+    rx.changed().await?;
+    println!("count: {:?}", count.value());
+}</code></pre>
+                                <figcaption class="snip-note"><strong>Lazy caches</strong>Vantage UI uses Lens with lazy caching by default. Drop in a 1M-record table and scroll — data loads as you go, without ever holding up the UI.</figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Complex aggregates, without starting over</h3>
+                                <p>Dashboards need real aggregation. You don't hand-write SQL for it — you build on a table you already have. This "top products by units sold" comes straight off the <code>order</code> table.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-yaml">name: product_units
+datasource: bakery-surreal
+
+id_column: product
+columns:
+  product: { type: string, flags: [id, title] }
+  units:   { type: int }
+
+surreal:
+  rhai: |
+    select()
+        .from(                                  # base: the order table
+            select()
+                .expression(ident("lines").alias("line"))
+                .from("order")
+                .split("lines")                 # one row per order line
+                .subquery())
+        .expression(ident("line")["product"].alias("product"))
+        .expression(sum(ident("line")["quantity"]).alias("units"))
+        .group_by(ident("product"))
+        .order_by(ident("units"), "desc")
+        .limit(10, 0)</code></pre>
+                                <figcaption class="snip-note"><strong>build on what you have</strong>Every aggregate starts from an existing table as its base — so a dashboard query is composition, not a from-scratch rewrite.</figcaption>
+                            </div>
+                            </div>
+                        </figure>
+
+                        <figure class="snip">
+                            <div class="snip-card">
+                            <header class="snip-head">
+                                <h3>Vantage UI: app-as-a-config</h3>
+                                <p>Vantage UI takes all of this beautiful Vantage code and wraps it in a <a href="https://www.gpui.rs/" target="_blank" rel="noopener">GPUI</a> interface. Table definitions are parsed by the Vista factory, while the UI is driven by similarly structured page files.</p>
+                            </header>
+                            <div class="snip-body">
+<pre class="snip-code"><code class="language-yaml">title: Orders
+
+elements:
+  - kind: crud
+    spot: body
+    table: bakery-surreal/order
+    params:
+      columns:
+        id:         { pin: true, label: ID }
+        created_at: { label: Created }
+        status:
+          label: Status
+          color:
+            success: [paid]
+            yellow:  [in_production, ready]
+            red:     [cancelled]
+          labels:
+            in_production: In production
+            ready:         Ready
+            paid:          Paid
+            cancelled:     Cancelled
+    row_actions:
+      - label: Open
+        icon: ChevronRight
+        primary: true
+        navigate: order-detail         # drill down to another page
+        args: { id: row.id }
+      - label: "Start production"
+        icon: Factory
+        when: 'row.status == "confirmed"'   # only show the legal next step
+        action: |
+          row.status = "in_production";
+          row.save();
+      - label: "Mark paid"
+        icon: DollarSign
+        when: 'row.status == "delivered" || row.status == "picked_up"'
+        action: |
+          row.status = "paid";
+          row.save();</code></pre>
+                                <figcaption class="snip-note"><strong>Vantage UI is free</strong>Download it now and build your own custom app on the open stack you've just seen. <a href="/download/">Get Vantage UI →</a></figcaption>
+                            </div>
+                            </div>
+                        </figure>
+                    </div>
+
+                    <div class="snip-nav">
+                        <button type="button" class="snip-arrow snip-prev" aria-label="Previous snippet"><span class="material-symbols-outlined">chevron_left</span></button>
+                        <div class="snip-dots" id="snipDots"></div>
+                        <button type="button" class="snip-arrow snip-next" aria-label="Next snippet"><span class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+    var gallery = document.getElementById('snipGallery');
+    if (!gallery) return;
+    var snips = Array.prototype.slice.call(gallery.querySelectorAll('.snip'));
+    var dotsWrap = document.getElementById('snipDots');
+    var idx = 0;
+
+    snips.forEach(function (_, i) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'snip-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Snippet ' + (i + 1));
+        dot.addEventListener('click', function () { show(i); });
+        dotsWrap.appendChild(dot);
+    });
+    var dots = Array.prototype.slice.call(dotsWrap.children);
+
+    function show(n, updateHash) {
+        idx = (n + snips.length) % snips.length;
+        snips.forEach(function (s, i) { s.classList.toggle('active', i === idx); });
+        dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+        if (updateHash !== false) {
+            // Keep the URL shareable without polluting history or scrolling.
+            history.replaceState(null, '', '#slide-' + (idx + 1));
+        }
+    }
+
+    function slideFromHash() {
+        var m = /^#slide-(\d+)$/.exec(window.location.hash);
+        return m ? parseInt(m[1], 10) - 1 : null;
+    }
+
+    gallery.querySelector('.snip-prev').addEventListener('click', function () { show(idx - 1); });
+    gallery.querySelector('.snip-next').addEventListener('click', function () { show(idx + 1); });
+    window.addEventListener('hashchange', function () {
+        var n = slideFromHash();
+        if (n !== null && n !== idx) show(n, false);
+    });
+
+    // Open the slide named in the URL on load (and scroll it into view).
+    var initial = slideFromHash();
+    if (initial !== null && initial >= 0 && initial < snips.length) {
+        show(initial, false);
+        gallery.scrollIntoView({ block: 'center' });
+    }
+})();
+</script>
+
+<!-- Crate map -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="feature-head mb-4">
+                    <h2>The crate map</h2>
+                    <p>Every published crate, all at <code>0.5.x</code>. Pull in only the layers you use.</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="crate-group">
+                            <h4>Core</h4>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-core" target="_blank" rel="noopener">vantage-core</a></div><div class="crate-purpose">Result type, error model and base traits.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-types" target="_blank" rel="noopener">vantage-types</a></div><div class="crate-purpose">The persistence-aligned type system and <code>Record</code> types.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-expressions" target="_blank" rel="noopener">vantage-expressions</a></div><div class="crate-purpose">Database-agnostic expression AST with push-down.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-dataset" target="_blank" rel="noopener">vantage-dataset</a></div><div class="crate-purpose">The <code>DataSet</code> / <code>ValueSet</code> traits and idempotency rules.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-table" target="_blank" rel="noopener">vantage-table</a></div><div class="crate-purpose"><code>Table</code>, columns and operation traits over any backend.</div></div>
+                        </div>
+
+                        <div class="crate-group">
+                            <h4>Universal handle</h4>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-vista" target="_blank" rel="noopener">vantage-vista</a></div><div class="crate-purpose">Universal, schema-bearing data handle.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-vista-factory" target="_blank" rel="noopener">vantage-vista-factory</a></div><div class="crate-purpose">Multi-datasource catalog and cross-persistence reference traversal.</div></div>
+                        </div>
+
+                        <div class="crate-group">
+                            <h4>Reactive cache</h4>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></div><div class="crate-purpose">Cached, composable, reactive surface — Lens, Dio and Scenery.</div></div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="crate-group">
+                            <h4>Backends</h4>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-sql" target="_blank" rel="noopener">vantage-sql</a></div><div class="crate-purpose">Postgres, MySQL and SQLite.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-surrealdb" target="_blank" rel="noopener">vantage-surrealdb</a></div><div class="crate-purpose">SurrealDB native client.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-mongodb" target="_blank" rel="noopener">vantage-mongodb</a></div><div class="crate-purpose">MongoDB with native pipeline support.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-api-client" target="_blank" rel="noopener">vantage-api-client</a></div><div class="crate-purpose">REST and GraphQL HTTP API backends.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-csv" target="_blank" rel="noopener">vantage-csv</a></div><div class="crate-purpose">CSV files as a dataset.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-redb" target="_blank" rel="noopener">vantage-redb</a></div><div class="crate-purpose">Embedded redb key-value store.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-log-writer" target="_blank" rel="noopener">vantage-log-writer</a></div><div class="crate-purpose">Append-only JSONL log files.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-aws" target="_blank" rel="noopener">vantage-aws</a></div><div class="crate-purpose">AWS API backend <span class="text-muted">— incubating</span>.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/surreal-client" target="_blank" rel="noopener">surreal-client</a></div><div class="crate-purpose">CBOR-based SurrealDB client.</div></div>
+                        </div>
+
+                        <div class="crate-group">
+                            <h4>Tooling &amp; adapters</h4>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-api-pool" target="_blank" rel="noopener">vantage-api-pool</a></div><div class="crate-purpose">Paginated REST client pool — rate limiting and cursors.</div></div>
+                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-cli-util" target="_blank" rel="noopener">vantage-cli-util</a></div><div class="crate-purpose">CLI utilities for the framework.</div></div>
+                            <div class="crate-row"><div class="crate-name">vantage-ui-adapters</div><div class="crate-purpose">DataGrid adapters for GPUI, egui, Slint, Tauri, ratatui and Cursive. Ships with the UI.</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Generic API export — coming -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-9 col-lg-10">
+                <div class="api-coming">
+                    <span class="badge rounded-pill bg-secondary mb-3">Roadmap</span>
+                    <h3>Your data, exported as an API</h3>
+                    <p class="mb-3">Today the framework <strong>consumes</strong> HTTP backends — <code>vantage-api-client</code> maps REST and GraphQL into tables, and <code>vantage-api-pool</code> handles paginated, rate-limited fetches.</p>
+                    <p class="mb-0">The reverse is in progress: a generic, open-source crate that <strong>exports</strong> your typed entities as a clean REST/GraphQL endpoint from minimal boilerplate, without losing the framework's capabilities. A genuinely generic API layer is rare in Rust — and it's the foundation the Vantage&nbsp;UI <em>API-generation</em> feature will build on.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contribute a data source -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-9 col-lg-10">
+                <div class="feature-head mb-3">
+                    <h2>Bring your own backend</h2>
+                    <p>Vantage UI's reach is bounded by the framework's connector list. Adding a backend is a well-defined six-step process in the book's <a href="https://romaninsh.github.io/vantage/new-persistence.html" target="_blank" rel="noopener">Adding a New Persistence</a> chapter.</p>
+                </div>
+                <ol class="row g-2 list-unstyled mb-4">
+                    <li class="col-md-6">1. Define the type system</li>
+                    <li class="col-md-6">2. Implement expressions</li>
+                    <li class="col-md-6">3. Implement operators</li>
+                    <li class="col-md-6">4. Build the query builder</li>
+                    <li class="col-md-6">5. Wire CRUD on <code>Table</code></li>
+                    <li class="col-md-6">6. Add relationships and multi-backend support</li>
+                </ol>
+                <p class="text-muted mb-0">Bringing a new database, message broker or infrastructure source into Vantage UI? That's the path. Pull requests welcome on <a href="https://github.com/romaninsh/vantage" target="_blank" rel="noopener">github.com/romaninsh/vantage</a>.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="pb-5">
+    <div class="container text-center">
+        <a href="https://romaninsh.github.io/vantage/" class="btn btn-lg btn-primary me-2" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined align-middle me-1">menu_book</span>
+            Read the Book
+        </a>
+        <a href="/solutions/app-builders/" class="btn btn-lg btn-outline-primary">
+            <span class="material-symbols-outlined align-middle me-1">developer_board</span>
+            Build your own app
+        </a>
+    </div>
+</section>
+
+{{ nav::footer() }}
+{% endblock content %}

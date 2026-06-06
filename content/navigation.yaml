@@ -1,42 +1,64 @@
 menu:
-  - title: "Download"
-    url: "/download/"
+  - title: "Features"
+    url: "/features/"
 
-  - title: "Use Cases"
-    url: "/use-cases/"
-
-  - title: "Framework"
-    url: "/framework/"
+  - title: "Solutions"
+    url: "/solutions/"
     dropdown:
-      - title: "Overview"
+      - title: "Internal-tools teams"
+        url: "/solutions/internal-tools-teams/"
+      - title: "Web & mobile backends"
+        url: "/solutions/developers/"
+      - title: "Build your own apps"
+        url: "/solutions/app-builders/"
+
+  - title: "Examples"
+    url: "/examples/"
+
+  - title: "Resources"
+    url: "/download/"
+    dropdown:
+      - title: "Releases & changelog"
+        url: "/download/"
+      - title: "Follow development"
+        url: "/follow/"
+      - divider: true
+      - title: "The Vantage Framework"
         url: "/framework/"
       - title: "The Book"
         url: "https://romaninsh.github.io/vantage/"
         external: true
       - title: "crates.io"
         url: "https://crates.io/search?q=vantage-"
+        external: true
+      - title: "docs.rs"
+        url: "https://docs.rs/releases/search?query=vantage"
         external: true
       - divider: true
       - title: "GitHub"
         url: "https://github.com/romaninsh/vantage"
         external: true
 
-  - title: "Roadmap"
-    url: "/roadmap/"
+  - title: "Download"
+    url: "/download/"
+    cta: true
 
   - title: "GitHub"
     url: "https://github.com/romaninsh/vantage"
     external: true
+    icon: "code"
 
 footer:
   - title: "Product"
     links:
       - title: "Download for Mac"
         url: "/download/"
-      - title: "Use Cases"
-        url: "/use-cases/"
-      - title: "Roadmap"
-        url: "/roadmap/"
+      - title: "Features"
+        url: "/features/"
+      - title: "Examples"
+        url: "/examples/"
+      - title: "Follow development"
+        url: "/follow/"
 
   - title: "Framework"
     links:
@@ -47,6 +69,9 @@ footer:
         external: true
       - title: "crates.io"
         url: "https://crates.io/search?q=vantage-"
+        external: true
+      - title: "docs.rs"
+        url: "https://docs.rs/releases/search?query=vantage"
         external: true
 
   - title: "Project"
@@ -56,4 +81,7 @@ footer:
         external: true
       - title: "Issues"
         url: "https://github.com/romaninsh/vantage/issues"
+        external: true
+      - title: "Bluesky"
+        url: "https://bsky.app/profile/nearly.guru"
         external: true

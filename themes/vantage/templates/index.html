@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% import "macros/feature-grid.html" as components %}
 {% import "macros/navigation.html" as nav %}
+{% import "macros/blocks.html" as blocks %}
 
 {% block body_class %}hero-page{% endblock body_class %}
 
@@ -15,7 +16,17 @@
 {% if manifest %}
     {% set hero_version = "v" ~ manifest.version %}
 {% else %}
-    {% set hero_version = section.extra.version | default(value="v0.1.0 — pre-alpha") %}
+    {% set hero_version = "v0.12" %}
+{% endif %}
+
+{% set examples_repo = "https://github.com/romaninsh/vantage-ui-examples" %}
+{% set catalog = load_data(
+    url="https://raw.githubusercontent.com/romaninsh/vantage-ui-examples/main/catalog.yaml",
+    format="yaml",
+    required=false
+) %}
+{% if not catalog %}
+    {% set catalog = load_data(path="static/examples-catalog.yaml", format="yaml", required=false) %}
 {% endif %}
 
 <!-- Hero Start -->
@@ -25,21 +36,22 @@
             <div class="col-lg-6 col-md-6">
                 <div class="title-heading">
                     <span class="badge rounded-pill bg-primary mb-3">{{ hero_version }}</span>
-                    <div class="para-desc text-muted mb-0">{{ section.content | safe }}</div>
+                    <h1 class="heading">{{ section.extra.hero_headline }}</h1>
+                    <p class="para-desc text-muted">{{ section.extra.hero_subhead }}</p>
 
                     <div class="mt-4">
                         <a href="{{ get_url(path='download/') }}" class="btn btn-lg btn-primary me-2 mt-2">
                             <span class="material-symbols-outlined align-middle me-1">download</span>
-                            Download
+                            Download for Mac — free
                         </a>
                         <a href="{{ get_url(path='framework/') }}" class="btn btn-lg btn-outline-primary mt-2">
-                            <span class="material-symbols-outlined align-middle me-1">construction</span>
-                            Framework
+                            <span class="material-symbols-outlined align-middle me-1">deployed_code</span>
+                            Explore the framework
                         </a>
                     </div>
 
                     <hr/>
-                    {{ section.extra.license | markdown | safe }}
+                    <div class="text-muted small">{{ section.extra.hero_caption | markdown | safe }}</div>
                 </div>
             </div>
 
@@ -55,12 +67,12 @@
 </section>
 <!-- Hero End -->
 
-<!-- What Vantage UI Does -->
-<section class="py-5">
+<!-- Feature tour -->
+<section class="pt-5 pb-2">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 col-lg-11">
-                <div class="text-center mb-5 index-section">
+                <div class="text-center mb-2 index-section">
                     <h2>{{ section.extra.features_intro.heading }}</h2>
                     <p>{{ section.extra.features_intro.body }}</p>
                 </div>
@@ -68,8 +80,15 @@
         </div>
     </div>
 </section>
-
 {{ components::feature_grid(features=section.extra.features, content="") }}
+<div class="container">
+    <div class="text-center mb-4">
+        <a href="{{ get_url(path='features/') }}" class="btn btn-outline-primary">
+            See all features
+            <span class="material-symbols-outlined align-middle ms-1" style="font-size: 1rem;">arrow_forward</span>
+        </a>
+    </div>
+</div>
 
 <!-- How It Works -->
 <section class="py-5 bg-light">
@@ -97,8 +116,31 @@
     </div>
 </section>
 
-<!-- Built on Vantage Framework -->
+<!-- Examples teaser -->
+{% if catalog and catalog.apps %}
 <section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="text-center mb-5 index-section">
+                    <h2>See it on real apps</h2>
+                    <p>Self-contained example apps you can open in Vantage UI.</p>
+                </div>
+                {{ blocks::example_grid(apps=catalog.apps, repo=examples_repo, limit=3) }}
+                <div class="text-center mt-4">
+                    <a href="{{ get_url(path='examples/') }}" class="btn btn-outline-primary">
+                        Browse all examples
+                        <span class="material-symbols-outlined align-middle ms-1" style="font-size: 1rem;">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Built on Vantage Framework -->
+<section class="py-5 bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-9 col-lg-10 text-center">
@@ -107,14 +149,21 @@
                 <div class="text-muted mb-4" style="font-size: 1.15rem;">
                     {{ section.extra.framework_callout.body | markdown | safe }}
                 </div>
-                <a href="{{ get_url(path='framework/') }}" class="btn btn-primary">
+                <a href="{{ get_url(path='framework/') }}" class="btn btn-primary me-2">
                     <span class="material-symbols-outlined align-middle me-1">menu_book</span>
-                    Vantage Framework Overview
+                    Framework overview
+                </a>
+                <a href="https://crates.io/search?q=vantage-" class="btn btn-outline-primary" target="_blank" rel="noopener">
+                    <span class="material-symbols-outlined align-middle me-1">deployed_code</span>
+                    crates.io
                 </a>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Follow development -->
+{{ blocks::follow_band() }}
 
 {{ nav::footer() }}
 {% endblock content %}

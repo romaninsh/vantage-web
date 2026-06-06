@@ -6,93 +6,50 @@
 {% block content %}
 {{ nav::header() }}
 
-<!-- Page Header -->
-<section class="py-5">
+<!-- Page hero -->
+<section class="page-hero">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-10 mx-auto">
-                <header class="mb-5 text-center">
-                    <h1>{{ section.title }}</h1>
-                    {% if section.description %}
-                        <p class="lead text-muted">{{ section.description | markdown | safe }}</p>
-                    {% endif %}
-                </header>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Content Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 mx-auto">
+            <div class="col-lg-9 text-center">
+                {% if section.extra.kicker %}<p class="page-kicker">{{ section.extra.kicker }}</p>{% endif %}
+                <h1>{{ section.title }}</h1>
                 {% if section.content %}
-                    <div class="mb-5">
-                        {{ section.content | safe }}
-                    </div>
-                {% endif %}
-
-                {% if section.pages %}
-                    <div class="row g-4">
-                        {% for page in section.pages %}
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card h-100 shadow-sm border-0">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <a href="{{ page.permalink }}" class="text-decoration-none">
-                                                {{ page.title }}
-                                            </a>
-                                        </h5>
-                                        {% if page.description %}
-                                            <p class="card-text text-muted">{{ page.description }}</p>
-                                        {% endif %}
-                                        {% if page.date %}
-                                            <p class="card-text">
-                                                <small class="text-muted">
-                                                    <span class="material-symbols-outlined align-middle">calendar_today</span>
-                                                    {{ page.date | date(format="%B %d, %Y") }}
-                                                </small>
-                                            </p>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                {% if section.subsections %}
-                    <div class="mt-5">
-                        <h2>Sections</h2>
-                        <div class="row g-4">
-                            {% for subsection_path in section.subsections %}
-                                {% set subsection = get_section(path=subsection_path) %}
-                                <div class="col-md-6">
-                                    <div class="card shadow-sm border-0">
-                                        <div class="card-body">
-                                            <h5 class="card-title">
-                                                <a href="{{ subsection.permalink }}" class="text-decoration-none">
-                                                    {{ subsection.title }}
-                                                </a>
-                                            </h5>
-                                            {% if subsection.description %}
-                                                <p class="card-text text-muted">{{ subsection.description | markdown | safe }}</p>
-                                            {% endif %}
-                                            <p class="card-text">
-                                                <small class="text-muted">{{ subsection.pages | length }} pages</small>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+                    <div class="lead section-intro">{{ section.content | safe }}</div>
                 {% endif %}
             </div>
         </div>
     </div>
 </section>
+
+<!-- Pages -->
+{% if section.pages %}
+<section class="pb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="row g-4">
+                    {% for page in section.pages %}
+                    <div class="col-md-6 col-lg-4">
+                        <a href="{{ page.permalink }}" class="card solution-card h-100 shadow-sm border-0 text-decoration-none">
+                            <div class="card-body p-4 d-flex flex-column">
+                                {% if page.extra.icon %}
+                                <span class="material-symbols-outlined text-primary mb-3" style="font-size: 2.5rem;">{{ page.extra.icon }}</span>
+                                {% endif %}
+                                <h5 class="card-title">{{ page.title }}</h5>
+                                {% if page.description %}<p class="card-text text-muted">{{ page.description }}</p>{% endif %}
+                                <span class="solution-more mt-auto pt-2 text-primary fw-medium">
+                                    Explore<span class="material-symbols-outlined align-middle ms-1" style="font-size: 1rem;">arrow_forward</span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 
 {{ nav::footer() }}
 {% endblock content %}

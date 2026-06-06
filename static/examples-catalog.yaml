@@ -1,0 +1,47 @@
+# Vantage UI example apps.
+#
+# Source of truth: https://github.com/romaninsh/vantage-ui-examples/blob/main/catalog.yaml
+# The website loads that file at build time; this committed copy is the local
+# fallback so the site always builds. Keep the two in sync.
+#
+# status: "available" (folder exists in the examples repo) | "coming" (planned)
+apps:
+  - slug: bakery
+    title: "Bakery franchise"
+    persona: "Internal-tools teams"
+    persona_url: "/solutions/internal-tools-teams/"
+    status: "available"
+    icon: "storefront"
+    blurb: "A back-office admin for a bakery franchise — products, clients and orders, with dashboards and an order-status workflow."
+    repo_path: "apps/bakery/inventory"
+    screenshot: "images/vantage-ui-app.png"
+    demonstrates:
+      - "CRUD grids with form and confirmation dialogs"
+      - "Charts and a dashboard built from query-sourced tables"
+      - "Right-click order-status workflow"
+
+  - slug: spacex
+    title: "SpaceX GraphQL explorer"
+    persona: "Web & mobile backends"
+    persona_url: "/solutions/developers/"
+    status: "coming"
+    icon: "rocket_launch"
+    blurb: "Explore a public GraphQL API through the console — launches, rockets and capsules as browsable, drillable tables."
+    repo_path: "apps/spacex/inventory"
+    screenshot: ""
+    demonstrates:
+      - "A read-only GraphQL datasource"
+      - "Master/detail drill-down across related records"
+
+  - slug: aws-console
+    title: "AWS control console"
+    persona: "Internal tools (SRE)"
+    persona_url: "/solutions/internal-tools-teams/"
+    status: "coming"
+    icon: "cloud"
+    blurb: "Build the AWS console you actually need — surface only the resources you operate, by wrapping the aws CLI as tables."
+    repo_path: "apps/aws-console/inventory"
+    screenshot: ""
+    demonstrates:
+      - "Command-line (CLI) data sources"
+      - "Infrastructure browsed and drilled like database tables"

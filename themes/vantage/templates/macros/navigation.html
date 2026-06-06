@@ -29,6 +29,18 @@
                             {% endfor %}
                         </ul>
                     </li>
+                    {% elif item.cta %}
+                    <li class="nav-cta-item {% if not loop.last %}me-4{% endif %}">
+                        <a href="{{ get_url(path=item.url) }}" class="btn btn-sm btn-primary nav-cta text-decoration-none">
+                            <span class="material-symbols-outlined align-middle me-1" style="font-size: 1.1rem;">download</span>{{ item.title }}
+                        </a>
+                    </li>
+                    {% elif item.icon %}
+                    <li class="{% if not loop.last %}me-4{% endif %}">
+                        <a href="{{ item.url }}" class="text-decoration-none nav-icon-link" aria-label="{{ item.title }}" title="{{ item.title }}" target="_blank" rel="noopener">
+                            <span class="material-symbols-outlined align-middle">{{ item.icon }}</span>
+                        </a>
+                    </li>
                     {% else %}
                     <li class="{% if not loop.last %}me-4{% endif %}">
                         <a href="{% if item.external %}{{ item.url }}{% else %}{{ get_url(path=item.url) }}{% endif %}" class="text-decoration-none"{% if item.external %} target="_blank" rel="noopener"{% endif %}>
@@ -75,7 +87,7 @@
                             <a href="{{ get_url(path='') }}" class="logo-footer">
                                 <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage" height="24" style="filter: brightness(0) invert(1);">
                             </a>
-                            <p class="mt-4 text-foot">A native macOS app for navigating your databases, APIs and infrastructure — built on the open-source Vantage Framework.</p>
+                            <p class="mt-4 text-foot">An AI-native, config-as-code console for the databases, APIs, cloud infrastructure and CLI tools you operate — native, local-first, built on the open-source Vantage Framework.</p>
                             <a href="{{ get_url(path='download/') }}" class="btn btn-soft-primary mt-2">
                                 <span class="material-symbols-outlined me-1" style="font-size: 1rem;">download</span>
                                 Download for Mac
