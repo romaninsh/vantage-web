@@ -8,9 +8,9 @@ can present their data as charts.
 
 - **Row actions.** A grid row's right-click menu can run an operation, not only open another page.
   Actions are declared as `action/*.yaml` and referenced from a row's `action:`.
-- **Form and confirmation dialogs.** A `kind: form` action opens a dialog to add or edit a record;
-  a `kind: confirm` action asks before a destructive step. The bakery example uses these to add,
-  edit, and delete products and to cancel an order.
+- **Form and confirmation dialogs.** A `kind: form` action opens a dialog to add or edit a record; a
+  `kind: confirm` action asks before a destructive step. The bakery example uses these to add, edit,
+  and delete products and to cancel an order.
 - **Grid toolbars.** Grids can carry a toolbar of buttons above the rows, such as "Add product".
 - **Order status workflow.** Orders carry a status, and the right-click menu offers only the valid
   next transitions for the current state — placed, confirmed, in production, ready, delivered or
