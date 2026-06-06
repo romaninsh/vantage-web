@@ -26,6 +26,7 @@ env:
   AWS_REGION: eu-west-2
   AWS_ROLE_ARN: arn:aws:iam::578465001751:role/vantage-demo-release-uploader
   SITE_BUCKET: vantage-ui.com
+  CF_DISTRIBUTION_ID: E18KQTM4QLF7KJ
 
 jobs:
   deploy:
@@ -48,3 +49,6 @@ jobs:
 
       - name: Sync to S3
         run: aws s3 sync public/ "s3://${SITE_BUCKET}" --delete
+
+      - name: Invalidate CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"
