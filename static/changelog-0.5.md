@@ -37,7 +37,7 @@ logs, in one click).
   feedback from the agent_ to ship the agent's notes alongside your own; _View agent feedback_ pops
   a larger viewer so you can read it first. Sent contents are deleted from disk.
 - The bundled `vantage-ui-builder` skill (now 1.3.0) tells the agent to drop UX, validator and
-  schema suggestions into `FEEDBACK.md` as it works, under a `# Vantage Admin <version>` header.
+  schema suggestions into `FEEDBACK.md` as it works, under a `# Vantage <version>` header.
 - Bundled skills install under `.agents/skills/` instead of `.claude/skills/`, so they're picked up
   by any agent following the [agentskills.io](https://agentskills.io) convention.
 - Opening or switching to a project refreshes any installed skills whose embedded version has moved

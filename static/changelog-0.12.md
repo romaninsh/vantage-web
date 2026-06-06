@@ -14,3 +14,8 @@ physical table.
 - **Dashboard examples.** The Surreal bakery demo now includes query-sourced tables for daily
   revenue, order totals, low-stock products, and debtors — each powered by a different aggregation
   pattern.
+
+## 0.12.1
+
+- **The app is now just "Vantage".** Same app, shorter name — you'll see it in the menu bar, window
+  title, and the download.
