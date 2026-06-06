@@ -2,7 +2,7 @@
 title = "Vantage"
 
 # The URL the site will be built for
-base_url = "https://romaninsh.github.io/vantage-web/"
+base_url = "https://vantage-ui.com"
 
 # The theme to use
 theme = "vantage"
