@@ -3,8 +3,6 @@
 {% import "macros/navigation.html" as nav %}
 {% import "macros/blocks.html" as blocks %}
 
-{% block body_class %}hero-page{% endblock body_class %}
-
 {% block content %}
 {{ nav::header() }}
 
@@ -29,135 +27,120 @@
     {% set catalog = load_data(path="static/examples-catalog.yaml", format="yaml", required=false) %}
 {% endif %}
 
-<!-- Hero Start -->
-<section id="hero" class="d-table w-100 overflow-hidden hero">
-    <div class="container">
-        <div class="row mt-5 align-items-center">
-            <div class="col-lg-6 col-md-6">
-                <div class="title-heading">
-                    <span class="badge rounded-pill bg-primary mb-3">{{ hero_version }}</span>
-                    <h1 class="heading">{{ section.extra.hero_headline }}</h1>
-                    <p class="para-desc text-muted">{{ section.extra.hero_subhead }}</p>
+<!-- Hero -->
+<section id="hero" class="relative overflow-hidden">
+    <div class="grid-pattern absolute inset-0"></div>
+    <div class="glow -top-48 left-[15%] h-[28rem] w-[44rem]"></div>
+    <div class="glow top-1/3 -right-64 h-[24rem] w-[36rem] opacity-60"></div>
 
-                    <div class="mt-4">
-                        <a href="{{ get_url(path='download/') }}" class="btn btn-lg btn-primary me-2 mt-2">
-                            <span class="material-symbols-outlined align-middle me-1">download</span>
-                            Download for Mac — free
-                        </a>
-                        <a href="{{ get_url(path='framework/') }}" class="btn btn-lg btn-outline-primary mt-2">
-                            <span class="material-symbols-outlined align-middle me-1">deployed_code</span>
-                            Explore the framework
-                        </a>
-                    </div>
+    <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pt-16 pb-16 sm:px-6 md:pt-24 lg:grid-cols-2 lg:gap-10">
+        <div>
+            <a href="{{ get_url(path='download/') }}" class="inline-flex items-center gap-2 rounded-full border border-accent-500/30 bg-accent-500/10 px-3 py-1 font-mono text-[0.72rem] font-medium text-accent-300 no-underline transition-colors hover:border-accent-400/50">
+                <span class="size-1.5 rounded-full bg-ok"></span>{{ hero_version }} — out now
+            </a>
+            <h1 class="text-display mt-5">{{ section.extra.hero_headline }}</h1>
+            <p class="mt-5 max-w-xl text-lg leading-relaxed text-text-2">{{ section.extra.hero_subhead }}</p>
 
-                    <hr/>
-                    <div class="text-muted small">{{ section.extra.hero_caption | markdown | safe }}</div>
-                </div>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a href="{{ get_url(path='download/') }}" class="btn btn-lg btn-primary">
+                    <span class="material-symbols-outlined">download</span>
+                    Download for Mac — free
+                </a>
+                <a href="{{ get_url(path='framework/') }}" class="btn btn-lg btn-outline-primary">
+                    <span class="material-symbols-outlined">deployed_code</span>
+                    Explore the framework
+                </a>
             </div>
 
-            <div class="col-lg-6 col-md-6 mt-4 pt-4 mt-sm-0 pt-sm-0">
-                <div class="ms-lg-4">
-                    <div class="classic-hero-image">
-                        <img src="{{ get_url(path='images/vantage-ui-app.png') }}" class="shadow-lg d-block rounded-top-4" width="884" height="768" alt="Vantage UI Screenshot">
-                    </div>
-                </div>
+            <div class="mt-6 border-t border-line pt-5 font-mono text-[0.78rem] leading-relaxed text-text-3 [&_a]:text-text-2 [&_a]:underline [&_a]:decoration-line-strong [&_a]:underline-offset-2 hover:[&_a]:text-text-1">{{ section.extra.hero_caption | markdown | safe }}</div>
+        </div>
+
+        <div class="relative">
+            <div class="window-frame lg:scale-[1.04] lg:origin-left">
+                <img src="{{ get_url(path='images/vantage-ui-app.png') }}" width="884" height="768" alt="Vantage UI Screenshot">
             </div>
         </div>
     </div>
 </section>
-<!-- Hero End -->
 
 <!-- Feature tour -->
-<section class="pt-5 pb-2">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="text-center mb-2 index-section">
-                    <h2>{{ section.extra.features_intro.heading }}</h2>
-                    <p>{{ section.extra.features_intro.body }}</p>
-                </div>
-            </div>
-        </div>
+<section class="pt-16 md:pt-24">
+    <div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
+        <p class="kicker mb-4">Features</p>
+        <h2 class="text-h2">{{ section.extra.features_intro.heading }}</h2>
+        <p class="mt-4 text-text-2">{{ section.extra.features_intro.body }}</p>
     </div>
 </section>
 {{ components::feature_grid(features=section.extra.features, content="") }}
-<div class="container">
-    <div class="text-center mb-4">
-        <a href="{{ get_url(path='features/') }}" class="btn btn-outline-primary">
-            See all features
-            <span class="material-symbols-outlined align-middle ms-1" style="font-size: 1rem;">arrow_forward</span>
-        </a>
-    </div>
+<div class="text-center">
+    <a href="{{ get_url(path='features/') }}" class="btn btn-outline-primary">
+        See all features
+        <span class="material-symbols-outlined !text-[1rem]">arrow_forward</span>
+    </a>
 </div>
 
 <!-- How It Works -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="text-center mb-5 index-section">
-                    <h2>{{ section.extra.howitworks.heading }}</h2>
-                    <p>{{ section.extra.howitworks.body }}</p>
-                </div>
+<section class="mt-20 border-y border-line bg-surface-1/60 py-16 md:py-20">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="mx-auto mb-12 max-w-2xl text-center">
+            <p class="kicker mb-4">How it works</p>
+            <h2 class="text-h2">{{ section.extra.howitworks.heading }}</h2>
+            <p class="mt-4 text-text-2">{{ section.extra.howitworks.body }}</p>
+        </div>
 
-                <div class="row g-4">
-                    {% for step in section.extra.howitworks_steps %}
-                    <div class="col-md-4">
-                        <div class="text-center">
-                            <span class="material-symbols-outlined text-primary mb-3 d-block" style="font-size: 3rem;">{{ step.icon }}</span>
-                            <h5>{{ step.title }}</h5>
-                            <p class="text-muted">{{ step.body }}</p>
-                        </div>
-                    </div>
-                    {% endfor %}
+        <div class="grid gap-8 md:grid-cols-3">
+            {% for step in section.extra.howitworks_steps %}
+            <div class="relative rounded-xl border border-line bg-bg/60 p-6">
+                <div class="mb-4 flex items-center gap-3">
+                    <span class="flex size-8 items-center justify-center rounded-lg border border-accent-500/30 bg-accent-500/10 font-mono text-sm font-semibold text-accent-300">{{ loop.index }}</span>
+                    <span class="material-symbols-outlined !text-[1.6rem] text-accent-400">{{ step.icon }}</span>
                 </div>
+                <h3 class="text-[1.02rem]">{{ step.title }}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-text-2">{{ step.body }}</p>
             </div>
+            {% endfor %}
         </div>
     </div>
 </section>
 
 <!-- Examples teaser -->
 {% if catalog and catalog.apps %}
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="text-center mb-5 index-section">
-                    <h2>See it on real apps</h2>
-                    <p>Self-contained example apps you can open in Vantage UI.</p>
-                </div>
-                {{ blocks::example_grid(apps=catalog.apps, repo=examples_repo, limit=3) }}
-                <div class="text-center mt-4">
-                    <a href="{{ get_url(path='examples/') }}" class="btn btn-outline-primary">
-                        Browse all examples
-                        <span class="material-symbols-outlined align-middle ms-1" style="font-size: 1rem;">arrow_forward</span>
-                    </a>
-                </div>
-            </div>
+<section class="py-16 md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="mx-auto mb-12 max-w-2xl text-center">
+            <p class="kicker mb-4">Examples</p>
+            <h2 class="text-h2">See it on real apps</h2>
+            <p class="mt-4 text-text-2">Self-contained example apps you can open in Vantage UI.</p>
+        </div>
+        {{ blocks::example_grid(apps=catalog.apps, repo=examples_repo, limit=3) }}
+        <div class="mt-10 text-center">
+            <a href="{{ get_url(path='examples/') }}" class="btn btn-outline-primary">
+                Browse all examples
+                <span class="material-symbols-outlined !text-[1rem]">arrow_forward</span>
+            </a>
         </div>
     </div>
 </section>
 {% endif %}
 
 <!-- Built on Vantage Framework -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-9 col-lg-10 text-center">
-                <span class="material-symbols-outlined text-primary mb-3 d-block" style="font-size: 3rem;">layers</span>
-                <h2 class="mb-3">{{ section.extra.framework_callout.heading }}</h2>
-                <div class="text-muted mb-4" style="font-size: 1.15rem;">
-                    {{ section.extra.framework_callout.body | markdown | safe }}
-                </div>
-                <a href="{{ get_url(path='framework/') }}" class="btn btn-primary me-2">
-                    <span class="material-symbols-outlined align-middle me-1">menu_book</span>
-                    Framework overview
-                </a>
-                <a href="https://crates.io/search?q=vantage-" class="btn btn-outline-primary" target="_blank" rel="noopener">
-                    <span class="material-symbols-outlined align-middle me-1">deployed_code</span>
-                    crates.io
-                </a>
-            </div>
+<section class="relative overflow-hidden border-y border-line bg-surface-1/60 py-16 md:py-20">
+    <div class="glow -top-40 left-1/2 h-72 w-[40rem] -translate-x-1/2 opacity-50"></div>
+    <div class="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
+        <span class="material-symbols-outlined mb-4 !text-[2.6rem] text-accent-400">layers</span>
+        <h2 class="text-h2">{{ section.extra.framework_callout.heading }}</h2>
+        <div class="prose mx-auto mt-4 max-w-2xl text-[1.05rem]">
+            {{ section.extra.framework_callout.body | markdown | safe }}
+        </div>
+        <div class="mt-7 flex flex-wrap justify-center gap-3">
+            <a href="{{ get_url(path='framework/') }}" class="btn btn-primary">
+                <span class="material-symbols-outlined">menu_book</span>
+                Framework overview
+            </a>
+            <a href="https://crates.io/search?q=vantage-" class="btn btn-outline-primary" target="_blank" rel="noopener">
+                <span class="material-symbols-outlined">deployed_code</span>
+                crates.io
+            </a>
         </div>
     </div>
 </section>

@@ -17,32 +17,31 @@
     {% set catalog = load_data(path="static/examples-catalog.yaml", format="yaml", required=false) %}
 {% endif %}
 
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 mx-auto">
-                <header class="mb-5 text-center">
-                    <h1>{{ page.title }}</h1>
-                    <p class="lead text-muted">{{ page.description }}</p>
-                </header>
-
-                {% if catalog and catalog.apps %}
-                {{ blocks::example_grid(apps=catalog.apps, repo=examples_repo) }}
-                {% else %}
-                <p class="text-center text-muted">The example catalog couldn't be loaded right now. Browse them directly on <a href="{{ examples_repo }}" target="_blank" rel="noopener">GitHub</a>.</p>
-                {% endif %}
-
-                <div class="text-center mt-5 text-muted">
-                    <p class="mb-1">
-                        <span class="material-symbols-outlined align-middle me-1" style="font-size: 1.1rem;">bolt</span>
-                        One-click <code>vantage://</code> open straight from this page is on the way. For now, clone the
-                        <a href="{{ examples_repo }}" target="_blank" rel="noopener">examples repo</a> and point Vantage UI at an app's <code>inventory/</code> folder.
-                    </p>
-                </div>
-            </div>
-        </div>
+<!-- Page hero -->
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-12 text-center sm:px-6 md:pt-24 md:pb-16">
+        <p class="kicker mb-4">Open &amp; explore</p>
+        <h1 class="text-display mx-auto max-w-3xl">{{ page.title }}</h1>
+        {% if page.description %}<p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ page.description }}</p>{% endif %}
     </div>
 </section>
+
+<main class="mx-auto max-w-6xl px-4 sm:px-6">
+    {% if catalog and catalog.apps %}
+    {{ blocks::example_grid(apps=catalog.apps, repo=examples_repo) }}
+    {% else %}
+    <p class="text-center text-text-2">The example catalog couldn't be loaded right now. Browse them directly on <a href="{{ examples_repo }}" class="text-accent-300 underline hover:text-accent-400" target="_blank" rel="noopener">GitHub</a>.</p>
+    {% endif %}
+
+    <div class="prose mx-auto mt-14 max-w-2xl text-center text-sm">
+        <p>
+            <span class="material-symbols-outlined me-1 !text-[1.1rem] text-accent-400">bolt</span>
+            One-click <code>vantage://</code> open straight from this page is on the way. For now, clone the
+            <a href="{{ examples_repo }}" target="_blank" rel="noopener">examples repo</a> and point Vantage UI at an app's <code>inventory/</code> folder.
+        </p>
+    </div>
+</main>
 
 {{ nav::footer() }}
 {% endblock content %}

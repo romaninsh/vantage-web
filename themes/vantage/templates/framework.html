@@ -7,54 +7,42 @@
 {{ nav::header() }}
 
 <!-- Page hero -->
-<section class="page-hero">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 text-center">
-                <p class="page-kicker">{{ page.extra.kicker }}</p>
-                <h1>{{ page.title }}</h1>
-                <p class="lead">{{ page.description }}</p>
-                <div class="mt-4">
-                    <a href="https://romaninsh.github.io/vantage/" class="btn btn-lg btn-primary me-2" target="_blank" rel="noopener">
-                        <span class="material-symbols-outlined align-middle me-1">menu_book</span>
-                        Read the Book
-                    </a>
-                    <a href="https://crates.io/search?q=vantage-" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
-                        <span class="material-symbols-outlined align-middle me-1">deployed_code</span>
-                        crates.io
-                    </a>
-                </div>
-            </div>
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-12 text-center sm:px-6 md:pt-24 md:pb-16">
+        {% if page.extra.kicker %}<p class="kicker mb-4">{{ page.extra.kicker }}</p>{% endif %}
+        <h1 class="text-display mx-auto max-w-3xl">{{ page.title }}</h1>
+        <p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ page.description }}</p>
+        <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <a href="https://romaninsh.github.io/vantage/" class="btn btn-lg btn-primary" target="_blank" rel="noopener">
+                <span class="material-symbols-outlined">menu_book</span>
+                Read the Book
+            </a>
+            <a href="https://crates.io/search?q=vantage-" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
+                <span class="material-symbols-outlined">deployed_code</span>
+                crates.io
+            </a>
         </div>
     </div>
 </section>
 
 <!-- Intro -->
-<section class="pb-2">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9">
-                <p class="fs-5 text-center text-muted mb-0">
-                    The <strong>Vantage framework</strong> is the open-source Rust data layer that powers Vantage&nbsp;UI.
-                    It is shipping on crates.io at <code>0.5.x</code>, with per-crate docs on docs.rs and a full mdBook.
-                    The API is still evolving — expected at 0.x — but it is production code: it builds Vantage&nbsp;UI itself.
-                </p>
-            </div>
-        </div>
-    </div>
+<section class="mx-auto max-w-3xl px-4 sm:px-6">
+    <p class="prose text-center text-[1.05rem] text-text-2">
+        The <strong>Vantage framework</strong> is the open-source Rust data layer that powers Vantage&nbsp;UI.
+        It is shipping on crates.io at <code>0.5.x</code>, with per-crate docs on docs.rs and a full mdBook.
+        The API is still evolving — expected at 0.x — but it is production code: it builds Vantage&nbsp;UI itself.
+    </p>
 </section>
 
 <!-- The abstraction stack -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="feature-head text-center mb-5">
-                    <h2 class="mx-auto">Nine layers — go as far as you need</h2>
-                    <p class="mx-auto">A stack of thin abstractions, built from the foundation up. They're not independent — <code>Table</code> stands on the DataSource and DataSet crates beneath it — but you climb only as far as your app needs and ignore the rest. In plenty of cases, <code>Table</code> is the whole job.</p>
-                </div>
+<section class="mx-auto mt-20 max-w-4xl px-4 sm:px-6 md:mt-24">
+    <div class="prose mx-auto mb-12 max-w-2xl text-center">
+        <h2 class="!mt-0 text-h2">Nine layers — go as far as you need</h2>
+        <p>A stack of thin abstractions, built from the foundation up. They're not independent — <code>Table</code> stands on the DataSource and DataSet crates beneath it — but you climb only as far as your app needs and ignore the rest. In plenty of cases, <code>Table</code> is the whole job.</p>
+    </div>
 
-                <div class="layer-map">
+    <div class="layer-map">
                     <div class="lm-step">
                         <div class="lm-num">1</div>
                         <div class="lm-body">
@@ -131,25 +119,20 @@
                             <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> Wrap any layer below in your own API or CLI. The connectors are a head start, not a cage — your surface, your logic.</span></p>
                         </div>
                     </div>
-                </div>
-
-                <p class="text-center text-muted mt-4 mb-0">It's all modular — depend only on the crates you need. Most data-source crates expose an optional <code>vista</code> feature, and an optional <code>rhai</code> feature layers scripting on top. Rolling your own tables? You generally need neither.</p>
-            </div>
-        </div>
     </div>
+
+    <p class="prose mt-8 text-center text-sm">It's all modular — depend only on the crates you need. Most data-source crates expose an optional <code>vista</code> feature, and an optional <code>rhai</code> feature layers scripting on top. Rolling your own tables? You generally need neither.</p>
 </section>
 
 <!-- Code gallery -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-9 col-lg-10">
-                <div class="feature-head text-center mb-5">
-                    <h2 class="mx-auto">What the code feels like</h2>
-                    <p class="mx-auto">Real snippets from the book. Step through them.</p>
-                </div>
+<section class="mt-20 border-y border-line bg-surface-1/60 py-16 md:mt-24 md:py-20">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6">
+        <div class="mx-auto mb-12 max-w-2xl text-center">
+            <h2 class="text-h2">What the code feels like</h2>
+            <p class="mt-4 text-text-2">Real snippets from the book. Step through them.</p>
+        </div>
 
-                <div class="snip-gallery" id="snipGallery">
+        <div class="snip-gallery" id="snipGallery">
                     <div class="snip-stage">
                         <figure class="snip active">
                             <div class="snip-card">
@@ -546,78 +529,24 @@ elements:
                         </figure>
                     </div>
 
-                    <div class="snip-nav">
-                        <button type="button" class="snip-arrow snip-prev" aria-label="Previous snippet"><span class="material-symbols-outlined">chevron_left</span></button>
-                        <div class="snip-dots" id="snipDots"></div>
-                        <button type="button" class="snip-arrow snip-next" aria-label="Next snippet"><span class="material-symbols-outlined">chevron_right</span></button>
-                    </div>
-                </div>
+            <div class="snip-nav">
+                <button type="button" class="snip-arrow snip-prev" aria-label="Previous snippet"><span class="material-symbols-outlined">chevron_left</span></button>
+                <div class="snip-dots" id="snipDots"></div>
+                <button type="button" class="snip-arrow snip-next" aria-label="Next snippet"><span class="material-symbols-outlined">chevron_right</span></button>
             </div>
         </div>
     </div>
 </section>
 
-<script>
-(function () {
-    var gallery = document.getElementById('snipGallery');
-    if (!gallery) return;
-    var snips = Array.prototype.slice.call(gallery.querySelectorAll('.snip'));
-    var dotsWrap = document.getElementById('snipDots');
-    var idx = 0;
-
-    snips.forEach(function (_, i) {
-        var dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'snip-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', 'Snippet ' + (i + 1));
-        dot.addEventListener('click', function () { show(i); });
-        dotsWrap.appendChild(dot);
-    });
-    var dots = Array.prototype.slice.call(dotsWrap.children);
-
-    function show(n, updateHash) {
-        idx = (n + snips.length) % snips.length;
-        snips.forEach(function (s, i) { s.classList.toggle('active', i === idx); });
-        dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
-        if (updateHash !== false) {
-            // Keep the URL shareable without polluting history or scrolling.
-            history.replaceState(null, '', '#slide-' + (idx + 1));
-        }
-    }
-
-    function slideFromHash() {
-        var m = /^#slide-(\d+)$/.exec(window.location.hash);
-        return m ? parseInt(m[1], 10) - 1 : null;
-    }
-
-    gallery.querySelector('.snip-prev').addEventListener('click', function () { show(idx - 1); });
-    gallery.querySelector('.snip-next').addEventListener('click', function () { show(idx + 1); });
-    window.addEventListener('hashchange', function () {
-        var n = slideFromHash();
-        if (n !== null && n !== idx) show(n, false);
-    });
-
-    // Open the slide named in the URL on load (and scroll it into view).
-    var initial = slideFromHash();
-    if (initial !== null && initial >= 0 && initial < snips.length) {
-        show(initial, false);
-        gallery.scrollIntoView({ block: 'center' });
-    }
-})();
-</script>
-
 <!-- Crate map -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="feature-head mb-4">
-                    <h2>The crate map</h2>
-                    <p>Every published crate, all at <code>0.5.x</code>. Pull in only the layers you use.</p>
-                </div>
+<section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-24">
+    <div class="prose mx-auto mb-10 max-w-2xl text-center">
+        <h2 class="!mt-0 text-h2">The crate map</h2>
+        <p>Every published crate, all at <code>0.5.x</code>. Pull in only the layers you use.</p>
+    </div>
 
-                <div class="row">
-                    <div class="col-lg-6">
+    <div class="grid gap-x-10 lg:grid-cols-2">
+        <div>
                         <div class="crate-group">
                             <h4>Core</h4>
                             <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-core" target="_blank" rel="noopener">vantage-core</a></div><div class="crate-purpose">Result type, error model and base traits.</div></div>
@@ -637,9 +566,9 @@ elements:
                             <h4>Reactive cache</h4>
                             <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></div><div class="crate-purpose">Cached, composable, reactive surface — Lens, Dio and Scenery.</div></div>
                         </div>
-                    </div>
+        </div>
 
-                    <div class="col-lg-6">
+        <div>
                         <div class="crate-group">
                             <h4>Backends</h4>
                             <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-sql" target="_blank" rel="noopener">vantage-sql</a></div><div class="crate-purpose">Postgres, MySQL and SQLite.</div></div>
@@ -659,61 +588,51 @@ elements:
                             <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-cli-util" target="_blank" rel="noopener">vantage-cli-util</a></div><div class="crate-purpose">CLI utilities for the framework.</div></div>
                             <div class="crate-row"><div class="crate-name">vantage-ui-adapters</div><div class="crate-purpose">DataGrid adapters for GPUI, egui, Slint, Tauri, ratatui and Cursive. Ships with the UI.</div></div>
                         </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
 
 <!-- Generic API export — coming -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-9 col-lg-10">
-                <div class="api-coming">
-                    <span class="badge rounded-pill bg-secondary mb-3">Roadmap</span>
-                    <h3>Your data, exported as an API</h3>
-                    <p class="mb-3">Today the framework <strong>consumes</strong> HTTP backends — <code>vantage-api-client</code> maps REST and GraphQL into tables, and <code>vantage-api-pool</code> handles paginated, rate-limited fetches.</p>
-                    <p class="mb-0">The reverse is in progress: a generic, open-source crate that <strong>exports</strong> your typed entities as a clean REST/GraphQL endpoint from minimal boilerplate, without losing the framework's capabilities. A genuinely generic API layer is rare in Rust — and it's the foundation the Vantage&nbsp;UI <em>API-generation</em> feature will build on.</p>
-                </div>
+<section class="mx-auto mt-20 max-w-4xl px-4 sm:px-6 md:mt-24">
+    <div class="card relative overflow-hidden border-violet/20 p-8">
+        <div class="glow -top-32 right-0 h-48 w-80 opacity-40"></div>
+        <div class="relative">
+            <span class="badge-soon mb-4">Roadmap</span>
+            <h3 class="text-h3">Your data, exported as an API</h3>
+            <div class="prose mt-3 text-sm">
+                <p>Today the framework <strong>consumes</strong> HTTP backends — <code>vantage-api-client</code> maps REST and GraphQL into tables, and <code>vantage-api-pool</code> handles paginated, rate-limited fetches.</p>
+                <p>The reverse is in progress: a generic, open-source crate that <strong>exports</strong> your typed entities as a clean REST/GraphQL endpoint from minimal boilerplate, without losing the framework's capabilities. A genuinely generic API layer is rare in Rust — and it's the foundation the Vantage&nbsp;UI <em>API-generation</em> feature will build on.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Contribute a data source -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-9 col-lg-10">
-                <div class="feature-head mb-3">
-                    <h2>Bring your own backend</h2>
-                    <p>Vantage UI's reach is bounded by the framework's connector list. Adding a backend is a well-defined six-step process in the book's <a href="https://romaninsh.github.io/vantage/new-persistence.html" target="_blank" rel="noopener">Adding a New Persistence</a> chapter.</p>
-                </div>
-                <ol class="row g-2 list-unstyled mb-4">
-                    <li class="col-md-6">1. Define the type system</li>
-                    <li class="col-md-6">2. Implement expressions</li>
-                    <li class="col-md-6">3. Implement operators</li>
-                    <li class="col-md-6">4. Build the query builder</li>
-                    <li class="col-md-6">5. Wire CRUD on <code>Table</code></li>
-                    <li class="col-md-6">6. Add relationships and multi-backend support</li>
-                </ol>
-                <p class="text-muted mb-0">Bringing a new database, message broker or infrastructure source into Vantage UI? That's the path. Pull requests welcome on <a href="https://github.com/romaninsh/vantage" target="_blank" rel="noopener">github.com/romaninsh/vantage</a>.</p>
-            </div>
-        </div>
+<section class="mx-auto mt-20 max-w-4xl px-4 sm:px-6 md:mt-24">
+    <div class="prose mb-8">
+        <h2 class="!mt-0 text-h2">Bring your own backend</h2>
+        <p>Vantage UI's reach is bounded by the framework's connector list. Adding a backend is a well-defined six-step process in the book's <a href="https://romaninsh.github.io/vantage/new-persistence.html" target="_blank" rel="noopener">Adding a New Persistence</a> chapter.</p>
     </div>
+    <ol class="grid gap-2.5 sm:grid-cols-2">
+        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">1.</span>Define the type system</li>
+        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">2.</span>Implement expressions</li>
+        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">3.</span>Implement operators</li>
+        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">4.</span>Build the query builder</li>
+        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">5.</span>Wire CRUD on <code class="font-mono text-[0.85em] text-accent-300">Table</code></li>
+        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">6.</span>Add relationships and multi-backend support</li>
+    </ol>
+    <p class="prose mt-6 text-sm">Bringing a new database, message broker or infrastructure source into Vantage UI? That's the path. Pull requests welcome on <a href="https://github.com/romaninsh/vantage" target="_blank" rel="noopener">github.com/romaninsh/vantage</a>.</p>
 </section>
 
 <!-- CTA -->
-<section class="pb-5">
-    <div class="container text-center">
-        <a href="https://romaninsh.github.io/vantage/" class="btn btn-lg btn-primary me-2" target="_blank" rel="noopener">
-            <span class="material-symbols-outlined align-middle me-1">menu_book</span>
+<section class="mx-auto mt-20 max-w-6xl px-4 text-center sm:px-6 md:mt-24">
+    <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <a href="https://romaninsh.github.io/vantage/" class="btn btn-lg btn-primary" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined">menu_book</span>
             Read the Book
         </a>
         <a href="/solutions/app-builders/" class="btn btn-lg btn-outline-primary">
-            <span class="material-symbols-outlined align-middle me-1">developer_board</span>
+            <span class="material-symbols-outlined">developer_board</span>
             Build your own app
         </a>
     </div>
