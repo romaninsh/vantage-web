@@ -1,41 +1,32 @@
 {% macro feature_grid(features, content) %}
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                {% if content %}
-                <div class="text-center mb-5 index-section">
-                    {{ content | safe }}
-                </div>
-                {% endif %}
+<section class="py-12 md:py-16">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        {% if content %}
+        <div class="prose mx-auto mb-12 max-w-2xl text-center">
+            {{ content | safe }}
+        </div>
+        {% endif %}
 
-                <div class="row g-4 mb-5">
-                    {% for feature in features %}
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card h-100 shadow-sm border-0">
-                            <div class="card-body p-4 text-center">
-                                <span class="material-symbols-outlined {{ feature.color | default(value="text-primary") }} fs-1 mb-3 d-block">{{ feature.icon }}</span>
-                                <h5 class="card-title">
-                                    {{ feature.title }}
-                                    {% if feature.status == "soon" %}
-                                        <span class="badge rounded-pill bg-secondary ms-1 align-middle" style="font-size: 0.6rem; vertical-align: middle;">Coming soon</span>
-                                    {% elif feature.status == "now" %}
-                                        <span class="badge rounded-pill bg-success ms-1 align-middle" style="font-size: 0.6rem; vertical-align: middle;">Now</span>
-                                    {% endif %}
-                                </h5>
-                                <p class="card-text text-muted">{{ feature.description }}</p>
-                                {% if feature.link %}
-                                <a href="{{ feature.link }}" class="btn btn-outline-{{ feature.color | default(value="primary") | replace(from="text-", to="") }} btn-sm">
-                                    Learn More
-                                    <span class="material-symbols-outlined ms-1" style="font-size: 1rem;">arrow_forward</span>
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {% for feature in features %}
+            <div class="card card-hover flex flex-col p-6">
+                <div class="mb-4 flex items-start justify-between">
+                    <span class="material-symbols-outlined !text-[2rem] text-accent-400">{{ feature.icon }}</span>
+                    {% if feature.status == "soon" %}
+                    <span class="badge-soon">Soon</span>
+                    {% elif feature.status == "now" %}
+                    <span class="badge-now">Now</span>
+                    {% endif %}
                 </div>
+                <h3 class="text-[1.02rem]">{{ feature.title }}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-text-2">{{ feature.description }}</p>
+                {% if feature.link %}
+                <a href="{{ feature.link }}" class="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-medium text-accent-400 no-underline hover:text-accent-300">
+                    Learn More<span class="material-symbols-outlined !text-[1rem]">arrow_forward</span>
+                </a>
+                {% endif %}
             </div>
+            {% endfor %}
         </div>
     </div>
 </section>

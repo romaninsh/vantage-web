@@ -7,29 +7,20 @@
 {{ nav::header() }}
 
 <!-- Page hero -->
-<section class="page-hero">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 text-center">
-                {% if page.extra.kicker %}<p class="page-kicker">{{ page.extra.kicker }}</p>{% endif %}
-                <h1>{{ page.title }}</h1>
-                {% if page.description %}<p class="lead">{{ page.description }}</p>{% endif %}
-            </div>
-        </div>
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-12 text-center sm:px-6 md:pt-24 md:pb-16">
+        {% if page.extra.kicker %}<p class="kicker mb-4">{{ page.extra.kicker }}</p>{% endif %}
+        <h1 class="text-display mx-auto max-w-3xl">{{ page.title }}</h1>
+        {% if page.description %}<p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ page.description }}</p>{% endif %}
     </div>
 </section>
 
 <!-- Main Content -->
-<main class="container pb-5">
-    <div class="row">
-        <div class="col-lg-9 col-md-11 mx-auto">
-            <article>
-                <div class="content">
-                    {{ page.content | safe }}
-                </div>
-            </article>
-        </div>
-    </div>
+<main class="mx-auto max-w-6xl px-4 sm:px-6">
+    <article class="prose mx-auto max-w-3xl">
+        {{ page.content | safe }}
+    </article>
 </main>
 
 {{ nav::footer() }}

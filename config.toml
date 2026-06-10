@@ -7,8 +7,9 @@ base_url = "https://vantage-ui.com"
 # The theme to use
 theme = "vantage"
 
-# Whether to automatically compile all Sass files in the sass directory
-compile_sass = true
+# Sass is not used; CSS is built by the Tailwind standalone CLI
+# (see Makefile) into static/main.css.
+compile_sass = false
 
 # Whether to minify the html output
 minify_html = false

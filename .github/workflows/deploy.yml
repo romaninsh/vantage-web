@@ -23,6 +23,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  # Keep in sync with the locally installed tailwindcss (brew install tailwindcss)
+  TAILWIND_VERSION: 4.3.0
   AWS_REGION: eu-west-2
   AWS_ROLE_ARN: arn:aws:iam::578465001751:role/vantage-demo-release-uploader
   SITE_BUCKET: vantage-ui.com
@@ -37,7 +39,17 @@ jobs:
       - name: Setup Zola
         uses: taiki-e/install-action@v2
         with:
-          tool: zola@0.18.0
+          tool: zola@0.21.0
+
+      - name: Install Tailwind CSS standalone CLI
+        run: |
+          curl -sL -o /usr/local/bin/tailwindcss \
+            "https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-linux-x64"
+          chmod +x /usr/local/bin/tailwindcss
+          tailwindcss --help | head -1
+
+      - name: Build CSS with Tailwind
+        run: tailwindcss -i css/main.css -o static/main.css --minify
 
       - name: Build with Zola
         run: zola build

@@ -1,75 +1,99 @@
 {% macro header() %}
 {% set nav_data = load_data(path="content/navigation.yaml") %}
-<header id="topnav">
-    <div class="container d-flex justify-content-between align-items-center py-3">
-        <a class="logo" aria-label="Home" href="{{ get_url(path='') }}">
-            <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage" height="40">
+<header id="topnav" class="sticky top-0 z-50 border-b border-transparent bg-bg/85 backdrop-blur-md transition-colors duration-200">
+    <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6" aria-label="Main">
+        <a class="flex shrink-0 items-center" aria-label="Home" href="{{ get_url(path='') }}">
+            <img class="invert" src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage" height="32" style="height: 32px; width: auto;">
         </a>
 
-        <div class="d-flex align-items-center">
-            <div id="navigation">
-                <ul class="navigation-menu nav-right list-unstyled d-flex mb-0">
-                    {% for item in nav_data.menu %}
-                    {% if item.dropdown %}
-                    <li class="dropdown me-4">
-                        <a href="{% if item.external %}{{ item.url }}{% else %}{{ get_url(path=item.url) }}{% endif %}" class="text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ item.title }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% for sub_item in item.dropdown %}
-                            {% if sub_item.divider %}
-                            <li><hr class="dropdown-divider"></li>
-                            {% else %}
-                            <li>
-                                <a class="dropdown-item" href="{% if sub_item.external %}{{ sub_item.url }}{% else %}{{ get_url(path=sub_item.url) }}{% endif %}"{% if sub_item.external %} target="_blank" rel="noopener"{% endif %}>
-                                    {{ sub_item.title }}
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% elif item.cta %}
-                    <li class="nav-cta-item {% if not loop.last %}me-4{% endif %}">
-                        <a href="{{ get_url(path=item.url) }}" class="btn btn-sm btn-primary nav-cta text-decoration-none">
-                            <span class="material-symbols-outlined align-middle me-1" style="font-size: 1.1rem;">download</span>{{ item.title }}
-                        </a>
-                    </li>
-                    {% elif item.icon %}
-                    <li class="{% if not loop.last %}me-4{% endif %}">
-                        <a href="{{ item.url }}" class="text-decoration-none nav-icon-link" aria-label="{{ item.title }}" title="{{ item.title }}" target="_blank" rel="noopener">
-                            <span class="material-symbols-outlined align-middle">{{ item.icon }}</span>
-                        </a>
-                    </li>
+        <!-- Desktop menu -->
+        <ul class="hidden items-center gap-1 lg:flex">
+            {% for item in nav_data.menu %}
+            {% if item.dropdown %}
+            <li class="relative" data-dropdown>
+                <button type="button" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                    {{ item.title }}
+                    <svg class="size-3 opacity-60 transition-transform" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown-panel hidden">
+                    {% for sub_item in item.dropdown %}
+                    {% if sub_item.divider %}
+                    <hr class="my-1.5 border-line">
                     {% else %}
-                    <li class="{% if not loop.last %}me-4{% endif %}">
-                        <a href="{% if item.external %}{{ item.url }}{% else %}{{ get_url(path=item.url) }}{% endif %}" class="text-decoration-none"{% if item.external %} target="_blank" rel="noopener"{% endif %}>
-                            {{ item.title }}
+                    <a class="dropdown-item" href="{% if sub_item.external %}{{ sub_item.url }}{% else %}{{ get_url(path=sub_item.url) }}{% endif %}"{% if sub_item.external %} target="_blank" rel="noopener"{% endif %}>
+                        {{ sub_item.title }}{% if sub_item.external %}<span class="material-symbols-outlined ms-auto !text-[0.95rem] text-text-3">north_east</span>{% endif %}
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </li>
+            {% elif item.cta %}
+            <li class="ms-2">
+                <a href="{{ get_url(path=item.url) }}" class="btn btn-sm btn-primary">
+                    <span class="material-symbols-outlined">download</span>{{ item.title }}
+                </a>
+            </li>
+            {% elif item.icon %}
+            <li>
+                <a href="{{ item.url }}" class="nav-link" aria-label="{{ item.title }}" title="{{ item.title }}" target="_blank" rel="noopener">
+                    <span class="material-symbols-outlined">{{ item.icon }}</span>
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <a href="{% if item.external %}{{ item.url }}{% else %}{{ get_url(path=item.url) }}{% endif %}" class="nav-link"{% if item.external %} target="_blank" rel="noopener"{% endif %}>
+                    {{ item.title }}
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+
+        <!-- Mobile: CTA + hamburger -->
+        <div class="flex items-center gap-2 lg:hidden">
+            {% for item in nav_data.menu %}{% if item.cta %}
+            <a href="{{ get_url(path=item.url) }}" class="btn btn-sm btn-primary">
+                <span class="material-symbols-outlined">download</span>{{ item.title }}
+            </a>
+            {% endif %}{% endfor %}
+            <button type="button" id="nav-toggle" class="btn btn-ghost btn-sm -me-2 px-2" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+                <span class="material-symbols-outlined" data-icon-open>menu</span>
+                <span class="material-symbols-outlined" data-icon-close hidden>close</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile menu panel -->
+    <div id="mobile-menu" class="hidden max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-bg/95 backdrop-blur-md lg:hidden">
+        <div class="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
+            {% for item in nav_data.menu %}
+            {% if item.dropdown %}
+            <div>
+                <div class="kicker mb-2">{{ item.title }}</div>
+                <ul class="space-y-1">
+                    {% for sub_item in item.dropdown %}
+                    {% if not sub_item.divider %}
+                    <li>
+                        <a class="mobile-link" href="{% if sub_item.external %}{{ sub_item.url }}{% else %}{{ get_url(path=sub_item.url) }}{% endif %}"{% if sub_item.external %} target="_blank" rel="noopener"{% endif %}>
+                            {{ sub_item.title }}{% if sub_item.external %}<span class="material-symbols-outlined ms-1 !text-[0.95rem] text-text-3">north_east</span>{% endif %}
                         </a>
                     </li>
                     {% endif %}
                     {% endfor %}
                 </ul>
             </div>
-
-            <div class="menu-extras ms-3 me-2">
-                <div class="menu-item">
-                    <button
-                        class="navbar-toggle btn btn-outline-secondary d-md-none"
-                        id="isToggle"
-                        aria-label="toggleMenu"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navigation"
-                    >
-                        <div class="lines">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            {% elif item.cta %}
+            {# CTA already shown in the header bar #}
+            {% elif item.icon %}
+            <a class="mobile-link" href="{{ item.url }}" target="_blank" rel="noopener">
+                <span class="material-symbols-outlined me-1 !text-[1.1rem]">{{ item.icon }}</span>{{ item.title }}
+            </a>
+            {% else %}
+            <a class="mobile-link text-base font-medium text-text-1" href="{% if item.external %}{{ item.url }}{% else %}{{ get_url(path=item.url) }}{% endif %}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>
+                {{ item.title }}
+            </a>
+            {% endif %}
+            {% endfor %}
         </div>
     </div>
 </header>
@@ -77,53 +101,38 @@
 
 {% macro footer() %}
 {% set nav_data = load_data(path="content/navigation.yaml") %}
-<footer class="bg-footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="footer-py-60">
-                    <div class="row">
-                        <div class="col-lg-5 col-12 mb-0 mb-md-4 pb-0 pb-md-2">
-                            <a href="{{ get_url(path='') }}" class="logo-footer">
-                                <img src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage" height="24" style="filter: brightness(0) invert(1);">
-                            </a>
-                            <p class="mt-4 text-foot">An AI-native, config-as-code console for the databases, APIs, cloud infrastructure and CLI tools you operate — native, local-first, built on the open-source Vantage Framework.</p>
-                            <a href="{{ get_url(path='download/') }}" class="btn btn-soft-primary mt-2">
-                                <span class="material-symbols-outlined me-1" style="font-size: 1rem;">download</span>
-                                Download for Mac
-                            </a>
-                        </div>
-
-                        {% for col in nav_data.footer %}
-                        <div class="col-lg-2 col-md-4 col-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                            <h5 class="text-light footer-head">{{ col.title }}</h5>
-                            <ul class="list-unstyled footer-list mt-4">
-                                {% for link in col.links %}
-                                <li>
-                                    <a href="{% if link.external %}{{ link.url }}{% else %}{{ get_url(path=link.url) }}{% endif %}" class="text-foot"{% if link.external %} target="_blank" rel="noopener"{% endif %}>
-                                        {{ link.title }}
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+<footer class="mt-28 border-t border-line bg-surface-1">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
+            <div class="sm:col-span-2 lg:col-span-1">
+                <a href="{{ get_url(path='') }}" aria-label="Home">
+                    <img class="invert" src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage" height="24" style="height: 24px; width: auto;">
+                </a>
+                <p class="mt-4 max-w-xs text-sm leading-relaxed text-text-3">An AI-native, config-as-code console for the databases, APIs, cloud infrastructure and CLI tools you operate — native, local-first, built on the open-source Vantage Framework.</p>
+                <a href="{{ get_url(path='download/') }}" class="btn btn-sm btn-soft-primary mt-5">
+                    <span class="material-symbols-outlined">download</span>Download for Mac
+                </a>
             </div>
+
+            {% for col in nav_data.footer %}
+            <div>
+                <h5 class="kicker">{{ col.title }}</h5>
+                <ul class="mt-4 space-y-2.5">
+                    {% for link in col.links %}
+                    <li>
+                        <a href="{% if link.external %}{{ link.url }}{% else %}{{ get_url(path=link.url) }}{% endif %}" class="text-sm text-text-2 hover:text-text-1"{% if link.external %} target="_blank" rel="noopener"{% endif %}>
+                            {{ link.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
-    <div class="footer-py-30 footer-bar">
-        <div class="container text-center">
-            <div class="row align-items-center">
-                <div class="col-sm-12">
-                    <div class="text-sm-center">
-                        <p class="mb-0 text-foot">© {{ now() | date(format="%Y") }} Vantage. <a href="https://github.com/romaninsh/vantage" class="text-foot" target="_blank" rel="noopener"><strong>Vantage Framework</strong> is open source, MIT licensed</a>.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="border-t border-line py-6">
+        <p class="mx-auto max-w-6xl px-4 text-center font-mono text-xs text-text-3 sm:px-6">© {{ now() | date(format="%Y") }} Vantage. <a href="https://github.com/romaninsh/vantage" class="text-text-2 hover:text-text-1" target="_blank" rel="noopener"><strong class="font-semibold">Vantage Framework</strong> is open source, MIT licensed</a>.</p>
     </div>
 </footer>
 {% endmacro %}

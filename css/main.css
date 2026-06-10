@@ -1,0 +1,972 @@
+@import "tailwindcss";
+
+@source "../themes/vantage/templates";
+@source "../content";
+
+@theme {
+  /* Palette — dark only */
+  --color-bg: #0b0b10;
+  --color-surface-1: #12131c;
+  --color-surface-2: #181a26;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.16);
+  --color-text-1: #ecedf2;
+  --color-text-2: #a0a3b5;
+  --color-text-3: #6e7186;
+  --color-accent-300: #a5b4fc;
+  --color-accent-400: #818cf8;
+  --color-accent-500: #6366f1;
+  --color-accent-600: #4f46e5;
+  --color-violet: #8b5cf6;
+  --color-ok: #34d399;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --text-display: clamp(2.2rem, 1.3rem + 3.8vw, 3.6rem);
+  --text-display--line-height: 1.08;
+  --text-display--letter-spacing: -0.025em;
+  --text-h2: clamp(1.6rem, 1.25rem + 1.5vw, 2.2rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h3: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
+  --text-h3--line-height: 1.3;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-padding-top: 5rem; /* sticky header offset for #anchors */
+  }
+
+  body {
+    @apply bg-bg font-sans text-[0.975rem] leading-relaxed text-text-2 antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-text-1 tracking-tight;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent-500) 35%, transparent);
+    color: var(--color-text-1);
+  }
+
+  a {
+    @apply transition-colors;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-400);
+    outline-offset: 2px;
+  }
+
+  pre {
+    @apply overflow-x-auto rounded-xl border border-line bg-surface-2 p-4 font-mono text-[0.82rem] leading-relaxed;
+  }
+
+  code {
+    @apply font-mono;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: "opsz" 24, "wght" 400, "FILL" 0, "GRAD" 0;
+    font-size: 1.35rem;
+    line-height: 1;
+    vertical-align: -0.2em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* ---------- Typography helpers ---------- */
+
+  .kicker {
+    @apply font-mono text-[0.72rem] font-medium uppercase tracking-[0.18em] text-accent-400;
+  }
+
+  /* Rendered-markdown bodies (page content, changelog entries) */
+  .prose {
+    @apply text-text-2;
+
+    h2 {
+      @apply mt-12 mb-4 text-h2;
+    }
+    h3 {
+      @apply mt-9 mb-3 text-h3;
+    }
+    h4 {
+      @apply mt-6 mb-2 text-[1.02rem] text-text-1;
+    }
+    p {
+      @apply my-4;
+    }
+    a:not(.btn) {
+      @apply font-medium text-accent-300 underline decoration-accent-300/40 underline-offset-3 hover:text-accent-400 hover:decoration-accent-400;
+    }
+    strong, b {
+      @apply font-semibold text-text-1;
+    }
+    ul, ol {
+      @apply my-4 space-y-2 ps-5;
+    }
+    ul {
+      @apply list-disc marker:text-text-3;
+    }
+    ol {
+      @apply list-decimal marker:text-text-3;
+    }
+    code:not(pre code) {
+      @apply rounded-md border border-line bg-surface-2 px-1.5 py-0.5 text-[0.82em] text-accent-300;
+    }
+    hr {
+      @apply my-10 border-line;
+    }
+    blockquote {
+      @apply my-6 border-s-2 border-accent-500/60 ps-4 text-text-2 italic;
+    }
+    /* Zola's insert_anchor_links = "right" */
+    .zola-anchor {
+      @apply ms-2 align-middle text-[0.8em] text-text-3 no-underline opacity-0 transition-opacity;
+    }
+    h1:hover .zola-anchor,
+    h2:hover .zola-anchor,
+    h3:hover .zola-anchor,
+    h4:hover .zola-anchor {
+      @apply opacity-100;
+    }
+  }
+
+  /* ---------- Navigation ---------- */
+
+  .topnav-scrolled {
+    @apply border-line;
+    box-shadow: 0 8px 32px -16px rgba(0, 0, 0, 0.6);
+  }
+
+  .nav-link {
+    @apply inline-flex cursor-pointer items-center gap-1 rounded-lg px-3 py-2 text-[0.88rem] font-medium text-text-2 no-underline transition-colors hover:bg-white/5 hover:text-text-1;
+  }
+
+  .nav-link[aria-expanded="true"] {
+    @apply bg-white/5 text-text-1;
+
+    svg {
+      transform: rotate(180deg);
+    }
+  }
+
+  .dropdown-panel {
+    @apply absolute start-0 top-full z-50 mt-2 w-64 rounded-xl border border-line bg-surface-1 p-1.5;
+    box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.8);
+  }
+
+  .dropdown-item {
+    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-[0.86rem] text-text-2 no-underline transition-colors hover:bg-white/5 hover:text-text-1;
+  }
+
+  .mobile-link {
+    @apply inline-flex items-center py-1 text-[0.95rem] text-text-2 no-underline hover:text-text-1;
+  }
+
+  /* ---------- Buttons (class names kept from the old theme — content/markdown uses them) ---------- */
+
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-transparent px-4 py-2 text-[0.9rem] font-medium no-underline transition-all duration-150;
+
+    .material-symbols-outlined {
+      font-size: 1.15rem;
+    }
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-[0.82rem];
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-[0.98rem];
+  }
+
+  .btn-primary {
+    @apply bg-accent-600 text-white;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-400) 35%, transparent),
+                0 4px 24px -8px color-mix(in srgb, var(--color-accent-500) 60%, transparent);
+  }
+  .btn-primary:hover {
+    @apply bg-accent-500 text-white;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-300) 45%, transparent),
+                0 4px 32px -6px color-mix(in srgb, var(--color-accent-500) 80%, transparent);
+  }
+
+  .btn-outline-primary,
+  .btn-outline-light,
+  .btn-outline-secondary {
+    @apply border-line-strong bg-transparent text-text-1 hover:border-accent-400/60 hover:bg-accent-500/10 hover:text-text-1;
+  }
+
+  .btn-soft-primary {
+    @apply border-accent-500/30 bg-accent-500/10 text-accent-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-300;
+  }
+
+  .btn-ghost {
+    @apply text-text-2 hover:bg-white/5 hover:text-text-1;
+  }
+
+  /* ---------- Cards ---------- */
+
+  .card {
+    @apply rounded-xl border border-line bg-surface-1 transition-all duration-200;
+  }
+
+  .card-hover:hover {
+    @apply -translate-y-0.5 border-line-strong;
+    box-shadow: 0 12px 40px -16px rgba(0, 0, 0, 0.8);
+  }
+
+  /* ---------- Badges ---------- */
+
+  .badge-now,
+  .badge-soon {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[0.66rem] font-medium uppercase tracking-wider;
+  }
+
+  .badge-now {
+    @apply border-ok/25 bg-ok/10 text-ok;
+  }
+  .badge-now::before {
+    content: "";
+    @apply size-1.5 rounded-full bg-ok;
+  }
+
+  .badge-soon {
+    @apply border-line bg-white/5 text-text-3;
+  }
+
+  .soon-tag {
+    @apply ms-1.5 inline-block translate-y-[-0.1em] rounded-full border border-violet/30 bg-violet/10 px-2 py-px font-mono text-[0.6rem] font-medium tracking-wider text-violet uppercase;
+  }
+
+  /* ---------- Window-chrome frame for app screenshots ---------- */
+
+  .window-frame {
+    @apply overflow-hidden rounded-xl border border-line bg-surface-2;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4),
+                0 24px 80px -24px rgba(0, 0, 0, 0.85),
+                0 0 64px -16px color-mix(in srgb, var(--color-accent-600) 25%, transparent);
+  }
+
+  .window-frame::before {
+    content: "";
+    @apply block h-8 border-b border-line bg-surface-1;
+    background-image: radial-gradient(circle 5px at 1.25rem 50%, #ff5f57 5px, transparent 6px),
+                      radial-gradient(circle 5px at 2.45rem 50%, #febc2e 5px, transparent 6px),
+                      radial-gradient(circle 5px at 3.65rem 50%, #28c840 5px, transparent 6px);
+  }
+
+  .window-frame img {
+    @apply block w-full;
+  }
+
+  /* ---------- Hero / section glow ---------- */
+
+  .glow {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
+    background: radial-gradient(closest-side,
+      color-mix(in srgb, var(--color-accent-600) 28%, transparent),
+      color-mix(in srgb, var(--color-violet) 12%, transparent) 60%,
+      transparent);
+  }
+
+  /* Faint dot grid for hero backdrops */
+  .grid-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+  }
+
+  /* ---------- Code cards (features/framework pages) ---------- */
+
+  .code-card {
+    @apply flex flex-col overflow-hidden rounded-xl border border-line bg-surface-2;
+  }
+
+  .code-card-head {
+    @apply flex items-center gap-2 border-b border-line bg-surface-1 px-4 py-2.5 font-mono text-[0.72rem] font-medium tracking-wider text-text-2 uppercase;
+  }
+
+  .code-card-head .dot {
+    @apply size-2 rounded-full;
+  }
+
+  .code-card-body {
+    @apply m-0 grow rounded-none border-0 bg-transparent;
+  }
+
+  .tool-chip {
+    @apply inline-block rounded-md border border-line bg-surface-2 px-2 py-1 font-mono text-[0.74rem] text-accent-300;
+  }
+
+  /* ---------- Backend explorer (features page) ---------- */
+
+  .backend-explorer {
+    @apply grid gap-4 md:grid-cols-[16rem_1fr];
+  }
+
+  .backend-list {
+    /* Mobile: horizontally scrolling chip strip; ≥md: vertical side list */
+    @apply flex snap-x gap-2 overflow-x-auto pb-2 md:flex-col md:overflow-visible md:pb-0;
+  }
+
+  .backend-item {
+    @apply flex shrink-0 snap-start cursor-pointer items-center gap-2.5 rounded-lg border border-line bg-surface-1 px-3.5 py-2.5 text-start transition-colors md:shrink;
+
+    .material-symbols-outlined {
+      @apply !text-[1.2rem] text-text-3;
+    }
+  }
+
+  .backend-item:hover {
+    @apply border-line-strong;
+  }
+
+  .backend-item.active {
+    @apply border-accent-500/50 bg-accent-500/10;
+
+    .material-symbols-outlined,
+    .backend-name {
+      @apply text-text-1;
+    }
+  }
+
+  .backend-name {
+    @apply text-[0.88rem] font-medium whitespace-nowrap text-text-2;
+  }
+
+  .backend-mode {
+    @apply ms-auto hidden font-mono text-[0.62rem] tracking-wider text-text-3 uppercase md:inline;
+  }
+
+  .backend-panels {
+    @apply relative;
+  }
+
+  .backend-panel {
+    @apply hidden rounded-xl border border-line bg-surface-1 p-6;
+  }
+
+  .backend-panel.active {
+    @apply block;
+  }
+
+  .cap-table {
+    @apply w-full border-collapse;
+  }
+
+  .cap-table td {
+    @apply border-t border-line py-2;
+  }
+
+  .cap-table tr:first-child td {
+    @apply border-t-0;
+  }
+
+  .cap-label {
+    @apply pe-3 text-[0.86rem] text-text-2;
+  }
+
+  .cap-val {
+    @apply w-10 text-end;
+  }
+
+  .cap-yes {
+    @apply !text-[1.15rem] text-ok;
+  }
+
+  .cap-no {
+    @apply !text-[1.15rem] text-text-3/50;
+  }
+
+  /* ---------- Agent flow (features page) ---------- */
+
+  .agent-flow {
+    @apply flex flex-col items-stretch gap-2 md:flex-row md:items-center md:justify-center md:gap-3;
+  }
+
+  .agent-step {
+    @apply flex items-center gap-2.5 rounded-lg border border-line bg-surface-1 px-4 py-3 text-[0.86rem] font-medium text-text-1;
+
+    .material-symbols-outlined {
+      @apply !text-[1.2rem] text-accent-400;
+    }
+  }
+
+  .agent-arrow {
+    @apply self-center !text-[1.2rem] text-text-3 max-md:rotate-90;
+  }
+
+  /* ---------- Roadmap deck (features page) ---------- */
+
+  .roadmap-deck {
+    @apply relative mx-auto h-72 max-w-xl cursor-pointer select-none sm:h-64;
+  }
+
+  .roadmap-card {
+    @apply absolute inset-x-0 top-0 flex h-60 flex-col items-center rounded-xl border border-line bg-surface-2 p-6 text-center transition-all duration-300 sm:h-56;
+    box-shadow: 0 16px 48px -16px rgba(0, 0, 0, 0.7);
+  }
+
+  .roadmap-card.is-front {
+    @apply border-accent-500/40;
+  }
+
+  .roadmap-card.leaving {
+    opacity: 0 !important;
+    transform: translateY(-24px) scale(0.97) !important;
+  }
+
+  .deck-badge {
+    @apply absolute top-4 right-4;
+  }
+
+  .deck-icon {
+    @apply !text-[2rem] text-accent-400;
+  }
+
+  /* ---------- Layer map (framework page) ---------- */
+
+  .layer-map {
+    @apply relative flex flex-col gap-3;
+  }
+
+  .lm-step {
+    @apply relative flex gap-4 rounded-xl border border-line bg-surface-1 p-5 sm:gap-5;
+  }
+
+  .lm-num {
+    @apply flex size-8 shrink-0 items-center justify-center rounded-lg border border-accent-500/30 bg-accent-500/10 font-mono text-sm font-semibold text-accent-300;
+  }
+
+  .lm-body {
+    @apply min-w-0;
+
+    h4 {
+      @apply flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[1.02rem];
+    }
+    p {
+      @apply mt-2 text-sm leading-relaxed text-text-2;
+    }
+    code {
+      @apply font-mono text-[0.85em] text-accent-300;
+    }
+  }
+
+  .lm-crate {
+    @apply inline-block rounded-md border border-line bg-surface-2 px-2 py-0.5 align-middle font-mono text-[0.68rem] font-normal text-accent-300 no-underline;
+  }
+
+  a.lm-crate:hover {
+    @apply border-accent-500/40 text-accent-300;
+  }
+
+  .lm-branch {
+    @apply mt-3 flex gap-2.5 rounded-lg border border-line bg-bg/60 p-3 !text-[0.82rem] text-text-3;
+
+    .material-symbols-outlined {
+      @apply mt-0.5 shrink-0 !text-[1.1rem] text-violet;
+    }
+    a {
+      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+    }
+    strong {
+      @apply font-semibold text-text-2;
+    }
+  }
+
+  /* ---------- Snippet gallery (framework page) ---------- */
+
+  .snip {
+    @apply m-0 hidden;
+  }
+
+  .snip.active {
+    @apply block;
+  }
+
+  .snip-card {
+    @apply overflow-hidden rounded-xl border border-line bg-surface-1;
+  }
+
+  .snip-head {
+    @apply border-b border-line p-5 sm:p-6;
+
+    h3 {
+      @apply text-h3;
+    }
+    p {
+      @apply mt-2 text-sm leading-relaxed text-text-2;
+    }
+    code {
+      @apply rounded-md border border-line bg-surface-2 px-1.5 py-0.5 font-mono text-[0.82em] text-accent-300;
+    }
+  }
+
+  .snip-body {
+    @apply bg-surface-2;
+  }
+
+  .snip-code {
+    @apply m-0 max-h-[28rem] rounded-none border-0 bg-transparent p-5 sm:p-6;
+  }
+
+  .snip-note {
+    @apply border-t border-line bg-surface-1 p-4 text-[0.82rem] leading-relaxed text-text-3 sm:px-6;
+
+    strong {
+      @apply mb-1 block font-mono text-[0.68rem] font-semibold tracking-[0.14em] text-accent-400 uppercase;
+    }
+    a {
+      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+    }
+  }
+
+  .snip-nav {
+    @apply mt-6 flex items-center justify-center gap-4;
+  }
+
+  .snip-arrow {
+    @apply flex size-9 cursor-pointer items-center justify-center rounded-full border border-line bg-surface-1 text-text-2 transition-colors hover:border-line-strong hover:text-text-1;
+  }
+
+  .snip-dots {
+    @apply flex flex-wrap items-center justify-center gap-2;
+  }
+
+  .snip-dot {
+    @apply size-2 cursor-pointer rounded-full bg-white/15 transition-colors hover:bg-white/30;
+  }
+
+  .snip-dot.active {
+    @apply bg-accent-400;
+  }
+
+  /* ---------- Crate map (framework page) ---------- */
+
+  .crate-group {
+    @apply mt-8 first:mt-0 lg:first:mt-0;
+
+    h4 {
+      @apply mb-3 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-accent-400 uppercase;
+    }
+  }
+
+  .crate-row {
+    @apply flex flex-col gap-0.5 border-t border-line py-2.5 sm:flex-row sm:items-baseline sm:gap-4;
+  }
+
+  .crate-name {
+    @apply shrink-0 font-mono text-[0.82rem] sm:w-52;
+
+    a {
+      @apply text-accent-300 no-underline hover:text-text-1 hover:underline;
+    }
+  }
+
+  .crate-purpose {
+    @apply text-[0.84rem] leading-relaxed text-text-3;
+
+    code {
+      @apply font-mono text-[0.9em] text-text-2;
+    }
+  }
+
+  /* ---------- Diagrams embedded in markdown (solutions pages) ---------- */
+
+  /* Journey timeline (developers page) */
+  .journey {
+    @apply my-8 flex flex-col;
+  }
+
+  .journey-phase {
+    @apply mb-4 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-ok uppercase;
+  }
+
+  .journey-phase.next-phase {
+    @apply mt-8 text-violet;
+  }
+
+  .journey-step {
+    @apply relative flex gap-4 pb-7 ps-1;
+  }
+
+  /* connector line */
+  .journey-step::before {
+    content: "";
+    @apply absolute top-9 bottom-0 left-[1.1rem] w-px bg-line-strong;
+  }
+
+  .journey-step.last::before,
+  .journey-step:last-child::before {
+    @apply hidden;
+  }
+
+  .journey-num {
+    @apply z-10 flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-sm font-semibold;
+  }
+
+  .journey-step.today .journey-num {
+    @apply border-ok/40 bg-ok/10 text-ok;
+  }
+
+  .journey-step.next .journey-num {
+    @apply border-violet/40 bg-violet/10 text-violet;
+  }
+
+  .journey-body {
+    h4 {
+      @apply text-[0.98rem];
+    }
+    p {
+      @apply mt-1.5 text-sm leading-relaxed text-text-2;
+    }
+  }
+
+  .journey-note {
+    @apply my-6 flex gap-3 rounded-xl border border-line bg-surface-1 p-4 text-[0.86rem] leading-relaxed text-text-2;
+
+    > .material-symbols-outlined {
+      @apply mt-0.5 shrink-0 !text-[1.25rem] text-accent-400;
+    }
+    a {
+      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+    }
+  }
+
+  /* Stack swap (developers page) */
+  .stack-swap {
+    @apply my-8 flex flex-col gap-4;
+  }
+
+  .swap-row {
+    @apply flex flex-col gap-3 rounded-xl border border-line bg-surface-1 p-5 lg:flex-row lg:items-center lg:gap-6;
+  }
+
+  .swap-label {
+    @apply shrink-0 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-text-3 uppercase lg:w-28;
+  }
+
+  .swap-label.accent {
+    @apply text-accent-400;
+  }
+
+  .swap-flow {
+    @apply flex grow flex-col items-stretch gap-2 md:flex-row md:items-center md:gap-3;
+  }
+
+  .swap-node {
+    @apply flex grow basis-0 flex-col items-center gap-1 rounded-lg border border-line bg-surface-2 px-4 py-3 text-center;
+
+    > .material-symbols-outlined {
+      @apply !text-[1.4rem] text-text-3;
+    }
+    b {
+      @apply text-[0.88rem] font-semibold text-text-1;
+    }
+    small {
+      @apply font-mono text-[0.66rem] text-text-3;
+    }
+  }
+
+  .swap-node.swap-legacy {
+    @apply border-dashed border-line-strong opacity-80;
+  }
+
+  .swap-node.swap-vantage {
+    @apply border-accent-500/50 bg-accent-500/10;
+
+    > .material-symbols-outlined {
+      @apply text-accent-400;
+    }
+  }
+
+  .swap-arrow {
+    @apply self-center !text-[1.2rem] text-text-3 max-md:rotate-90;
+  }
+
+  .swap-tags {
+    @apply mt-1.5 flex flex-wrap justify-center gap-1.5;
+
+    i {
+      @apply rounded-full border border-line bg-bg/60 px-2 py-px font-mono text-[0.6rem] not-italic text-text-2;
+    }
+  }
+
+  .swap-benefits {
+    @apply my-8 grid gap-4 md:grid-cols-3;
+  }
+
+  .swap-benefit {
+    @apply flex gap-3 rounded-xl border border-line bg-surface-1 p-5;
+
+    > .material-symbols-outlined {
+      @apply mt-0.5 shrink-0 !text-[1.4rem] text-accent-400;
+    }
+    b {
+      @apply block text-[0.92rem] font-semibold text-text-1;
+    }
+    p {
+      @apply mt-1 text-sm leading-relaxed text-text-2;
+    }
+  }
+
+  /* Share flow (internal-tools page) */
+  .share-flow {
+    @apply my-8 flex flex-col items-stretch gap-1 lg:flex-row lg:items-stretch;
+  }
+
+  .share-node {
+    @apply relative flex grow basis-0 flex-col rounded-xl border border-line bg-surface-1 p-5;
+
+    h4 {
+      @apply mt-3 text-[0.98rem];
+    }
+    p {
+      @apply mt-1.5 text-sm leading-relaxed text-text-2;
+    }
+  }
+
+  .share-node.share-hub {
+    @apply border-accent-500/40 bg-accent-500/5;
+  }
+
+  .share-num {
+    @apply absolute top-4 right-4 flex size-7 items-center justify-center rounded-full border border-line bg-surface-2 font-mono text-xs font-semibold text-text-2;
+  }
+
+  .share-ico {
+    @apply !text-[1.8rem] text-accent-400;
+  }
+
+  .share-avatars {
+    @apply flex;
+
+    i {
+      @apply -ms-1.5 size-7 rounded-full border-2 border-surface-1 bg-gradient-to-br from-accent-400 to-violet first:ms-0;
+    }
+    i:nth-child(2) {
+      @apply from-violet to-accent-600;
+    }
+    i:nth-child(3) {
+      @apply from-accent-600 to-accent-400;
+    }
+  }
+
+  .share-link {
+    @apply flex shrink-0 flex-col items-center justify-center gap-1 px-2 py-1 lg:w-28 lg:px-1;
+  }
+
+  .share-tag {
+    @apply rounded-full border border-line bg-surface-2 px-2 py-px font-mono text-[0.62rem] tracking-wider text-text-3 uppercase;
+  }
+
+  .share-track {
+    @apply relative block h-8 w-px overflow-hidden bg-line-strong lg:h-px lg:w-full;
+  }
+
+  .share-dot {
+    @apply absolute size-[5px] rounded-full bg-accent-400;
+    top: 0;
+    left: -2px;
+    animation: share-travel-v 2.2s linear infinite;
+  }
+
+  @media (min-width: 64rem) {
+    .share-dot {
+      top: -2px;
+      left: 0;
+      animation: share-travel 2.2s linear infinite;
+    }
+  }
+
+  .share-footnote,
+  .connect-benefit {
+    @apply my-6 flex gap-2.5 text-[0.84rem] leading-relaxed text-text-3;
+
+    > .material-symbols-outlined {
+      @apply mt-0.5 shrink-0 !text-[1.15rem] text-accent-400;
+    }
+  }
+
+  /* Connect hub (internal-tools page) */
+  .connect-hub {
+    @apply relative my-8;
+  }
+
+  .connect-svg {
+    @apply absolute inset-6 hidden h-auto md:block;
+    width: calc(100% - 3rem);
+    height: calc(100% - 3rem);
+
+    line {
+      stroke: var(--color-line-strong);
+      stroke-width: 1px;
+      stroke-dasharray: 4 4;
+    }
+  }
+
+  .connect-grid {
+    @apply relative grid gap-3 md:grid-cols-3 md:gap-y-10;
+  }
+
+  .connect-node {
+    @apply flex items-center gap-3 rounded-xl border border-line bg-surface-1 px-4 py-3;
+  }
+
+  .cn-ico {
+    @apply !text-[1.4rem] text-text-3;
+  }
+
+  .cn-text {
+    b {
+      @apply block text-[0.88rem] font-semibold text-text-1;
+    }
+    small {
+      @apply font-mono text-[0.66rem] text-text-3;
+    }
+  }
+
+  .connect-node.cn-hub {
+    @apply flex-col gap-1 border-accent-500/50 bg-accent-500/10 py-5 text-center md:col-start-2 md:row-start-2;
+    box-shadow: 0 0 48px -12px color-mix(in srgb, var(--color-accent-600) 50%, transparent);
+
+    b {
+      @apply text-[0.95rem] text-text-1;
+    }
+    small {
+      @apply font-mono text-[0.66rem] text-text-3;
+    }
+  }
+
+  .cn-hub-ico {
+    @apply !text-[1.8rem] text-accent-400;
+  }
+
+  .connect-node.cn-gh {
+    @apply md:row-start-3;
+  }
+
+  .connect-node.cn-tools {
+    @apply md:col-start-3 md:row-start-3;
+  }
+
+  /* Layer stack (app-builders page) */
+  .layer-stack {
+    @apply my-8 flex flex-col;
+  }
+
+  .layer {
+    @apply rounded-xl border border-line bg-surface-1 px-5 py-4 text-center;
+
+    h4 {
+      @apply text-[0.98rem];
+    }
+    small {
+      @apply font-mono text-[0.7rem] text-text-3;
+    }
+  }
+
+  .layer.mid {
+    @apply border-accent-500/50 bg-accent-500/10;
+  }
+
+  .layer-link {
+    @apply flex items-center justify-center gap-1.5 py-2 font-mono text-[0.68rem] tracking-wider text-text-3 uppercase;
+
+    .material-symbols-outlined {
+      @apply !text-[1.05rem] text-accent-400;
+    }
+  }
+
+  /* Capability cards (app-builders page) */
+  .cap-card {
+    @apply h-full rounded-xl border border-line bg-surface-1 p-5;
+
+    h5 {
+      @apply mt-3 text-[0.95rem];
+    }
+    p {
+      @apply mt-1.5 text-sm leading-relaxed text-text-2;
+    }
+    code {
+      @apply font-mono text-[0.85em] text-accent-300;
+    }
+  }
+
+  .cap-icon {
+    @apply !text-[1.7rem] text-accent-400;
+  }
+
+  /* Code-card dot colours (used in markdown + features page) */
+  .dot.yaml {
+    background: #6ee7b7;
+  }
+
+  .dot.rhai {
+    background: #c4b5fd;
+  }
+
+  /* ---------- Code highlighting (Prism, custom dark palette) ---------- */
+
+  .token.comment, .token.prolog, .token.doctype, .token.cdata {
+    color: #5b5f73;
+    font-style: italic;
+  }
+  .token.punctuation {
+    color: #8b8fa3;
+  }
+  .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted {
+    color: #f472b6;
+  }
+  .token.boolean, .token.number {
+    color: #fbbf24;
+  }
+  .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted {
+    color: #6ee7b7;
+  }
+  .token.operator, .token.entity, .token.url {
+    color: #93c5fd;
+  }
+  .token.atrule, .token.attr-value, .token.keyword {
+    color: #a5b4fc;
+  }
+  .token.function, .token.class-name {
+    color: #c4b5fd;
+  }
+  .token.regex, .token.important, .token.variable {
+    color: #fda4af;
+  }
+  .token.important, .token.bold {
+    font-weight: 600;
+  }
+}
+
+/* Animated dot travelling along share-flow tracks */
+@keyframes share-travel {
+  from { left: 0; }
+  to { left: calc(100% - 5px); }
+}
+
+@keyframes share-travel-v {
+  from { top: 0; }
+  to { top: calc(100% - 5px); }
+}
