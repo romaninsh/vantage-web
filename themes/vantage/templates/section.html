@@ -6,47 +6,34 @@
 {% block content %}
 {{ nav::header() }}
 
-<!-- Page hero -->
-<section class="page-hero">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 text-center">
-                {% if section.extra.kicker %}<p class="page-kicker">{{ section.extra.kicker }}</p>{% endif %}
-                <h1>{{ section.title }}</h1>
-                {% if section.content %}
-                    <div class="lead section-intro">{{ section.content | safe }}</div>
-                {% endif %}
-            </div>
-        </div>
+<!-- Section hero -->
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-12 text-center sm:px-6 md:pt-24 md:pb-16">
+        {% if section.extra.kicker %}<p class="kicker mb-4">{{ section.extra.kicker }}</p>{% endif %}
+        <h1 class="text-display mx-auto max-w-3xl">{{ section.title }}</h1>
+        {% if section.content %}
+            <div class="prose mx-auto mt-5 max-w-2xl text-lg">{{ section.content | safe }}</div>
+        {% endif %}
     </div>
 </section>
 
-<!-- Pages -->
+<!-- Child pages -->
 {% if section.pages %}
-<section class="pb-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="row g-4">
-                    {% for page in section.pages %}
-                    <div class="col-md-6 col-lg-4">
-                        <a href="{{ page.permalink }}" class="card solution-card h-100 shadow-sm border-0 text-decoration-none">
-                            <div class="card-body p-4 d-flex flex-column">
-                                {% if page.extra.icon %}
-                                <span class="material-symbols-outlined text-primary mb-3" style="font-size: 2.5rem;">{{ page.extra.icon }}</span>
-                                {% endif %}
-                                <h5 class="card-title">{{ page.title }}</h5>
-                                {% if page.description %}<p class="card-text text-muted">{{ page.description }}</p>{% endif %}
-                                <span class="solution-more mt-auto pt-2 text-primary fw-medium">
-                                    Explore<span class="material-symbols-outlined align-middle ms-1" style="font-size: 1rem;">arrow_forward</span>
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+<section class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {% for page in section.pages %}
+        <a href="{{ page.permalink }}" class="card card-hover group flex flex-col p-6 no-underline">
+            {% if page.extra.icon %}
+            <span class="material-symbols-outlined mb-4 !text-[2.2rem] text-accent-400">{{ page.extra.icon }}</span>
+            {% endif %}
+            <h3 class="text-[1.05rem]">{{ page.title }}</h3>
+            {% if page.description %}<p class="mt-2 text-sm leading-relaxed text-text-2">{{ page.description }}</p>{% endif %}
+            <span class="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-medium text-accent-400 transition-colors group-hover:text-accent-300">
+                Explore<span class="material-symbols-outlined !text-[1rem] transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+            </span>
+        </a>
+        {% endfor %}
     </div>
 </section>
 {% endif %}
