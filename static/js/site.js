@@ -107,4 +107,51 @@
     });
     render();
   }
+
+  /* ---------- Snippet gallery with #slide-N deep links (framework page) ---------- */
+  const gallery = document.getElementById("snipGallery");
+  if (gallery) {
+    const snips = Array.from(gallery.querySelectorAll(".snip"));
+    const dotsWrap = document.getElementById("snipDots");
+    let idx = 0;
+
+    snips.forEach((_, i) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "snip-dot" + (i === 0 ? " active" : "");
+      dot.setAttribute("aria-label", "Snippet " + (i + 1));
+      dot.addEventListener("click", () => show(i));
+      dotsWrap.appendChild(dot);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function show(n, updateHash) {
+      idx = (n + snips.length) % snips.length;
+      snips.forEach((s, i) => s.classList.toggle("active", i === idx));
+      dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+      if (updateHash !== false) {
+        // Keep the URL shareable without polluting history or scrolling.
+        history.replaceState(null, "", "#slide-" + (idx + 1));
+      }
+    }
+
+    const slideFromHash = () => {
+      const m = /^#slide-(\d+)$/.exec(window.location.hash);
+      return m ? parseInt(m[1], 10) - 1 : null;
+    };
+
+    gallery.querySelector(".snip-prev").addEventListener("click", () => show(idx - 1));
+    gallery.querySelector(".snip-next").addEventListener("click", () => show(idx + 1));
+    window.addEventListener("hashchange", () => {
+      const n = slideFromHash();
+      if (n !== null && n !== idx) show(n, false);
+    });
+
+    // Open the slide named in the URL on load (and scroll it into view).
+    const initial = slideFromHash();
+    if (initial !== null && initial >= 0 && initial < snips.length) {
+      show(initial, false);
+      gallery.scrollIntoView({ block: "center" });
+    }
+  }
 })();

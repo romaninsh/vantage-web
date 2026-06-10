@@ -443,6 +443,153 @@
     @apply !text-[2rem] text-accent-400;
   }
 
+  /* ---------- Layer map (framework page) ---------- */
+
+  .layer-map {
+    @apply relative flex flex-col gap-3;
+  }
+
+  .lm-step {
+    @apply relative flex gap-4 rounded-xl border border-line bg-surface-1 p-5 sm:gap-5;
+  }
+
+  .lm-num {
+    @apply flex size-8 shrink-0 items-center justify-center rounded-lg border border-accent-500/30 bg-accent-500/10 font-mono text-sm font-semibold text-accent-300;
+  }
+
+  .lm-body {
+    @apply min-w-0;
+
+    h4 {
+      @apply flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[1.02rem];
+    }
+    p {
+      @apply mt-2 text-sm leading-relaxed text-text-2;
+    }
+    code {
+      @apply font-mono text-[0.85em] text-accent-300;
+    }
+  }
+
+  .lm-crate {
+    @apply inline-block rounded-md border border-line bg-surface-2 px-2 py-0.5 align-middle font-mono text-[0.68rem] font-normal text-accent-300 no-underline;
+  }
+
+  a.lm-crate:hover {
+    @apply border-accent-500/40 text-accent-300;
+  }
+
+  .lm-branch {
+    @apply mt-3 flex gap-2.5 rounded-lg border border-line bg-bg/60 p-3 !text-[0.82rem] text-text-3;
+
+    .material-symbols-outlined {
+      @apply mt-0.5 shrink-0 !text-[1.1rem] text-violet;
+    }
+    a {
+      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+    }
+    strong {
+      @apply font-semibold text-text-2;
+    }
+  }
+
+  /* ---------- Snippet gallery (framework page) ---------- */
+
+  .snip {
+    @apply m-0 hidden;
+  }
+
+  .snip.active {
+    @apply block;
+  }
+
+  .snip-card {
+    @apply overflow-hidden rounded-xl border border-line bg-surface-1;
+  }
+
+  .snip-head {
+    @apply border-b border-line p-5 sm:p-6;
+
+    h3 {
+      @apply text-h3;
+    }
+    p {
+      @apply mt-2 text-sm leading-relaxed text-text-2;
+    }
+    code {
+      @apply rounded-md border border-line bg-surface-2 px-1.5 py-0.5 font-mono text-[0.82em] text-accent-300;
+    }
+  }
+
+  .snip-body {
+    @apply bg-surface-2;
+  }
+
+  .snip-code {
+    @apply m-0 max-h-[28rem] rounded-none border-0 bg-transparent p-5 sm:p-6;
+  }
+
+  .snip-note {
+    @apply border-t border-line bg-surface-1 p-4 text-[0.82rem] leading-relaxed text-text-3 sm:px-6;
+
+    strong {
+      @apply mb-1 block font-mono text-[0.68rem] font-semibold tracking-[0.14em] text-accent-400 uppercase;
+    }
+    a {
+      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+    }
+  }
+
+  .snip-nav {
+    @apply mt-6 flex items-center justify-center gap-4;
+  }
+
+  .snip-arrow {
+    @apply flex size-9 cursor-pointer items-center justify-center rounded-full border border-line bg-surface-1 text-text-2 transition-colors hover:border-line-strong hover:text-text-1;
+  }
+
+  .snip-dots {
+    @apply flex flex-wrap items-center justify-center gap-2;
+  }
+
+  .snip-dot {
+    @apply size-2 cursor-pointer rounded-full bg-white/15 transition-colors hover:bg-white/30;
+  }
+
+  .snip-dot.active {
+    @apply bg-accent-400;
+  }
+
+  /* ---------- Crate map (framework page) ---------- */
+
+  .crate-group {
+    @apply mt-8 first:mt-0 lg:first:mt-0;
+
+    h4 {
+      @apply mb-3 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-accent-400 uppercase;
+    }
+  }
+
+  .crate-row {
+    @apply flex flex-col gap-0.5 border-t border-line py-2.5 sm:flex-row sm:items-baseline sm:gap-4;
+  }
+
+  .crate-name {
+    @apply shrink-0 font-mono text-[0.82rem] sm:w-52;
+
+    a {
+      @apply text-accent-300 no-underline hover:text-text-1 hover:underline;
+    }
+  }
+
+  .crate-purpose {
+    @apply text-[0.84rem] leading-relaxed text-text-3;
+
+    code {
+      @apply font-mono text-[0.9em] text-text-2;
+    }
+  }
+
   /* ---------- Code highlighting (Prism, custom dark palette) ---------- */
 
   .token.comment, .token.prolog, .token.doctype, .token.cdata {
