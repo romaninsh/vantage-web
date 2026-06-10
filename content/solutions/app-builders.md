@@ -27,13 +27,13 @@ It's the same engine that powers Vantage UI. The difference: it's **fully open-s
 
 ## What you get
 
-<div class="row g-4">
-<div class="col-md-6 col-lg-4"><div class="cap-card h-100"><span class="material-symbols-outlined cap-icon">verified</span><h5>Typed &amp; safe</h5><p>Model entities as native Rust types. The compiler catches mismatches, and capability traits stop you calling <code>insert</code> on a read-only source.</p></div></div>
-<div class="col-md-6 col-lg-4"><div class="cap-card h-100"><span class="material-symbols-outlined cap-icon">swap_horiz</span><h5>Swap backends, keep your code</h5><p>Move an entity between SQLite, Postgres, SurrealDB, Mongo or a REST API without changing your app logic.</p></div></div>
-<div class="col-md-6 col-lg-4"><div class="cap-card h-100"><span class="material-symbols-outlined cap-icon">bolt</span><h5>Local cache, off the main thread</h5><p>Diorama keeps a local copy in memory or on disk, serves reads instantly, and refreshes on a background task — even when the backend is slow or rate-limited.</p></div></div>
-<div class="col-md-6 col-lg-4"><div class="cap-card h-100"><span class="material-symbols-outlined cap-icon">sync</span><h5>Reactive &amp; live</h5><p>When data changes, everything watching hears about it — grids re-render, forms update. Build reactive UIs without hand-rolling state sync.</p></div></div>
-<div class="col-md-6 col-lg-4"><div class="cap-card h-100"><span class="material-symbols-outlined cap-icon">table_rows</span><h5>Virtualized loading</h5><p>Viewport-driven sparse paging fetches only the rows on screen, so a million-row list stays smooth.</p></div></div>
-<div class="col-md-6 col-lg-4"><div class="cap-card h-100"><span class="material-symbols-outlined cap-icon">science</span><h5>Mock-testable</h5><p>Mocks at the SDK level let you unit-test business logic with no database and no network — fast, deterministic CI.</p></div></div>
+<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+<div class="cap-card"><span class="material-symbols-outlined cap-icon">verified</span><h5>Typed &amp; safe</h5><p>Model entities as native Rust types. The compiler catches mismatches, and capability traits stop you calling <code>insert</code> on a read-only source.</p></div>
+<div class="cap-card"><span class="material-symbols-outlined cap-icon">swap_horiz</span><h5>Swap backends, keep your code</h5><p>Move an entity between SQLite, Postgres, SurrealDB, Mongo or a REST API without changing your app logic.</p></div>
+<div class="cap-card"><span class="material-symbols-outlined cap-icon">bolt</span><h5>Local cache, off the main thread</h5><p>Diorama keeps a local copy in memory or on disk, serves reads instantly, and refreshes on a background task — even when the backend is slow or rate-limited.</p></div>
+<div class="cap-card"><span class="material-symbols-outlined cap-icon">sync</span><h5>Reactive &amp; live</h5><p>When data changes, everything watching hears about it — grids re-render, forms update. Build reactive UIs without hand-rolling state sync.</p></div>
+<div class="cap-card"><span class="material-symbols-outlined cap-icon">table_rows</span><h5>Virtualized loading</h5><p>Viewport-driven sparse paging fetches only the rows on screen, so a million-row list stays smooth.</p></div>
+<div class="cap-card"><span class="material-symbols-outlined cap-icon">science</span><h5>Mock-testable</h5><p>Mocks at the SDK level let you unit-test business logic with no database and no network — fast, deterministic CI.</p></div>
 </div>
 
 ## The framework, in full

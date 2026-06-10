@@ -1,0 +1,157 @@
+// Vantage site behaviour — vanilla JS, no dependencies.
+// Each block guards on element existence so the file is safe on every page.
+
+(() => {
+  "use strict";
+
+  /* ---------- Sticky nav: border + shadow once scrolled ---------- */
+  const topnav = document.getElementById("topnav");
+  if (topnav) {
+    const sync = () => topnav.classList.toggle("topnav-scrolled", window.scrollY > 0);
+    window.addEventListener("scroll", sync, { passive: true });
+    sync();
+  }
+
+  /* ---------- Desktop dropdowns ---------- */
+  const dropdowns = Array.from(document.querySelectorAll("[data-dropdown]"));
+  const closeDropdowns = (except) => {
+    for (const drop of dropdowns) {
+      if (drop === except) continue;
+      drop.querySelector(".dropdown-panel")?.classList.add("hidden");
+      drop.querySelector("button")?.setAttribute("aria-expanded", "false");
+    }
+  };
+  for (const drop of dropdowns) {
+    const btn = drop.querySelector("button");
+    const panel = drop.querySelector(".dropdown-panel");
+    if (!btn || !panel) continue;
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeDropdowns(drop);
+      const open = panel.classList.toggle("hidden") === false;
+      btn.setAttribute("aria-expanded", String(open));
+    });
+  }
+  if (dropdowns.length) {
+    document.addEventListener("click", () => closeDropdowns());
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDropdowns();
+    });
+  }
+
+  /* ---------- Mobile menu ---------- */
+  const navToggle = document.getElementById("nav-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+  if (navToggle && mobileMenu) {
+    const iconOpen = navToggle.querySelector("[data-icon-open]");
+    const iconClose = navToggle.querySelector("[data-icon-close]");
+    const setOpen = (open) => {
+      mobileMenu.classList.toggle("hidden", !open);
+      navToggle.setAttribute("aria-expanded", String(open));
+      if (iconOpen) iconOpen.hidden = open;
+      if (iconClose) iconClose.hidden = !open;
+    };
+    navToggle.addEventListener("click", () => setOpen(mobileMenu.classList.contains("hidden")));
+    // Close when a link inside is followed (same-page anchors etc.)
+    mobileMenu.addEventListener("click", (e) => {
+      if (e.target.closest("a")) setOpen(false);
+    });
+  }
+
+  /* ---------- Backend explorer tabs (features page) ---------- */
+  document.querySelectorAll(".backend-item").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const slug = btn.getAttribute("data-backend");
+      document.querySelectorAll(".backend-item").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".backend-panel").forEach((p) => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("bp-" + slug)?.classList.add("active");
+    });
+  });
+
+  /* ---------- Roadmap deck (features page) ---------- */
+  const deck = document.getElementById("roadmapDeck");
+  if (deck) {
+    const cards = Array.from(deck.querySelectorAll(".roadmap-card"));
+    const OFFSET = 16, SCALE = 0.05, MAX_VISIBLE = 3;
+    let animating = false;
+
+    const render = () => {
+      cards.forEach((card, i) => {
+        card.style.zIndex = String(cards.length - i);
+        card.style.transform = `translateY(${i * OFFSET}px) scale(${1 - i * SCALE})`;
+        card.style.opacity = i > MAX_VISIBLE ? "0" : "1";
+        card.classList.toggle("is-front", i === 0);
+      });
+    };
+
+    const cycle = () => {
+      if (animating || cards.length < 2) return;
+      animating = true;
+      const front = cards[0];
+      front.classList.add("leaving");
+      setTimeout(() => {
+        cards.push(cards.shift());
+        front.classList.remove("leaving");
+        render();
+        animating = false;
+      }, 240);
+    };
+
+    deck.addEventListener("click", cycle);
+    deck.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        cycle();
+      }
+    });
+    render();
+  }
+
+  /* ---------- Snippet gallery with #slide-N deep links (framework page) ---------- */
+  const gallery = document.getElementById("snipGallery");
+  if (gallery) {
+    const snips = Array.from(gallery.querySelectorAll(".snip"));
+    const dotsWrap = document.getElementById("snipDots");
+    let idx = 0;
+
+    snips.forEach((_, i) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "snip-dot" + (i === 0 ? " active" : "");
+      dot.setAttribute("aria-label", "Snippet " + (i + 1));
+      dot.addEventListener("click", () => show(i));
+      dotsWrap.appendChild(dot);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function show(n, updateHash) {
+      idx = (n + snips.length) % snips.length;
+      snips.forEach((s, i) => s.classList.toggle("active", i === idx));
+      dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+      if (updateHash !== false) {
+        // Keep the URL shareable without polluting history or scrolling.
+        history.replaceState(null, "", "#slide-" + (idx + 1));
+      }
+    }
+
+    const slideFromHash = () => {
+      const m = /^#slide-(\d+)$/.exec(window.location.hash);
+      return m ? parseInt(m[1], 10) - 1 : null;
+    };
+
+    gallery.querySelector(".snip-prev").addEventListener("click", () => show(idx - 1));
+    gallery.querySelector(".snip-next").addEventListener("click", () => show(idx + 1));
+    window.addEventListener("hashchange", () => {
+      const n = slideFromHash();
+      if (n !== null && n !== idx) show(n, false);
+    });
+
+    // Open the slide named in the URL on load (and scroll it into view).
+    const initial = slideFromHash();
+    if (initial !== null && initial >= 0 && initial < snips.length) {
+      show(initial, false);
+      gallery.scrollIntoView({ block: "center" });
+    }
+  }
+})();
