@@ -57,4 +57,54 @@
       if (e.target.closest("a")) setOpen(false);
     });
   }
+
+  /* ---------- Backend explorer tabs (features page) ---------- */
+  document.querySelectorAll(".backend-item").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const slug = btn.getAttribute("data-backend");
+      document.querySelectorAll(".backend-item").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".backend-panel").forEach((p) => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("bp-" + slug)?.classList.add("active");
+    });
+  });
+
+  /* ---------- Roadmap deck (features page) ---------- */
+  const deck = document.getElementById("roadmapDeck");
+  if (deck) {
+    const cards = Array.from(deck.querySelectorAll(".roadmap-card"));
+    const OFFSET = 16, SCALE = 0.05, MAX_VISIBLE = 3;
+    let animating = false;
+
+    const render = () => {
+      cards.forEach((card, i) => {
+        card.style.zIndex = String(cards.length - i);
+        card.style.transform = `translateY(${i * OFFSET}px) scale(${1 - i * SCALE})`;
+        card.style.opacity = i > MAX_VISIBLE ? "0" : "1";
+        card.classList.toggle("is-front", i === 0);
+      });
+    };
+
+    const cycle = () => {
+      if (animating || cards.length < 2) return;
+      animating = true;
+      const front = cards[0];
+      front.classList.add("leaving");
+      setTimeout(() => {
+        cards.push(cards.shift());
+        front.classList.remove("leaving");
+        render();
+        animating = false;
+      }, 240);
+    };
+
+    deck.addEventListener("click", cycle);
+    deck.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        cycle();
+      }
+    });
+    render();
+  }
 })();

@@ -7,31 +7,24 @@
 {{ nav::header() }}
 
 <!-- Page hero -->
-<section class="page-hero">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 text-center">
-                <p class="page-kicker">{{ page.extra.kicker }}</p>
-                <h1>{{ page.title }}</h1>
-                <p class="lead">{{ page.description }}</p>
-            </div>
-        </div>
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-12 text-center sm:px-6 md:pt-24 md:pb-16">
+        {% if page.extra.kicker %}<p class="kicker mb-4">{{ page.extra.kicker }}</p>{% endif %}
+        <h1 class="text-display mx-auto max-w-3xl">{{ page.title }}</h1>
+        <p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ page.description }}</p>
     </div>
 </section>
 
 <!-- 1. Two languages, one config -->
-<section class="pb-2">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="feature-head mb-4">
-                    <h2>Two languages, one config</h2>
-                    <p>Config in Vantage is two first-class languages, not one with an escape hatch. <strong>YAML</strong> declares the shape; <strong>Rhai</strong> carries the logic. Both live in the same git folder — and your agent writes both.</p>
-                </div>
-                <div class="row g-3 align-items-stretch">
-                    <div class="col-md-6">
-                        <div class="code-card h-100">
-                            <div class="code-card-head"><span class="dot yaml"></span>YAML — structure</div>
+<section class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-h2">Two languages, one config</h2>
+        <p class="mt-4 text-text-2">Config in Vantage is two first-class languages, not one with an escape hatch. <strong class="font-semibold text-text-1">YAML</strong> declares the shape; <strong class="font-semibold text-text-1">Rhai</strong> carries the logic. Both live in the same git folder — and your agent writes both.</p>
+    </div>
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+        <div class="code-card">
+            <div class="code-card-head"><span class="dot bg-[#6ee7b7]"></span>YAML — structure</div>
 <pre class="code-card-body"><code class="language-yaml"># table/clients.yaml
 title: Clients
 source: main_db
@@ -42,11 +35,9 @@ context_menu:
   - title: View orders
     open_page: orders
     model: model.get_ref("orders", row.id)</code></pre>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="code-card h-100">
-                            <div class="code-card-head"><span class="dot rhai"></span>Rhai — logic</div>
+        </div>
+        <div class="code-card">
+            <div class="code-card-head"><span class="dot bg-[#c4b5fd]"></span>Rhai — logic</div>
 <pre class="code-card-body"><code class="language-rust">// a computed label for each row
 let label = row.name;
 if row.balance &lt; 0 {
@@ -57,288 +48,208 @@ label
 // drill two hops, in one expression
 model.get_ref("clients", row.id)
      .get_ref("orders", client_id)</code></pre>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-muted small mt-2 mb-0">Queries, drill-downs, actions, computed fields and visibility are all real, diffable code.</p>
-            </div>
         </div>
     </div>
+    <p class="mt-4 text-center text-sm text-text-3">Queries, drill-downs, actions, computed fields and visibility are all real, diffable code.</p>
 </section>
 
 <!-- 2. Connect anything -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="feature-head mb-4">
-                    <h2>Connect anything</h2>
-                    <p>One sidebar over every system you run. <strong>Reading and listing rows is baseline — every source does it.</strong> Beyond that, each driver advertises an honest capability contract, and the UI renders only the controls a backend really supports. Pick one to see what it can do.</p>
+<section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
+    <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-h2">Connect anything</h2>
+        <p class="mt-4 text-text-2">One sidebar over every system you run. <strong class="font-semibold text-text-1">Reading and listing rows is baseline — every source does it.</strong> Beyond that, each driver advertises an honest capability contract, and the UI renders only the controls a backend really supports. Pick one to see what it can do.</p>
+    </div>
+
+    <div class="backend-explorer mt-10">
+        <div class="backend-list" role="tablist">
+            {% for b in page.extra.backends %}
+            <button type="button" class="backend-item{% if loop.first %} active{% endif %}" data-backend="{{ b.slug }}" role="tab">
+                <span class="material-symbols-outlined">{{ b.icon }}</span>
+                <span class="backend-name">{{ b.name }}</span>
+                <span class="backend-mode">{{ b.mode }}</span>
+            </button>
+            {% endfor %}
+        </div>
+
+        <div class="backend-panels">
+            {% for b in page.extra.backends %}
+            <div class="backend-panel{% if loop.first %} active{% endif %}" id="bp-{{ b.slug }}">
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <h3 class="me-1 text-h3">{{ b.name }}</h3>
+                    <span class="{% if b.mode == 'Read-only' or b.mode == 'Read-focused' or b.mode == 'Append-only' %}badge-soon{% else %}badge-now{% endif %}">{{ b.mode }}</span>
+                    <span class="badge-soon !text-accent-300 !border-accent-500/25 !bg-accent-500/10">{{ b.wire }}</span>
                 </div>
-
-                <div class="backend-explorer">
-                    <div class="backend-list" role="tablist">
-                        {% for b in page.extra.backends %}
-                        <button type="button" class="backend-item{% if loop.first %} active{% endif %}" data-backend="{{ b.slug }}" role="tab">
-                            <span class="material-symbols-outlined">{{ b.icon }}</span>
-                            <span class="backend-name">{{ b.name }}</span>
-                            <span class="backend-mode">{{ b.mode }}</span>
-                        </button>
-                        {% endfor %}
+                <p class="mt-3 text-sm leading-relaxed text-text-2">{{ b.note }}</p>
+                <div class="mt-5 grid gap-6 lg:grid-cols-2 lg:gap-8">
+                    <div>
+                        <p class="kicker mb-2 !text-[0.66rem]">Retrieving data</p>
+                        <table class="cap-table">
+                            <tbody>
+                            {% for r in page.extra.retrieve_rows %}
+                                <tr>
+                                    <td class="cap-label">{{ r.label }}</td>
+                                    <td class="cap-val">
+                                        {% if b.caps[r.key] %}
+                                        <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
+                                        {% else %}
+                                        <span class="material-symbols-outlined cap-no" title="Not supported">remove</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="backend-panels">
-                        {% for b in page.extra.backends %}
-                        <div class="backend-panel{% if loop.first %} active{% endif %}" id="bp-{{ b.slug }}">
-                            <div class="backend-panel-head">
-                                <h4>{{ b.name }}</h4>
-                                <span class="badge rounded-pill {% if b.mode == 'Read-only' or b.mode == 'Read-focused' or b.mode == 'Append-only' %}text-bg-light{% else %}text-bg-success{% endif %}">{{ b.mode }}</span>
-                                <span class="badge rounded-pill backend-wire">{{ b.wire }}</span>
-                            </div>
-                            <p class="backend-note text-muted">{{ b.note }}</p>
-                            <p class="cap-group-label">Retrieving data</p>
-                            <table class="cap-table">
-                                <tbody>
-                                {% for r in page.extra.retrieve_rows %}
-                                    <tr>
-                                        <td class="cap-label">{{ r.label }}</td>
-                                        <td class="cap-val">
-                                            {% if b.caps[r.key] %}
-                                            <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
-                                            {% else %}
-                                            <span class="material-symbols-outlined cap-no" title="Not supported">remove</span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            <p class="cap-group-label mt-3">Editing data</p>
-                            <table class="cap-table">
-                                <tbody>
-                                {% for r in page.extra.edit_rows %}
-                                    <tr>
-                                        <td class="cap-label">{{ r.label }}</td>
-                                        <td class="cap-val">
-                                            {% if b.caps[r.key] %}
-                                            <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
-                                            {% else %}
-                                            <span class="material-symbols-outlined cap-no" title="Not supported">remove</span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% endfor %}
+                    <div>
+                        <p class="kicker mb-2 !text-[0.66rem]">Editing data</p>
+                        <table class="cap-table">
+                            <tbody>
+                            {% for r in page.extra.edit_rows %}
+                                <tr>
+                                    <td class="cap-label">{{ r.label }}</td>
+                                    <td class="cap-val">
+                                        {% if b.caps[r.key] %}
+                                        <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
+                                        {% else %}
+                                        <span class="material-symbols-outlined cap-no" title="Not supported">remove</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-                <p class="text-muted small mt-3 mb-0">Create / update / delete also depend on whether the source is writable — a query-sourced (Rhai) table is read-only by design. You can also read from one backend and write through another.</p>
-
-                <script>
-                    document.querySelectorAll('.backend-item').forEach(function (btn) {
-                        btn.addEventListener('click', function () {
-                            var slug = btn.getAttribute('data-backend');
-                            document.querySelectorAll('.backend-item').forEach(function (b) { b.classList.remove('active'); });
-                            document.querySelectorAll('.backend-panel').forEach(function (p) { p.classList.remove('active'); });
-                            btn.classList.add('active');
-                            var panel = document.getElementById('bp-' + slug);
-                            if (panel) panel.classList.add('active');
-                        });
-                    });
-                </script>
             </div>
+            {% endfor %}
         </div>
     </div>
+
+    <p class="mt-4 text-center text-sm text-text-3">Create / update / delete also depend on whether the source is writable — a query-sourced (Rhai) table is read-only by design. You can also read from one backend and write through another.</p>
 </section>
 
 <!-- 3. Build a real console -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="feature-head mb-4">
-                    <h2>Build a real console — not just a grid</h2>
-                    <p>Everything you'd expect from an operational tool, described in config and rendered natively.</p>
+<section class="mt-20 border-y border-line bg-surface-1/60 py-16 md:mt-28 md:py-20">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-h2">Build a real console — not just a grid</h2>
+            <p class="mt-4 text-text-2">Everything you'd expect from an operational tool, described in config and rendered natively.</p>
+        </div>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+            {% for item in page.extra.gallery %}
+            <figure class="card card-hover flex flex-col overflow-hidden">
+                <div class="window-frame !rounded-none !border-x-0 !border-t-0 !shadow-none">
+                    <img src="{{ get_url(path=item.image) }}" alt="{{ item.title }}">
                 </div>
-                <div class="row g-4 ui-gallery">
-                    {% for item in page.extra.gallery %}
-                    <div class="col-md-6">
-                        <figure class="gallery-card h-100">
-                            <div class="gallery-shot">
-                                <img src="{{ get_url(path=item.image) }}" alt="{{ item.title }}">
-                            </div>
-                            <figcaption>
-                                <h5>{{ item.title }}</h5>
-                                <ul>
-                                    {% for n in item.notes %}<li>{{ n }}</li>{% endfor %}
-                                </ul>
-                            </figcaption>
-                        </figure>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+                <figcaption class="flex grow flex-col p-5">
+                    <h3 class="text-[1.02rem]">{{ item.title }}</h3>
+                    <ul class="mt-3 space-y-1.5 text-sm text-text-2">
+                        {% for n in item.notes %}
+                        <li class="flex gap-2"><span class="material-symbols-outlined !text-[1.05rem] text-accent-400">arrow_right</span>{{ n }}</li>
+                        {% endfor %}
+                    </ul>
+                </figcaption>
+            </figure>
+            {% endfor %}
         </div>
     </div>
 </section>
 
 <!-- 4. Your agent does the typing -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="feature-head mb-4">
-                    <h2>Your agent does the typing</h2>
-                    <p>Vantage UI embeds a local <strong>MCP server</strong>, so the coding agent you already use — Claude Code, Cursor, any MCP client — builds your console without leaving the editor.</p>
-                </div>
+<section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
+    <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-h2">Your agent does the typing</h2>
+        <p class="mt-4 text-text-2">Vantage UI embeds a local <strong class="font-semibold text-text-1">MCP server</strong>, so the coding agent you already use — Claude Code, Cursor, any MCP client — builds your console without leaving the editor.</p>
+    </div>
 
-                <div class="agent-flow mb-4">
-                    <div class="agent-step"><span class="material-symbols-outlined">chat</span><span>Describe the tool</span></div>
-                    <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
-                    <div class="agent-step"><span class="material-symbols-outlined">travel_explore</span><span>Agent introspects over MCP</span></div>
-                    <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
-                    <div class="agent-step"><span class="material-symbols-outlined">data_object</span><span>Writes YAML + Rhai</span></div>
-                    <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
-                    <div class="agent-step"><span class="material-symbols-outlined">bolt</span><span>App hot-reloads</span></div>
-                </div>
+    <div class="agent-flow mt-10">
+        <div class="agent-step"><span class="material-symbols-outlined">chat</span><span>Describe the tool</span></div>
+        <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
+        <div class="agent-step"><span class="material-symbols-outlined">travel_explore</span><span>Agent introspects over MCP</span></div>
+        <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
+        <div class="agent-step"><span class="material-symbols-outlined">data_object</span><span>Writes YAML + Rhai</span></div>
+        <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
+        <div class="agent-step"><span class="material-symbols-outlined">bolt</span><span>App hot-reloads</span></div>
+    </div>
 
-                <div class="row g-3">
-                    <div class="col-md-7">
-                        <div class="agent-panel h-100">
-                            <h6 class="mb-3">Read-only tools the agent gets</h6>
-                            <div class="tool-chips">
-                                <code>list_data_sources</code>
-                                <code>introspect_schema</code>
-                                <code>sample_records</code>
-                                <code>current_project_layout</code>
-                                <code>get_json_schema</code>
-                                <code>validate_config</code>
-                                <code>list_logs</code>
-                            </div>
-                            <p class="text-muted small mt-3 mb-0">The agent writes config to disk via plain file I/O; the tools only read and validate. You review and commit — it's early and gets better every release.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="agent-panel h-100">
-                            <h6 class="mb-2">Bundled skills</h6>
-                            <p class="text-muted small mb-0">Vantage ships <a href="https://agentskills.io" target="_blank" rel="noopener">agentskills.io</a>-style skills (<code>vantage-ui-builder</code>) that teach any agent how to author pages, charts, Rhai expressions and drill-downs — no extra subscription, kept in sync with the app.</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="mt-8 grid gap-4 md:grid-cols-[1.4fr_1fr]">
+        <div class="card p-6">
+            <h3 class="text-[0.95rem]">Read-only tools the agent gets</h3>
+            <div class="mt-4 flex flex-wrap gap-2">
+                <code class="tool-chip">list_data_sources</code>
+                <code class="tool-chip">introspect_schema</code>
+                <code class="tool-chip">sample_records</code>
+                <code class="tool-chip">current_project_layout</code>
+                <code class="tool-chip">get_json_schema</code>
+                <code class="tool-chip">validate_config</code>
+                <code class="tool-chip">list_logs</code>
             </div>
+            <p class="mt-4 text-sm leading-relaxed text-text-3">The agent writes config to disk via plain file I/O; the tools only read and validate. You review and commit — it's early and gets better every release.</p>
+        </div>
+        <div class="card p-6">
+            <h3 class="text-[0.95rem]">Bundled skills</h3>
+            <p class="mt-3 text-sm leading-relaxed text-text-3">Vantage ships <a href="https://agentskills.io" class="text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400" target="_blank" rel="noopener">agentskills.io</a>-style skills (<code class="tool-chip">vantage-ui-builder</code>) that teach any agent how to author pages, charts, Rhai expressions and drill-downs — no extra subscription, kept in sync with the app.</p>
         </div>
     </div>
 </section>
 
 <!-- 5. Native, local-first, reactive -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-11">
-                <div class="row g-4 text-center">
-                    <div class="col-md-3 col-6">
-                        <span class="material-symbols-outlined text-primary mb-2 d-block" style="font-size: 2.4rem;">speed</span>
-                        <h6 class="mb-1">Native &amp; GPU-accelerated</h6>
-                        <p class="text-muted small mb-0">Built on GPUI, not a web view.</p>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <span class="material-symbols-outlined text-primary mb-2 d-block" style="font-size: 2.4rem;">sync</span>
-                        <h6 class="mb-1">Reactive, no refresh</h6>
-                        <p class="text-muted small mb-0">Edit YAML or data — the UI updates in place.</p>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <span class="material-symbols-outlined text-primary mb-2 d-block" style="font-size: 2.4rem;">lock</span>
-                        <h6 class="mb-1">Local &amp; private</h6>
-                        <p class="text-muted small mb-0">Your app, data and config never leave the box.</p>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <span class="material-symbols-outlined text-primary mb-2 d-block" style="font-size: 2.4rem;">code</span>
-                        <h6 class="mb-1">Config-as-code</h6>
-                        <p class="text-muted small mb-0">YAML + Rhai you version, diff and hand off.</p>
-                    </div>
-                </div>
-            </div>
+<section class="mt-20 border-y border-line bg-surface-1/60 py-14 md:mt-28">
+    <div class="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 text-center sm:px-6 md:grid-cols-4">
+        <div>
+            <span class="material-symbols-outlined mb-3 block !text-[2.2rem] text-accent-400">speed</span>
+            <h3 class="text-[0.95rem]">Native &amp; GPU-accelerated</h3>
+            <p class="mt-1.5 text-sm text-text-3">Built on GPUI, not a web view.</p>
+        </div>
+        <div>
+            <span class="material-symbols-outlined mb-3 block !text-[2.2rem] text-accent-400">sync</span>
+            <h3 class="text-[0.95rem]">Reactive, no refresh</h3>
+            <p class="mt-1.5 text-sm text-text-3">Edit YAML or data — the UI updates in place.</p>
+        </div>
+        <div>
+            <span class="material-symbols-outlined mb-3 block !text-[2.2rem] text-accent-400">lock</span>
+            <h3 class="text-[0.95rem]">Local &amp; private</h3>
+            <p class="mt-1.5 text-sm text-text-3">Your app, data and config never leave the box.</p>
+        </div>
+        <div>
+            <span class="material-symbols-outlined mb-3 block !text-[2.2rem] text-accent-400">code</span>
+            <h3 class="text-[0.95rem]">Config-as-code</h3>
+            <p class="mt-1.5 text-sm text-text-3">YAML + Rhai you version, diff and hand off.</p>
         </div>
     </div>
 </section>
 
 <!-- 6. Coming next — roadmap deck -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="feature-head text-center mb-4">
-                    <h2 class="mx-auto">On the roadmap</h2>
-                    <p class="mx-auto">Where Vantage is heading. Tap the deck to flip through.</p>
-                </div>
-                <div class="roadmap-deck" id="roadmapDeck" role="button" tabindex="0" aria-label="Roadmap cards — activate to see the next">
-                    {% for r in page.extra.roadmap %}
-                    <article class="roadmap-card">
-                        <span class="badge rounded-pill bg-secondary deck-badge">Roadmap</span>
-                        <span class="material-symbols-outlined deck-icon">{{ r.icon }}</span>
-                        <h4>{{ r.title }}</h4>
-                        <p>{{ r.body }}</p>
-                    </article>
-                    {% endfor %}
-                </div>
-                <p class="deck-hint text-center text-muted">
-                    <span class="material-symbols-outlined align-middle me-1" style="font-size: 1rem;">touch_app</span>
-                    Click to deal the next card
-                </p>
-            </div>
-        </div>
+<section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
+    <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-h2">On the roadmap</h2>
+        <p class="mt-4 text-text-2">Where Vantage is heading. Tap the deck to flip through.</p>
     </div>
+    <div class="roadmap-deck mt-10" id="roadmapDeck" role="button" tabindex="0" aria-label="Roadmap cards — activate to see the next">
+        {% for r in page.extra.roadmap %}
+        <article class="roadmap-card">
+            <span class="badge-soon deck-badge">Roadmap</span>
+            <span class="material-symbols-outlined deck-icon">{{ r.icon }}</span>
+            <h3 class="mt-3 text-h3">{{ r.title }}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-2">{{ r.body }}</p>
+        </article>
+        {% endfor %}
+    </div>
+    <p class="mt-6 text-center text-sm text-text-3">
+        <span class="material-symbols-outlined me-1 !text-[1rem]">touch_app</span>
+        Click to deal the next card
+    </p>
 </section>
 
-<script>
-(function () {
-    var deck = document.getElementById('roadmapDeck');
-    if (!deck) return;
-    var cards = Array.prototype.slice.call(deck.querySelectorAll('.roadmap-card'));
-    var OFFSET = 16, SCALE = 0.05, MAX_VISIBLE = 3, animating = false;
-
-    function render() {
-        cards.forEach(function (card, i) {
-            card.style.zIndex = String(cards.length - i);
-            card.style.transform = 'translateY(' + (i * OFFSET) + 'px) scale(' + (1 - i * SCALE) + ')';
-            card.style.opacity = i > MAX_VISIBLE ? '0' : '1';
-            card.classList.toggle('is-front', i === 0);
-        });
-    }
-
-    function cycle() {
-        if (animating || cards.length < 2) return;
-        animating = true;
-        var front = cards[0];
-        front.classList.add('leaving');
-        setTimeout(function () {
-            cards.push(cards.shift());
-            front.classList.remove('leaving');
-            render();
-            animating = false;
-        }, 240);
-    }
-
-    deck.addEventListener('click', cycle);
-    deck.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cycle(); }
-    });
-    render();
-})();
-</script>
-
 <!-- CTA -->
-<section class="pb-5">
-    <div class="container text-center">
-        <a href="/download/" class="btn btn-lg btn-primary me-2">
-            <span class="material-symbols-outlined align-middle me-1">download</span>
+<section class="mx-auto mt-20 max-w-6xl px-4 text-center sm:px-6 md:mt-24">
+    <div class="flex flex-col justify-center gap-3 sm:flex-row">
+        <a href="/download/" class="btn btn-lg btn-primary">
+            <span class="material-symbols-outlined">download</span>
             Download for Mac — free
         </a>
         <a href="/examples/" class="btn btn-lg btn-outline-primary">
-            <span class="material-symbols-outlined align-middle me-1">apps</span>
+            <span class="material-symbols-outlined">apps</span>
             See example apps
         </a>
     </div>
