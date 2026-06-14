@@ -15,7 +15,8 @@ physical table.
   revenue, order totals, low-stock products, and debtors — each powered by a different aggregation
   pattern.
 
-## 0.12.1
+## 0.12.2
 
 - **The app is now just "Vantage".** Same app, shorter name — you'll see it in the menu bar, window
-  title, and the download.
+  title, and the download. The name change breaks auto-update from older builds — grab this version
+  manually from the download page; future updates will flow normally again.
