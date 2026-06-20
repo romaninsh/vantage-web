@@ -9,10 +9,11 @@ kicker = "Free download"
 # `static/changelog-<minor>.md` and is rendered inline on this page.
 # The vantage-ui release workflow prepends a new minor here whenever it
 # syncs `static/changelog-<minor>.md` for a release in a new line.
-changelog_minors = ["0.16", "0.15", "0.14", "0.13", "0.12", "0.11", "0.10", "0.9", "0.8", "0.7", "0.6", "0.5", "0.4"]
+changelog_minors = ["0.17", "0.16", "0.15", "0.14", "0.13", "0.12", "0.11", "0.10", "0.9", "0.8", "0.7", "0.6", "0.5", "0.4"]
 
 # Release dates, keyed by minor (from the vantage-ui git tags).
 [extra.changelog_dates]
+"0.17" = "20 June 2026"
 "0.16" = "20 June 2026"
 "0.15" = "14 June 2026"
 "0.14" = "9 June 2026"
