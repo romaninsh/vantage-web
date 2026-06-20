@@ -14,6 +14,12 @@ own app alongside stable instead of replacing it.
 - **Nightly is its own app.** The nightly build installs as **Vantage Nightly** next to the stable
   app instead of overwriting it, and keeps its own settings and recent-projects list — the two no
   longer step on each other.
+- **Themes and customizable chart colors.** Pick a look for the app, and tune chart colors right on
+  a chart: a palette customizer with sliders for hue, spread, and lightness, plus **Copy as JSON** to
+  save what you land on. Set a project-wide palette in your config so every chart shares one scheme.
+- **Install examples in one click.** A link on the website now opens Vantage, downloads the example
+  with a progress bar, shows you what's inside, asks you to trust the source, and installs it ready
+  to open — no manual unzip-and-find-the-folder.
 - **Fix:** the app no longer crashes the first time you open it on a new machine. Launching without
   a project now drops you on the welcome screen instead of quitting.
 - **Fix:** nightly stopped nagging about an update that was already installed. It now offers an
