@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+{% block body_class %}lc{% endblock body_class %}
+
+{% block content %}
+{{ nav::header() }}
+
+{% set repo = "https://github.com/romaninsh/vantage-ui-examples" %}
+{% set app = repo ~ "/tree/main/apps/launch-control" %}
+{% set install_url = "vantage://vantage-ui.com/examples/launch-control.zip" %}
+
+<!-- Ascent bar — scroll progress -->
+<div class="lc-progress" aria-hidden="true"><span></span></div>
+
+<div class="lc-shell pt-10 md:pt-14">
+
+    <!-- ===== Flight rail: table of contents + progress ===== -->
+    <aside class="lc-rail">
+        <nav class="lc-rail-inner" aria-label="On this page">
+            <p class="lc-rail-title">Flight plan</p>
+            <div class="lc-rail-list">
+                <a href="#liftoff"    class="lc-rail-item"><span class="lc-rail-num">01</span><span>Liftoff</span></a>
+                <a href="#briefing"   class="lc-rail-item"><span class="lc-rail-num">02</span><span>Briefing</span></a>
+                <a href="#data"       class="lc-rail-item"><span class="lc-rail-num">03</span><span>Flight data</span></a>
+                <a href="#console"    class="lc-rail-item"><span class="lc-rail-num">04</span><span>The console</span></a>
+                <a href="#backend"    class="lc-rail-item"><span class="lc-rail-num">05</span><span>The backend</span></a>
+                <a href="#turbulence" class="lc-rail-item"><span class="lc-rail-num">06</span><span>Turbulence</span></a>
+                <a href="#mission"    class="lc-rail-item"><span class="lc-rail-num">07</span><span>Your mission</span></a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- ===== Reading column ===== -->
+    <main class="lc-doc">
+
+        <!-- 01 ───────────────────────────── LIFTOFF -->
+        <section id="liftoff" class="lc-chapter">
+            <p class="lc-phase">Phase 01 / Liftoff</p>
+            <h1 class="text-display">Launch&nbsp;Control</h1>
+            <p class="lc-lead">
+                A live mission-control console for global spaceflight. Fifteen related
+                entities, real-time launch countdowns, and a deliberately flaky API the
+                interface rides straight through — and the entire thing is a folder of
+                YAML talking to a real Rust server.
+            </p>
+            <p class="lc-body !mt-4">
+                This page is the whole story, top to bottom. Installing the app is just the
+                first thirty seconds of it — stay on, and you'll see exactly how the
+                console is declared, how the backend is modeled, and why it doesn't flinch
+                when the network does.
+            </p>
+
+            <div class="lc-actions">
+                <a href="{{ install_url | safe }}" class="btn btn-lg btn-primary">
+                    <span class="material-symbols-outlined">rocket_launch</span>
+                    Open in Vantage UI
+                </a>
+                <a href="{{ app }}" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
+                    <span class="material-symbols-outlined">code</span>
+                    View source
+                </a>
+            </div>
+
+            <div class="lc-note">
+                <span class="material-symbols-outlined">science</span>
+                <span><strong>Preview.</strong> The one-click <code>vantage://</code>
+                installer is live in Vantage UI today. The hosted server it points at is
+                coming online shortly; until then, run the bundled server locally — it's
+                three commands, in <a href="#mission">Your mission</a>.</span>
+            </div>
+
+            <div class="lc-readout">
+                <div class="lc-stat"><span class="lc-stat-num">15</span><span class="lc-stat-label">Entities</span></div>
+                <div class="lc-stat"><span class="lc-stat-num">1</span><span class="lc-stat-label">Binder screen</span></div>
+                <div class="lc-stat"><span class="lc-stat-num">0</span><span class="lc-stat-label">Lines of UI code</span></div>
+                <div class="lc-stat"><span class="lc-stat-num">~60s</span><span class="lc-stat-label">Live countdown</span></div>
+            </div>
+
+            <div class="lc-frame">
+                <img src="{{ get_url(path='images/vantage-ui-app.png') }}" width="884" height="768" alt="Launch Control running in Vantage UI" loading="eager">
+            </div>
+        </section>
+
+        <!-- 02 ───────────────────────────── MISSION BRIEFING -->
+        <section id="briefing" class="lc-chapter">
+            <p class="lc-phase">Phase 02 / Mission briefing</p>
+            <h2 class="lc-h">What you're looking at</h2>
+            <div class="lc-body">
+                <p>
+                    Launch Control mirrors <a href="https://lldev.thespacedevs.com/docs" target="_blank" rel="noopener">Launch Library 2</a>,
+                    the public dataset that tracks spaceflight across every agency on
+                    Earth — rockets, pads, payloads, crews and the missions that tie them
+                    together. Real domain, real shape, real mess: IDs that are sometimes
+                    integers and sometimes UUIDs, objects nested two levels deep, stats
+                    that have to be counted rather than stored.
+                </p>
+                <p>
+                    On screen it's a single <strong>launch board</strong>. Each row is a
+                    flight; select one and the panel below fills with its payloads, its
+                    crew and its landings. From there you keep going — open a launch's
+                    provider to see every mission they've flown, follow a pad to its
+                    location, trace a booster's landing to the pad it touched down on.
+                    One screen, fifteen entities, drilling all the way down.
+                </p>
+                <p>
+                    And it's not a static snapshot. Hit <strong>"New simulated
+                    launch"</strong> and the server schedules a mission at T-1min, then
+                    ticks it through a real sixty-second countdown — <em>To Be Confirmed</em>
+                    → <em>Go for Launch</em> → outcome — while the board updates underneath
+                    you. No reload, no refresh button. You watch a rocket fly.
+                </p>
+            </div>
+        </section>
+
+        <!-- 03 ───────────────────────────── FLIGHT DATA -->
+        <section id="data" class="lc-chapter">
+            <p class="lc-phase">Phase 03 / Flight data</p>
+            <h2 class="lc-h">Launch is the hub</h2>
+            <div class="lc-body">
+                <p>
+                    Everything in the model orbits a single entity. A <strong>launch</strong>
+                    belongs to a provider, flies a rocket from a pad, carries payloads and
+                    crew, and ends in one or more landings. Model those relationships once
+                    and the entire navigation of the app falls out of them for free.
+                </p>
+            </div>
+
+            <div class="lc-hub">
+                <div class="lc-hub-core">
+                    <span class="material-symbols-outlined">rocket_launch</span>
+                    <b>Launch</b>
+                    <small>the hub</small>
+                </div>
+                <div class="lc-channels">
+                    <div class="lc-channel"><span class="material-symbols-outlined">apartment</span><span><span class="lc-channel-name">Agency</span> <span class="lc-channel-sub">provider · manufacturer</span></span><span class="lc-channel-kind">belongs-to</span></div>
+                    <div class="lc-channel"><span class="material-symbols-outlined">location_on</span><span><span class="lc-channel-name">Pad → Location</span> <span class="lc-channel-sub">two hops deep</span></span><span class="lc-channel-kind">belongs-to</span></div>
+                    <div class="lc-channel"><span class="material-symbols-outlined">rocket</span><span><span class="lc-channel-name">Rocket config</span> <span class="lc-channel-sub">launcher family</span></span><span class="lc-channel-kind">belongs-to</span></div>
+                    <div class="lc-channel"><span class="material-symbols-outlined">inventory_2</span><span><span class="lc-channel-name">Payloads</span> <span class="lc-channel-sub">via payload flights</span></span><span class="lc-channel-kind">has-many</span></div>
+                    <div class="lc-channel"><span class="material-symbols-outlined">group</span><span><span class="lc-channel-name">Crew</span> <span class="lc-channel-sub">astronauts aboard</span></span><span class="lc-channel-kind">has-many</span></div>
+                    <div class="lc-channel"><span class="material-symbols-outlined">flight_land</span><span><span class="lc-channel-name">Landings</span> <span class="lc-channel-sub">booster → landpad</span></span><span class="lc-channel-kind">has-many</span></div>
+                </div>
+            </div>
+
+            <div class="lc-note">
+                <span class="material-symbols-outlined">functions</span>
+                <span><strong>Stats are computed, never stored.</strong> Launches per
+                agency, payload mass per flight, success and failure tallies — all
+                evaluated on read with aggregate expressions, so there's no denormalized
+                column to keep in sync. You'll see one in Rust two chapters down.</span>
+            </div>
+        </section>
+
+        <!-- 04 ───────────────────────────── THE CONSOLE (YAML) -->
+        <section id="console" class="lc-chapter">
+            <p class="lc-phase">Phase 04 / The console</p>
+            <h2 class="lc-h">The whole client is YAML</h2>
+            <div class="lc-body">
+                <p>
+                    There is no frontend code in this example. The console is a handful of
+                    declarative files: one datasource, a table per entity, a page, and an
+                    action. Here's the path from "an API exists" to "a drillable board",
+                    file by file.
+                </p>
+            </div>
+
+            <div class="lc-body"><p><strong>1 · Point at the server, once.</strong> The
+                <code>api-client</code> datasource learns the LL2 envelope — the array
+                lives under <code>results</code>, the total under <code>count</code> — and
+                pushes filters server-side. Because this server honours every filter param,
+                one datasource drives all fifteen tables.</p></div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">dns</span><b>datasource/local.yaml</b></figcaption>
+<pre><code class="language-yaml">type: api-client
+url: "http://127.0.0.1:8080"
+response_key: results       # the array inside the envelope
+total_key: count            # so grids size their scrollbar and load lazily
+pagination:
+  page_param: offset
+  limit_param: limit
+  offset_based: true
+filter_strategy: query      # this server honours every ?field=value filter</code></pre>
+            </figure>
+
+            <div class="lc-body"><p><strong>2 · Declare a table — relations included.</strong>
+                Fetch <code>?mode=detailed</code> so belongs-to objects come back nested,
+                then surface their leaves as dotted columns. A hidden foreign-key column
+                carries <code>references:</code>, which turns its cell into a drill link —
+                and the same <code>references:</code> generate the binder's detail tabs.</p></div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">table</span><b>table/launches.yaml</b></figcaption>
+<pre><code class="language-yaml">datasource: local
+table: "launches/?mode=detailed&amp;ordering=-last_updated"
+
+columns:
+  - { name: name, type: string, flags: [title, searchable] }
+  - { name: status.name, type: string, flags: [label] }       # colored tag
+  - { name: lsp_id, type: string, flags: [hidden], references: agencies }
+  - { name: launch_service_provider.name, type: string }      # nested leaf
+  - { name: pad.location.name, type: string }                 # two hops deep
+  - { name: payload_count, type: int }        # computed server-side, not stored
+  - { name: total_payload_mass, type: float }
+
+references:                  # these become the binder's detail tabs
+  payloads: { table: payload_flights, kind: has_many, foreign_key: launch__id }
+  crew:     { table: launch_crew,     kind: has_many, foreign_key: launch__id }
+  landings: { table: landings,        kind: has_many, foreign_key: launch__id }</code></pre>
+                <figcaption><strong>Relations are the UI.</strong> Model the data once; the clickable cells and the master/detail tabs both come from it.</figcaption>
+            </figure>
+
+            <div class="lc-body"><p><strong>3 · Make it a live Binder.</strong> The page is
+                a <code>binder</code> layout — grid on top, auto-derived detail tabs below.
+                A toolbar action triggers a simulated launch; a cheap <code>refresh_probe</code>
+                folds the cached rows for a change signal, so a full refresh only happens
+                when the simulator actually moves something.</p></div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">grid_view</span><b>page/launches.yaml</b></figcaption>
+<pre><code class="language-yaml">title: Launches
+layout: binder
+
+elements:
+  - kind: crud
+    table: launches
+    toolbar:
+      - label: "New simulated launch"
+        icon: Play
+        action: |
+          let r = actions.new_launch();
+          actions.submit_launch(r.lsp_id, r.pad_id, r.rocket_configuration_id, r.name);
+    params:
+      refresh_interval: 5
+      # Cheap change probe: count + newest last_updated, over the cached rows.
+      refresh_probe: |
+        let rows = page_table().list(); let latest = "";
+        for r in rows { let u = r.last_updated; if u != () &amp;&amp; u > latest { latest = u; } }
+        "" + rows.len() + "@" + latest</code></pre>
+                <figcaption><strong>Live without websockets.</strong> The probe is microseconds of Rhai over cached rows; the simulator bumps <code>last_updated</code>; the grid notices and refreshes.</figcaption>
+            </figure>
+
+            <div class="lc-body"><p><strong>4 · An action that knows the model.</strong> The
+                "new launch" dialog is a table-derived form, so its foreign-key fields
+                render as real dropdowns. One of them is <em>dependent</em>: pick a
+                provider and the rocket list narrows to that agency's configurations,
+                driven entirely by <code>depends_on</code> + <code>filter_column</code>.</p></div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">dynamic_form</span><b>action/new-launch.yaml</b></figcaption>
+<pre><code class="language-yaml">kind: form
+form:
+  table: launches
+  fields:
+    - { name: lsp_id, label: "Launch provider", widget: dropdown }
+    - name: rocket_configuration_id
+      label: "Rocket configuration"
+      widget: dropdown
+      depends_on: lsp_id             # dependent dropdown:
+      filter_column: manufacturer_id #   narrow to the chosen agency's rockets
+    - { name: pad_id, label: "Pad", widget: dropdown }
+    - { name: name, label: "Mission name", required: false }</code></pre>
+            </figure>
+        </section>
+
+        <!-- 05 ───────────────────────────── THE BACKEND (RUST) -->
+        <section id="backend" class="lc-chapter">
+            <p class="lc-phase">Phase 05 / The backend</p>
+            <h2 class="lc-h">The server is a Vantage app too</h2>
+            <div class="lc-body">
+                <p>
+                    Here's the part most demos hand-wave. The API isn't a fixture server —
+                    it's a real Rust backend built on the <a href="/framework/">same Vantage
+                    framework</a> the UI consumes. SQLite tables become typed entities with
+                    relations and computed expressions, every entity collapses into one
+                    universal facade, and a single Axum handler serves the lot as a familiar
+                    REST API.
+                </p>
+                <p>
+                    <strong>Computed stats, never stored.</strong> An agency has many
+                    launches; its tallies are <code>with_expression</code> aggregates —
+                    correlated subqueries the database evaluates on read. Note that
+                    <code>query_launches()</code> is just the <code>with_many</code>
+                    relation reused as a subquery: model the relation once, count over it
+                    everywhere.
+                </p>
+            </div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">functions</span><b>server/src/model/agency.rs</b></figcaption>
+<pre><code class="language-rust">Table::new("agencies", db)
+    .with_id_column("id")
+    .with_column_of::&lt;String&gt;("name")
+    .with_one("type", "type_id", AgencyType::table)
+    .with_many("launches", "lsp_id", Launch::table)
+    // aggregates over the related launches — computed on read, not stored:
+    .with_expression("total_launch_count", |t| t.query_launches().get_count_query())
+    .with_expression("successful_launches", |t| t.query_launches().count_successful())
+    .with_expression("failed_launches",     |t| t.query_launches().count_failed())
+    .with_expression("pending_launches",    |t| t.query_launches().count_pending())</code></pre>
+            </figure>
+
+            <div class="lc-body"><p><strong>One handler, every table.</strong> Each entity
+                becomes a backend-blind <code>Vista</code> — the exact same read surface the
+                UI's api-client speaks. A single route reads any table through it, mapping
+                leftover query params to server-side filters. "Consume an API" and "serve an
+                API" turn out to be the same shapes, mirrored.</p></div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">api</span><b>server/src/rest.rs</b></figcaption>
+<pre><code class="language-rust">async fn list(
+    State(state): State&lt;AppState&gt;,
+    Path(table): Path&lt;String&gt;,
+    Query(params): Query&lt;HashMap&lt;String, String&gt;&gt;,
+) -&gt; Result&lt;Json&lt;Value&gt;, ApiError&gt; {
+    let mut vista = vista_for(&amp;state.db, &amp;table)?;   // table name -> Vista
+
+    for (key, value) in &amp;params {                    // leftover ?field=value
+        if is_reserved(key) { continue; }            //   becomes a filter
+        let column = to_column(key);                  //   LL2 `lsp__id` -> `lsp_id`
+        if vista.get_column(&amp;column).is_some() {
+            let _ = vista.add_condition_eq(column, Cbor::Text(value.clone()));
+        }
+    }
+
+    let count = vista.get_count().await?;
+    let rows  = vista.fetch_window(offset, limit).await?;
+    Ok(Json(json!({ "count": count, "next": null, "results": results })))
+}</code></pre>
+                <figcaption><strong>The facade is the contract.</strong> One generic handler serves all fifteen entities — paging, filtering, ordering and LL2 nesting, generically.</figcaption>
+            </figure>
+        </section>
+
+        <!-- 06 ───────────────────────────── TURBULENCE -->
+        <section id="turbulence" class="lc-chapter">
+            <p class="lc-phase">Phase 06 / Turbulence</p>
+            <h2 class="lc-h">A flaky API, a calm UI</h2>
+            <div class="lc-body">
+                <p>
+                    The server is built to misbehave — that's the test. Every read is delayed
+                    by 150–1200ms and, about a tenth of the time, answered with a
+                    <code>503</code> instead of data. Meanwhile the simulator is mutating
+                    rows out from under the grid. The same data path that survives this demo
+                    is the one that survives a real network.
+                </p>
+            </div>
+
+            <div class="lc-pipe" aria-label="Data flow: a flaky server, a cache that holds, a calm grid">
+                <div class="lc-pipe-node fault"><span class="material-symbols-outlined">dns</span><b>Flaky server</b><small>latency + random 503s</small></div>
+                <span class="lc-pipe-seg"><span class="lc-flow-dot"></span></span>
+                <div class="lc-pipe-node"><span class="material-symbols-outlined">cached</span><b>Diorama cache</b><small>holds last-good data; never blanks</small></div>
+                <span class="lc-pipe-seg"><span class="lc-flow-dot"></span></span>
+                <div class="lc-pipe-node"><span class="material-symbols-outlined">grid_view</span><b>Launch board</b><small>smooth, virtualised, self-refreshing</small></div>
+            </div>
+
+            <div class="lc-body"><p>The flakiness is honest middleware — random latency,
+                then a probabilistic failure. Crucially it wraps only the read API; the
+                trigger endpoint that starts a mission is left reliable, because writes
+                must land.</p></div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">bolt</span><b>server/src/flaky.rs</b></figcaption>
+<pre><code class="language-rust">pub async fn middleware(State(state): State&lt;AppState&gt;, req: Request, next: Next) -&gt; Response {
+    let cfg = state.flaky;
+    let (delay_ms, fail) = {                          // decide before any await
+        let mut rng = rand::thread_rng();
+        let delay = rng.gen_range(cfg.latency_min_ms..=cfg.latency_max_ms);
+        (delay, rng.gen_bool(cfg.error_rate.clamp(0.0, 1.0)))
+    };
+    tokio::time::sleep(Duration::from_millis(delay_ms)).await;
+    if fail {
+        return (StatusCode::SERVICE_UNAVAILABLE,
+                Json(json!({ "detail": "injected flaky failure" }))).into_response();
+    }
+    next.run(req).await
+}</code></pre>
+            </figure>
+
+            <div class="lc-body"><p><strong>The countdown is a plan, then a playback.</strong>
+                A simulator phase is a pure function: it returns a list of timed events; the
+                engine sorts them and plays them in real time. Each event stamps
+                <code>last_updated</code> — which the UI's refresh probe catches — so a
+                sixty-second timeline in Rust becomes a live countdown on screen.</p></div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">timer</span><b>server/src/sim/countdown.rs</b></figcaption>
+<pre><code class="language-rust">fn plan(&amp;self, ctx: &amp;MissionContext, _rng: &amp;mut StdRng) -&gt; Vec&lt;TimedEvent&gt; {
+    let mut events = Vec::new();
+    // T-1min: schedule &amp; confirm  (status 8 = "To Be Confirmed")
+    events.push(timed(Duration::ZERO,          "T-1min", |l| { l.net = net_in_60s; l.status_id = "8"; }));
+    // T-30s: a mid-countdown update — proves timed playback + live refresh
+    events.push(timed(Duration::from_secs(30), "T-30s",  |l| { l.probability = Some(95); }));
+    // T-0: go for launch          (status 1 = "Go for Launch")
+    events.push(timed(Duration::from_secs(60), "Go",     |l| { l.status_id = "1"; }));
+    events
+}</code></pre>
+            </figure>
+
+            <div class="lc-note warn">
+                <span class="material-symbols-outlined">warning</span>
+                <span><strong>Crank it up.</strong> Run <code>serve --error-rate 0.3</code>
+                to fail a third of all reads and watch the grid stay put. The non-blanking
+                refresh is the whole reason this example exists.</span>
+            </div>
+        </section>
+
+        <!-- 07 ───────────────────────────── YOUR MISSION -->
+        <section id="mission" class="lc-chapter">
+            <p class="lc-phase">Phase 07 / Your mission</p>
+            <h2 class="lc-h">Clone it, then make it yours</h2>
+            <div class="lc-body">
+                <p>
+                    Both halves are open source and small enough to read in an afternoon —
+                    the YAML inventory and the Rust server sit side by side. Fork it as the
+                    starting point for your own backend-and-console, or just run it locally
+                    to poke at the live countdown.
+                </p>
+            </div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">terminal</span><b>Run the whole thing locally</b></figcaption>
+<pre><code class="language-bash">git clone https://github.com/romaninsh/vantage-ui-examples
+cd vantage-ui-examples/apps/launch-control
+
+cargo run -p launch-control-server -- seed     # seed SQLite from fixtures (once)
+cargo run -p launch-control-server -- serve    # the flaky API on :8080
+
+# then, from the vantage-ui repo, point the app at the inventory:
+cargo run -p vantage-ui -- --config ../vantage-ui-examples/apps/launch-control/inventory</code></pre>
+            </figure>
+
+            <div class="lc-cta">
+                <h3 class="text-h3">Ready for launch</h3>
+                <p class="lc-body !mt-3">Install the app and open the example in one click, or dig straight into the source.</p>
+                <div class="lc-actions">
+                    <a href="{{ install_url | safe }}" class="btn btn-primary">
+                        <span class="material-symbols-outlined">rocket_launch</span>
+                        Open in Vantage UI
+                    </a>
+                    <a href="{{ app }}/inventory" class="btn btn-outline-primary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">description</span>
+                        The YAML inventory
+                    </a>
+                    <a href="{{ app }}/server" class="btn btn-outline-secondary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">dns</span>
+                        The Rust server
+                    </a>
+                    <a href="/solutions/app-builders/" class="btn btn-outline-secondary">
+                        <span class="material-symbols-outlined">developer_board</span>
+                        Build your own
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+{{ nav::footer() }}
+{% endblock content %}

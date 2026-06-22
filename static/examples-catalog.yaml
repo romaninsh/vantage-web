@@ -6,6 +6,21 @@
 #
 # status: "available" (folder exists in the examples repo) | "coming" (planned)
 apps:
+  - slug: launch-control
+    title: "Launch Control"
+    persona: "Web & mobile backends"
+    persona_url: "/solutions/developers/"
+    status: "available"
+    icon: "rocket_launch"
+    blurb: "A live mission-control console for global spaceflight — 15 related entities, real-time launch countdowns and a deliberately flaky API the UI rides straight through. A full Rust server plus a YAML console."
+    repo_path: "apps/launch-control/inventory"
+    screenshot: "images/vantage-ui-app.png"
+    tour_url: "/examples/launch-control/"
+    demonstrates:
+      - "A real REST API consumed as drillable tables"
+      - "Live, self-refreshing grids resilient to a flaky server"
+      - "A full Rust + Vantage backend, modeled and served"
+
   - slug: bakery
     title: "Bakery franchise"
     persona: "Internal-tools teams"

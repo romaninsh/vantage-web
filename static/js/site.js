@@ -108,11 +108,16 @@
     render();
   }
 
-  /* ---------- Snippet gallery with #slide-N deep links (framework page) ---------- */
-  const gallery = document.getElementById("snipGallery");
-  if (gallery) {
+  /* ---------- Snippet galleries (framework + example pages) ----------
+     Any number of .snip-gallery blocks are supported. The framework page's
+     #snipGallery additionally owns the #slide-N URL hash for deep links; other
+     galleries (e.g. the launch-control example) step independently. */
+  document.querySelectorAll(".snip-gallery").forEach((gallery) => {
     const snips = Array.from(gallery.querySelectorAll(".snip"));
-    const dotsWrap = document.getElementById("snipDots");
+    const dotsWrap = gallery.querySelector(".snip-dots");
+    if (!snips.length || !dotsWrap) return;
+
+    const deepLink = gallery.id === "snipGallery"; // only this one drives the URL hash
     let idx = 0;
 
     snips.forEach((_, i) => {
@@ -129,29 +134,88 @@
       idx = (n + snips.length) % snips.length;
       snips.forEach((s, i) => s.classList.toggle("active", i === idx));
       dots.forEach((d, i) => d.classList.toggle("active", i === idx));
-      if (updateHash !== false) {
+      if (deepLink && updateHash !== false) {
         // Keep the URL shareable without polluting history or scrolling.
         history.replaceState(null, "", "#slide-" + (idx + 1));
       }
     }
 
-    const slideFromHash = () => {
-      const m = /^#slide-(\d+)$/.exec(window.location.hash);
-      return m ? parseInt(m[1], 10) - 1 : null;
+    gallery.querySelector(".snip-prev")?.addEventListener("click", () => show(idx - 1));
+    gallery.querySelector(".snip-next")?.addEventListener("click", () => show(idx + 1));
+
+    if (deepLink) {
+      const slideFromHash = () => {
+        const m = /^#slide-(\d+)$/.exec(window.location.hash);
+        return m ? parseInt(m[1], 10) - 1 : null;
+      };
+      window.addEventListener("hashchange", () => {
+        const n = slideFromHash();
+        if (n !== null && n !== idx) show(n, false);
+      });
+      // Open the slide named in the URL on load (and scroll it into view).
+      const initial = slideFromHash();
+      if (initial !== null && initial >= 0 && initial < snips.length) {
+        show(initial, false);
+        gallery.scrollIntoView({ block: "center" });
+      }
+    }
+  });
+
+  /* ---------- Launch Control: ascent progress + flight-rail spy ---------- */
+  if (document.body.classList.contains("lc")) {
+    // Top progress bar tracks how far down the page you are.
+    const bar = document.querySelector(".lc-progress > span");
+    if (bar) {
+      const updateBar = () => {
+        const el = document.documentElement;
+        const max = el.scrollHeight - el.clientHeight;
+        const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        bar.style.width = (p * 100).toFixed(1) + "%";
+      };
+      window.addEventListener("scroll", updateBar, { passive: true });
+      window.addEventListener("resize", updateBar);
+      updateBar();
+    }
+
+    // Flight rail: highlight the current chapter, mark passed ones done.
+    const items = Array.from(document.querySelectorAll(".lc-rail-item"));
+    const ids = items.map((a) => a.getAttribute("href").slice(1));
+
+    const setActive = (id) => {
+      const ai = ids.indexOf(id);
+      items.forEach((a, i) => {
+        a.classList.toggle("active", i === ai);
+        a.classList.toggle("done", ai > -1 && i < ai);
+      });
     };
 
-    gallery.querySelector(".snip-prev").addEventListener("click", () => show(idx - 1));
-    gallery.querySelector(".snip-next").addEventListener("click", () => show(idx + 1));
-    window.addEventListener("hashchange", () => {
-      const n = slideFromHash();
-      if (n !== null && n !== idx) show(n, false);
+    items.forEach((a) => {
+      a.addEventListener("click", (e) => {
+        const target = document.getElementById(a.getAttribute("href").slice(1));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
     });
 
-    // Open the slide named in the URL on load (and scroll it into view).
-    const initial = slideFromHash();
-    if (initial !== null && initial >= 0 && initial < snips.length) {
-      show(initial, false);
-      gallery.scrollIntoView({ block: "center" });
+    const chapters = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    if ("IntersectionObserver" in window && chapters.length) {
+      const visible = new Set();
+      const obs = new IntersectionObserver(
+        (entries) => {
+          for (const en of entries) {
+            if (en.isIntersecting) visible.add(en.target.id);
+            else visible.delete(en.target.id);
+          }
+          // The first chapter (in document order) still in the band wins.
+          const current = ids.find((id) => visible.has(id));
+          if (current) setActive(current);
+        },
+        { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+      );
+      chapters.forEach((c) => obs.observe(c));
     }
+    if (ids.length) setActive(ids[0]);
   }
 })();

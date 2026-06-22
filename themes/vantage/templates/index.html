@@ -18,13 +18,20 @@
 {% endif %}
 
 {% set examples_repo = "https://github.com/romaninsh/vantage-ui-examples" %}
-{% set catalog = load_data(
-    url="https://raw.githubusercontent.com/romaninsh/vantage-ui-examples/main/catalog.yaml",
-    format="yaml",
-    required=false
-) %}
-{% if not catalog %}
+{# Local dev (zola serve, 127.0.0.1) reads the working-copy catalog so edits
+   show immediately; published builds read the authoritative catalog from main
+   (with the committed copy as an offline fallback). #}
+{% if "127.0.0.1" in config.base_url or "localhost" in config.base_url %}
     {% set catalog = load_data(path="static/examples-catalog.yaml", format="yaml", required=false) %}
+{% else %}
+    {% set catalog = load_data(
+        url="https://raw.githubusercontent.com/romaninsh/vantage-ui-examples/main/catalog.yaml",
+        format="yaml",
+        required=false
+    ) %}
+    {% if not catalog %}
+        {% set catalog = load_data(path="static/examples-catalog.yaml", format="yaml", required=false) %}
+    {% endif %}
 {% endif %}
 
 <!-- Hero -->

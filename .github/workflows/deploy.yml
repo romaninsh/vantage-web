@@ -60,7 +60,11 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Sync to S3
-        run: aws s3 sync public/ "s3://${SITE_BUCKET}" --delete
+        # Exclude examples/*.zip: those archives are published separately by the
+        # vantage-ui-examples build-example-zips workflow (the vantage://
+        # one-click installer downloads them from /examples/). They aren't in
+        # public/, so without this exclude `--delete` would wipe them.
+        run: aws s3 sync public/ "s3://${SITE_BUCKET}" --delete --exclude 'examples/*.zip'
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"
