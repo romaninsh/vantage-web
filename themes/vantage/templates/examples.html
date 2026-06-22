@@ -2,19 +2,26 @@
 {% import "macros/navigation.html" as nav %}
 {% import "macros/blocks.html" as blocks %}
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+{% block title %}{{ section.title }} | {{ config.title }}{% endblock title %}
 
 {% block content %}
 {{ nav::header() }}
 
 {% set examples_repo = "https://github.com/romaninsh/vantage-ui-examples" %}
-{% set catalog = load_data(
-    url="https://raw.githubusercontent.com/romaninsh/vantage-ui-examples/main/catalog.yaml",
-    format="yaml",
-    required=false
-) %}
-{% if not catalog %}
+{# Local dev (zola serve, 127.0.0.1) reads the working-copy catalog so edits
+   show immediately; published builds read the authoritative catalog from main
+   (with the committed copy as an offline fallback). #}
+{% if "127.0.0.1" in config.base_url or "localhost" in config.base_url %}
     {% set catalog = load_data(path="static/examples-catalog.yaml", format="yaml", required=false) %}
+{% else %}
+    {% set catalog = load_data(
+        url="https://raw.githubusercontent.com/romaninsh/vantage-ui-examples/main/catalog.yaml",
+        format="yaml",
+        required=false
+    ) %}
+    {% if not catalog %}
+        {% set catalog = load_data(path="static/examples-catalog.yaml", format="yaml", required=false) %}
+    {% endif %}
 {% endif %}
 
 <!-- Page hero -->
@@ -22,8 +29,8 @@
     <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
     <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-12 text-center sm:px-6 md:pt-24 md:pb-16">
         <p class="kicker mb-4">Open &amp; explore</p>
-        <h1 class="text-display mx-auto max-w-3xl">{{ page.title }}</h1>
-        {% if page.description %}<p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ page.description }}</p>{% endif %}
+        <h1 class="text-display mx-auto max-w-3xl">{{ section.title }}</h1>
+        {% if section.description %}<p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ section.description }}</p>{% endif %}
     </div>
 </section>
 
