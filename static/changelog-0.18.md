@@ -21,3 +21,17 @@ changes. HTTP action errors get readable.
 - **Fix:** a dropdown's options sometimes came up empty until you'd opened the referenced table in
   its own tab first. Dropdowns now read straight from the datasource, so the full list of valid
   choices is there regardless of what you've browsed.
+
+## 0.18.3
+
+- **Fix:** a multi-line value in a table cell or a form field (a JSON blob, a stack trace) would
+  crash the app. Multi-line strings are now flattened to a single line wherever they're rendered.
+- **Fix:** a `cmd`-backed table with a per-row `detail` script showed only its first 100 rows, then
+  re-ran the whole CLI to fetch the next page. It now loads the full list in one pass and hydrates
+  only the rows on screen.
+- **Fix:** a two-pass grid that also had a default sort lost its per-row hydration dimming the
+  moment the preset sort applied — every row looked fully loaded even before its detail arrived. The
+  preset sort is now skipped on two-pass grids so the dimming stays an honest signal.
+- **Fix:** a `detail` script that errored on a row (non-zero exit, unparseable output) failed
+  silently — the row just stayed un-augmented forever with no trace. Per-row detail failures are now
+  logged at WARN so they're diagnosable.
