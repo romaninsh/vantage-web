@@ -46,6 +46,10 @@
     @apply bg-bg font-sans text-[0.975rem] leading-relaxed text-text-2 antialiased;
   }
 
+  body.no-scroll {
+    overflow: hidden;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold text-text-1 tracking-tight;
   }
@@ -276,6 +280,69 @@
 
   .window-frame img {
     @apply block w-full;
+  }
+
+  /* ---------- Release-note screenshots + lightbox ---------- */
+
+  /* Row of thumbnails under a changelog entry. The captures are trimmed
+     window grabs (rounded corners on transparency), so no extra chrome. */
+  .shot-grid {
+    @apply mt-6 flex flex-wrap gap-3;
+  }
+
+  .shot-thumb {
+    @apply block cursor-pointer overflow-hidden rounded-lg border border-line bg-surface-2 p-0;
+    width: 13.5rem;
+    max-width: 100%;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .shot-thumb:hover,
+  .shot-thumb:focus-visible {
+    @apply border-line-strong outline-none;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);
+  }
+
+  .shot-thumb img {
+    @apply block h-auto w-full;
+  }
+
+  .lightbox {
+    @apply fixed inset-0 z-[100] flex items-center justify-center p-6;
+    background: rgba(5, 5, 9, 0.88);
+    backdrop-filter: blur(4px);
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  .lightbox-figure {
+    @apply m-0 flex max-h-full max-w-5xl flex-col items-center gap-3;
+  }
+
+  .lightbox-img {
+    @apply block max-h-[82vh] w-auto max-w-full rounded-xl;
+    box-shadow: 0 32px 90px -24px rgba(0, 0, 0, 0.9);
+  }
+
+  .lightbox-caption {
+    @apply max-w-2xl text-center text-sm text-text-2;
+  }
+
+  .lightbox-caption[hidden] {
+    display: none;
+  }
+
+  .lightbox-close {
+    @apply fixed top-5 right-5 flex size-10 items-center justify-center rounded-full border border-line bg-surface-1 text-text-2;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .lightbox-close:hover,
+  .lightbox-close:focus-visible {
+    @apply border-line-strong text-text-1 outline-none;
   }
 
   /* ---------- Hero / section glow ---------- */

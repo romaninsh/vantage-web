@@ -1,0 +1,24 @@
+# Release-note screenshots, keyed by minor version. Owned by this repo and
+# rendered by themes/vantage/templates/download.html. Managed by
+# script/add-screenshots — outside the vantage-ui changelog sync, so safe.
+"0.18":
+  - thumb:  images/changelog/0.18/01.webp
+    full:   images/changelog/0.18/01-full.webp
+    alt:    "Scripted dropdowns: picking a launch provider narrows the Rocket configuration list to that provider's rockets"
+    width:  480
+    height: 315
+  - thumb:  images/changelog/0.18/02.webp
+    full:   images/changelog/0.18/02-full.webp
+    alt:    "Action dialogs spell out what they'll do — confirming a simulated launch against the live server"
+    width:  480
+    height: 315
+  - thumb:  images/changelog/0.18/03.webp
+    full:   images/changelog/0.18/03-full.webp
+    alt:    "The new launch lands in the list instantly, its details ready to edit"
+    width:  480
+    height: 315
+  - thumb:  images/changelog/0.18/04.webp
+    full:   images/changelog/0.18/04-full.webp
+    alt:    "Recent updates stream in as the server runs the countdown simulation"
+    width:  480
+    height: 315

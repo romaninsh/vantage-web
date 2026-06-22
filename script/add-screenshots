@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+#
+# add-screenshots — ingest macOS window-capture screenshots for a release.
+#
+# Usage:
+#   script/add-screenshots <minor> <path> [caption] <path> [caption] ...
+#
+# Example:
+#   script/add-screenshots 0.18 \
+#     ~/shots/launches.png "Scripted dropdown filters the launches list" \
+#     ~/shots/dropdown.png "Country drives the cities dropdown" \
+#     ~/shots/error.png    "HTTP errors now show the server's message"
+#
+# Arguments after the minor are walked left-to-right: a token that is an
+# existing file starts a new screenshot; the following token (if it is NOT an
+# existing file) is that screenshot's caption.
+#
+# Each screenshot is trimmed of its transparent macOS drop-shadow margin and
+# written as a fast-load WebP thumbnail (NN.webp, ~480px wide) plus a larger
+# fullscreen WebP (NN-full.webp, capped at 1600px wide) under
+# static/images/changelog/<minor>/. The per-minor block in
+# static/changelog-screenshots.yaml is then rewritten in place (idempotent:
+# re-running for the same minor replaces that block, leaving other minors
+# untouched).
+#
+# This data file and image folder are deliberately OUTSIDE what the vantage-ui
+# release pipeline syncs (changelog-*.md + content/download.md), so screenshots
+# survive every "chore: sync changelog" commit.
+
+set -euo pipefail
+
+THUMB_WIDTH=480
+FULL_WIDTH=1600
+THUMB_QUALITY=82
+FULL_QUALITY=85
+
+# --- locate repo root (script lives in <root>/script) ---
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+YAML="$ROOT/static/changelog-screenshots.yaml"
+
+die() { echo "error: $*" >&2; exit 1; }
+
+command -v magick >/dev/null 2>&1 || die "ImageMagick 'magick' not found (brew install imagemagick)"
+
+[ "$#" -ge 2 ] || die "usage: add-screenshots <minor> <path> [caption] ..."
+
+MINOR="$1"; shift
+[[ "$MINOR" =~ ^[0-9]+\.[0-9]+$ ]] || die "minor must look like 0.18 (got '$MINOR')"
+
+OUTDIR="$ROOT/static/images/changelog/$MINOR"
+REL="images/changelog/$MINOR"
+mkdir -p "$OUTDIR"
+# Clear prior output for this minor so a re-run with fewer shots leaves no orphans.
+rm -f "$OUTDIR"/*.webp
+
+# --- parse alternating path [caption] arguments ---
+paths=()
+captions=()
+while [ "$#" -gt 0 ]; do
+  src="$1"; shift
+  [ -f "$src" ] || die "not a file: '$src' (expected a screenshot path here)"
+  caption=""
+  if [ "$#" -gt 0 ] && [ ! -f "$1" ]; then
+    caption="$1"; shift
+  fi
+  paths+=("$src")
+  captions+=("$caption")
+done
+
+[ "${#paths[@]}" -gt 0 ] || die "no screenshots given"
+
+# yaml-escape: wrap in double quotes, escaping backslash and double-quote
+yaml_str() {
+  local s="${1//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  printf '"%s"' "$s"
+}
+
+# --- process each screenshot, accumulating the new YAML block ---
+block="\"$MINOR\":"$'\n'
+n=0
+for i in "${!paths[@]}"; do
+  n=$((i + 1))
+  nn=$(printf '%02d' "$n")
+  src="${paths[$i]}"
+  caption="${captions[$i]}"
+  [ -n "$caption" ] || caption="Vantage $MINOR — screenshot $n"
+
+  thumb="$OUTDIR/$nn.webp"
+  full="$OUTDIR/$nn-full.webp"
+
+  # macOS window captures sit on a large transparent canvas with a SOFT
+  # (semi-transparent) drop shadow, so a plain -trim barely cuts. Instead,
+  # threshold the alpha channel to find the window's bounding box (the faint
+  # shadow falls below the threshold; the opaque window stays) and crop to it.
+  # An opaque screenshot (no real alpha) thresholds to the full frame, so this
+  # degrades to a no-op crop rather than mangling the image.
+  box=$(magick "$src" -alpha extract -threshold 50% -format "%@" info:)
+  # "<W>x>" only ever shrinks (never upscales a smaller capture).
+  magick "$src" -crop "$box" +repage -resize "${THUMB_WIDTH}x>" -quality "$THUMB_QUALITY" "$thumb"
+  magick "$src" -crop "$box" +repage -resize "${FULL_WIDTH}x>"  -quality "$FULL_QUALITY"  "$full"
+
+  read -r w h < <(magick identify -format "%w %h\n" "$thumb")
+
+  echo "  $nn  $(basename "$src")  ->  $nn.webp (${w}x${h}) + $nn-full.webp  \"$caption\""
+
+  block+="  - thumb:  $REL/$nn.webp"$'\n'
+  block+="    full:   $REL/$nn-full.webp"$'\n'
+  block+="    alt:    $(yaml_str "$caption")"$'\n'
+  block+="    width:  $w"$'\n'
+  block+="    height: $h"$'\n'
+done
+
+# --- rewrite static/changelog-screenshots.yaml (replace this minor's block) ---
+header="# Release-note screenshots, keyed by minor version. Owned by this repo and
+# rendered by themes/vantage/templates/download.html. Managed by
+# script/add-screenshots — outside the vantage-ui changelog sync, so safe.
+"
+
+tmp="$(mktemp)"
+printf '%s' "$header" > "$tmp"
+
+if [ -f "$YAML" ]; then
+  # Emit every existing top-level block except this minor's, dropping any
+  # existing header comments (we re-add a fresh header above).
+  awk -v key="\"$MINOR\":" '
+    /^#/ { next }
+    $0 == key { skip = 1; next }
+    skip && /^[^[:space:]]/ { skip = 0 }
+    !skip { print }
+  ' "$YAML" | sed '/^[[:space:]]*$/d' >> "$tmp"
+fi
+
+printf '%s' "$block" >> "$tmp"
+mv "$tmp" "$YAML"
+
+echo "updated $YAML  (minor $MINOR: ${#paths[@]} screenshot(s))"

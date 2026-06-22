@@ -26,6 +26,17 @@
         {% block content %}
         {% endblock content %}
 
+        <!-- Lightbox overlay (populated by site.js when a .shot-thumb is clicked) -->
+        <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Screenshot">
+            <button type="button" class="lightbox-close" aria-label="Close">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <figure class="lightbox-figure">
+                <img class="lightbox-img" src="" alt="">
+                <figcaption class="lightbox-caption"></figcaption>
+            </figure>
+        </div>
+
         <!-- Prism.js syntax highlighting (client-side; grammars loaded explicitly) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" integrity="sha512-9khQRAUBYEJDCDVP2yw3LRUQvjJ0Pjx0EShmaQjcHa6AXiOv6qHQu9lCAIR8O+/D8FtaCoJ2c0Tf9Xo7hYH01Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js" integrity="sha512-/Rynaa6ehLZJO9fdk+EUsgiOdJqFSFUB4Qgy+gP4vU4U1DrmPJWypfXe1CgyaV7rRdZjGxdpLe9djxhx1ZHvqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
