@@ -218,4 +218,45 @@
     }
     if (ids.length) setActive(ids[0]);
   }
+
+  /* ---------- Screenshot lightbox (download page changelog) ----------
+     Thumbnails carry data-full (fullscreen src) + data-caption. Click opens
+     the shared #lightbox overlay; backdrop / ✕ / Escape close it. */
+  const lightbox = document.getElementById("lightbox");
+  const thumbs = Array.from(document.querySelectorAll(".shot-thumb"));
+  if (lightbox && thumbs.length) {
+    const img = lightbox.querySelector(".lightbox-img");
+    const caption = lightbox.querySelector(".lightbox-caption");
+    const closeBtn = lightbox.querySelector(".lightbox-close");
+    let lastFocused = null;
+
+    const open = (thumb) => {
+      lastFocused = thumb;
+      img.src = thumb.getAttribute("data-full") || "";
+      const text = thumb.getAttribute("data-caption") || "";
+      img.alt = text;
+      caption.textContent = text;
+      caption.hidden = !text;
+      lightbox.hidden = false;
+      document.body.classList.add("no-scroll");
+      closeBtn.focus();
+    };
+
+    const close = () => {
+      lightbox.hidden = true;
+      img.src = "";
+      document.body.classList.remove("no-scroll");
+      if (lastFocused) lastFocused.focus();
+    };
+
+    thumbs.forEach((t) => t.addEventListener("click", () => open(t)));
+    closeBtn.addEventListener("click", close);
+    // Click on the backdrop (not the image/caption) closes.
+    lightbox.addEventListener("click", (e) => {
+      if (!e.target.closest(".lightbox-figure") && !e.target.closest(".lightbox-close")) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !lightbox.hidden) close();
+    });
+  }
 })();
