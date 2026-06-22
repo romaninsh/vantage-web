@@ -1,22 +1,45 @@
-## Phase 1: Features & Third-Party Plugins
-- [x] Enable Zola syntax highlighting (already configured)
-- [ ] Add Bootstrap 5 via CDN
-- [ ] Add Material Symbols icons via CDN
-- [ ] Add Google Fonts integration
-- [ ] Migrate custom Chroma syntax highlighting theme to Zola
+# vantage-web rules
 
-## Phase 2: Base Layout Logic
-- [ ] Create base.html template with Bootstrap structure
-- [ ] Create section.html for list pages (patterns, integration, etc)
-- [ ] Create page.html for single content pages
-- [ ] Create macros.html for reusable components
-- [ ] Migrate navigation header with logo positioning
-- [ ] Implement card-based content grid system
-- [ ] Add footer with copyright
+Static site (Zola + Tailwind v4) for vantage-ui.com. Built with `make build`
+(`tailwindcss -i css/main.css -o static/main.css` then `zola build`); deployed
+to S3 + CloudFront by `.github/workflows/deploy.yml`. `static/main.css` is a
+gitignored build output — only the `css/main.css` source is committed.
 
-## Phase 3: Content Migration
-- [ ] Copy patterns/ content from Hugo to Zola
-- [ ] Copy integration/ content from Hugo to Zola
-- [ ] Copy docs/ content (if needed)
-- [ ] Update frontmatter format (Hugo +++ to Zola +++)
-- [ ] Test all internal links and navigation
+## Changelog (synced — do not hand-edit)
+
+The release notes on `/download` are synced **automatically** from `vantage-ui`
+(its `release.yaml` writes `static/changelog-*.md` and the `changelog_minors` /
+`[extra.changelog_dates]` blocks in `content/download.md` on every release).
+Do not hand-edit those — a future `chore: sync changelog` commit overwrites them.
+
+## Release-note screenshots (website-owned)
+
+Screenshots are a separate layer the sync never touches:
+
+- **Mapping:** `static/changelog-screenshots.yaml`, keyed by minor version.
+- **Images:** `static/images/changelog/<minor>/NN.webp` (thumb) + `NN-full.webp`.
+- **Render:** `themes/vantage/templates/download.html` draws a `.shot-grid` of
+  thumbnails under each version; clicking opens the lightbox (overlay in
+  `base.html`, behaviour in `static/js/site.js`, styles in `css/main.css`).
+
+### Adding screenshots for a release
+
+1. Take macOS **window captures** (⌘⇧4 then Space) — they come on a transparent
+   canvas with a drop shadow; the script crops to the window automatically.
+2. Run the ingest, passing alternating `path` then `caption` arguments:
+   ```
+   script/add-screenshots 0.18 \
+     ~/Desktop/screenshots/a.png "Caption A" \
+     ~/Desktop/screenshots/b.png "Caption B"
+   ```
+   It crops each window out of the shadow (via its alpha bounding box), writes a
+   fast-load thumb + a fullscreen WebP, and updates the YAML idempotently
+   (re-running for the same minor replaces that block; other minors are kept).
+   Captions are optional — omit to fall back to generic alt text.
+3. Commit the new YAML + `static/images/changelog/<minor>/`.
+
+Screenshots for an **unreleased** version (e.g. 0.18 before it ships) sit
+dormant: they only render once that minor appears in `changelog_minors`, which
+happens when the release publishes and syncs. To preview earlier, temporarily
+add the minor to `changelog_minors` + a stub `changelog-<minor>.md`,
+`zola build`, then revert.
