@@ -22,3 +22,34 @@
     alt:    "Recent updates stream in as the server runs the countdown simulation"
     width:  480
     height: 315
+"0.19":
+  - thumb:  images/changelog/0.19/01.webp
+    full:   images/changelog/0.19/01-full.webp
+    alt:    "The launch board lists every simulated launch with its live status"
+    width:  480
+    height: 315
+  - thumb:  images/changelog/0.19/02.webp
+    full:   images/changelog/0.19/02-full.webp
+    alt:    "Start a simulated launch — pick the provider, rocket and pad"
+    width:  480
+    height: 344
+  - thumb:  images/changelog/0.19/03.webp
+    full:   images/changelog/0.19/03-full.webp
+    alt:    "The action dialog spells out what it'll do before it hits the live server"
+    width:  480
+    height: 403
+  - thumb:  images/changelog/0.19/04.webp
+    full:   images/changelog/0.19/04-full.webp
+    alt:    "The new Summary tab counts down to liftoff, live"
+    width:  480
+    height: 296
+  - thumb:  images/changelog/0.19/05.webp
+    full:   images/changelog/0.19/05-full.webp
+    alt:    "Crew and payload manifest fill in as the mission comes together — masses in friendly units"
+    width:  480
+    height: 322
+  - thumb:  images/changelog/0.19/06.webp
+    full:   images/changelog/0.19/06-full.webp
+    alt:    "Live ascent telemetry: altitude, velocity and downrange tick up in real time toward orbit"
+    width:  480
+    height: 324
