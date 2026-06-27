@@ -57,31 +57,44 @@
             {{ page.content | safe }}
         </article>
 
-        <!-- Changelog -->
+        <!-- Changelog: one collapsible entry per minor, all open by default.
+             The version + date live in the <summary> so each entry's own
+             `# Vantage x.y` heading is redundant — it's hidden in CSS. -->
         {% set minors = page.extra.changelog_minors | default(value=[]) %}
         {% set shots = load_data(path="static/changelog-screenshots.yaml", required=false) %}
-        {% for minor in minors %}
-            {% set changelog = load_data(path="static/changelog-" ~ minor ~ ".md", format="plain", required=false) %}
-            {% if changelog %}
-            <article class="mt-12 border-t border-line pt-10 first-of-type:border-t-0">
+        <section class="mt-16">
+            <h2 class="text-h3 text-text-1">Changelog</h2>
+            {% for minor in minors %}
+                {% set changelog = load_data(path="static/changelog-" ~ minor ~ ".md", format="plain", required=false) %}
+                {% if changelog %}
                 {% set released = page.extra.changelog_dates[minor] | default(value="") %}
-                {% if released %}<p class="kicker mb-2">{{ released }}</p>{% endif %}
-                <div class="prose">{{ changelog | markdown | safe }}</div>
-                {% if shots and shots[minor] %}
-                <div class="shot-grid">
-                    {% for s in shots[minor] %}
-                    <button type="button" class="shot-thumb" data-full="{{ get_url(path=s.full) }}" data-caption="{{ s.alt }}">
-                        <img src="{{ get_url(path=s.thumb) }}" alt="{{ s.alt }}" loading="lazy" width="{{ s.width }}" height="{{ s.height }}">
-                    </button>
-                    {% endfor %}
-                </div>
+                <details open id="vantage-{{ minor | replace(from='.', to='-') }}" class="changelog-entry">
+                    <summary class="changelog-summary">
+                        <span class="flex items-baseline gap-3">
+                            <h3 class="text-h3 text-text-1 !my-0">Vantage {{ minor }}</h3>
+                            {% if released %}<span class="kicker">{{ released }}</span>{% endif %}
+                        </span>
+                        <span class="material-symbols-outlined changelog-chevron" aria-hidden="true">expand_more</span>
+                    </summary>
+                    <div class="changelog-body">
+                        <div class="prose">{{ changelog | markdown | safe }}</div>
+                        {% if shots and shots[minor] %}
+                        <div class="shot-grid">
+                            {% for s in shots[minor] %}
+                            <button type="button" class="shot-thumb" data-full="{{ get_url(path=s.full) }}" data-caption="{{ s.alt }}">
+                                <img src="{{ get_url(path=s.thumb) }}" alt="{{ s.alt }}" loading="lazy" width="{{ s.width }}" height="{{ s.height }}">
+                            </button>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <p class="mt-4 font-mono text-xs text-text-3">
+                            Raw file: <a href="/changelog-{{ minor }}.md" class="text-text-2 underline decoration-line-strong underline-offset-2 hover:text-text-1">changelog-{{ minor }}.md</a>
+                        </p>
+                    </div>
+                </details>
                 {% endif %}
-                <p class="mt-4 font-mono text-xs text-text-3">
-                    Raw file: <a href="/changelog-{{ minor }}.md" class="text-text-2 underline decoration-line-strong underline-offset-2 hover:text-text-1">changelog-{{ minor }}.md</a>
-                </p>
-            </article>
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
+        </section>
 
         <!-- Nightly -->
         {% if nightly %}

@@ -152,6 +152,44 @@
     }
   }
 
+  /* ---------- Changelog (download page) ----------
+     Each minor is a <details open> accordion. The version + date sit in the
+     <summary>, so the entry's own `# Vantage x.y` h1 is hidden, and the inner
+     section headings are toned down — no more page full of huge h1s. */
+  .changelog-entry {
+    @apply border-t border-line first-of-type:border-t-0;
+  }
+  .changelog-summary {
+    @apply flex cursor-pointer list-none items-center justify-between gap-4 py-6 select-none;
+  }
+  /* Drop the native disclosure triangle (we use our own chevron). */
+  .changelog-summary::-webkit-details-marker {
+    display: none;
+  }
+  .changelog-chevron {
+    @apply text-text-3 transition-transform duration-200;
+  }
+  .changelog-entry[open] .changelog-chevron {
+    @apply rotate-180;
+  }
+  .changelog-summary:hover .text-h3 {
+    @apply text-accent-300;
+  }
+  .changelog-body {
+    @apply pb-10;
+  }
+  /* The version name now lives in the summary; hide the markdown's own h1. */
+  .changelog-body .prose > h1:first-child {
+    @apply hidden;
+  }
+  /* Tone the per-release section headings down from h2 to h3 scale. */
+  .changelog-body .prose h2 {
+    @apply mt-8 text-h3;
+  }
+  .changelog-body .prose > :first-child {
+    @apply mt-0;
+  }
+
   /* ---------- Navigation ---------- */
 
   .topnav-scrolled {
