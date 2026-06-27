@@ -1245,6 +1245,21 @@
   .lc-frame img {
     @apply block w-full rounded-lg;
   }
+  .lc-frame figcaption {
+    @apply px-1 pt-2 pb-1 text-center text-sm text-text-3;
+
+    code {
+      @apply font-mono text-[0.85em] text-accent-300;
+    }
+  }
+
+  /* Two screenshots side by side (stacks on narrow viewports). */
+  .lc-shots {
+    @apply my-2 grid gap-4 sm:grid-cols-2;
+  }
+  .lc-shots .lc-frame {
+    @apply my-0;
+  }
 
   /* Data-model: a hub core + a list of relation channels. */
   .lc-hub {
