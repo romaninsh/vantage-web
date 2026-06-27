@@ -166,11 +166,59 @@
     // Top progress bar tracks how far down the page you are.
     const bar = document.querySelector(".lc-progress > span");
     if (bar) {
+      const root = document.documentElement;
+      // The Moon is a large 3D model (~80 MB) + viewer component. Only load it on
+      // capable desktops with a decent connection: skip on small/touch screens
+      // and on slow or data-saver networks. Until then it has no `src`, so nothing
+      // downloads. The starfield backdrop (pure CSS) runs everywhere.
+      let planet = null;
+      const mv = document.querySelector("model-viewer.lc-planet");
+      const conn = navigator.connection || {};
+      const slowNet =
+        conn.saveData === true ||
+        (conn.effectiveType && conn.effectiveType !== "4g") ||
+        (typeof conn.downlink === "number" && conn.downlink > 0 && conn.downlink < 2);
+      const smallOrTouch =
+        window.matchMedia("(max-width: 1023px)").matches ||
+        window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+      if (mv && !slowNet && !smallOrTouch) {
+        const s = document.createElement("script");
+        s.type = "module";
+        s.src = mv.dataset.mv;
+        document.head.appendChild(s);
+        mv.setAttribute("src", mv.dataset.glb);
+        planet = mv;
+      }
       const updateBar = () => {
         const el = document.documentElement;
         const max = el.scrollHeight - el.clientHeight;
         const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
         bar.style.width = (p * 100).toFixed(1) + "%";
+        // "Into space" backdrop: ramp depth 0→1 over the first 20% of scroll
+        // (smoothstep), so the galaxy fills in early and stays (see .lc-space in
+        // launch-control.html).
+        const t = Math.min(1, p / 0.2);
+        root.style.setProperty("--lc-depth", (t * t * (3 - 2 * t)).toFixed(3));
+        // Raw full-page progress drives the star parallax, which keeps drifting
+        // all the way to the bottom (in sync with the Moon descent below).
+        root.style.setProperty("--lc-scroll", p.toFixed(4));
+        // Moon descent over the final stretch (from ~78% of scroll to the end):
+        // a lander's side-window view. At the start the horizon is a low sliver
+        // and we're looking up (sky-heavy); by the end we've dropped toward the
+        // surface and the ground fills the bottom ~30% of the screen.
+        const er = Math.min(1, Math.max(0, (p - 0.78) / 0.22));
+        const e = er * er * (3 - 2 * er);
+        root.style.setProperty("--lc-end", e.toFixed(3));
+        if (planet) {
+          const L = (a, b) => (a + (b - a) * e).toFixed(2);
+          // camera-target Y rides above the limb (in space): higher = Moon sits
+          // lower in frame (more sky); lowering it raises the ground into view.
+          planet.setAttribute("camera-target", `0m ${L(1.55, 1.02)}m 0m`);
+          // phi tips the look slightly down as we near the surface; radius drops
+          // 2.2m→1.45m to descend toward the ground.
+          planet.setAttribute("camera-orbit", `0deg ${L(96, 104)}deg ${L(2.2, 1.45)}m`);
+          planet.setAttribute("field-of-view", `${L(30, 34)}deg`);
+        }
       };
       window.addEventListener("scroll", updateBar, { passive: true });
       window.addEventListener("resize", updateBar);

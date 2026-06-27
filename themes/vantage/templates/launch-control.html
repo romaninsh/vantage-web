@@ -5,6 +5,122 @@
 {% block body_class %}lc{% endblock body_class %}
 
 {% block content %}
+
+{# ===== "Into space" backdrop — self-contained; driven by --lc-depth (set in site.js).
+   Sits at z-index:-1, above the body's dark background but behind all content, so the
+   header's backdrop-blur and the reading column keep text legible over the stars. ===== #}
+<style>
+  .lc-space{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+    --d:var(--lc-depth,0); /* fade/intensity: full by ~20% scroll */
+    --s:var(--lc-scroll,0)} /* raw 0→1 across the whole page: parallax */
+  /* The void itself: a faint galaxy glow, deepening to near-black as you descend. */
+  .lc-space__sky{position:absolute;inset:0;
+    background:
+      radial-gradient(120% 75% at 86% 6%,  rgba(99,102,241,.28), transparent 55%),
+      radial-gradient(115% 85% at 10% 96%, rgba(139,92,246,.24), transparent 55%),
+      radial-gradient(90% 60% at 50% 120%, rgba(79,70,229,.30), transparent 60%),
+      linear-gradient(180deg, transparent 0%, rgba(6,7,18,.45) 55%, rgba(3,3,11,.92) 100%);
+    opacity:calc(.08 + .92 * var(--d));transition:opacity .25s linear}
+  /* Vignette grows with depth, drawing the eye to the reading column. */
+  .lc-space__vignette{position:absolute;inset:0;
+    background:radial-gradient(78% 62% at 40% 42%, transparent 52%, rgba(0,0,0,.55) 100%);
+    opacity:calc(.12 + .55 * var(--d));transition:opacity .25s linear}
+  /* Three star layers, each parallaxed by depth and drifting slowly. */
+  .lc-stars{position:absolute;inset:-24% -12%;background-repeat:repeat;transition:opacity .25s linear}
+  .lc-stars--far{opacity:calc(.05 + .80 * var(--d));background-size:200px 200px;
+    transform:translateY(calc(var(--s) * -60px));
+    animation:lc-tw 8s ease-in-out infinite;
+    background-image:
+      radial-gradient(1px 1px at 12% 22%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 47% 9%,#cdd6ff,transparent 60%),
+      radial-gradient(1px 1px at 78% 34%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 33% 61%,#e9ecff,transparent 60%),
+      radial-gradient(1px 1px at 64% 78%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 8% 88%,#cdd6ff,transparent 60%),
+      radial-gradient(1px 1px at 90% 14%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 55% 45%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 21% 73%,#e9ecff,transparent 60%),
+      radial-gradient(1px 1px at 71% 57%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 38% 92%,#cdd6ff,transparent 60%),
+      radial-gradient(1px 1px at 95% 68%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 3% 38%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 27% 32%,#cdd6ff,transparent 60%),
+      radial-gradient(1px 1px at 58% 18%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 83% 52%,#e9ecff,transparent 60%),
+      radial-gradient(1px 1px at 16% 52%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 44% 36%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 6% 67%,#cdd6ff,transparent 60%),
+      radial-gradient(1px 1px at 49% 84%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 86% 88%,#e9ecff,transparent 60%),
+      radial-gradient(1px 1px at 75% 7%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 31% 47%,#fff,transparent 60%),
+      radial-gradient(1px 1px at 67% 67%,#cdd6ff,transparent 60%)}
+  .lc-stars--mid{opacity:calc(.05 + .92 * var(--d));background-size:320px 320px;
+    transform:translateY(calc(var(--s) * -130px));
+    animation:lc-tw 6s ease-in-out infinite .6s;
+    background-image:
+      radial-gradient(1.5px 1.5px at 18% 12%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 62% 28%,#dfe5ff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 84% 7%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 9% 52%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 40% 70%,#ffe9c7,transparent 62%),
+      radial-gradient(1.5px 1.5px at 73% 88%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 95% 44%,#dfe5ff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 28% 91%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 52% 5%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 88% 63%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 6% 22%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 34% 38%,#dfe5ff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 50% 52%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 78% 58%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 14% 78%,#ffe9c7,transparent 62%),
+      radial-gradient(1.5px 1.5px at 60% 78%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 92% 22%,#fff,transparent 62%),
+      radial-gradient(1.5px 1.5px at 44% 18%,#dfe5ff,transparent 62%)}
+  .lc-stars--near{opacity:calc(.04 + 1.0 * var(--d));background-size:440px 440px;
+    transform:translateY(calc(var(--s) * -230px));
+    animation:lc-tw 5s ease-in-out infinite .3s;
+    background-image:
+      radial-gradient(2px 2px at 22% 18%,#fff,transparent 64%),
+      radial-gradient(2px 2px at 67% 40%,#eaf0ff,transparent 64%),
+      radial-gradient(2px 2px at 12% 77%,#fff,transparent 64%),
+      radial-gradient(2px 2px at 85% 22%,#ffe9c7,transparent 64%),
+      radial-gradient(2px 2px at 45% 88%,#fff,transparent 64%),
+      radial-gradient(2px 2px at 92% 60%,#fff,transparent 64%),
+      radial-gradient(2px 2px at 33% 50%,#eaf0ff,transparent 64%),
+      radial-gradient(2px 2px at 8% 38%,#fff,transparent 64%),
+      radial-gradient(2px 2px at 54% 14%,#fff,transparent 64%),
+      radial-gradient(2px 2px at 76% 72%,#ffe9c7,transparent 64%),
+      radial-gradient(2px 2px at 38% 32%,#fff,transparent 64%),
+      radial-gradient(2px 2px at 62% 60%,#eaf0ff,transparent 64%)}
+  @keyframes lc-tw{0%,100%{filter:opacity(.7)}50%{filter:opacity(1)}}
+  @media (prefers-reduced-motion:reduce){.lc-stars{animation:none!important;filter:none!important}}
+  /* A real 3D Moon (glTF, with topography) fills the backdrop over the last
+     stretch of the page (--lc-end 0→1). The camera is flown by site.js to feel
+     like a lander descent seen from the side window. model-viewer renders to a
+     transparent canvas, so the surface composites over the stars.
+     Model: NASA SVS "Moon" 3D model (LRO imagery + topography) — public domain. */
+  .lc-planet{position:absolute;inset:0;width:100%;height:100%;
+    --poster-color:transparent;background:transparent;border:0;display:block;
+    opacity:var(--lc-end,0);transition:opacity .3s linear}
+</style>
+<div class="lc-space" aria-hidden="true">
+  <div class="lc-space__sky"></div>
+  <div class="lc-stars lc-stars--far"></div>
+  <div class="lc-stars lc-stars--mid"></div>
+  <div class="lc-stars lc-stars--near"></div>
+  <model-viewer class="lc-planet"
+    data-glb="{{ get_url(path='models/launch-control/moon.glb') }}"
+    data-mv="{{ get_url(path='js/model-viewer.min.js') }}"
+    orientation="0deg 0deg 90deg"
+    camera-orbit="0deg 96deg 2.2m" camera-target="0m 1.55m 0m" field-of-view="30deg"
+    min-camera-orbit="-Infinity 0deg 0.5m" max-camera-orbit="Infinity 180deg 20m"
+    min-field-of-view="8deg" max-field-of-view="70deg" interpolation-decay="90"
+    interaction-prompt="none" shadow-intensity="0" exposure="0.5"
+    disable-zoom disable-tap disable-pan loading="eager" reveal="auto" aria-hidden="true"></model-viewer>
+  <div class="lc-space__vignette"></div>
+</div>
+
 {{ nav::header() }}
 
 {% set repo = "https://github.com/romaninsh/vantage-ui-examples" %}
