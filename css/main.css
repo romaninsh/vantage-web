@@ -1261,6 +1261,73 @@
     @apply my-0;
   }
 
+  /* Numbered step list (the cache/refresh flow). */
+  .lc-steps {
+    @apply my-5 max-w-2xl space-y-2.5 text-[0.95rem] leading-relaxed text-text-2;
+    counter-reset: step;
+  }
+  .lc-steps li {
+    @apply relative pl-10;
+    counter-increment: step;
+  }
+  .lc-steps li::before {
+    content: counter(step);
+    @apply absolute top-0 left-0 flex size-6 items-center justify-center rounded-full bg-accent-500/15 text-[0.72rem] font-semibold text-accent-300;
+  }
+  .lc-steps strong {
+    @apply text-text-1;
+  }
+
+  /* Entity-relationship schema diagram (inline SVG, classic-DB-modeling style). */
+  .lc-erd {
+    @apply my-6 overflow-x-auto rounded-xl border border-line bg-surface-1 p-3;
+  }
+  .lc-erd svg {
+    @apply mx-auto block h-auto;
+    width: 100%;
+    min-width: 560px;
+    max-width: 860px;
+  }
+  .lc-erd .erd-box {
+    fill: var(--color-surface-2);
+    stroke: var(--color-line);
+    stroke-width: 1;
+  }
+  .lc-erd .erd-hub {
+    stroke: var(--color-accent-400);
+    stroke-width: 1.5;
+  }
+  .lc-erd .erd-head {
+    fill: var(--color-accent-500);
+    opacity: 0.16;
+  }
+  .lc-erd text {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .lc-erd .erd-name {
+    fill: var(--color-text-1);
+    font-weight: 600;
+  }
+  .lc-erd .erd-col {
+    fill: var(--color-text-2);
+  }
+  .lc-erd .erd-key {
+    fill: var(--color-accent-300);
+    font-weight: 600;
+  }
+  .lc-erd .erd-fk {
+    fill: var(--color-text-3);
+  }
+  .lc-erd .erd-line {
+    stroke: var(--color-accent-500);
+    stroke-width: 1.2;
+    fill: none;
+    opacity: 0.65;
+  }
+  .lc-erd .erd-card {
+    fill: var(--color-text-3);
+  }
+
   /* Data-model: a hub core + a list of relation channels. */
   .lc-hub {
     @apply my-8 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center;

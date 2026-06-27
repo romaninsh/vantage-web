@@ -21,13 +21,14 @@
         <nav class="lc-rail-inner" aria-label="On this page">
             <p class="lc-rail-title">Flight plan</p>
             <div class="lc-rail-list">
-                <a href="#watch"   class="lc-rail-item"><span class="lc-rail-num">01</span><span>Watch it fly</span></a>
-                <a href="#yaml"    class="lc-rail-item"><span class="lc-rail-num">02</span><span>It's just YAML</span></a>
-                <a href="#live"    class="lc-rail-item"><span class="lc-rail-num">03</span><span>Live, no plumbing</span></a>
-                <a href="#calm"    class="lc-rail-item"><span class="lc-rail-num">04</span><span>Flaky API, calm UI</span></a>
-                <a href="#backend" class="lc-rail-item"><span class="lc-rail-num">05</span><span>Driven by your API</span></a>
-                <a href="#extend"  class="lc-rail-item"><span class="lc-rail-num">06</span><span>Extend it</span></a>
-                <a href="#mission" class="lc-rail-item"><span class="lc-rail-num">07</span><span>Make it yours</span></a>
+                <a href="#watch"     class="lc-rail-item"><span class="lc-rail-num">01</span><span>Watch it fly</span></a>
+                <a href="#yaml"      class="lc-rail-item"><span class="lc-rail-num">02</span><span>Telemetry</span></a>
+                <a href="#relations" class="lc-rail-item"><span class="lc-rail-num">03</span><span>Relationships</span></a>
+                <a href="#calm"      class="lc-rail-item"><span class="lc-rail-num">04</span><span>Resilience</span></a>
+                <a href="#forms"     class="lc-rail-item"><span class="lc-rail-num">05</span><span>Dialogs &amp; dropdowns</span></a>
+                <a href="#backend"   class="lc-rail-item"><span class="lc-rail-num">06</span><span>Server included</span></a>
+                <a href="#extend"    class="lc-rail-item"><span class="lc-rail-num">07</span><span>Extend it</span></a>
+                <a href="#mission"   class="lc-rail-item"><span class="lc-rail-num">08</span><span>Make it yours</span></a>
             </div>
         </nav>
     </aside>
@@ -40,219 +41,495 @@
             <p class="lc-phase">Phase 01 / Watch it fly</p>
             <h1 class="text-display">Launch&nbsp;Control</h1>
             <p class="lc-lead">
-                One app, downloaded once, can run thousands of different consoles.
-                This is one of them: a live mission-control board for global
-                spaceflight — real-time launch countdowns and a deliberately flaky
-                API the interface rides straight through. And it's a folder of YAML,
-                not a frontend you had to build.
+                Vantage, downloaded once, can fulfil thousands of business use-cases.
+                Launch Control isn't an application — it's a small collection of YAML
+                files that turn Vantage into a powerful, real-time rocket-launch
+                control interface. Let's take a closer look.
             </p>
             <p class="lc-body !mt-4">
-                Click the button and Vantage UI opens this example against our hosted
-                server — no account, no setup, about thirty seconds. Hit
-                <strong>"New simulated launch"</strong> and watch a rocket count down
-                and fly while the board updates underneath you. The rest of this page
-                is how that's put together, and why none of it took a line of UI code.
+                First, <a href="/download/">download Vantage</a> — then click
+                <strong>Open Launch Control</strong> below. Vantage is like a web browser
+                for custom apps: it installs the example locally and verifies it before
+                running. By default it talks to our hosted API at
+                <code>launch-control.vantage-ui.com</code>, so you can browse past
+                launches straight away — and start a new one.
             </p>
 
             <div class="lc-actions">
                 <a href="{{ install_url | safe }}" class="btn btn-lg btn-primary">
                     <span class="material-symbols-outlined">rocket_launch</span>
-                    Open in Vantage UI
+                    Open Launch Control
                 </a>
                 <a href="{{ app }}" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
                     <span class="material-symbols-outlined">code</span>
-                    View source
+                    See "Launch Control" source
                 </a>
             </div>
 
-            <div class="lc-note">
-                <span class="material-symbols-outlined">bolt</span>
-                <span>The one-click <code>vantage://</code> link opens the example
-                straight from <a href="/download/">the app</a> against the live hosted
-                server. Prefer to run everything yourself? It's three commands —
-                <a href="#backend">jump to Driven by your API</a>.</span>
-            </div>
-
+            <p class="lc-body !mt-8 !mb-1 text-sm text-text-3">The whole Launch Control example:</p>
             <div class="lc-readout">
-                <div class="lc-stat"><span class="lc-stat-num">15</span><span class="lc-stat-label">Related entities</span></div>
+                <div class="lc-stat"><span class="lc-stat-num">30</span><span class="lc-stat-label">YAML files</span></div>
+                <div class="lc-stat"><span class="lc-stat-num">12</span><span class="lc-stat-label">Data tables</span></div>
+                <div class="lc-stat"><span class="lc-stat-num">~50</span><span class="lc-stat-label">Lines of Rhai</span></div>
                 <div class="lc-stat"><span class="lc-stat-num">0</span><span class="lc-stat-label">Lines of UI code</span></div>
-                <div class="lc-stat"><span class="lc-stat-num">~60s</span><span class="lc-stat-label">Live countdown</span></div>
-                <div class="lc-stat"><span class="lc-stat-num">1000s</span><span class="lc-stat-label">Apps, one binary</span></div>
             </div>
 
             <div class="lc-frame">
-                <img src="{{ get_url(path='images/vantage-ui-app.png') }}" width="884" height="768" alt="Launch Control running in Vantage UI" loading="eager">
+                <img src="{{ get_url(path='images/changelog/0.19/01-full.webp') }}" width="1600" height="1050" alt="A birds-eye view of Launch Control in Vantage — the sidebar of entities and the live launch board" loading="eager">
             </div>
 
-            <div class="lc-body !mt-8">
-                <p>
-                    A rocket is just the exciting illustration. The same app shape —
-                    trigger a task, watch its state move, drill into the detail — is how
-                    you'd run a campaign, a deployment, or an overnight batch job. Those
-                    are duller to look at and identical to build. So we launch a rocket.
-                </p>
+            <div class="lc-note !mt-6">
+                <span class="material-symbols-outlined">code</span>
+                <div>
+                    <p>Everything on this screen, Vantage gives you for free —
+                    <strong>arbitrary REST endpoints as live tables</strong>,
+                    <strong>auto-refresh that never blanks</strong>,
+                    <strong>virtualized, auto-paginated CRUD grids</strong>,
+                    <strong>end-to-end type safety</strong>, a
+                    <strong>launch dialog with dependent dropdowns</strong>,
+                    <strong>master/detail binder layouts</strong>,
+                    <strong>tabbed navigation</strong> and <strong>themes</strong> —
+                    all of which, in a browser app, you would hand-write in TypeScript.</p>
+                    <p class="!mt-3">Reckon on it: ~30 typed entity interfaces plus their
+                    request/response codecs; a fetch layer with retry, backoff and an LRU
+                    cache keyed by query-plus-offset; a windowed virtual scroller diffing
+                    the ~40 visible rows out of tens of thousands; ~6 reducers for
+                    selection, sort, filter, pagination, refresh and error; a debounced
+                    1&nbsp;Hz poller reconciling in-flight writes against server state;
+                    ~12 form fields with cross-field validation and dependent-option
+                    refetch; optimistic mutations with rollback; theme tokens threaded
+                    through every component; 4 states — loading, empty, error, stale —
+                    across ~25 components and a handful of routed tabs. Call it
+                    <strong>~20,000 lines of TSX</strong>, a few hundred type errors
+                    fought to zero, and <strong>6–12 weeks</strong> before it stops
+                    flickering. Then host it.</p>
+                </div>
             </div>
         </section>
 
-        <!-- 02 ───────────────────────────── IT'S JUST YAML -->
+        <!-- 02 ───────────────────────────── TELEMETRY -->
         <section id="yaml" class="lc-chapter">
-            <p class="lc-phase">Phase 02 / It's just YAML</p>
-            <h2 class="lc-h">A view is a line, not a sprint</h2>
+            <p class="lc-phase">Phase 02 / Telemetry</p>
+            <h2 class="lc-h">Telemetry, projected at full frame rate</h2>
             <div class="lc-body">
                 <p>
-                    There is no frontend code in this example. The whole console is a
-                    handful of declarative files — one datasource, a table per entity, a
-                    page, an action — short enough to read in a sitting, and easy for you
-                    (or your coding agent) to change. The telemetry panel below isn't a
-                    component someone wrote; it's a list of small widgets, each a few
-                    lines of YAML.
+                    One of the app's highlights is its live telemetry. It runs at a high
+                    frame rate, continuously estimating where the rocket is right now —
+                    altitude, velocity, acceleration — and every two to four seconds it
+                    snaps back to the real numbers the API reports. Smooth on screen,
+                    honest underneath.
                 </p>
             </div>
 
-            <div class="lc-shots">
-                <figure class="lc-frame">
-                    <img src="{{ get_url(path='images/launch-control/telemetry.webp') }}" width="812" height="258" alt="Live ascent telemetry: altitude, velocity, acceleration, downrange and MET tick up in real time toward orbit" loading="lazy">
-                    <figcaption>Live ascent telemetry — each stat is one widget of YAML.</figcaption>
-                </figure>
-                <figure class="lc-frame">
-                    <img src="{{ get_url(path='images/launch-control/countdown.webp') }}" width="800" height="172" alt="The Summary tab counts down to liftoff, live" loading="lazy">
-                    <figcaption>The countdown — a single <code>kind: countdown</code> line.</figcaption>
-                </figure>
-            </div>
+            <figure class="lc-frame">
+                <img src="{{ get_url(path='images/launch-control/telemetry.webp') }}" width="812" height="258" alt="Live ascent telemetry: altitude, velocity, acceleration, downrange and MET tick up in real time toward orbit" loading="lazy">
+                <figcaption>Live ascent telemetry — composed from widgets, animated by a formula.</figcaption>
+            </figure>
+
+            <div class="lc-body"><p>It takes two things, and both live in one view file.
+                <strong>First, the presentation.</strong> The panel is a list of named
+                widgets — separators, rows, stats, a countdown — each a few lines of YAML,
+                no view code. The telemetry block is a separator and a row of three stats:</p></div>
 
             <figure class="lc-code">
                 <figcaption class="lc-code-head"><span class="material-symbols-outlined">dashboard</span><b>view/launch_summary.yaml</b></figcaption>
 <pre><code class="language-yaml">body:
-  - kind: countdown            # the whole liftoff clock, declared
-    target: "${record.net}"
-    label: "Liftoff in"
-  - kind: stat                 # one telemetry readout…
-    label: "Altitude"
-    value: "${record.altitude_km}"
-    unit: km
-  - kind: stat                 # …add another by adding four lines
-    label: "Velocity"
-    value: "${record.velocity_ms}"
-    unit: m/s</code></pre>
-                <figcaption><strong>No view code.</strong> You compose a panel from named widgets; the app renders them. Want one more readout? Add four lines.</figcaption>
+  - kind: separator
+    label: "Telemetry"
+  - kind: row
+    gap: 16
+    repaint: 3hz                 # custom frame rate (see below)
+    children:
+      - kind: stat
+        label: "Altitude"
+        unit: km
+      - kind: stat
+        label: "Velocity"
+        unit: m/s
+      - kind: stat
+        label: "Acceleration"
+        unit: m/s²</code></pre>
+                <figcaption><strong><code>repaint: 3hz</code> sets a custom refresh rate.</strong> A view normally repaints only when its data changes; this one ticks three times a second so the projected numbers move smoothly between API samples.</figcaption>
             </figure>
 
-            <div class="lc-body"><p><strong>Point at the server once.</strong> The
-                <code>api-client</code> datasource learns the response envelope — the
-                array lives under <code>results</code>, the total under <code>count</code> —
-                and pushes filters server-side. One datasource drives all fifteen
-                tables.</p></div>
+            <div class="lc-note">
+                <span class="material-symbols-outlined">dashboard_customize</span>
+                <span>Composing a view from named widgets is much like
+                <a href="https://ui.shadcn.com" target="_blank" rel="noopener">shadcn/ui</a> —
+                except it's rendered by Rust's
+                <a href="https://www.gpui.rs" target="_blank" rel="noopener">GPUI</a>, the
+                GPU-accelerated toolkit behind the Zed editor, so it stays fluid at a frame
+                rate a browser can't reach.</span>
+            </div>
+
+            <div class="lc-body"><p><strong>Second, the scripting.</strong> A raw
+                <code>altitude_km</code> only changes when the API answers — every few
+                seconds. To make it move every frame, each stat's <code>value</code> is a
+                snippet of <strong>Rhai</strong> that projects forward from the last
+                sample:</p></div>
 
             <figure class="lc-code">
-                <figcaption class="lc-code-head"><span class="material-symbols-outlined">dns</span><b>datasource/local.yaml</b></figcaption>
-<pre><code class="language-yaml">type: api-client
-url: "https://launch-control.vantage-ui.com"   # the hosted demo server
-response_key: results       # the array inside the envelope
-total_key: count            # so grids size their scrollbar and load lazily
-pagination:
-  page_param: offset
-  limit_param: limit
-  offset_based: true
-filter_strategy: query      # this server honours every ?field=value filter</code></pre>
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">function</span><b>view/launch_summary.yaml — projected values</b></figcaption>
+<pre><code class="language-yaml">      - kind: stat
+        label: "Altitude"
+        unit: km
+        # ×15 because our launch runs the real-time scenario 15× faster
+        value: >
+          ${ record.altitude_km + record.vertical_speed_ms / 1000.0
+             * secs_since(record.last_updated) * 15.0 }
+      - kind: stat
+        label: "Velocity"
+        unit: m/s
+        value: >
+          ${ record.velocity_ms + record.acceleration_ms2
+             * secs_since(record.last_updated) * 15.0 }</code></pre>
             </figure>
 
-            <h3 class="lc-h !text-[1.4rem] !mt-12">Model the relations once — the navigation falls out</h3>
+            <div class="lc-body"><p>The projection is only ever as right as that last
+                sample: if the API stalls mid-flight it keeps climbing and sails the rocket
+                clean past MECO — main-engine cut-off — into open space, until the next
+                reading reels it back.</p></div>
+
+            <div class="lc-note">
+                <span class="material-symbols-outlined">bolt</span>
+                <span><strong>Rhai</strong> — a small, Lua-like scripting language built for
+                Rust, readable and editable without a reload — is sprinkled through the YAML
+                wherever something needs tweaking. Here one frontend-side formula brings the
+                UI alive at full frame rate, and costs the API nothing.</span>
+            </div>
+        </section>
+
+        <!-- 03 ───────────────────────────── RELATIONSHIPS -->
+        <section id="relations" class="lc-chapter">
+            <p class="lc-phase">Phase 03 / Relationships</p>
+            <h2 class="lc-h">One summary page, a dozen tables</h2>
             <div class="lc-body">
                 <p>
-                    Everything in this domain orbits one entity. A
-                    <strong>launch</strong> belongs to a provider, flies a rocket from a
-                    pad, carries payloads and crew, and ends in landings. Declare those
-                    relationships on the table and the entire navigation of the app —
-                    clickable cells, master/detail tabs — comes from them for free.
+                    The data behind a single launch is scattered: the launch row itself,
+                    the agency that flies it, its rocket and pad, the crew aboard, the
+                    payloads riding up — across a dozen tables and as many API endpoints.
+                    Vantage pulls all of it onto one Summary page. And because this API can
+                    only be asked, never pushed, it keeps that page current by polling —
+                    once every couple of seconds today, and that's configurable.
                 </p>
             </div>
 
-            <div class="lc-hub">
-                <div class="lc-hub-core">
-                    <span class="material-symbols-outlined">rocket_launch</span>
-                    <b>Launch</b>
-                    <small>the hub</small>
-                </div>
-                <div class="lc-channels">
-                    <div class="lc-channel"><span class="material-symbols-outlined">apartment</span><span><span class="lc-channel-name">Agency</span> <span class="lc-channel-sub">provider · manufacturer</span></span><span class="lc-channel-kind">belongs-to</span></div>
-                    <div class="lc-channel"><span class="material-symbols-outlined">location_on</span><span><span class="lc-channel-name">Pad → Location</span> <span class="lc-channel-sub">two hops deep</span></span><span class="lc-channel-kind">belongs-to</span></div>
-                    <div class="lc-channel"><span class="material-symbols-outlined">rocket</span><span><span class="lc-channel-name">Rocket config</span> <span class="lc-channel-sub">launcher family</span></span><span class="lc-channel-kind">belongs-to</span></div>
-                    <div class="lc-channel"><span class="material-symbols-outlined">inventory_2</span><span><span class="lc-channel-name">Payloads</span> <span class="lc-channel-sub">via payload flights</span></span><span class="lc-channel-kind">has-many</span></div>
-                    <div class="lc-channel"><span class="material-symbols-outlined">group</span><span><span class="lc-channel-name">Crew</span> <span class="lc-channel-sub">astronauts aboard</span></span><span class="lc-channel-kind">has-many</span></div>
-                    <div class="lc-channel"><span class="material-symbols-outlined">flight_land</span><span><span class="lc-channel-name">Landings</span> <span class="lc-channel-sub">booster → landpad</span></span><span class="lc-channel-kind">has-many</span></div>
-                </div>
+            <div class="lc-erd" style="margin:1rem 0;overflow-x:auto;border:1px solid var(--color-line,#2a3346);border-radius:12px;background:var(--color-surface-1,#0f1729);padding:12px">
+                <svg viewBox="0 0 1040 248" role="img" style="width:100%;height:auto;max-width:1020px;display:block;margin:0 auto" aria-label="Entity-relationship diagram of the data the Summary screen shows: the launches table at the centre, belongs-to relations to launcher configurations and pads, has-many relations to payload flights and launch crew, and those in turn belonging to payloads and astronauts.">
+                    <style>
+                      .erd-box{fill:var(--color-surface-2,#161e2e);stroke:var(--color-line,#2a3346);stroke-width:1}
+                      .erd-hub{stroke:var(--color-accent-400,#8aa0ff);stroke-width:1.5}
+                      .erd-head{fill:var(--color-accent-500,#5b6cff);opacity:.16}
+                      .erd-name{fill:var(--color-text-1,#e6e9f2);font-weight:600}
+                      .erd-col{fill:var(--color-text-2,#aab2c5)}
+                      .erd-key{fill:var(--color-accent-300,#9fb0ff);font-weight:600}
+                      .erd-fk{fill:var(--color-text-3,#6b7488)}
+                      .erd-line{stroke:var(--color-accent-500,#5b6cff);stroke-width:1.2;fill:none;opacity:.6}
+                      .erd-card{fill:var(--color-text-3,#8a93a8)}
+                      text{font-family:ui-monospace,Menlo,monospace}
+                    </style>
+                    <!-- connectors: orthogonal (elbow) routing — each on its own exit row and lane -->
+                    <polyline class="erd-line" points="350,126 290,126 290,65 196,65"/>
+                    <polyline class="erd-line" points="350,144 270,144 270,175 196,175"/>
+                    <polyline class="erd-line" points="550,104 585,104 585,82 620,82"/>
+                    <polyline class="erd-line" points="550,112 570,112 570,202 620,202"/>
+                    <polyline class="erd-line" points="800,100 830,100 830,64 860,64"/>
+                    <polyline class="erd-line" points="800,220 830,220 830,184 860,184"/>
+                    <text class="erd-card" x="232" y="61"  font-size="9.5">N:1</text>
+                    <text class="erd-card" x="224" y="171" font-size="9.5">N:1</text>
+                    <text class="erd-card" x="594" y="78"  font-size="9.5">1:N</text>
+                    <text class="erd-card" x="586" y="198" font-size="9.5">1:N</text>
+                    <text class="erd-card" x="834" y="60"  font-size="9.5">N:1</text>
+                    <text class="erd-card" x="834" y="180" font-size="9.5">N:1</text>
+
+                    <!-- launcher_configurations -->
+                    <rect class="erd-box" x="16" y="30" width="180" height="70" rx="6"/>
+                    <rect class="erd-head" x="16" y="30" width="180" height="26" rx="6"/>
+                    <text class="erd-name" x="28" y="48" font-size="13">launcher_configs</text>
+                    <text class="erd-col" x="28" y="74" font-size="11">id</text>
+                    <text class="erd-key" x="188" y="74" text-anchor="end" font-size="8.5">PK</text>
+                    <text class="erd-col" x="28" y="92" font-size="11">full_name</text>
+
+                    <!-- pads -->
+                    <rect class="erd-box" x="16" y="140" width="180" height="70" rx="6"/>
+                    <rect class="erd-head" x="16" y="140" width="180" height="26" rx="6"/>
+                    <text class="erd-name" x="28" y="158" font-size="13">pads</text>
+                    <text class="erd-col" x="28" y="184" font-size="11">id</text>
+                    <text class="erd-key" x="188" y="184" text-anchor="end" font-size="8.5">PK</text>
+                    <text class="erd-col" x="28" y="202" font-size="11">name</text>
+
+                    <!-- launches (hub) -->
+                    <rect class="erd-box erd-hub" x="350" y="64" width="200" height="94" rx="6"/>
+                    <rect class="erd-head" x="350" y="64" width="200" height="26" rx="6"/>
+                    <text class="erd-name" x="362" y="82" font-size="13">launches</text>
+                    <text class="erd-col" x="362" y="108" font-size="11">id</text>
+                    <text class="erd-key" x="542" y="108" text-anchor="end" font-size="8.5">PK</text>
+                    <text class="erd-col" x="362" y="126" font-size="11">rocket_configuration_id</text>
+                    <text class="erd-fk" x="542" y="126" text-anchor="end" font-size="8.5">FK</text>
+                    <text class="erd-col" x="362" y="144" font-size="11">pad_id</text>
+                    <text class="erd-fk" x="542" y="144" text-anchor="end" font-size="8.5">FK</text>
+
+                    <!-- payload_flights -->
+                    <rect class="erd-box" x="620" y="20" width="180" height="94" rx="6"/>
+                    <rect class="erd-head" x="620" y="20" width="180" height="26" rx="6"/>
+                    <text class="erd-name" x="632" y="38" font-size="13">payload_flights</text>
+                    <text class="erd-col" x="632" y="64" font-size="11">id</text>
+                    <text class="erd-key" x="792" y="64" text-anchor="end" font-size="8.5">PK</text>
+                    <text class="erd-col" x="632" y="82" font-size="11">launch_id</text>
+                    <text class="erd-fk" x="792" y="82" text-anchor="end" font-size="8.5">FK</text>
+                    <text class="erd-col" x="632" y="100" font-size="11">payload_id</text>
+                    <text class="erd-fk" x="792" y="100" text-anchor="end" font-size="8.5">FK</text>
+
+                    <!-- launch_crew -->
+                    <rect class="erd-box" x="620" y="140" width="180" height="94" rx="6"/>
+                    <rect class="erd-head" x="620" y="140" width="180" height="26" rx="6"/>
+                    <text class="erd-name" x="632" y="158" font-size="13">launch_crew</text>
+                    <text class="erd-col" x="632" y="184" font-size="11">id</text>
+                    <text class="erd-key" x="792" y="184" text-anchor="end" font-size="8.5">PK</text>
+                    <text class="erd-col" x="632" y="202" font-size="11">launch_id</text>
+                    <text class="erd-fk" x="792" y="202" text-anchor="end" font-size="8.5">FK</text>
+                    <text class="erd-col" x="632" y="220" font-size="11">astronaut_id</text>
+                    <text class="erd-fk" x="792" y="220" text-anchor="end" font-size="8.5">FK</text>
+
+                    <!-- payloads -->
+                    <rect class="erd-box" x="860" y="20" width="160" height="94" rx="6"/>
+                    <rect class="erd-head" x="860" y="20" width="160" height="26" rx="6"/>
+                    <text class="erd-name" x="872" y="38" font-size="13">payloads</text>
+                    <text class="erd-col" x="872" y="64" font-size="11">id</text>
+                    <text class="erd-key" x="1012" y="64" text-anchor="end" font-size="8.5">PK</text>
+                    <text class="erd-col" x="872" y="82" font-size="11">name</text>
+                    <text class="erd-col" x="872" y="100" font-size="11">mass</text>
+
+                    <!-- astronauts -->
+                    <rect class="erd-box" x="860" y="140" width="160" height="70" rx="6"/>
+                    <rect class="erd-head" x="860" y="140" width="160" height="26" rx="6"/>
+                    <text class="erd-name" x="872" y="158" font-size="13">astronauts</text>
+                    <text class="erd-col" x="872" y="184" font-size="11">id</text>
+                    <text class="erd-key" x="1012" y="184" text-anchor="end" font-size="8.5">PK</text>
+                    <text class="erd-col" x="872" y="202" font-size="11">name</text>
+                </svg>
             </div>
+
+            <p class="lc-body !mt-1 text-center text-sm text-text-3">Launch data is stored across 7 distinct tables, each served by its own REST endpoint.</p>
+
+            <div class="lc-body"><p>Each relation is a line or two of YAML — a foreign-key
+                column with <code>references:</code> for a belongs-to, a <code>references:</code>
+                entry with <code>kind: has_many</code> for a has-many — declared once on the
+                table:</p></div>
 
             <figure class="lc-code">
                 <figcaption class="lc-code-head"><span class="material-symbols-outlined">table</span><b>table/launches.yaml</b></figcaption>
-<pre><code class="language-yaml">datasource: local
-table: "launches/?mode=detailed&amp;ordering=-last_updated"
+<pre><code class="language-yaml">columns:
+  # belongs-to: a hidden FK with `references:` → a clickable drill link
+  - { name: rocket_configuration_id, flags: [hidden], references: launcher_configurations }
+  - { name: pad_id,                  flags: [hidden], references: pads }
 
-columns:
-  - { name: name, type: string, flags: [title, searchable] }
-  - { name: status.name, type: string, flags: [label] }       # colored tag
-  - { name: lsp_id, type: string, flags: [hidden], references: agencies }
-  - { name: launch_service_provider.name, type: string }      # nested leaf
-  - { name: pad.location.name, type: string }                 # two hops deep
-
-references:                  # these become the binder's detail tabs
-  payloads: { table: payload_flights, kind: has_many, foreign_key: launch__id }
+references:                  # has-many: one detail tab per relation
   crew:     { table: launch_crew,     kind: has_many, foreign_key: launch__id }
-  landings: { table: landings,        kind: has_many, foreign_key: launch__id }</code></pre>
-                <figcaption><strong>Relations are the UI.</strong> The hidden foreign key turns its cell into a drill link; the same <code>references:</code> generate the detail tabs.</figcaption>
+  payloads: { table: payload_flights, kind: has_many, foreign_key: launch__id }</code></pre>
             </figure>
+
+            <div class="lc-note">
+                <span class="material-symbols-outlined">groups</span>
+                <span>Watch it during the one-minute countdown: the crew is
+                <a href="https://github.com/romaninsh/vantage-ui-examples/blob/main/apps/launch-control/server/src/sim/mission.rs" target="_blank" rel="noopener">added one astronaut at a time</a>,
+                each insert landing in the server's database — and the Crew tab fills in
+                seat by seat as it happens, no refresh. Very few admin interfaces react
+                correctly to writes appearing underneath them, let alone across several
+                related tables at once.</span>
+            </div>
+
+            <div class="lc-body"><p>And rendering it takes no query. The Summary's right
+                column — total payload, the crew, the payload manifest — is just a few more
+                widgets, each one following a relation:</p></div>
+
+            <div style="display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start;margin:1.25rem 0">
+                <figure class="lc-code" style="margin:0">
+                    <figcaption class="lc-code-head"><span class="material-symbols-outlined">account_tree</span><b>view/launch_summary.yaml</b></figcaption>
+<pre><code class="language-yaml">body:
+  - kind: stat
+    label: "Total payload"
+    value: >
+      ${ unit(record.total_payload_mass, "kg") }
+
+  - kind: separator
+    label: "Crew"
+  - kind: list
+    ref: crew
+    item:
+      - kind: label
+        text: "${ row.astronaut.name }"
+      - kind: badge
+        text: "${ row.role }"
+
+  - kind: separator
+    label: "Payloads"
+  - kind: list
+    ref: payloads
+    item:
+      - kind: label
+        text: "${ row.payload.name }"
+      - kind: stat
+        label: "${ row.destination }"
+        value: >
+          ${ unit(row.payload.mass, "kg") }</code></pre>
+                </figure>
+                <figure class="lc-frame" style="margin:0">
+                    <img src="{{ get_url(path='images/launch-control/manifest.webp') }}" width="478" height="470" alt="A launch's Summary manifest — total payload, the crew with their roles, and the payloads with destinations and masses" loading="lazy">
+                    <figcaption>Rendered view</figcaption>
+                </figure>
+            </div>
+
+            <div class="lc-body"><p>That ease is the point: a view <strong>traverses the
+                relationships</strong> for you. The crew <code>list</code> follows
+                <code>crew</code> into <code>launch_crew</code>, and each row reaches on
+                through to its astronaut — <code>row.astronaut.name</code> — so the name comes
+                straight from the <code>astronauts</code> table, no join to write. The payload
+                list does the same through <code>payloads</code> for each name and mass.</p></div>
         </section>
 
-        <!-- 03 ───────────────────────────── LIVE, NO PLUMBING -->
-        <section id="live" class="lc-chapter">
-            <p class="lc-phase">Phase 03 / Live, no plumbing</p>
-            <h2 class="lc-h">Real-time you declare, not wire up</h2>
+        <!-- 04 ───────────────────────────── RESILIENCE -->
+        <section id="calm" class="lc-chapter">
+            <p class="lc-phase">Phase 04 / Resilience</p>
+            <h2 class="lc-h">Built for adverse networks</h2>
             <div class="lc-body">
                 <p>
-                    Most builders make you reach for websockets, a subscription server
-                    and a state store to show data that moves. Here you set an interval
-                    and a cheap change probe, and the grid keeps itself current. The
-                    page is a <code>binder</code> — grid on top, auto-derived detail tabs
-                    below — with a toolbar action that triggers a launch. When the
-                    simulator moves a row, the board notices and refreshes; nothing else
-                    to run.
+                    The server is usually fine; the network between you and it often isn't —
+                    mobile data, hotel wifi, a train tunnel. Vantage is built so none of that
+                    reaches the screen: the app stays usable on an unreliable connection and
+                    recovers on its own. Two cases are worth walking through.
                 </p>
             </div>
 
+            <h3 class="lc-h" style="font-size:1.3rem;margin-top:2.25rem">1 · Reading data</h3>
+            <div class="lc-body">
+                <p>
+                    Two things can go wrong upstream: the API server can lag or answer with a
+                    <code>503</code>, and the network in between can simply time out. Neither
+                    reaches your eyes. Inside Vantage a cache and the UI sit together and talk
+                    directly — in-process, no network — so the screen always renders from the
+                    last good data, instantly, while fetches happen quietly behind it.
+                </p>
+            </div>
+
+            <div class="lc-erd" style="margin:1rem 0;overflow-x:auto;border:1px solid var(--color-line,#2a3346);border-radius:12px;background:var(--color-surface-1,#0f1729);padding:14px">
+                <svg viewBox="0 0 900 200" role="img" style="width:100%;height:auto;max-width:880px;display:block;margin:0 auto" aria-label="Data-loading flow: an API server that can lag or return 503 errors, across a network that can time out, into a cache and UI that sit together inside Vantage and talk directly.">
+                    <style>
+                      .fd-box{fill:var(--color-surface-2,#161e2e);stroke:var(--color-line,#2a3346);stroke-width:1}
+                      .fd-head{fill:var(--color-accent-500,#5b6cff);opacity:.16}
+                      .fd-title{fill:var(--color-text-1,#e6e9f2);font-weight:600}
+                      .fd-sub{fill:var(--color-text-3,#8a93a8)}
+                      .fd-chip{fill:#3a1d22;stroke:#7d3a44;stroke-width:1}
+                      .fd-chiptext{fill:#ff9b9b}
+                      .fd-arrow{stroke:var(--color-text-2,#aab2c5);stroke-width:1.4;fill:none}
+                      .fd-bound{fill:var(--color-accent-500,#5b6cff);fill-opacity:.05;stroke:var(--color-accent-400,#8aa0ff);stroke-width:1.2;stroke-dasharray:5 4}
+                      .fd-blabel{fill:var(--color-accent-300,#9fb0ff);letter-spacing:.08em}
+                      .fd-axis{fill:var(--color-text-3,#8a93a8)}
+                      text{font-family:ui-monospace,Menlo,monospace}
+                    </style>
+                    <defs>
+                      <marker id="fd-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M0 0 L10 5 L0 10 Z" fill="#aab2c5"/>
+                      </marker>
+                    </defs>
+
+                    <!-- API server -->
+                    <rect class="fd-box" x="16" y="52" width="172" height="96" rx="8"/>
+                    <rect class="fd-head" x="16" y="52" width="172" height="28" rx="8"/>
+                    <text class="fd-title" x="32" y="72" font-size="14">API server</text>
+                    <rect class="fd-chip" x="30" y="98" width="64" height="22" rx="11"/>
+                    <text class="fd-chiptext" x="62" y="113" text-anchor="middle" font-size="11">latency</text>
+                    <rect class="fd-chip" x="102" y="98" width="56" height="22" rx="11"/>
+                    <text class="fd-chiptext" x="130" y="113" text-anchor="middle" font-size="11">503s</text>
+
+                    <!-- network hop -->
+                    <line class="fd-arrow" x1="188" y1="100" x2="300" y2="100" marker-end="url(#fd-ah)"/>
+                    <rect class="fd-chip" x="196" y="70" width="92" height="22" rx="11"/>
+                    <text class="fd-chiptext" x="242" y="85" text-anchor="middle" font-size="11">timeouts</text>
+                    <text class="fd-axis" x="242" y="122" text-anchor="middle" font-size="10">network</text>
+
+                    <!-- Vantage boundary -->
+                    <rect class="fd-bound" x="312" y="30" width="572" height="150" rx="14"/>
+                    <text class="fd-blabel" x="330" y="50" font-size="10">VANTAGE · ON YOUR DEVICE</text>
+
+                    <!-- Cache -->
+                    <rect class="fd-box" x="344" y="74" width="186" height="84" rx="8"/>
+                    <rect class="fd-head" x="344" y="74" width="186" height="28" rx="8"/>
+                    <text class="fd-title" x="360" y="94" font-size="14">Cache</text>
+                    <text class="fd-sub" x="360" y="130" font-size="11">last-good data, ready</text>
+
+                    <!-- in-process hop -->
+                    <line class="fd-arrow" x1="530" y1="116" x2="688" y2="116" marker-start="url(#fd-ah)" marker-end="url(#fd-ah)"/>
+                    <text class="fd-axis" x="609" y="106" text-anchor="middle" font-size="10">in-process</text>
+
+                    <!-- UI -->
+                    <rect class="fd-box" x="688" y="74" width="172" height="84" rx="8"/>
+                    <rect class="fd-head" x="688" y="74" width="172" height="28" rx="8"/>
+                    <text class="fd-title" x="704" y="94" font-size="14">UI</text>
+                    <text class="fd-sub" x="704" y="130" font-size="11">instant · never blank</text>
+                </svg>
+            </div>
+            <p class="lc-body !mt-1 text-center text-sm text-text-3">Faults live outside Vantage; inside, the cache and UI talk directly — so the screen never waits on the network.</p>
+
+            <h3 class="lc-h" style="font-size:1.3rem;margin-top:2.25rem">2 · Editing data</h3>
+            <div class="lc-body">
+                <p>
+                    Writes are eventually consistent. Vantage builds each change as an
+                    <strong>idempotent</strong> operation — applying it twice has the same
+                    effect as applying it once — so a write that fails or times out is simply
+                    retried until it lands, with no duplicates and no half-applied edits. You
+                    make the edit; Vantage makes sure it sticks.
+                </p>
+            </div>
+
+            <h3 class="lc-h" style="font-size:1.3rem;margin-top:2.25rem">3 · Many things at once</h3>
+            <div class="lc-body">
+                <p>
+                    A browser tab is essentially single-threaded — pile on concurrent
+                    requests, a large dataset and a stream of live updates and it stutters.
+                    Vantage is native and <strong>multi-threaded, async to the core</strong>:
+                    fetching, caching and rendering run in parallel on real threads. It's
+                    polished machinery that scales to large data and dozens of live views at
+                    once — without lagging, dropping frames, or falling over.
+                </p>
+            </div>
+
+            <div class="lc-note">
+                <span class="material-symbols-outlined">lock_open</span>
+                <span>None of this is bespoke to Launch Control — the cache, the retry loop and
+                the idempotent write queue are part of the open-source
+                <a href="/framework/">Vantage framework</a>.</span>
+            </div>
+        </section>
+
+        <!-- 05 ───────────────────────────── DIALOGS & DROPDOWNS -->
+        <section id="forms" class="lc-chapter">
+            <p class="lc-phase">Phase 05 / Dialogs &amp; dropdowns</p>
+            <h2 class="lc-h">Forms that already know your data</h2>
+            <div class="lc-body"><p>
+                "New simulated launch" opens a dialog — and because the form is derived from
+                the launches table, its foreign-key fields render as real dropdowns, with no
+                options hand-listed. One is <em>dependent</em>: pick a provider and the
+                rocket list narrows to that agency's configurations, from
+                <code>depends_on</code> + <code>filter_column</code> alone.
+            </p></div>
+
             <figure class="lc-code">
-                <figcaption class="lc-code-head"><span class="material-symbols-outlined">grid_view</span><b>page/launches.yaml</b></figcaption>
-<pre><code class="language-yaml">title: Launches
-layout: binder
-
-elements:
-  - kind: crud
-    table: launches
-    toolbar:
-      - label: "New simulated launch"
-        icon: Play
-        action: |
-          let r = actions.new_launch();
-          actions.submit_launch(r.lsp_id, r.pad_id, r.rocket_configuration_id, r.name);
-    params:
-      refresh_interval: 1
-      # Cheap change probe: count + newest last_updated, over the cached rows.
-      refresh_probe: |
-        let rows = page_table().list(); let latest = "";
-        for r in rows { let u = r.last_updated; if u != () &amp;&amp; u > latest { latest = u; } }
-        "" + rows.len() + "@" + latest</code></pre>
-                <figcaption><strong>Live without websockets.</strong> The probe is microseconds of Rhai over cached rows; the simulator bumps <code>last_updated</code>; the grid refreshes only when something actually changed.</figcaption>
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">dynamic_form</span><b>action/new-launch.yaml</b></figcaption>
+<pre><code class="language-yaml">kind: form
+form:
+  table: launches
+  fields:
+    - { name: lsp_id, label: "Launch provider", widget: dropdown }
+    - name: rocket_configuration_id
+      label: "Rocket configuration"
+      widget: dropdown
+      depends_on: lsp_id             # dependent dropdown:
+      filter_column: manufacturer_id #   narrow to the chosen provider's rockets
+    - { name: pad_id, label: "Pad", widget: dropdown }
+    - { name: name, label: "Mission name" }</code></pre>
+                <figcaption><strong>The form is the table.</strong> Declare the fields; the dropdowns, their options, and the dependency are derived from the model.</figcaption>
             </figure>
-
-            <figure class="lc-frame">
-                <img src="{{ get_url(path='images/launch-control/live-updates.webp') }}" width="1300" height="405" alt="Recent updates stream in as the server runs the countdown simulation — the refresh probe's count@timestamp signals" loading="lazy">
-                <figcaption>The "recent updates" trail is the refresh probe firing: <code>rows.len() + "@" + latest</code>.</figcaption>
-            </figure>
-
-            <div class="lc-body"><p>The "new launch" dialog is a table-derived form, so
-                its foreign-key fields render as real dropdowns — and one is
-                <em>dependent</em>: pick a provider and the rocket list narrows to that
-                agency's configurations, from <code>depends_on</code> + <code>filter_column</code>
-                alone.</p></div>
 
             <div class="lc-shots">
                 <figure class="lc-frame">
@@ -266,136 +543,70 @@ elements:
             </div>
         </section>
 
-        <!-- 04 ───────────────────────────── FLAKY API, CALM UI -->
-        <section id="calm" class="lc-chapter">
-            <p class="lc-phase">Phase 04 / Flaky API, calm UI</p>
-            <h2 class="lc-h">A flaky server, a calm screen</h2>
-            <div class="lc-body">
-                <p>
-                    Reliable data integration is where browser-based builders crack — a
-                    slow or failing API and the screen goes blank. So this server is
-                    built to misbehave: every read is delayed 150–1200ms and, about a
-                    tenth of the time, answered with a <code>503</code> instead of data,
-                    all while the simulator mutates rows underneath. The grid never
-                    blanks. The data path that survives this demo is the one that
-                    survives a real network.
-                </p>
-            </div>
-
-            <div class="lc-pipe" aria-label="Data flow: a flaky server, a cache that holds, a calm grid">
-                <div class="lc-pipe-node fault"><span class="material-symbols-outlined">dns</span><b>Flaky server</b><small>latency + random 503s</small></div>
-                <span class="lc-pipe-seg"><span class="lc-flow-dot"></span></span>
-                <div class="lc-pipe-node"><span class="material-symbols-outlined">cached</span><b>Diorama cache</b><small>holds last-good data; never blanks</small></div>
-                <span class="lc-pipe-seg"><span class="lc-flow-dot"></span></span>
-                <div class="lc-pipe-node"><span class="material-symbols-outlined">grid_view</span><b>Launch board</b><small>smooth, virtualised, self-refreshing</small></div>
-            </div>
-
-            <div class="lc-body"><p>The flakiness is honest middleware — random latency,
-                then a probabilistic failure. It wraps only the read API; the trigger
-                endpoint that starts a mission is left reliable, because writes must
-                land.</p></div>
-
-            <figure class="lc-code">
-                <figcaption class="lc-code-head"><span class="material-symbols-outlined">bolt</span><b>server/src/flaky.rs</b></figcaption>
-<pre><code class="language-rust">pub async fn middleware(State(state): State&lt;AppState&gt;, req: Request, next: Next) -&gt; Response {
-    let cfg = state.flaky;
-    let (delay_ms, fail) = {                          // decide before any await
-        let mut rng = rand::thread_rng();
-        let delay = rng.gen_range(cfg.latency_min_ms..=cfg.latency_max_ms);
-        (delay, rng.gen_bool(cfg.error_rate.clamp(0.0, 1.0)))
-    };
-    tokio::time::sleep(Duration::from_millis(delay_ms)).await;
-    if fail {
-        return (StatusCode::SERVICE_UNAVAILABLE,
-                Json(json!({ "detail": "injected flaky failure" }))).into_response();
-    }
-    next.run(req).await
-}</code></pre>
-            </figure>
-
-            <div class="lc-note warn">
-                <span class="material-symbols-outlined">warning</span>
-                <span><strong>Crank it up.</strong> Run the local server with
-                <code>serve --error-rate 0.3</code> to fail a third of all reads and
-                watch the grid stay put. The non-blanking refresh is the whole reason
-                this example exists.</span>
-            </div>
-        </section>
-
-        <!-- 05 ───────────────────────────── DRIVEN BY YOUR API -->
+        <!-- 06 ───────────────────────────── SERVER INCLUDED -->
         <section id="backend" class="lc-chapter">
-            <p class="lc-phase">Phase 05 / Driven by your API</p>
-            <h2 class="lc-h">Driven by your API — and you can run it all yourself</h2>
+            <p class="lc-phase">Phase 06 / Server included</p>
+            <h2 class="lc-h">The server ships with the example</h2>
             <div class="lc-body">
                 <p>
-                    Vantage UI is mostly API-driven: it adapts to the API you already
-                    have. To prove it, the server here isn't a fixture — it's a real Rust
-                    backend on the <a href="/framework/">same Vantage framework</a> the UI
-                    consumes. Each entity collapses into one universal <code>Vista</code>
-                    facade — the exact read surface the UI's api-client speaks — and a
-                    single Axum handler serves the lot. "Consume an API" and "serve an
-                    API" turn out to be the same shape, mirrored.
+                    The hosted demo is convenient, but you don't have to take our word for it —
+                    the whole backend is in the repo: a small Rust server (SQLite, served on
+                    the <a href="/framework/">same Vantage framework</a> the UI consumes). You
+                    can build and run it yourself in a couple of minutes. No Rust yet? Install
+                    the toolchain first:
                 </p>
             </div>
 
             <figure class="lc-code">
-                <figcaption class="lc-code-head"><span class="material-symbols-outlined">api</span><b>server/src/rest.rs</b></figcaption>
-<pre><code class="language-rust">async fn list(
-    State(state): State&lt;AppState&gt;,
-    Path(table): Path&lt;String&gt;,
-    Query(params): Query&lt;HashMap&lt;String, String&gt;&gt;,
-) -&gt; Result&lt;Json&lt;Value&gt;, ApiError&gt; {
-    let mut vista = vista_for(&amp;state.db, &amp;table)?;   // table name -> Vista
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">terminal</span><b>Install Rust, then build &amp; run the server</b></figcaption>
+<pre><code class="language-bash"># 1 · install the Rust toolchain (skip if you already have it)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-    for (key, value) in &amp;params {                    // leftover ?field=value
-        if is_reserved(key) { continue; }            //   becomes a filter
-        let column = to_column(key);
-        if vista.get_column(&amp;column).is_some() {
-            let _ = vista.add_condition_eq(column, Cbor::Text(value.clone()));
-        }
-    }
-
-    let count = vista.get_count().await?;
-    let rows  = vista.fetch_window(offset, limit).await?;
-    Ok(Json(json!({ "count": count, "next": null, "results": results })))
-}</code></pre>
-                <figcaption><strong>One handler, every table.</strong> Paging, filtering, ordering and nesting — generically, for all fifteen entities.</figcaption>
-            </figure>
-
-            <div class="lc-body"><p><strong>Run the whole thing locally.</strong> Both
-                halves are open source and small. Point the datasource at
-                <code>http://127.0.0.1:8080</code> instead of the hosted URL and start
-                the bundled server:</p></div>
-
-            <figure class="lc-code">
-                <figcaption class="lc-code-head"><span class="material-symbols-outlined">terminal</span><b>Compile and run your own server</b></figcaption>
-<pre><code class="language-bash">git clone https://github.com/romaninsh/vantage-ui-examples
+# 2 · clone the examples and start the bundled server
+git clone https://github.com/romaninsh/vantage-ui-examples
 cd vantage-ui-examples/apps/launch-control
 
 cargo run -p launch-control-server -- seed     # seed SQLite from fixtures (once)
-cargo run -p launch-control-server -- serve    # the flaky API on :8080
-
-# then open the example in Vantage UI with its datasource pointed at localhost</code></pre>
+cargo run -p launch-control-server -- serve    # serve the API on :8080</code></pre>
             </figure>
+
+            <div class="lc-body"><p>Then point the example's datasource at your local server —
+                one line of YAML:</p></div>
+
+            <figure class="lc-code">
+                <figcaption class="lc-code-head"><span class="material-symbols-outlined">dns</span><b>datasource/local.yaml</b></figcaption>
+<pre><code class="language-yaml">type: api-client
+url: "http://127.0.0.1:8080"    # ← was launch-control.vantage-ui.com
+response_key: results
+total_key: count</code></pre>
+            </figure>
+
+            <div class="lc-note">
+                <span class="material-symbols-outlined">science</span>
+                <span>Now make it misbehave on purpose: start it with
+                <code>serve --latency-min 200 --latency-max 1200 --error-rate 0.3</code> to
+                inject latency and fail a third of all reads — then watch Vantage stay calm.
+                That's <a href="#calm">Resilience</a>, proven on your own machine.</span>
+            </div>
         </section>
 
-        <!-- 06 ───────────────────────────── EXTEND IT -->
+        <!-- 07 ───────────────────────────── EXTEND WITH AI -->
         <section id="extend" class="lc-chapter">
-            <p class="lc-phase">Phase 06 / Extend it</p>
-            <h2 class="lc-h">Add a field in two lines</h2>
+            <p class="lc-phase">Phase 07 / Extend it</p>
+            <h2 class="lc-h">Need more? Just ask your AI</h2>
             <div class="lc-body">
                 <p>
-                    Low-code all the way down: a new piece of data is one expression on
-                    the server and one column in the YAML. Say you want each agency's
-                    <strong>success rate</strong>. It's an aggregate over the launches
-                    you already related — computed on read, never stored — so adding it
-                    is two small edits, no migration, no UI work.
+                    Both halves are built from the patterns an AI coding agent is good at —
+                    typed Rust models and expressions on the server, declarative YAML on the
+                    front — and Vantage ships <strong>skills</strong> (task guides the agent
+                    loads on demand) for each one. So you describe what you want, and it makes
+                    the edits.
                 </p>
                 <p>
-                    On the server, declare the expression next to the counts that are
-                    already there. <code>query_launches()</code> is just the
-                    <code>with_many</code> relation reused as a subquery: model the
-                    relation once, aggregate over it however you like.
+                    Ask for <em>"a success rate on each agency,"</em> say, and it adds one
+                    computed expression on the server — <code>query_launches()</code> is just
+                    the <code>with_many</code> relation reused as a subquery, aggregated on
+                    read:
                 </p>
             </div>
 
@@ -426,11 +637,22 @@ cargo run -p launch-control-server -- serve    # the flaky API on :8080
   - { name: success_rate, type: float, unit: "%" }   # ← appears in the grid</code></pre>
                 <figcaption><strong>That's the whole change.</strong> The column shows up in the agencies board as a percentage — Jet Propulsion Laboratory with no flown launches reads blank, Arianespace's eighteen launches read 44.4%.</figcaption>
             </figure>
+
+            <div class="lc-body"><p>The same ask scales up: a new <strong>model and endpoint</strong>
+                on the server, or a new <strong>table, page or view</strong> in the console.
+                Each has a skill, so "add X" is usually a sentence — not an afternoon.</p></div>
+
+            <div class="lc-note">
+                <span class="material-symbols-outlined">smart_toy</span>
+                <span>Vantage ships skills for the whole stack — datasources, tables, pages,
+                views and actions on the front; models, expressions and endpoints on the
+                server — so your agent always knows the right shape to write. Just ask.</span>
+            </div>
         </section>
 
-        <!-- 07 ───────────────────────────── MAKE IT YOURS -->
+        <!-- 08 ───────────────────────────── MAKE IT YOURS -->
         <section id="mission" class="lc-chapter">
-            <p class="lc-phase">Phase 07 / Make it yours</p>
+            <p class="lc-phase">Phase 08 / Make it yours</p>
             <h2 class="lc-h">The rocket is a stand-in for your launches</h2>
             <div class="lc-body">
                 <p>
@@ -450,7 +672,7 @@ cargo run -p launch-control-server -- serve    # the flaky API on :8080
                 <div class="lc-actions">
                     <a href="{{ install_url | safe }}" class="btn btn-primary">
                         <span class="material-symbols-outlined">rocket_launch</span>
-                        Open in Vantage UI
+                        Open Launch Control
                     </a>
                     <a href="{{ app }}/inventory" class="btn btn-outline-primary" target="_blank" rel="noopener">
                         <span class="material-symbols-outlined">description</span>
