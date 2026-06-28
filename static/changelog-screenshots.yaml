@@ -53,3 +53,24 @@
     alt:    "Live ascent telemetry: altitude, velocity and downrange tick up in real time toward orbit"
     width:  480
     height: 324
+"0.20":
+  - thumb:  images/changelog/0.20/01.webp
+    full:   images/changelog/0.20/01-full.webp
+    alt:    "A deployment's rollout health at a glance — ready replicas, and the ReplicaSets and pods it owns filling in live"
+    width:  480
+    height: 318
+  - thumb:  images/changelog/0.20/02.webp
+    full:   images/changelog/0.20/02-full.webp
+    alt:    "A node and everything scheduled on it — drill straight from the machine down to its pods"
+    width:  480
+    height: 318
+  - thumb:  images/changelog/0.20/03.webp
+    full:   images/changelog/0.20/03-full.webp
+    alt:    "Every Kubernetes resource is a browsable table — ConfigMaps across all namespaces, with a detail panel"
+    width:  480
+    height: 368
+  - thumb:  images/changelog/0.20/04.webp
+    full:   images/changelog/0.20/04-full.webp
+    alt:    "Live CPU and memory usage per node and per pod, charted straight from the metrics API"
+    width:  480
+    height: 320
