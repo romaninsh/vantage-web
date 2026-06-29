@@ -1,0 +1,614 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+{% block body_class %}ps{% endblock body_class %}
+
+{% block content %}
+
+{# ===== "Into the deep" backdrop — self-contained; driven by --ps-depth /
+   --ps-scroll / --ps-end (set in site.js). Sits at z-index:-1, above the body's
+   dark background but behind all content. The page OPENS in the normal site
+   theme (the water is transparent at the top) and only submerges as you scroll:
+   the water fades in and darkens teal → abyss, an independent bubble field rises
+   continuously (each bubble its own speed/path — spawned in site.js), and at the
+   very bottom a real deep-sea floor surfaces from the dark. CSS + one image;
+   bubbles degrade to nothing without JS or under reduced-motion. ===== #}
+<style>
+  .ps-sea{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+    --d:var(--ps-depth,0);  /* submersion: 0 at the surface (default theme) → 1 under */
+    --s:var(--ps-scroll,0); /* raw 0→1 across the page: descent + parallax */
+    --e:var(--ps-end,0)}    /* abyss crush + seabed reveal, final stretch */
+  /* The water column: transparent at the top so the page starts in the site's
+     normal theme; fades in as you submerge, sliding darker teal → abyss. */
+  .ps-sea__water{position:absolute;inset:0;
+    background:linear-gradient(180deg,
+      #073a4e 0%,    /* shallows (muted so text stays legible) */
+      #06303f 16%,
+      #042634 34%,
+      #031c2b 54%,   /* twilight */
+      #02121f 74%,
+      #010b15 88%,
+      #01060f 100%); /* abyss */
+    background-size:100% 300%;
+    background-position:0 calc(var(--s) * 100%);
+    opacity:var(--d)}
+  /* Extra crush so the very bottom goes truly black behind the seabed. */
+  .ps-sea__water::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 35%,rgba(0,3,9,.92) 100%);
+    opacity:var(--e)}
+  /* Bubble field — each bubble is its own element (spawned in site.js) carrying
+     its own size, lane (--x), rise duration (--ttl), sway (--sway), peak opacity
+     (--o) and a negative delay (--dl), so no two share a path or a speed. The
+     tiny ones read as suspended marine snow, the larger ones as bubbles. The
+     whole field fades in with submersion (--d). */
+  .ps-rise{position:absolute;inset:0;overflow:hidden;opacity:var(--d)}
+  .ps-rise b{position:absolute;bottom:-6%;left:var(--x);
+    width:var(--sz);height:var(--sz);border-radius:50%;
+    /* Hollow bubble: a faint rim + a small specular highlight, transparent in
+       the middle — not a bright solid ball. */
+    background:
+      radial-gradient(circle at 38% 30%, rgba(255,255,255,.34) 0%, transparent 26%),
+      radial-gradient(circle at 50% 50%, transparent 46%, rgba(204,234,246,.09) 66%, rgba(216,240,250,.20) 83%, transparent 90%);
+    will-change:transform,opacity;
+    animation:ps-rise-up var(--ttl) linear var(--dl) infinite}
+  /* Rise the full viewport with a side-to-side wobble (sign of --sway alternates
+     per keyframe) and a faint swell, so each path reads as buoyant, not linear. */
+  @keyframes ps-rise-up{
+    0%  {transform:translate3d(0,0,0) scale(.8);opacity:0}
+    6%  {opacity:var(--o)}
+    25% {transform:translate3d(var(--sway),-26vh,0) scale(1)}
+    50% {transform:translate3d(calc(var(--sway) * -1),-52vh,0) scale(1)}
+    75% {transform:translate3d(var(--sway),-78vh,0) scale(1.04)}
+    94% {opacity:var(--o)}
+    100%{transform:translate3d(0,-105vh,0) scale(1.1);opacity:0}}
+  /* Vignette deepens with submersion, crushing inward in the abyss. */
+  .ps-sea__vignette{position:absolute;inset:0;
+    background:radial-gradient(78% 62% at 50% 42%, transparent 48%, rgba(0,4,12,.6) 100%);
+    opacity:calc(.3 * var(--d) + .42 * var(--e))}
+  /* The payoff: a real deep-sea floor, fit to the full width, that slides up
+     from below over the final stretch (--e 0→1) — like the Moon arriving on the
+     Launch Control page. A tint keeps reading-column text legible and blends the
+     photo into the abyss. */
+  .ps-seabed{position:absolute;inset:0;
+    background-position:center bottom;background-size:100% auto;background-repeat:no-repeat;
+    opacity:var(--e);
+    transform:translateY(calc((1 - var(--e)) * 45%))}
+  .ps-seabed::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,
+      rgba(1,8,18,.62) 0%, rgba(1,8,18,.34) 42%, rgba(1,6,15,.78) 100%)}
+  /* ── Prompt absorption ─────────────────────────────────────────────
+     The prompt is a sticky "bubble"; the prose of everything that went into
+     it simply scrolls up and slides behind the bubble (which is opaque and on
+     top). A counter on the bubble tallies the build steps as each one
+     disappears into the prompt. The bubble spans the full reading column while
+     the feed below is inset narrower, so the prompt overhangs the prose and the
+     steps read as rolling *into* it — the centre of gravity. */
+  .ps-prompt{position:relative;margin-top:1.75rem}
+  /* Sits right under the header (h-16 = 4rem) so absorbed prose has no gap to
+     re-appear in before it slides under the translucent header. */
+  .ps-prompt__sticky{position:sticky;top:4rem;z-index:6}
+  /* Absorption skirt — a blur band anchored just below the bubble. Rising feed
+     prose dissolves into the water before it slips under the (opaque) bubble,
+     so text never hard-clips at the edge. It's a backdrop blur faded by an alpha
+     mask — no colour of its own, so it never assumes a black backdrop; it just
+     softens whatever (water + prose) is actually behind it. The old scrim
+     glitched only because it sat in the ~0-height gap *above* the bubble; below
+     the bubble it has a real backdrop to sample. z-index keeps it above the feed
+     (z:1) but below the bubble (z:2), so the bubble and tail stay crisp on top. */
+  .ps-prompt__sticky::after{content:"";position:absolute;left:0;right:0;top:100%;height:5.5rem;z-index:1;
+    -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+    -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 14%,transparent 100%);
+            mask-image:linear-gradient(to bottom,#000 0%,#000 14%,transparent 100%);
+    pointer-events:none;opacity:0;transition:opacity .2s ease}
+  /* Only blur while the bubble is actually pinned and prose is sliding under it
+     (class toggled from site.js); otherwise there's nothing to absorb. */
+  .ps-prompt.is-absorbing .ps-prompt__sticky::after{opacity:1}
+  .ps-bubble{position:relative;z-index:2;border-radius:16px;background:var(--color-surface-1);
+    border:1px solid color-mix(in srgb,var(--color-accent-500) 50%,var(--color-line));
+    box-shadow:0 22px 48px -26px rgba(0,0,0,.95),
+               0 0 36px -12px color-mix(in srgb,var(--color-accent-500) 45%,transparent);
+    padding:1.15rem 1.4rem}
+  .ps-bubble::after{content:"";position:absolute;left:2.2rem;bottom:-8px;width:16px;height:16px;
+    background:var(--color-surface-1);
+    border-right:1px solid color-mix(in srgb,var(--color-accent-500) 50%,var(--color-line));
+    border-bottom:1px solid color-mix(in srgb,var(--color-accent-500) 50%,var(--color-line));
+    transform:rotate(45deg)}
+  .ps-bubble__meta{display:flex;align-items:center;gap:.5rem;
+    font-family:ui-monospace,Menlo,monospace;font-size:.66rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--color-accent-300)}
+  .ps-bubble__meta .material-symbols-outlined{font-size:1rem!important}
+  .ps-bubble__text{margin:.6rem 0 0;font-family:ui-monospace,Menlo,monospace;
+    font-size:1.08rem;line-height:1.55;color:var(--color-text-1)}
+  .ps-bubble__count{margin-top:.85rem;padding-top:.7rem;border-top:1px solid var(--color-line);
+    font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--color-text-3)}
+  .ps-bubble__count .n{color:var(--color-accent-300);font-weight:600}
+  /* The prose feed scrolls up behind the bubble. Each step is a small prose
+     subsection — a guide-step kicker, a heading, prose, and the odd snippet. */
+  /* Inset narrower than the column-width bubble above it, so the bubble overhangs
+     the prose on both sides and feed steps read as rolling *into* the prompt
+     rather than sliding under a same-width lid. */
+  .ps-feed{position:relative;z-index:1;margin-top:1.2rem;padding:0 2rem;
+    display:flex;flex-direction:column;gap:1.9rem}
+  @media (max-width:640px){.ps-feed{padding:0 .9rem}}
+  .ps-step{font-size:1.04rem;line-height:1.75;color:var(--color-text-2)}
+  .ps-step p{margin:0}
+  .ps-step p + p{margin-top:.85rem}
+  .ps-step__k{display:block;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;font-weight:600;
+    letter-spacing:.15em;text-transform:uppercase;color:var(--color-accent-300);margin-bottom:.4rem}
+  .ps-step__h{display:block;color:var(--color-text-1);font-weight:600;
+    font-size:1.14rem;line-height:1.35;margin-bottom:.45rem}
+  .ps-step strong{color:var(--color-text-1);font-weight:600}
+  /* Skipped steps read identically to the rest — the "· skipped" label and the
+     "Not needed for Kubernetes" line are the only cues; prose stays full-contrast. */
+  .ps-step code{border:1px solid var(--color-line);background:var(--color-surface-2);
+    border-radius:4px;padding:0 .25em;font-family:ui-monospace,Menlo,monospace;
+    font-size:.85em;color:var(--color-accent-300)}
+  .ps-step pre{margin:1rem 0;border:1px solid var(--color-line);border-radius:10px;
+    background:var(--color-surface-2);padding:.8rem 1rem;overflow-x:auto;
+    font-size:.8rem;line-height:1.6}
+  .ps-step pre code{border:0;background:none;padding:0;color:inherit;font-size:.8rem}
+  .ps-outcome{position:relative;z-index:2;margin-top:1.5rem;
+    display:flex;align-items:center;gap:.6rem;color:var(--color-text-2);font-size:.97rem}
+  .ps-outcome .material-symbols-outlined{color:var(--color-accent-400)}
+  .ps-outcome strong{color:var(--color-text-1)}
+  @media (prefers-reduced-motion:reduce){
+    .ps-rise{display:none}}
+</style>
+<div class="ps-sea" aria-hidden="true">
+  <div class="ps-sea__water"></div>
+  <div class="ps-rise"></div>{# independent bubbles, spawned in site.js #}
+  <div class="ps-seabed" style="background-image:url('{{ get_url(path='images/periscope/seabed.webp') }}')"></div>
+  <div class="ps-sea__vignette"></div>
+</div>
+
+{{ nav::header() }}
+
+{% set repo = "https://github.com/romaninsh/vantage-ui-examples" %}
+{% set app = repo ~ "/tree/main/apps/periscope" %}
+{% set crate_pr = "https://github.com/romaninsh/vantage/pull/323" %}
+{% set crate_src = "https://github.com/romaninsh/vantage/tree/main/vantage-kubernetes" %}
+{% set app_pr = repo ~ "/pull/17" %}
+
+<!-- Dive bar — scroll progress -->
+<div class="ps-progress" aria-hidden="true"><span></span></div>
+
+<div class="ps-shell pt-10 md:pt-14">
+
+    <!-- ===== Reading column ===== -->
+    <main class="ps-doc">
+
+        <!-- 00 ───────────────────────────── SURFACE -->
+        <section id="surface" class="ps-chapter">
+            <p class="ps-phase">A proof of concept, in three prompts</p>
+            <h1 class="text-display">Periscope</h1>
+            <p class="ps-lead">
+                Lens, K9s and Rancher give you a polished window onto a Kubernetes cluster —
+                the control plane's manifests laid out, related and drillable. Periscope is the
+                same idea, as a Vantage proof of concept: the cluster as browsable, related
+                tables — put together with almost no effort.
+            </p>
+            <p class="ps-body !mt-4">
+                What's worth telling is <em>how</em>. Periscope is a Vantage example app that an
+                AI agent — Claude Opus 4.8 — wrote in <strong>three prompts</strong>: one for the
+                data source, one for the integration, one for the app. Here is each, and
+                everything it pulled in.
+            </p>
+
+            <div class="ps-actions">
+                <a href="#datasource" class="btn btn-lg btn-primary">
+                    <span class="material-symbols-outlined">south</span>
+                    See the three prompts
+                </a>
+                <a href="{{ app }}" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
+                    <span class="material-symbols-outlined">code</span>
+                    See "Periscope" source
+                </a>
+            </div>
+
+            <div class="ps-frame !mt-8">
+                <img src="{{ get_url(path='images/periscope/infrastructure.webp') }}" width="1600" height="1053" alt="Periscope in Vantage — the grouped Kubernetes sidebar, a node table above a live pod listing" loading="eager">
+            </div>
+        </section>
+
+        <!-- 01 ───────────────────────────── THE DATA SOURCE (PR #323) -->
+        <section id="datasource" class="ps-chapter">
+            <p class="ps-phase">Prompt one</p>
+            <h2 class="ps-h">The missing data source: the Kubernetes API</h2>
+            <div class="ps-body">
+                <p>
+                    Vantage already speaks REST — its api-client data source turns endpoints
+                    into tables — so the obvious move is to point it at the Kubernetes API. It
+                    doesn't fit. Kubernetes doesn't hand back flat rows; it returns deeply
+                    nested objects, with numbers hidden inside strings like
+                    <code>"16331752Ki"</code>. And its relationships aren't foreign keys: a pod
+                    belongs to its ReplicaSet by an owner-reference id, a Service finds its pods
+                    by matching labels, everything is grouped by namespace. A generic REST
+                    client that drills through a plain <code>references: foreign_key</code> can't
+                    follow any of that.
+                </p>
+                <p>
+                    So Periscope needed a real, native data source — and adding one is a path
+                    Vantage documents, the same path whether you're teaching it SQL, a REST API,
+                    a document store or a cluster. It's how Vantage UI gets something to drive.
+                    The guide runs to nine steps, and you stop when your source has enough; watch
+                    each step the agent built slide up into the prompt that asked for it.
+                </p>
+            </div>
+
+            <div class="ps-prompt">
+                <div class="ps-prompt__sticky">
+                    <div class="ps-bubble">
+                        <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 1 · Claude Opus 4.8</span>
+                        <p class="ps-bubble__text">use new persistence guide to add one for kubernetes, stop when done</p>
+                        <div class="ps-bubble__count"><span class="n">0</span> / 6 build steps</div>
+                    </div>
+                </div>
+                <div class="ps-feed">
+                    <div class="ps-step">
+                        <span class="ps-step__k">Step 1 · Type system</span>
+                        <span class="ps-step__h">First, agree on what a value is</span>
+                        <p>Every store has its own idea of types — SQLite has five storage
+                        classes, Postgres has dozens, SurrealDB its own. So before anything else
+                        Vantage needs a type layer that remembers what each value really is,
+                        rather than letting a string quietly turn into a number somewhere
+                        downstream. You declare it with a single macro:</p>
+<pre><code class="language-rust">vantage_type_system! {
+    type_trait: KubeType,
+    value_type: serde_json::Value,
+    type_variants: [Null, Bool, Integer, Number, Quantity, Text, Time],
+}</code></pre>
+                        <p>For Kubernetes it pays off at once: a <code>Quantity</code> knows that
+                        <code>"16331752Ki"</code> is sixteen gigabytes and <code>"250m"</code> a
+                        quarter of a CPU — real numbers you can sort and chart, not text.</p>
+                    </div>
+
+                    <div class="ps-step skip">
+                        <span class="ps-step__k">Step 2 · Expressions · skipped</span>
+                        <span class="ps-step__h">Expressions — the backend's own query language</span>
+                        <p>If a backend runs queries, Vantage needs a way to build them: a small
+                        vendor macro that produces a typed expression with safely-bound
+                        parameters — <code>sqlite_expr!</code> for SQLite, <code>surreal_expr!</code>
+                        for SurrealDB.</p>
+<pre><code class="language-rust">let q = sqlite_expr!("SELECT * FROM product WHERE price > {}", 100i64);</code></pre>
+                        <p><em>Not needed for Kubernetes</em> — the API has no query language to
+                        build against, so the agent skipped it and filters the fetched list
+                        instead.</p>
+                    </div>
+
+                    <div class="ps-step skip">
+                        <span class="ps-step__k">Step 3 · Operators · skipped</span>
+                        <span class="ps-step__h">Operators — typed conditions, not raw strings</span>
+                        <p>So nobody hand-writes expressions, this layers ergonomic methods onto
+                        typed columns — <code>.eq()</code>, <code>.gt()</code>, <code>.in_()</code>
+                        — each producing the backend's native condition.</p>
+<pre><code class="language-rust">table.add_condition(price.gt(100));   // → WHERE price > 100</code></pre>
+                        <p><em>Not needed for Kubernetes</em> — with no query to push a condition
+                        into, there is nothing for these to build. Skipped.</p>
+                    </div>
+
+                    <div class="ps-step skip">
+                        <span class="ps-step__k">Step 4 · Query builder · skipped</span>
+                        <span class="ps-step__h">Query builder — composable SELECTs</span>
+                        <p>The piece that assembles fields, conditions, ordering and limits into a
+                        statement and runs it through one standard interface, so every backend
+                        builds queries the same way. (MongoDB skips it too, using native pipelines
+                        instead.)</p>
+<pre><code class="language-rust">SqliteSelect::new()
+    .with_source("product")
+    .with_condition(price.gt(100))
+    .with_limit(20);</code></pre>
+                        <p><em>Not needed for Kubernetes</em> — a resource list comes back whole
+                        and is filtered in memory. Three steps the guide lets you walk straight
+                        past.</p>
+                    </div>
+
+                    <div class="ps-step">
+                        <span class="ps-step__k">Step 5 · Table &amp; CRUD</span>
+                        <span class="ps-step__h">Implement one trait, get the rest for free</span>
+                        <p>This is the heart of it, and it's a clean bargain. You — or your agent
+                        — implement a single trait, <code>TableSource</code>: the one piece that
+                        knows how to talk to your backend. In return Vantage hands you everything
+                        layered on top, none of which you write — a typed
+                        <code>Table&lt;DB, Entity&gt;</code>, an ActiveRecord-style record you can
+                        load and edit, readable and writable data sets, CRUD, aggregates,
+                        ordering and pagination.</p>
+<pre><code class="language-rust">// You implement one trait — the only backend-specific code:
+impl TableSource for KubernetesCluster { /* list, read, … */ }
+
+// In return, every backend gets the same toolkit, for free:
+//   Table&lt;DB, Entity&gt;  ·  ActiveEntitySet (ActiveRecord)  ·  ReadableDataSet
+//   WritableDataSet  ·  aggregates  ·  ordering  ·  pagination</code></pre>
+                        <p>For Kubernetes the only backend-specific work is the read path: a small
+                        projector that flattens each nested object into a flat row and pulls out
+                        the fields people actually read.</p>
+<pre><code class="language-rust">// one pod's nested JSON → a flat, typed row
+row.set("namespace", &amp;pod.metadata.namespace);
+row.set("node",      &amp;pod.spec.node_name);
+row.set("ready",     ready_ratio(&amp;pod.status));    // "2/3"
+row.set("restarts",  total_restarts(&amp;pod.status)); // 7</code></pre>
+                        <p>That's all it takes for pods and nodes to behave exactly like database
+                        rows — the same <code>Table</code> and record API the rest of Vantage
+                        already speaks.</p>
+                    </div>
+
+                    <div class="ps-step">
+                        <span class="ps-step__k">Step 6 · Relationships</span>
+                        <span class="ps-step__h">Switch on the relationship engine</span>
+                        <p>This step enables Vantage's relationship engine: you declare how
+                        records relate — <code>with_one</code> for a belongs-to,
+                        <code>with_many</code> for a has-many — and from there the UI picks them
+                        up on its own, turning every reference into a link you can follow, with
+                        no per-screen wiring.</p>
+<pre><code class="language-rust">Table::new("replicasets", cluster)
+    .with_many("pods", "owner_uid", Pod::table);  // a ReplicaSet → the pods it owns</code></pre>
+                        <p>How much a relation can do depends on the backend. <strong>SQL is the
+                        most powerful</strong>: because the database evaluates them, relations
+                        there carry <em>expressions and aggregation</em> — a client's
+                        <code>order_count</code>, the sum of an order's lines — computed as
+                        correlated subqueries on read.</p>
+<pre><code class="language-rust">.with_many("orders", "client_id", Order::table)
+.with_expression("order_count", |c| {
+    c.get_subquery_as::&lt;Order&gt;("orders")?.get_count_query()
+})</code></pre>
+                        <p>Simpler sources keep the relation, just not the cleverness. When a
+                        backend can't narrow results after a traversal, <strong>Vantage applies
+                        those conditions client-side</strong>, so the link still resolves to
+                        exactly the right rows. For a REST API the conditions are instead sent the
+                        way each endpoint expects — folded into the <strong>path or the query
+                        string</strong>.</p>
+                        <p>For Kubernetes that means owner-reference ids and label selectors,
+                        matched against the list Vantage already holds — which is what lets a
+                        namespace open into its workloads, and a deployment reach down through its
+                        replicasets to its pods.</p>
+                    </div>
+
+                    <div class="ps-step">
+                        <span class="ps-step__k">Step 7 · Models</span>
+                        <span class="ps-step__h">Two ways to define a table</span>
+                        <p>A table can be defined two ways in Vantage, and both are first-class:
+                        as a typed model in Rust, or declaratively in YAML with Rhai for the
+                        computed fields. Rust gives you compile-time types and the full expression
+                        API; YAML lets you add or reshape a table without recompiling — the next
+                        step is what makes that possible. For <code>vantage-kubernetes</code> the
+                        agent wrote the models in Rust, since the projection is code anyway — a
+                        few lines per resource kind:</p>
+<pre><code class="language-rust">Table::new("pods", cluster)
+    .with_id_column("id")
+    .with_column_of::&lt;String&gt;("namespace")
+    .with_column_of::&lt;String&gt;("node_name")
+    .with_column_of::&lt;String&gt;("ready")
+    .with_many("metrics", "pod", PodMetrics::table);</code></pre>
+                        <p>A dozen of these later — pods through jobs, plus live metrics — the
+                        backend type is erased, so the same generic UI, CLI and API code runs
+                        over any model, Kubernetes or otherwise. The agent proved the seam by
+                        drilling a live cluster from a small CLI:</p>
+<pre><code class="language-bash">$ k8s-cli apps.deployment name=web :pods
+web-8fc56b787-9hgtz   demo   Running   1/1
+web-8fc56b787-cgmkf   demo   Running   1/1
+web-8fc56b787-zgjcp   demo   Running   1/1
+# → exactly the three pods it owns</code></pre>
+                    </div>
+
+                    <div class="ps-step">
+                        <span class="ps-step__k">Step 8 · Vista</span>
+                        <span class="ps-step__h">Open the door for the UI</span>
+                        <p>Everything so far is perfect for Rust code — and invisible to
+                        everything else. Vista is the bridge: it wraps a typed table as a
+                        schema-bearing handle that the UI, scripts and agents read over a plain
+                        serialization boundary, and it can load straight from a YAML schema so
+                        nothing on the other side needs a Rust struct. It's the same doorway for
+                        every backend, and it's exactly what gives Vantage UI something to drive
+                        — the next two prompts build entirely on it.</p>
+                    </div>
+
+                    <div class="ps-step">
+                        <span class="ps-step__k">Plus · Scripting</span>
+                        <span class="ps-step__h">Make it tweakable in YAML</span>
+                        <p>One last touch the same Vista boundary unlocks: small expressions in
+                        Rhai, evaluated at runtime, so a computed column or a label can be written
+                        and changed in YAML without recompiling — a ready ratio here, an age
+                        there. The data source isn't just readable; it's scriptable.</p>
+<pre><code class="language-yaml">- { name: ready, value: "${ record.ready }" }   # "2/3", via a Rhai helper</code></pre>
+                    </div>
+                </div>
+                <p class="ps-outcome"><span class="material-symbols-outlined">all_inclusive</span><span>Every step above, from one sentence. The agent stopped there — Kubernetes is read-only, so the guide's remaining steps didn't apply — and out came <strong>vantage-kubernetes</strong>: a new crate, <strong>+5,915 lines</strong>, 8 library and 9 integration tests green.</span></p>
+            </div>
+
+            <div class="ps-actions">
+                <a href="{{ crate_pr }}" class="btn btn-soft-primary" target="_blank" rel="noopener">
+                    <span class="material-symbols-outlined">merge</span>
+                    Read PR #323
+                </a>
+                <a href="{{ crate_src }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">
+                    <span class="material-symbols-outlined">code</span>
+                    The crate source
+                </a>
+            </div>
+        </section>
+
+        <!-- 02 ───────────────────────────── THE INTEGRATION (PR #112) -->
+        <section id="integration" class="ps-chapter">
+            <p class="ps-phase">Prompt two</p>
+            <h2 class="ps-h">Vantage learns to speak it</h2>
+            <div class="ps-body">
+                <p>
+                    A crate on its own is just a library. The second prompt wired it into
+                    Vantage as a <strong>first-class data source kind</strong> — mirroring the
+                    existing AWS loader, so any YAML app can say <code>type: kubernetes</code>
+                    and point at a cluster. Four pieces, again pulled into one ask:
+                </p>
+            </div>
+
+            <div class="ps-prompt">
+                <div class="ps-prompt__sticky">
+                    <div class="ps-bubble">
+                        <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 2 · Claude Opus 4.8</span>
+                        <p class="ps-bubble__text">register the new vantage-kubernetes crate as a Vantage data source</p>
+                        <div class="ps-bubble__count"><span class="n">0</span> / 4 pieces</div>
+                    </div>
+                </div>
+                <div class="ps-feed">
+                    <p class="ps-step"><strong>A new data-source kind.</strong> First, Vantage
+                        learns that <code>kubernetes</code> is a thing you can connect to —
+                        <code>type: kubernetes</code>, with an optional <code>context</code> and
+                        <code>namespace</code> — so a YAML app can name it like any other source.</p>
+                    <p class="ps-step"><strong>A per-table query loader.</strong> Then the piece
+                        that turns each table's YAML columns into a live query surface against
+                        the cluster — built to mirror the existing AWS loader, so it slots into
+                        machinery the rest of Vantage already understands.</p>
+                    <p class="ps-step"><strong>Connection plumbing.</strong> The connection is
+                        threaded through the app's open, resolver and entity paths, loading your
+                        current kubeconfig context or, in-cluster, the pod's service account —
+                        the unglamorous wiring that makes "connect" actually connect.</p>
+                    <p class="ps-step"><strong>Surfaced in the UI.</strong> Finally the new kind
+                        shows up in the Add data source dialog, so it's a first-class choice and
+                        not a hidden config flag.</p>
+                </div>
+                <p class="ps-outcome"><span class="material-symbols-outlined">deployed_code_update</span><span>Threaded through the whole app in one prompt — and shipped as <strong>Vantage 0.20</strong>.</span></p>
+            </div>
+
+            <figure class="ps-code">
+                <figcaption class="ps-code-head"><span class="material-symbols-outlined">dns</span><b>datasource/cluster.yaml</b></figcaption>
+<pre><code class="language-yaml">type: kubernetes
+context: minikube        # optional — defaults to the current kubeconfig context
+namespace: demo          # optional — the namespace pages open in</code></pre>
+                <figcaption>The entire datasource. One prompt to thread a new backend through the whole app; it shipped as <strong>Vantage 0.20</strong>, and <code>kubernetes</code> now appears in the Add data source dialog.</figcaption>
+            </figure>
+
+            <div class="ps-note warn">
+                <span class="material-symbols-outlined">key</span>
+                <div>
+                    <p>This integration lives in the <strong>private Vantage UI repository</strong>,
+                    and the published builds don't yet ship the Kubernetes backend — so Periscope
+                    won't open in a stock download just yet.</p>
+                    <p class="!mt-2">If you want to point Vantage at your own cluster and try
+                    Periscope for real, I'm happy to make you a <strong>custom build</strong> —
+                    <a href="{{ repo }}/issues" target="_blank" rel="noopener">open an issue</a>
+                    and say hello.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 ───────────────────────────── THE APP (PR #17) -->
+        <section id="app" class="ps-chapter">
+            <p class="ps-phase">Prompt three</p>
+            <h2 class="ps-h">The control room, in YAML</h2>
+            <div class="ps-body">
+                <p>
+                    With a datasource Vantage understands, the third prompt built the app
+                    itself — described in a sentence, delivered as YAML. Here's the whole
+                    control room being pulled into the ask:
+                </p>
+            </div>
+
+            <div class="ps-prompt">
+                <div class="ps-prompt__sticky">
+                    <div class="ps-bubble">
+                        <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 3 · Claude Opus 4.8</span>
+                        <p class="ps-bubble__text">build a Lens-style Kubernetes browser on the kubernetes datasource</p>
+                        <div class="ps-bubble__count"><span class="n">0</span> / 6 pieces</div>
+                    </div>
+                </div>
+                <div class="ps-feed">
+                    <p class="ps-step"><strong>Twelve resource tables.</strong> Nodes,
+                        namespaces, pods, deployments, replicasets, services, configmaps,
+                        secrets, jobs and events — plus live node and pod metrics — each a short
+                        YAML file naming the columns worth showing.</p>
+                    <p class="ps-step"><strong>Relations both ways.</strong> A <code>references:</code>
+                        block declares the drill-downs (namespace → workloads → pods, node →
+                        pods), and the same machinery lets a namespace or node cell drill back
+                        up — the traversal Prompt 1 built, now spent.</p>
+                    <p class="ps-step"><strong>Two dashboards.</strong> An <code>overview</code>
+                        of capacity, replicas and restarts, and a <code>usage</code> board of
+                        live CPU and memory — each with a Namespace control that re-scopes the
+                        namespaced charts.</p>
+                    <p class="ps-step"><strong>Three Summary views.</strong> Bespoke node,
+                        deployment and pod panels — badges, progress bars, stats and relation
+                        lists — so a selected row reads like a briefing, not a raw record.</p>
+                    <p class="ps-step"><strong>Both layouts.</strong> <code>binder</code> pages
+                        that auto-generate relation tabs alongside the Summary, and
+                        <code>burger</code> explorers for vertical drill-downs — two different
+                        ways to move through the same graph.</p>
+                    <p class="ps-step"><strong>A grouped sidebar and a theme.</strong> The
+                        navigation grouped into sections, and a Tokyo Night / Ayu Light theme —
+                        the finish that makes 32 YAML files feel like an app.</p>
+                </div>
+                <p class="ps-outcome"><span class="material-symbols-outlined">all_inclusive</span><span>All of it as <strong>32 YAML files</strong> — and <strong>zero lines of UI code</strong>.</span></p>
+            </div>
+
+            <figure class="ps-frame">
+                <img src="{{ get_url(path='images/periscope/usage.webp') }}" width="1600" height="1061" alt="Periscope's Usage dashboard — live CPU and memory by node and by pod, with a namespace selector that re-scopes the charts" loading="lazy">
+                <figcaption>The <code>usage</code> dashboard — live CPU/memory, with a Namespace control that re-scopes the namespaced charts.</figcaption>
+            </figure>
+
+            <div class="ps-shots">
+                <figure class="ps-frame">
+                    <img src="{{ get_url(path='images/periscope/deployments.webp') }}" width="1600" height="1053" alt="The Deployments grid with a rollout Summary view — health badge, ready-replicas progress bar and per-ReplicaSet status" loading="lazy">
+                    <figcaption>A deployment's Summary view — badges, a rollout progress bar, stats.</figcaption>
+                </figure>
+                <figure class="ps-frame">
+                    <img src="{{ get_url(path='images/periscope/configmaps.webp') }}" width="1600" height="1221" alt="The ConfigMaps list with a master/detail binder panel showing a selected ConfigMap's fields" loading="lazy">
+                    <figcaption>ConfigMaps in a master/detail binder — list on the left, record on the right.</figcaption>
+                </figure>
+            </div>
+
+            <div class="ps-note">
+                <span class="material-symbols-outlined">verified</span>
+                <span>All <strong>32 YAML files pass the real schema-validating loaders</strong>,
+                and a run against a live minikube cluster came up clean — <strong>0 WARN,
+                0 ERROR</strong>: <code>connected kubernetes cluster datasource=cluster</code>,
+                dashboards bound to live node data.
+                <a href="{{ app_pr }}" target="_blank" rel="noopener">Read PR #17</a>.</span>
+            </div>
+        </section>
+
+        <!-- 04 ───────────────────────────── THE TREASURE -->
+        <section id="treasure" class="ps-chapter">
+            <p class="ps-phase">The result</p>
+            <h2 class="ps-h">The treasure at the bottom</h2>
+            <div class="ps-body">
+                <p>
+                    There's no chest down here. The treasure at the bottom of the dive is what
+                    three prompts produced: a native Kubernetes datasource, a UI that speaks it,
+                    and a full control room over a real cluster — <strong>zero lines of UI
+                    code, no <code>kubectl</code></strong>, written and tested in an afternoon
+                    instead of a quarter. The prize was never the app. It's the speed.
+                </p>
+                <p>
+                    And it generalizes. Because Vantage is AI-ready end to end, you can point
+                    an agent at its guides and turn <em>any</em> backend — an API, a database,
+                    a CLI — into a drillable, related-table app. Periscope is what that looks
+                    like when the backend is a cluster. Yours could be anything you operate.
+                </p>
+            </div>
+
+            <div class="ps-cta">
+                <h3 class="text-h3">Surface with it</h3>
+                <p class="ps-body !mt-3">Read the source, follow the three prompts that built it, or ask for a custom build to drive your own cluster.</p>
+                <div class="ps-actions">
+                    <a href="{{ repo }}/issues" class="btn btn-primary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">sailing</span>
+                        Request a custom build
+                    </a>
+                    <a href="{{ app }}" class="btn btn-outline-primary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">description</span>
+                        The YAML inventory
+                    </a>
+                    <a href="{{ crate_src }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">dns</span>
+                        The Kubernetes crate
+                    </a>
+                    <a href="/solutions/app-builders/" class="btn btn-outline-secondary">
+                        <span class="material-symbols-outlined">developer_board</span>
+                        Build your own
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+{{ nav::footer() }}
+{% endblock content %}

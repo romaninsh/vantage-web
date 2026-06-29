@@ -21,6 +21,24 @@ apps:
       - "Live, self-refreshing grids resilient to a flaky server"
       - "A full Rust + Vantage backend, modeled and served"
 
+  - slug: periscope
+    title: "Periscope"
+    persona: "Internal tools (SRE)"
+    persona_url: "/solutions/internal-tools-teams/"
+    # Needs a Vantage UI build that ships the native `vantage-kubernetes`
+    # backend; flip to "available" once that lands in a release.
+    status: "coming"
+    min_version: "0.20.0"
+    icon: "lan"
+    blurb: "A Lens-style control room for Kubernetes — nodes, namespaces and every standard workload as drillable, related tables, with capacity dashboards and vertical drill-downs. Backed by a native Kubernetes datasource: no kubectl, no proxy."
+    repo_path: "apps/periscope/inventory"
+    screenshot: ""
+    tour_url: "/examples/periscope/"
+    demonstrates:
+      - "A native Kubernetes API datasource (the vantage-kubernetes backend)"
+      - "Relation drill-downs: namespace → workloads → pods, node → pods"
+      - "Built with three AI prompts — datasource, integration, app"
+
   - slug: bakery
     title: "Bakery franchise"
     persona: "Internal-tools teams"
