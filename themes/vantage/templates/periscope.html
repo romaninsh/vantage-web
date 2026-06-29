@@ -43,25 +43,15 @@
      tiny ones read as suspended marine snow, the larger ones as bubbles. The
      whole field fades in with submersion (--d). */
   .ps-rise{position:absolute;inset:0;overflow:hidden;opacity:var(--d)}
-  .ps-rise b{position:absolute;bottom:-6%;left:var(--x);
-    width:var(--sz);height:var(--sz);border-radius:50%;
-    /* Hollow bubble: a faint rim + a small specular highlight, transparent in
-       the middle — not a bright solid ball. */
-    background:
-      radial-gradient(circle at 38% 30%, rgba(255,255,255,.34) 0%, transparent 26%),
-      radial-gradient(circle at 50% 50%, transparent 46%, rgba(204,234,246,.09) 66%, rgba(216,240,250,.20) 83%, transparent 90%);
-    will-change:transform,opacity;
-    animation:ps-rise-up var(--ttl) linear var(--dl) infinite}
-  /* Rise the full viewport with a side-to-side wobble (sign of --sway alternates
-     per keyframe) and a faint swell, so each path reads as buoyant, not linear. */
+  .ps-rise b{position:absolute;bottom:-6%;left:var(--x);width:var(--sz);height:var(--sz);border-radius:50%;
+    background:radial-gradient(circle, rgba(216,240,250,.5), rgba(216,240,250,0) 70%);
+    will-change:transform,opacity;animation:ps-rise-up var(--ttl) linear var(--dl) infinite}
+  /* Simple straight rise with a gentle fade in and out — subtle marine snow. */
   @keyframes ps-rise-up{
-    0%  {transform:translate3d(0,0,0) scale(.8);opacity:0}
-    6%  {opacity:var(--o)}
-    25% {transform:translate3d(var(--sway),-26vh,0) scale(1)}
-    50% {transform:translate3d(calc(var(--sway) * -1),-52vh,0) scale(1)}
-    75% {transform:translate3d(var(--sway),-78vh,0) scale(1.04)}
-    94% {opacity:var(--o)}
-    100%{transform:translate3d(0,-105vh,0) scale(1.1);opacity:0}}
+    0%{transform:translateY(0);opacity:0}
+    12%{opacity:var(--o)}
+    88%{opacity:var(--o)}
+    100%{transform:translateY(-105vh);opacity:0}}
   /* Vignette deepens with submersion, crushing inward in the abyss. */
   .ps-sea__vignette{position:absolute;inset:0;
     background:radial-gradient(78% 62% at 50% 42%, transparent 48%, rgba(0,4,12,.6) 100%);
@@ -136,9 +126,44 @@
   .ps-step p + p{margin-top:.85rem}
   .ps-step__k{display:block;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;font-weight:600;
     letter-spacing:.15em;text-transform:uppercase;color:var(--color-accent-300);margin-bottom:.4rem}
+  .ps-step__k a{color:inherit;text-decoration:underline;text-underline-offset:2px;
+    text-decoration-color:color-mix(in srgb,currentColor 40%,transparent)}
+  .ps-step__k a:hover{text-decoration-color:currentColor}
   .ps-step__h{display:block;color:var(--color-text-1);font-weight:600;
     font-size:1.14rem;line-height:1.35;margin-bottom:.45rem}
   .ps-step strong{color:var(--color-text-1);font-weight:600}
+  .ps-step ul{margin:.7rem 0 0;padding-left:1.15rem;list-style:disc}
+  .ps-step li{margin:.25rem 0}
+  .ps-step li::marker{color:var(--color-accent-400)}
+  /* Interactive capability ladder — pure-CSS radio tabs (relationship levels). */
+  .ps-tier{margin:1.1rem 0 0;border:1px solid var(--color-line);border-radius:14px;overflow:hidden;
+    background:color-mix(in srgb,var(--color-surface-1) 70%,transparent)}
+  .ps-tier > input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .ps-tier__tabs{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--color-line)}
+  .ps-tier__tabs label{cursor:pointer;display:flex;flex-direction:column;gap:.28rem;padding:.7rem .8rem;
+    border-right:1px solid var(--color-line);border-bottom:2px solid transparent;color:var(--color-text-2);
+    transition:background .15s,color .15s}
+  .ps-tier__tabs label:last-of-type{border-right:0}
+  .ps-tier__tabs label:hover{background:var(--color-surface-2);color:var(--color-text-1)}
+  .ps-tier__n{font-family:ui-monospace,Menlo,monospace;font-size:.62rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--color-text-3)}
+  .ps-tier__t{font-size:.9rem;font-weight:600;line-height:1.2;color:inherit}
+  .ps-tier__badge{align-self:flex-start;font-family:ui-monospace,Menlo,monospace;font-size:.58rem;
+    letter-spacing:.06em;text-transform:uppercase;padding:.12rem .42rem;border-radius:5px;
+    background:color-mix(in srgb,var(--color-accent-500) 18%,transparent);color:var(--color-accent-300)}
+  .ps-tier__panel{display:none;padding:1rem 1.15rem 1.15rem}
+  .ps-tier__panel > p{margin:0}
+  .ps-tier__panel > pre{margin:.9rem 0 0}
+  .ps-tier>input:nth-of-type(1):checked ~ .ps-tier__panels .ps-tier__panel:nth-child(1),
+  .ps-tier>input:nth-of-type(2):checked ~ .ps-tier__panels .ps-tier__panel:nth-child(2),
+  .ps-tier>input:nth-of-type(3):checked ~ .ps-tier__panels .ps-tier__panel:nth-child(3){display:block}
+  .ps-tier>input:nth-of-type(1):checked ~ .ps-tier__tabs label:nth-of-type(1),
+  .ps-tier>input:nth-of-type(2):checked ~ .ps-tier__tabs label:nth-of-type(2),
+  .ps-tier>input:nth-of-type(3):checked ~ .ps-tier__tabs label:nth-of-type(3){background:var(--color-surface-2);
+    color:var(--color-text-1);border-bottom-color:var(--color-accent-400)}
+  .ps-tier__badge.dim{background:color-mix(in srgb,var(--color-text-3) 16%,transparent);color:var(--color-text-2)}
+  @media(max-width:560px){.ps-tier__tabs{grid-template-columns:1fr}
+    .ps-tier__tabs label{border-right:0;border-bottom:1px solid var(--color-line)}}
   /* Skipped steps read identically to the rest — the "· skipped" label and the
      "Not needed for Kubernetes" line are the only cues; prose stays full-contrast. */
   .ps-step code{border:1px solid var(--color-line);background:var(--color-surface-2);
@@ -148,10 +173,130 @@
     background:var(--color-surface-2);padding:.8rem 1rem;overflow-x:auto;
     font-size:.8rem;line-height:1.6}
   .ps-step pre code{border:0;background:none;padding:0;color:inherit;font-size:.8rem}
+  /* Side-by-side two-language code cards (features-page style). */
+  .ps-cards{display:grid;gap:.7rem;margin:1rem 0}
+  @media(min-width:680px){.ps-cards{grid-template-columns:1fr 1fr}}
+  .ps-step .ps-cards .code-card-body{margin:0;border:0;border-radius:0;background:transparent;padding:.8rem 1rem}
+  .dot.rust{background:#dea584}
+  /* Terminal screenshots — extra dark padding so the output isn't flush to the frame. */
+  .ps-frame.ps-term{padding:1.1rem 1.3rem;background:var(--color-bg)}
+  .ps-frame.ps-term img{display:block;border-radius:6px}
+  /* Capability table — two columns (supported / unsupported); each cell a stack
+     of capabilities: official name, then a smaller description. */
+  .ps-cap-tbl{margin:1.1rem 0 0}
+  .ps-cap-tbl thead th{width:50%;text-align:left}
+  .ps-cap-tbl thead th.ok{color:var(--color-accent-300)}
+  .ps-cmp-tbl.ps-cap-tbl td{vertical-align:top;padding:.35rem 1rem}
+  .ps-cap-tbl td:first-child{border-right:1px solid var(--color-line)}
+  .ps-cap-tbl .cap{padding:.5rem 0;border-bottom:1px solid var(--color-line)}
+  .ps-cap-tbl .cap:last-child{border-bottom:0}
+  .ps-cap-tbl .cap code{display:block;border:0;background:none;padding:0;font-weight:600;
+    font-size:.84rem;color:var(--color-accent-300)}
+  .ps-cap-tbl .cap small{display:block;margin-top:.12rem;font-size:.74rem;line-height:1.35;
+    color:var(--color-text-3)}
+  .ps-cap-tbl td.off .cap code{color:var(--color-text-2)}
+  /* Bonus closing note. */
+  .ps-bonus{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--color-line)}
+  .ps-bonus__k{display:block;margin-bottom:.6rem;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-300)}
+  .ps-bonus p{margin:0;color:var(--color-text-2);font-size:.99rem;line-height:1.7}
+  .ps-bonus p + p{margin-top:.9rem}
+  .ps-bonus strong{color:var(--color-text-1);font-weight:600}
+  .ps-bonus code{border:1px solid var(--color-line);background:var(--color-surface-2);border-radius:4px;
+    padding:0 .25em;font-family:ui-monospace,Menlo,monospace;font-size:.85em;color:var(--color-accent-300)}
+  .ps-bonus a{color:var(--color-accent-300);text-decoration:underline;text-underline-offset:2px}
+  .ps-bonus a:hover{color:var(--color-accent-400)}
+  /* Section summary — the elevated closing panel. */
+  .ps-sum{margin-top:1.9rem;border:1px solid color-mix(in srgb,var(--color-accent-500) 26%,var(--color-line));
+    border-radius:16px;background:color-mix(in srgb,var(--color-accent-500) 7%,var(--color-surface-1));
+    padding:1.5rem 1.7rem}
+  .ps-sum p{margin:0;color:var(--color-text-2);font-size:1rem;line-height:1.65}
+  .ps-sum p + p{margin-top:.85rem}
+  .ps-sum strong{color:var(--color-text-1);font-weight:600}
+  .ps-sum .ps-sum__lead{font-size:1.14rem;line-height:1.5;color:var(--color-text-1)}
+  .ps-sum__lead strong{color:var(--color-accent-300)}
+  .ps-sum .ps-actions{margin-top:1.3rem}
   .ps-outcome{position:relative;z-index:2;margin-top:1.5rem;
     display:flex;align-items:center;gap:.6rem;color:var(--color-text-2);font-size:.97rem}
   .ps-outcome .material-symbols-outlined{color:var(--color-accent-400)}
   .ps-outcome strong{color:var(--color-text-1)}
+  /* Temporary: restore prose paragraph spacing regardless of the CSS build
+     (the compiled space-y rule is mis-scoped — to be fixed at the source later). */
+  .ps-body > * + * { margin-top: 1rem; }
+
+  /* A small kicker above each comparison block. */
+  .ps-ckick{margin:2.4rem 0 .2rem;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--color-text-3)}
+  .ps-ckick b{color:var(--color-accent-300);font-weight:700;margin-right:.5rem}
+
+  /* ===== Lines of code — two equal SVG pies (a full 360° = 52k lines). ===== */
+  .p2-pies{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;align-items:start}
+  .p2-pie__g{display:flex;flex-direction:column;align-items:center}
+  .p2-pie{width:168px;height:168px;display:block;filter:drop-shadow(0 8px 16px rgba(0,0,0,.55))}
+  .p2-pie.vantage{filter:drop-shadow(0 8px 16px rgba(0,0,0,.55)) drop-shadow(0 0 9px rgba(129,140,248,.55))}
+  .p2-pie__bg{fill:var(--color-surface-2)}
+  .p2-pie__ring{fill:none;stroke:var(--color-line);stroke-width:1}
+  .p2-pie__cap{margin-top:.75rem;text-align:center;font-size:.82rem;color:var(--color-text-2)}
+  .p2-pie__cap b{display:block;color:var(--color-text-1);font-family:ui-monospace,Menlo,monospace;
+    font-size:1.05rem}
+  .p2-pie__legend{list-style:none;margin:.95rem 0 0;padding:0;width:100%;max-width:15rem;
+    display:flex;flex-direction:column;gap:.42rem}
+  .p2-pie__legend li{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--color-text-2)}
+  .p2-pie__legend i{width:.7rem;height:.7rem;border-radius:3px;flex:none}
+  .p2-pie__legend span{flex:1}
+  .p2-pie__legend .v{flex:none;font-family:ui-monospace,Menlo,monospace;font-size:.78rem;color:var(--color-text-3)}
+  .p2-pie__legend li.incl{color:var(--color-text-3);margin-top:.3rem;padding-top:.5rem;
+    border-top:1px solid var(--color-line)}
+  .p2-pie__legend li.incl + li.incl{margin-top:0;padding-top:0;border-top:0}
+  .p2-pie__legend li.incl .ck{flex:none;width:.7rem;text-align:center;font-size:.78rem;font-weight:700;
+    color:var(--color-accent-400)}
+  .p2-pie__legend li.incl .v{color:var(--color-accent-300)}
+  @media(max-width:560px){.p2-pies{gap:1rem}.p2-pie{width:128px;height:128px}}
+
+  /* ===== Drag-to-compare screenshots ===== */
+  .ps-cmp{position:relative;container-type:inline-size;aspect-ratio:1600/1000;overflow:hidden;
+    border-radius:14px;border:1px solid var(--color-line);user-select:none;touch-action:pan-y;
+    box-shadow:0 30px 60px -40px rgba(0,0,0,.9)}
+  .ps-cmp__pane{position:absolute;inset:0;margin:0;overflow:hidden}
+  .ps-cmp__pane img{position:absolute;top:0;left:0;width:100cqw;height:100%;object-fit:cover;
+    object-position:left top;display:block}
+  .ps-cmp__pane.top{width:var(--pos,50%)}
+  .ps-cmp__tag{position:absolute;top:.7rem;z-index:3;font-family:ui-monospace,Menlo,monospace;font-size:.68rem;
+    letter-spacing:.06em;text-transform:uppercase;padding:.3rem .6rem;border-radius:6px;
+    background:rgba(2,8,16,.62);color:#fff;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+  .ps-cmp__tag.l{left:.7rem}
+  .ps-cmp__tag.r{right:.7rem}
+  .ps-cmp__div{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:2px;transform:translateX(-1px);
+    background:var(--color-accent-400);box-shadow:0 0 12px rgba(129,140,248,.7);pointer-events:none;z-index:4}
+  .ps-cmp__grip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2.1rem;height:2.1rem;
+    border-radius:50%;background:var(--color-accent-500);color:#fff;display:grid;place-items:center;
+    font-size:1.05rem;box-shadow:0 3px 12px rgba(0,0,0,.55)}
+  .ps-cmp__range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;z-index:5}
+
+  /* ===== Feature comparison table (pricing-style, 3 columns) ===== */
+  .ps-cmp-tbl{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.95rem;
+    border:1px solid var(--color-line);border-radius:14px;overflow:hidden}
+  .ps-cmp-tbl th,.ps-cmp-tbl td{padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--color-line);
+    vertical-align:middle}
+  .ps-cmp-tbl thead th{font-family:ui-monospace,Menlo,monospace;font-size:.95rem;color:var(--color-text-1);
+    background:var(--color-surface-1);vertical-align:bottom}
+  .ps-cmp-tbl thead th span{display:block;font-size:.66rem;font-weight:400;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--color-text-3);margin-top:.2rem}
+  .ps-cmp-tbl col.feat{width:46%}
+  .ps-cmp-tbl .col{text-align:center;width:27%;font-family:ui-monospace,Menlo,monospace;color:var(--color-text-2)}
+  .ps-cmp-tbl tbody th{font-weight:500;color:var(--color-text-1)}
+  .ps-cmp-tbl tr.grp td{background:var(--color-surface-2);font-family:ui-monospace,Menlo,monospace;
+    font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-3);padding:.5rem 1rem}
+  .ps-cmp-tbl .va{color:var(--color-text-1);background:color-mix(in srgb,var(--color-accent-500) 9%,transparent)}
+  .ps-cmp-tbl thead .va{background:color-mix(in srgb,var(--color-accent-500) 16%,var(--color-surface-1));
+    color:var(--color-accent-300)}
+  .ps-cmp-tbl .yes{color:var(--color-accent-400);font-weight:700}
+  .ps-cmp-tbl .no{color:var(--color-text-3)}
+  .ps-cmp-tbl tr:last-child th,.ps-cmp-tbl tr:last-child td{border-bottom:0}
+  .ps-cmp-note{margin:.9rem 0 0;font-size:.85rem;line-height:1.5;color:var(--color-text-3)}
+  .ps-cmp-note b{color:var(--color-text-2)}
+  @media(max-width:560px){.ps-cmp-tbl{font-size:.84rem}.ps-cmp-tbl th,.ps-cmp-tbl td{padding:.55rem .6rem}}
+
   @media (prefers-reduced-motion:reduce){
     .ps-rise{display:none}}
 </style>
@@ -180,35 +325,108 @@
 
         <!-- 00 ───────────────────────────── SURFACE -->
         <section id="surface" class="ps-chapter">
-            <p class="ps-phase">A proof of concept, in three prompts</p>
+            <p class="ps-phase">React vs Vantage</p>
             <h1 class="text-display">Periscope</h1>
             <p class="ps-lead">
-                Lens, K9s and Rancher give you a polished window onto a Kubernetes cluster —
-                the control plane's manifests laid out, related and drillable. Periscope is the
-                same idea, as a Vantage proof of concept: the cluster as browsable, related
-                tables — put together with almost no effort.
+                Building a control room for a Kubernetes cluster — nodes, pods and deployments as
+                drillable tables, with live metrics — is normally a job for <strong>React</strong>,
+                and it is enormous. We built the same thing a different way: in
+                <strong>Vantage</strong>, with three prompts to Claude Opus 4.8, in an afternoon.
             </p>
             <p class="ps-body !mt-4">
-                What's worth telling is <em>how</em>. Periscope is a Vantage example app that an
-                AI agent — Claude Opus 4.8 — wrote in <strong>three prompts</strong>: one for the
-                data source, one for the integration, one for the app. Here is each, and
-                everything it pulled in.
+                The yardstick is <a href="https://headlamp.dev/">Headlamp</a> — the open-source,
+                CNCF-backed cluster UI, and about as good as the React way gets: six years of work,
+                ~330 contributors, 100,000+ lines. That's what building it yourself costs. Here is
+                the difference, graph by graph.
             </p>
 
-            <div class="ps-actions">
-                <a href="#datasource" class="btn btn-lg btn-primary">
-                    <span class="material-symbols-outlined">south</span>
-                    See the three prompts
-                </a>
-                <a href="{{ app }}" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
-                    <span class="material-symbols-outlined">code</span>
-                    See "Periscope" source
-                </a>
+            <!-- Lines of code — two pies -->
+            <p class="ps-ckick"><b>01</b> Lines of code you write</p>
+            <div class="p2-pies">
+                <div class="p2-pie__g">
+                    <svg class="p2-pie react" viewBox="0 0 100 100" role="img" aria-label="React, about 52,000 lines">
+                        <circle class="p2-pie__bg" cx="50" cy="50" r="48"></circle>
+                        <path d="M50 50 L50 2 A48 48 0 0 1 97.91 46.99 Z" fill="#6366f1"></path>
+                        <path d="M50 50 L97.91 46.99 A48 48 0 0 1 24.28 90.53 Z" fill="#8b5cf6"></path>
+                        <path d="M50 50 L24.28 90.53 A48 48 0 0 1 13.02 19.40 Z" fill="#5b8def"></path>
+                        <path d="M50 50 L13.02 19.40 A48 48 0 0 1 50 2 Z" fill="#3f7d8c"></path>
+                        <circle class="p2-pie__ring" cx="50" cy="50" r="48"></circle>
+                    </svg>
+                    <div class="p2-pie__cap">React · Headlamp<b>~52,000 lines</b></div>
+                    <ul class="p2-pie__legend">
+                        <li><i style="background:#6366f1"></i><span>Resource views</span><span class="v">~12,600</span></li>
+                        <li><i style="background:#8b5cf6"></i><span>Vantage UI</span><span class="v">~18,000</span></li>
+                        <li><i style="background:#5b8def"></i><span>K8s client</span><span class="v">~14,000</span></li>
+                        <li><i style="background:#3f7d8c"></i><span>Vantage Framework</span><span class="v">~8,000</span></li>
+                    </ul>
+                </div>
+                <div class="p2-pie__g">
+                    <svg class="p2-pie vantage" viewBox="0 0 100 100" role="img" aria-label="Vantage, about 3,100 lines">
+                        <circle class="p2-pie__bg" cx="50" cy="50" r="48"></circle>
+                        <path d="M50 50 L50 2 A48 48 0 0 1 63.10 3.82 Z" fill="#818cf8"></path>
+                        <path d="M50 50 L63.10 3.82 A48 48 0 0 1 67.67 5.37 Z" fill="#c4b5fd"></path>
+                        <circle class="p2-pie__ring" cx="50" cy="50" r="48"></circle>
+                    </svg>
+                    <div class="p2-pie__cap">Vantage · Periscope<b>~3,100 lines</b></div>
+                    <ul class="p2-pie__legend">
+                        <li><i style="background:#818cf8"></i><span>Rust &middot; K8s protocol</span><span class="v">~2,300</span></li>
+                        <li><i style="background:#c4b5fd"></i><span>YAML + Rhai &middot; the app</span><span class="v">~800</span></li>
+                        <li class="incl"><span class="ck">&check;</span><span>Vantage UI</span><span class="v">included</span></li>
+                        <li class="incl"><span class="ck">&check;</span><span>Framework</span><span class="v">Vantage (OSS)</span></li>
+                    </ul>
+                </div>
             </div>
 
-            <div class="ps-frame !mt-8">
-                <img src="{{ get_url(path='images/periscope/infrastructure.webp') }}" width="1600" height="1053" alt="Periscope in Vantage — the grouped Kubernetes sidebar, a node table above a live pod listing" loading="eager">
+            <!-- Drag-to-compare screenshots -->
+            <p class="ps-ckick"><b>02</b> The same window onto a cluster — drag to compare</p>
+            <div class="ps-cmp" style="--pos:50%">
+                <figure class="ps-cmp__pane base">
+                    <img src="{{ get_url(path='images/periscope/headlamp-workloads.png') }}" width="1806" height="1040" alt="Headlamp — the Workloads list in React" loading="lazy">
+                    <span class="ps-cmp__tag r">Headlamp · React</span>
+                </figure>
+                <figure class="ps-cmp__pane top">
+                    <img src="{{ get_url(path='images/periscope/infrastructure.webp') }}" width="1600" height="1053" alt="Periscope — the cluster view in Vantage" loading="lazy">
+                    <span class="ps-cmp__tag l">Periscope · Vantage</span>
+                </figure>
+                <div class="ps-cmp__div"><span class="ps-cmp__grip">⇆</span></div>
+                <input class="ps-cmp__range" type="range" min="0" max="100" value="50" aria-label="Drag to compare Headlamp and Periscope">
             </div>
+
+            <!-- Feature comparison table -->
+            <p class="ps-ckick"><b>03</b> What you get, side by side</p>
+            <table class="ps-cmp-tbl">
+                <colgroup><col class="feat"><col><col></colgroup>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="col">Headlamp<span>React + Go</span></th>
+                        <th class="col va">Periscope<span>Vantage</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="grp"><td colspan="3">Browse the cluster</td></tr>
+                    <tr><th>Resources as related, drillable tables</th><td class="col yes">✓</td><td class="col va yes">✓</td></tr>
+                    <tr><th>Live metric dashboards</th><td class="col yes">✓</td><td class="col va yes">✓</td></tr>
+                    <tr><th>Summary &amp; detail panels</th><td class="col yes">✓</td><td class="col va yes">✓</td></tr>
+                    <tr><th>Grouped sidebar &amp; theming</th><td class="col yes">✓</td><td class="col va yes">✓</td></tr>
+
+                    <tr class="grp"><td colspan="3">Beyond browsing — Headlamp's advanced features</td></tr>
+                    <tr><th>Edit &amp; apply resources</th><td class="col yes">✓</td><td class="col va no">—</td></tr>
+                    <tr><th>Plugins &amp; extensions</th><td class="col yes">✓</td><td class="col va no">—</td></tr>
+                    <tr><th>Multi-cluster</th><td class="col yes">✓</td><td class="col va no">—</td></tr>
+                    <tr><th>RBAC, port-forward, exec</th><td class="col yes">✓</td><td class="col va no">—</td></tr>
+                    <tr><th>Helm, topology map, search</th><td class="col yes">✓</td><td class="col va no">—</td></tr>
+
+                    <tr class="grp"><td colspan="3">Cost to build &amp; support</td></tr>
+                    <tr><th>Lines of code you write</th><td class="col">~52,000</td><td class="col va">~3,100</td></tr>
+                    <tr><th>Time to build</th><td class="col">~6 years</td><td class="col va">an afternoon</td></tr>
+                    <tr><th>People to build &amp; support</th><td class="col">~330 contributors</td><td class="col va">1 AI agent</td></tr>
+                </tbody>
+            </table>
+            <p class="ps-cmp-note">The <b>~52,000-line</b> figure is Headlamp with its advanced features
+                stripped out — the browse-and-view core only, the part Periscope reproduces. We are
+                <b>not</b> rebuilding the rest (editing, plugins, multi-cluster, RBAC…) in Vantage;
+                those are the next handful of prompts, not the next six years.</p>
         </section>
 
         <!-- 01 ───────────────────────────── THE DATA SOURCE (PR #323) -->
@@ -217,22 +435,20 @@
             <h2 class="ps-h">The missing data source: the Kubernetes API</h2>
             <div class="ps-body">
                 <p>
-                    Vantage already speaks REST — its api-client data source turns endpoints
-                    into tables — so the obvious move is to point it at the Kubernetes API. It
-                    doesn't fit. Kubernetes doesn't hand back flat rows; it returns deeply
-                    nested objects, with numbers hidden inside strings like
-                    <code>"16331752Ki"</code>. And its relationships aren't foreign keys: a pod
-                    belongs to its ReplicaSet by an owner-reference id, a Service finds its pods
-                    by matching labels, everything is grouped by namespace. A generic REST
-                    client that drills through a plain <code>references: foreign_key</code> can't
-                    follow any of that.
+                    Vantage is a very young framework. It already speaks <strong>SQL</strong>, a
+                    <strong>REST API</strong> and document stores — but it had no notion of
+                    <strong>Kubernetes</strong> in particular.
                 </p>
                 <p>
-                    So Periscope needed a real, native data source — and adding one is a path
-                    Vantage documents, the same path whether you're teaching it SQL, a REST API,
-                    a document store or a cluster. It's how Vantage UI gets something to drive.
-                    The guide runs to nine steps, and you stop when your source has enough; watch
-                    each step the agent built slide up into the prompt that asked for it.
+                    A cluster isn't a flat database, so we couldn't just reuse an existing
+                    connector. To unlock the Kubernetes API, we had to give Vantage a new, native
+                    <strong>data source</strong>.
+                </p>
+                <p>
+                    Luckily, adding one is a documented path — a <strong>nine-step guide, optimised
+                    for an AI agent to follow</strong>. Between the documentation and Rust's traits,
+                    the agent is held to implementing every feature faithfully. Watch each step
+                    slide up into the prompt that asked for it.
                 </p>
             </div>
 
@@ -240,190 +456,392 @@
                 <div class="ps-prompt__sticky">
                     <div class="ps-bubble">
                         <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 1 · Claude Opus 4.8</span>
-                        <p class="ps-bubble__text">use new persistence guide to add one for kubernetes, stop when done</p>
-                        <div class="ps-bubble__count"><span class="n">0</span> / 6 build steps</div>
+                        <p class="ps-bubble__text">Using Vantage docs — read the "new persistence" section, then implement a DataSource for Vantage that speaks the Kubernetes API. Stop when all steps are fully completed and tested.</p>
+                        <div class="ps-bubble__count">Completed in ~15 minutes, cost under $5.00</div>
                     </div>
                 </div>
                 <div class="ps-feed">
                     <div class="ps-step">
-                        <span class="ps-step__k">Step 1 · Type system</span>
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step1-types.html" target="_blank" rel="noopener">Step 1 · Type system</a></span>
                         <span class="ps-step__h">First, agree on what a value is</span>
-                        <p>Every store has its own idea of types — SQLite has five storage
-                        classes, Postgres has dozens, SurrealDB its own. So before anything else
-                        Vantage needs a type layer that remembers what each value really is,
-                        rather than letting a string quietly turn into a number somewhere
-                        downstream. You declare it with a single macro:</p>
+                        <p>Every backend has its own type system, and they vary wildly in size. A
+                        CSV gets by with one — everything is text. Vantage's <strong>SQLite</strong>
+                        type system has seven variants, <strong>Postgres</strong> fourteen,
+                        <strong>SurrealDB</strong> twenty-four. Vantage is strict about type
+                        boundaries and safety, so this first step <strong>defines that type
+                        system</strong>: the variants, the conversions to and from native Rust
+                        types, and clean round-tripping through <strong>CBOR / Serde</strong>. You
+                        declare it with a single macro:</p>
 <pre><code class="language-rust">vantage_type_system! {
     type_trait: KubeType,
     value_type: serde_json::Value,
     type_variants: [Null, Bool, Integer, Number, Quantity, Text, Time],
 }</code></pre>
-                        <p>For Kubernetes it pays off at once: a <code>Quantity</code> knows that
-                        <code>"16331752Ki"</code> is sixteen gigabytes and <code>"250m"</code> a
-                        quarter of a CPU — real numbers you can sort and chart, not text.</p>
+                        <p>Kubernetes brings its own oddities — a <code>Quantity</code> and a
+                        <code>Time</code> — and the Vantage type system takes them in stride. The
+                        agent reads the guide and builds the right variants, so
+                        <code>"16331752Ki"</code> becomes a real number you can sort and chart, and
+                        <code>"250m"</code> a quarter of a CPU — not text.</p>
                     </div>
 
                     <div class="ps-step skip">
-                        <span class="ps-step__k">Step 2 · Expressions · skipped</span>
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step2-expressions.html" target="_blank" rel="noopener">Step 2 · Expressions · skipped</a></span>
                         <span class="ps-step__h">Expressions — the backend's own query language</span>
-                        <p>If a backend runs queries, Vantage needs a way to build them: a small
-                        vendor macro that produces a typed expression with safely-bound
-                        parameters — <code>sqlite_expr!</code> for SQLite, <code>surreal_expr!</code>
-                        for SurrealDB.</p>
-<pre><code class="language-rust">let q = sqlite_expr!("SELECT * FROM product WHERE price > {}", 100i64);</code></pre>
+                        <p>Many backends ship a query engine — SQL, SurrealQL, GraphQL. Vantage
+                        supplies the mechanics for <strong>type-safe expression building</strong>:
+                        with expressions, many operations run server-side, and Vantage takes full
+                        advantage of that. The same primitives exist in both <strong>Rust and
+                        Rhai</strong> — a <code>CASE</code>, for instance, reads the same either
+                        way:</p>
+                        <div class="ps-cards">
+                            <div class="code-card">
+                                <div class="code-card-head"><span class="dot rust"></span>Rust</div>
+<pre class="code-card-body"><code class="language-rust">let kind = Case::new()
+    .when(ident("status").eq("active"), "yes")
+    .when(ident("status").eq("banned"), "no")
+    .else_("unknown");</code></pre>
+                            </div>
+                            <div class="code-card">
+                                <div class="code-card-head"><span class="dot rhai"></span>Rhai</div>
+<pre class="code-card-body"><code class="language-rust">case_when()
+    .when(row["status"] == "active", expr("'yes'"))
+    .when(row["status"] == "banned", expr("'no'"))
+    .else_(expr("'unknown'"))
+    .expr()</code></pre>
+                            </div>
+                        </div>
                         <p><em>Not needed for Kubernetes</em> — the API has no query language to
-                        build against, so the agent skipped it and filters the fetched list
+                        build against, so the agent skips this step and filters the fetched list
                         instead.</p>
                     </div>
 
                     <div class="ps-step skip">
-                        <span class="ps-step__k">Step 3 · Operators · skipped</span>
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step3-operators.html" target="_blank" rel="noopener">Step 3 · Operators &amp; conditions · skipped</a></span>
                         <span class="ps-step__h">Operators — typed conditions, not raw strings</span>
-                        <p>So nobody hand-writes expressions, this layers ergonomic methods onto
-                        typed columns — <code>.eq()</code>, <code>.gt()</code>, <code>.in_()</code>
-                        — each producing the backend's native condition.</p>
-<pre><code class="language-rust">table.add_condition(price.gt(100));   // → WHERE price > 100</code></pre>
-                        <p><em>Not needed for Kubernetes</em> — with no query to push a condition
-                        into, there is nothing for these to build. Skipped.</p>
+                        <p>Once a backend can run conditions, Vantage layers ergonomic, typed
+                        operators onto columns — <code>.eq()</code>, <code>.gt()</code>,
+                        <code>.in_()</code> — each producing that backend's native condition type.
+                        How far they reach is up to the backend: SQL takes arbitrary expression
+                        conditions, a document store maps them to its own operators, and some
+                        sources support little more than equality. Each DataSource <strong>declares
+                        and implements exactly the conditions it can honour</strong> — Vantage never
+                        pretends a backend can filter in ways it can't.</p>
+                        <div class="ps-cards">
+                            <div class="code-card">
+                                <div class="code-card-head"><span class="dot rust"></span>Rust</div>
+<pre class="code-card-body"><code class="language-rust">table.add_condition(status.eq("active"));
+table.add_condition(price.gt(100));</code></pre>
+                            </div>
+                            <div class="code-card">
+                                <div class="code-card-head"><span class="dot rhai"></span>Rhai</div>
+<pre class="code-card-body"><code class="language-rust">.where(row["status"] == "active")
+.where(row["price"] > 100)</code></pre>
+                            </div>
+                        </div>
+                        <p><em>Not needed for Kubernetes</em> — the API has no general query language
+                        to push a condition into, so the agent filters the fetched list in memory
+                        instead. Skipped.</p>
                     </div>
 
                     <div class="ps-step skip">
-                        <span class="ps-step__k">Step 4 · Query builder · skipped</span>
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step4-query-builder.html" target="_blank" rel="noopener">Step 4 · Query builder · skipped</a></span>
                         <span class="ps-step__h">Query builder — composable SELECTs</span>
-                        <p>The piece that assembles fields, conditions, ordering and limits into a
-                        statement and runs it through one standard interface, so every backend
-                        builds queries the same way. (MongoDB skips it too, using native pipelines
-                        instead.)</p>
-<pre><code class="language-rust">SqliteSelect::new()
+                        <p>For backends that run queries, Vantage wants them implemented properly,
+                        not faked. It introduces the <code>Selectable</code> trait — the standard
+                        SELECT-builder interface — and the agent implements it for the backend's own
+                        statement type. The variants are SQL-like and compose: fields, conditions,
+                        ordering, limits, and nested sub-statements. Once a DataSource is
+                        <code>Selectable</code>, the builder is safely exposed in both Rust and
+                        Rhai:</p>
+                        <div class="ps-cards">
+                            <div class="code-card">
+                                <div class="code-card-head"><span class="dot rust"></span>Rust</div>
+<pre class="code-card-body"><code class="language-rust">SqliteSelect::new()
     .with_source("product")
-    .with_condition(price.gt(100))
-    .with_limit(20);</code></pre>
-                        <p><em>Not needed for Kubernetes</em> — a resource list comes back whole
-                        and is filtered in memory. Three steps the guide lets you walk straight
-                        past.</p>
+    .with_field("name")
+    .with_field("price")</code></pre>
+                            </div>
+                            <div class="code-card">
+                                <div class="code-card-head"><span class="dot rhai"></span>Rhai</div>
+<pre class="code-card-body"><code class="language-rust">select()
+    .from("product")
+    .field("name")
+    .field("price")</code></pre>
+                            </div>
+                        </div>
+                        <p><em>Not needed for Kubernetes</em> — a resource list comes back whole,
+                        with no SELECT to build, so the agent filters it in memory. Skipped.</p>
                     </div>
 
                     <div class="ps-step">
-                        <span class="ps-step__k">Step 5 · Table &amp; CRUD</span>
-                        <span class="ps-step__h">Implement one trait, get the rest for free</span>
-                        <p>This is the heart of it, and it's a clean bargain. You — or your agent
-                        — implement a single trait, <code>TableSource</code>: the one piece that
-                        knows how to talk to your backend. In return Vantage hands you everything
-                        layered on top, none of which you write — a typed
-                        <code>Table&lt;DB, Entity&gt;</code>, an ActiveRecord-style record you can
-                        load and edit, readable and writable data sets, CRUD, aggregates,
-                        ordering and pagination.</p>
-<pre><code class="language-rust">// You implement one trait — the only backend-specific code:
-impl TableSource for KubernetesCluster { /* list, read, … */ }
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step5-table-crud.html" target="_blank" rel="noopener">Step 5 · Table &amp; CRUD</a></span>
+                        <span class="ps-step__h">Where everything converges</span>
+                        <p>Here the earlier pieces come together. The agent implements one trait,
+                        <code>TableSource</code>, and on it <strong>declares the backend's types</strong>
+                        — its value type, its condition (comparison) type, its select/source type, and
+                        several more. The same trait spans everything from a flat CSV to
+                        <strong>SurrealDB</strong>, one of the most feature-rich database servers; each
+                        backend simply names the types it actually has.</p>
+                        <div class="ps-cards">
+                            <div class="code-card">
+                                <div class="code-card-head"><span class="dot rust"></span>PostgreSQL</div>
+<pre class="code-card-body"><code class="language-rust">impl TableSource for PostgresDB {
+    type Value = AnyPostgresType;
+    type Condition = PostgresCondition;
+    type Source = SelectSource&lt;PostgresSelect&gt;;
+    // + Column, Id, AnyType …
+}</code></pre>
+                            </div>
+                            <div class="code-card">
+                                <div class="code-card-head"><span class="dot rust"></span>Kubernetes</div>
+<pre class="code-card-body"><code class="language-rust">impl TableSource for KubernetesCluster {
+    type Value = CborValue;
+    type Condition = KubeCondition;
+    type Source = String;
+    // no query language — just the kind
+}</code></pre>
+                            </div>
+                        </div>
+                        <p>Postgres declares a full <code>Select</code>-based source; Kubernetes, with
+                        no query language, declares its source as a plain <code>String</code> — the
+                        resource kind. That single line is exactly why the three query steps above were
+                        skipped.</p>
+                        <p>Implementing <code>TableSource</code> unlocks a <code>Table</code>: a typed
+                        <code>Table&lt;DB, Entity&gt;</code> with ActiveRecord-style records, CRUD,
+                        aggregates, ordering and pagination — none of which you write.
+                        <code>Table</code> is Rust-only and highly typed; in a Rust application it's
+                        what you reach for most of the time.</p>
+                        <p>Reading it back is exactly what you'd expect — load the pods table and
+                        iterate its rows:</p>
+<pre><code class="language-rust">// load the pods table, then read every row
+let pods = pods::pods_table(cluster);
 
-// In return, every backend gets the same toolkit, for free:
-//   Table&lt;DB, Entity&gt;  ·  ActiveEntitySet (ActiveRecord)  ·  ReadableDataSet
-//   WritableDataSet  ·  aggregates  ·  ordering  ·  pagination</code></pre>
-                        <p>For Kubernetes the only backend-specific work is the read path: a small
-                        projector that flattens each nested object into a flat row and pulls out
-                        the fields people actually read.</p>
-<pre><code class="language-rust">// one pod's nested JSON → a flat, typed row
-row.set("namespace", &amp;pod.metadata.namespace);
-row.set("node",      &amp;pod.spec.node_name);
-row.set("ready",     ready_ratio(&amp;pod.status));    // "2/3"
-row.set("restarts",  total_restarts(&amp;pod.status)); // 7</code></pre>
-                        <p>That's all it takes for pods and nodes to behave exactly like database
-                        rows — the same <code>Table</code> and record API the rest of Vantage
-                        already speaks.</p>
+for (_, pod) in pods.list_values().await? {
+    let name  = pod.get("name");
+    let ready = pod.get("ready");   // "1/1", "2/2", …
+}</code></pre>
                     </div>
 
                     <div class="ps-step">
-                        <span class="ps-step__k">Step 6 · Relationships</span>
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step6-relationships.html" target="_blank" rel="noopener">Step 6 · Relationships</a></span>
                         <span class="ps-step__h">Switch on the relationship engine</span>
-                        <p>This step enables Vantage's relationship engine: you declare how
-                        records relate — <code>with_one</code> for a belongs-to,
-                        <code>with_many</code> for a has-many — and from there the UI picks them
-                        up on its own, turning every reference into a link you can follow, with
-                        no per-screen wiring.</p>
+                        <p>Now Vantage's relationship engine comes on. You declare how records
+                        relate — <code>with_one</code> for a belongs-to, <code>with_many</code> for
+                        a has-many — and the UI picks them up on its own, turning every reference
+                        into a link you can follow, with no per-screen wiring.</p>
 <pre><code class="language-rust">Table::new("replicasets", cluster)
     .with_many("pods", "owner_uid", Pod::table);  // a ReplicaSet → the pods it owns</code></pre>
-                        <p>How much a relation can do depends on the backend. <strong>SQL is the
-                        most powerful</strong>: because the database evaluates them, relations
-                        there carry <em>expressions and aggregation</em> — a client's
-                        <code>order_count</code>, the sum of an order's lines — computed as
-                        correlated subqueries on read.</p>
+                        <p>How much a relationship can <em>do</em> depends on the backend. Vantage
+                        supports three levels — and since pushing work to the server is always
+                        cheaper, it prefers the higher ones. Pick a level:</p>
+                        <div class="ps-tier">
+                            <input type="radio" name="ps-tier" id="tier1" checked>
+                            <input type="radio" name="ps-tier" id="tier2">
+                            <input type="radio" name="ps-tier" id="tier3">
+                            <div class="ps-tier__tabs">
+                                <label for="tier1"><span class="ps-tier__n">Level 1</span><span class="ps-tier__t">Full query language</span><span class="ps-tier__badge">most powerful</span></label>
+                                <label for="tier2"><span class="ps-tier__n">Level 2</span><span class="ps-tier__t">Fetch-time conditions</span><span class="ps-tier__badge">Kubernetes</span></label>
+                                <label for="tier3"><span class="ps-tier__n">Level 3</span><span class="ps-tier__t">Client-side only</span></label>
+                            </div>
+                            <div class="ps-tier__panels">
+                                <div class="ps-tier__panel">
+                                    <p>Server-side conditions <em>and</em> subqueries. A relation can
+                                    carry expressions and aggregation — a client's
+                                    <code>order_count</code> computed as a correlated subquery on
+                                    read. launch-control builds its aggregation expressions exactly
+                                    this way:</p>
 <pre><code class="language-rust">.with_many("orders", "client_id", Order::table)
-.with_expression("order_count", |c| {
-    c.get_subquery_as::&lt;Order&gt;("orders")?.get_count_query()
+.with_expression("order_count", |t| {
+    let orders = t.get_subquery_as::&lt;Order&gt;("orders").unwrap();
+    orders.get_count_query()
 })</code></pre>
-                        <p>Simpler sources keep the relation, just not the cleverness. When a
-                        backend can't narrow results after a traversal, <strong>Vantage applies
-                        those conditions client-side</strong>, so the link still resolves to
-                        exactly the right rows. For a REST API the conditions are instead sent the
-                        way each endpoint expects — folded into the <strong>path or the query
-                        string</strong>.</p>
-                        <p>For Kubernetes that means owner-reference ids and label selectors,
-                        matched against the list Vantage already holds — which is what lets a
-                        namespace open into its workloads, and a deployment reach down through its
-                        replicasets to its pods.</p>
+                                </div>
+                                <div class="ps-tier__panel">
+                                    <p>Most REST APIs filter on the server, but only while fetching —
+                                    folded into the path or query string, never as a subquery inside
+                                    another query. <strong>Kubernetes lives here</strong>, with label
+                                    and field selectors and owner-reference ids — enough for
+                                    relationships to resolve cleanly:</p>
+                                    <ul>
+                                        <li>a <strong>deployment</strong> has many pods</li>
+                                        <li>a <strong>node</strong> has many pods</li>
+                                        <li>a <strong>namespace</strong> has many services</li>
+                                        <li>a <strong>pod</strong> has one node</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-tier__panel">
+                                    <p>A CSV or a CLI can't filter at all, so Vantage fetches what it
+                                    can and narrows the results in memory afterwards — the same link
+                                    still resolves to exactly the right rows, just at the client.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="ps-step">
-                        <span class="ps-step__k">Step 7 · Models</span>
-                        <span class="ps-step__h">Two ways to define a table</span>
-                        <p>A table can be defined two ways in Vantage, and both are first-class:
-                        as a typed model in Rust, or declaratively in YAML with Rhai for the
-                        computed fields. Rust gives you compile-time types and the full expression
-                        API; YAML lets you add or reshape a table without recompiling — the next
-                        step is what makes that possible. For <code>vantage-kubernetes</code> the
-                        agent wrote the models in Rust, since the projection is code anyway — a
-                        few lines per resource kind:</p>
-<pre><code class="language-rust">Table::new("pods", cluster)
-    .with_id_column("id")
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step7-multi-backend.html" target="_blank" rel="noopener">Step 7 · Checkpoint</a></span>
+                        <span class="ps-step__h">Prove it from a CLI</span>
+                        <p>By now the data source has the whole stack — types, expressions,
+                        conditions, queries, a typed <code>Table</code> and relations. The guide's
+                        checkpoint is to build a small <strong>CLI</strong>, the fastest way to
+                        exercise all of it against a real cluster. Because the backend type is
+                        erased, the <em>same generic CLI code</em> runs over any Vantage model: it
+                        fetches, filters with conditions and traverses relations, and
+                        <code>vantage-cli-util</code> renders each result as a table.</p>
+                        <p>Fetch a resource and filter it by namespace —
+                        <code>vantage-cli-util</code> renders the result straight into the
+                        terminal:</p>
+                        <figure class="ps-frame ps-term">
+                            <img src="{{ get_url(path='images/periscope/cli-pods.png') }}" width="2576" height="474" alt="k8s-cli listing the demo namespace's pods as a coloured table — pi, sidecar (2/2) and three web replicas" loading="lazy">
+                        </figure>
+                        <p>Then traverse a relation — a deployment down to the pods it owns:</p>
+                        <figure class="ps-frame ps-term">
+                            <img src="{{ get_url(path='images/periscope/cli-traversal.png') }}" width="2242" height="390" alt="k8s-cli drilling apps.deployment name=web down to its three web pods" loading="lazy">
+                        </figure>
+                        <p>Exactly the three pods that deployment owns — fetched, filtered and
+                        drilled, with no Kubernetes-specific code in the CLI at all. The checkpoint
+                        passes.</p>
+                    </div>
+
+                    <div class="ps-step">
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step8-vista-integration.html" target="_blank" rel="noopener">Step 8 · Vista</a></span>
+                        <span class="ps-step__h">Seal the types — make it universal</span>
+                        <p>So far everything has been type-rich Rust resources — ideal for Rust
+                        code, and invisible to everything else. To use that <code>Table</code> —
+                        the DataSource you just built — outside of Rust, or in Vantage UI, those
+                        types have to be <strong>sealed</strong> behind one uniform boundary. That
+                        boundary is
+                        <strong>Vista</strong>: a typed <code>Table</code> goes in, and out comes a
+                        schema-bearing handle the UI, scripts and agents read over a plain
+                        serialization boundary — no Rust struct needed on the other side.</p>
+                        <p>As the table enters Vista it also <strong>declares the backend's
+                        capabilities</strong>. Queries? No. Conditions? Yes. Pagination? Yes.
+                        Consuming code reads these flags and adapts, so the same UI drives a SQL
+                        Vista, a Mongo Vista or this Kubernetes one without caring how it was built.
+                        Here is what the Kubernetes driver advertises:</p>
+                        <table class="ps-cmp-tbl ps-cap-tbl">
+                            <thead>
+                                <tr><th class="ok">Supported</th><th>Unsupported</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="cap"><code>count</code><small>fetch the total number of rows</small></div>
+                                        <div class="cap"><code>order</code><small>sort by any column</small></div>
+                                        <div class="cap"><code>search</code><small>quick free-text search</small></div>
+                                        <div class="cap"><code>set_page_size</code><small>choose how many rows a page holds</small></div>
+                                        <div class="cap"><code>fetch_page</code><small>random-access pages by number</small></div>
+                                        <div class="cap"><code>fetch_next</code><small>cursor-style pagination</small></div>
+                                        <div class="cap"><code>fetch_window</code><small>offset windows for lazy scroll</small></div>
+                                    </td>
+                                    <td class="off">
+                                        <div class="cap"><code>insert / update / delete</code><small>create, edit or delete resources</small></div>
+                                        <div class="cap"><code>subscribe</code><small>live updates as the cluster changes</small></div>
+                                        <div class="cap"><code>traverse_to_set</code><small>narrow a relation with a subquery</small></div>
+                                        <div class="cap"><code>build_ref_via_script</code><small>Rhai-scripted reference traversal</small></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>Some of the right-hand column are real limits — the API has no query
+                        language, so server-side queries will never appear. But others the
+                        Kubernetes API <em>does</em> support; the v1 driver just doesn't use them yet
+                        — a live <code>watch</code>, server-side field selectors. They can be added
+                        later to make the driver more powerful, and swapped in <strong>without
+                        touching a line of code that uses Vantage</strong> — Vantage UI included.</p>
+                    </div>
+
+                    <div class="ps-step">
+                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step9-contained-relations.html" target="_blank" rel="noopener">Step 9 · Scripting</a></span>
+                        <span class="ps-step__h">Declare tables without Rust</span>
+                        <p>Vantage UI ships as one <strong>precompiled</strong> binary — you can't
+                        drop new Rust into it. So tables are declared in <strong>YAML</strong> or
+                        <strong>Rhai</strong> instead, both read at runtime. Here's the same
+                        deployments table, three ways:</p>
+                        <div class="ps-tier">
+                            <input type="radio" name="ps-decl" id="decl-yaml" checked>
+                            <input type="radio" name="ps-decl" id="decl-rhai">
+                            <input type="radio" name="ps-decl" id="decl-rust">
+                            <div class="ps-tier__tabs">
+                                <label for="decl-yaml"><span class="ps-tier__n">Declarative</span><span class="ps-tier__t">YAML</span><span class="ps-tier__badge">no recompile</span></label>
+                                <label for="decl-rhai"><span class="ps-tier__n">Scripted</span><span class="ps-tier__t">Rhai</span><span class="ps-tier__badge">no recompile</span></label>
+                                <label for="decl-rust"><span class="ps-tier__n">Compiled</span><span class="ps-tier__t">Rust</span><span class="ps-tier__badge dim">needs recompile</span></label>
+                            </div>
+                            <div class="ps-tier__panels">
+                                <div class="ps-tier__panel">
+<pre><code class="language-yaml"># table/deployments.yaml
+datasource: cluster
+title: Deployments
+table: apis/apps/v1/deployments
+columns:
+  - { name: name, flags: [title] }
+  - { name: namespace, references: namespaces }
+  - { name: replicas, type: int }
+  - { name: ready, type: int }
+references:
+  pods: { table: pods, kind: has_many, foreign_key: ownerDeployment }</code></pre>
+                                </div>
+                                <div class="ps-tier__panel">
+<pre><code class="language-yaml"># the pods relation, narrowed by a Rhai script
+references:
+  pods:
+    table: pods
+    kind: has_many
+    rhai: |
+      table("pods")
+          .add_condition_eq("ownerDeployment", row.name)
+          .add_order("name", "asc")</code></pre>
+                                </div>
+                                <div class="ps-tier__panel">
+<pre><code class="language-rust">Table::new("deployments", cluster)
+    .with_title_column_of::&lt;String&gt;("name")
     .with_column_of::&lt;String&gt;("namespace")
-    .with_column_of::&lt;String&gt;("node_name")
-    .with_column_of::&lt;String&gt;("ready")
-    .with_many("metrics", "pod", PodMetrics::table);</code></pre>
-                        <p>A dozen of these later — pods through jobs, plus live metrics — the
-                        backend type is erased, so the same generic UI, CLI and API code runs
-                        over any model, Kubernetes or otherwise. The agent proved the seam by
-                        drilling a live cluster from a small CLI:</p>
-<pre><code class="language-bash">$ k8s-cli apps.deployment name=web :pods
-web-8fc56b787-9hgtz   demo   Running   1/1
-web-8fc56b787-cgmkf   demo   Running   1/1
-web-8fc56b787-zgjcp   demo   Running   1/1
-# → exactly the three pods it owns</code></pre>
-                    </div>
-
-                    <div class="ps-step">
-                        <span class="ps-step__k">Step 8 · Vista</span>
-                        <span class="ps-step__h">Open the door for the UI</span>
-                        <p>Everything so far is perfect for Rust code — and invisible to
-                        everything else. Vista is the bridge: it wraps a typed table as a
-                        schema-bearing handle that the UI, scripts and agents read over a plain
-                        serialization boundary, and it can load straight from a YAML schema so
-                        nothing on the other side needs a Rust struct. It's the same doorway for
-                        every backend, and it's exactly what gives Vantage UI something to drive
-                        — the next two prompts build entirely on it.</p>
-                    </div>
-
-                    <div class="ps-step">
-                        <span class="ps-step__k">Plus · Scripting</span>
-                        <span class="ps-step__h">Make it tweakable in YAML</span>
-                        <p>One last touch the same Vista boundary unlocks: small expressions in
-                        Rhai, evaluated at runtime, so a computed column or a label can be written
-                        and changed in YAML without recompiling — a ready ratio here, an age
-                        there. The data source isn't just readable; it's scriptable.</p>
-<pre><code class="language-yaml">- { name: ready, value: "${ record.ready }" }   # "2/3", via a Rhai helper</code></pre>
+    .with_column_of::&lt;i64&gt;("replicas")
+    .with_column_of::&lt;i64&gt;("ready")
+    .with_many("pods", "ownerDeployment", pods_table);</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Two of those need no recompile — which is the real unlock: you can
+                        mix and match custom manifest types, pointing a table at a <strong>CRD</strong>
+                        to add it to Vantage UI without touching the binary.</p>
+                        <p>The Kubernetes driver itself shipped in <strong>Vantage 0.20</strong> and
+                        stays a built-in capability — so a cluster works out of the box, and YAML or
+                        Rhai is for the custom types you layer on top.</p>
                     </div>
                 </div>
-                <p class="ps-outcome"><span class="material-symbols-outlined">all_inclusive</span><span>Every step above, from one sentence. The agent stopped there — Kubernetes is read-only, so the guide's remaining steps didn't apply — and out came <strong>vantage-kubernetes</strong>: a new crate, <strong>+5,915 lines</strong>, 8 library and 9 integration tests green.</span></p>
             </div>
 
-            <div class="ps-actions">
-                <a href="{{ crate_pr }}" class="btn btn-soft-primary" target="_blank" rel="noopener">
-                    <span class="material-symbols-outlined">merge</span>
-                    Read PR #323
-                </a>
-                <a href="{{ crate_src }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">
-                    <span class="material-symbols-outlined">code</span>
-                    The crate source
-                </a>
+            <div class="ps-bonus">
+                <p>Claude Opus 4.8 implemented every step — and added the tests too — everything
+                fitting Vantage's specifications, from a single, simple prompt.</p>
+                <p><code>vantage-kubernetes</code> was added to
+                <a href="https://github.com/romaninsh/vantage">github.com/romaninsh/vantage</a>,
+                alongside several other incubating crates — so when a more dedicated, refined driver
+                comes along, it can simply take over.</p>
+            </div>
+
+            <div class="ps-sum">
+                <p class="ps-sum__lead"><strong>Vantage.</strong> Most modern frameworks are built by
+                humans, for humans. Vantage is built by humans too — but aimed squarely at AI and
+                human developers alike.</p>
+                <p>The new reality is that code is cheap: quick to write, and quick to rewrite. A
+                sharper Kubernetes driver may already be on its way — and that's fine, because
+                swapping a <strong>DataSource</strong> has little to no impact on everything built on
+                top of it.</p>
+                <p>So whatever legacy or in-house API your organisation runs, you can give it a data
+                source — and a real, browsable UI — with a single prompt, today.
+                <strong>PR&nbsp;#323 is exactly that, in action.</strong></p>
+                <div class="ps-actions">
+                    <a href="{{ crate_pr }}" class="btn btn-primary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">merge</span>
+                        Read PR #323
+                    </a>
+                    <a href="/follow/" class="btn btn-outline-primary">
+                        <span class="material-symbols-outlined">forum</span>
+                        Bring your API to Vantage
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -609,6 +1027,20 @@ namespace: demo          # optional — the namespace pages open in</code></pre>
 
     </main>
 </div>
+
+{# Drag-to-compare screenshots: the range input drives the --pos split position;
+   degrades to a static 50/50 split without JS. #}
+<script>
+(function () {
+  document.querySelectorAll(".ps-cmp").forEach(function (cmp) {
+    var range = cmp.querySelector(".ps-cmp__range");
+    if (!range) return;
+    var set = function () { cmp.style.setProperty("--pos", range.value + "%"); };
+    range.addEventListener("input", set);
+    set();
+  });
+})();
+</script>
 
 {{ nav::footer() }}
 {% endblock content %}
