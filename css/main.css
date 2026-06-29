@@ -1147,10 +1147,10 @@
     @apply text-h2;
   }
   .lc-lead {
-    @apply mt-4 max-w-2xl text-[1.14rem] leading-relaxed text-text-1;
+    @apply mt-4 text-[1.14rem] leading-relaxed text-text-1;
   }
   .lc-body {
-    @apply mt-5 max-w-2xl space-y-4 text-[0.99rem] leading-[1.7] text-text-2;
+    @apply mt-5 space-y-4 text-[0.99rem] leading-[1.7] text-text-2;
 
     strong {
       @apply font-semibold text-text-1;
@@ -1182,7 +1182,7 @@
 
   /* Callout note. */
   .lc-note {
-    @apply my-6 flex max-w-2xl gap-3 rounded-r-lg border-l-2 border-accent-500 bg-surface-1 p-4 text-[0.9rem] leading-relaxed text-text-2;
+    @apply my-6 flex gap-3 rounded-r-lg border-l-2 border-accent-500 bg-surface-1 p-4 text-[0.9rem] leading-relaxed text-text-2;
 
     > .material-symbols-outlined {
       @apply mt-0.5 shrink-0 !text-[1.2rem] text-accent-400;
@@ -1263,7 +1263,7 @@
 
   /* Numbered step list (the cache/refresh flow). */
   .lc-steps {
-    @apply my-5 max-w-2xl space-y-2.5 text-[0.95rem] leading-relaxed text-text-2;
+    @apply my-5 space-y-2.5 text-[0.95rem] leading-relaxed text-text-2;
     counter-reset: step;
   }
   .lc-steps li {
@@ -1415,6 +1415,360 @@
   .lc-actions {
     @apply mt-7 flex flex-wrap gap-3;
   }
+
+  /* ============================================================= */
+  /* Periscope — Kubernetes example (bespoke "deep-sea dive")       */
+  /* Mirror of the `lc-` journey layout, self-contained `ps-`       */
+  /* namespace so it owns its look. Accent recolored aqua via the   */
+  /* `body.ps` override below.                                      */
+  /* ============================================================= */
+
+  /* Ascent bar: scroll progress pinned to the very top. */
+  .ps-progress {
+    @apply pointer-events-none fixed inset-x-0 top-0 z-50 h-[3px] bg-transparent;
+  }
+  .ps-progress > span {
+    @apply block h-full w-0 bg-gradient-to-r from-accent-600 via-accent-400 to-violet;
+    box-shadow: 0 0 14px color-mix(in srgb, var(--color-accent-400) 75%, transparent);
+    transition: width 0.1s linear;
+  }
+
+  /* Single wide reading column (no rail). */
+  .ps-shell {
+    @apply mx-auto max-w-4xl px-4 pb-10 sm:px-6;
+  }
+
+  /* ---- Flight rail (table of contents + progress) ---- */
+  .ps-rail {
+    @apply hidden lg:block;
+  }
+  .ps-rail-inner {
+    @apply sticky top-24 self-start;
+  }
+  .ps-rail-title {
+    @apply mb-4 ps-5 font-mono text-[0.64rem] font-semibold tracking-[0.22em] text-text-3 uppercase;
+  }
+  .ps-rail-list {
+    @apply relative border-l border-line;
+  }
+  .ps-rail-item {
+    @apply relative flex items-baseline gap-2.5 py-2 ps-5 font-mono text-[0.74rem] leading-snug tracking-wide text-text-3 no-underline transition-colors;
+  }
+  .ps-rail-item::before {
+    content: "";
+    @apply absolute top-[0.7rem] left-[-4.5px] size-[8px] rounded-full border border-line bg-bg transition-all;
+  }
+  .ps-rail-item:hover {
+    @apply text-text-2;
+  }
+  .ps-rail-num {
+    @apply shrink-0 text-[0.62rem] text-text-3/80 tabular-nums;
+  }
+  .ps-rail-item.done {
+    @apply text-text-2;
+  }
+  .ps-rail-item.done::before {
+    @apply border-accent-500/50 bg-accent-500/40;
+  }
+  .ps-rail-item.active {
+    @apply text-accent-300;
+  }
+  .ps-rail-item.active .ps-rail-num {
+    @apply text-accent-400;
+  }
+  .ps-rail-item.active::before {
+    @apply border-accent-400 bg-accent-400;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-400) 18%, transparent);
+  }
+
+  /* ---- Reading column ---- */
+  .ps-doc {
+    @apply min-w-0;
+  }
+  .ps-chapter {
+    @apply scroll-mt-24 border-t border-line py-14 first:border-t-0 first:pt-6 md:py-16;
+  }
+
+  .ps-phase {
+    @apply mb-3 flex items-center gap-2.5 font-mono text-[0.72rem] font-medium tracking-[0.2em] text-accent-400 uppercase;
+  }
+  .ps-phase::before {
+    content: "";
+    @apply h-px w-7 bg-accent-500/60;
+  }
+  .ps-h {
+    @apply text-h2;
+  }
+  .ps-lead {
+    @apply mt-4 text-[1.14rem] leading-relaxed text-text-1;
+  }
+  .ps-body {
+    @apply mt-5 space-y-4 text-[0.99rem] leading-[1.7] text-text-2;
+
+    strong {
+      @apply font-semibold text-text-1;
+    }
+    code {
+      @apply rounded border border-line bg-surface-2 px-1 py-px font-mono text-[0.85em] text-accent-300;
+    }
+    a {
+      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+    }
+    h3 {
+      @apply !mt-8 text-h3 text-text-1;
+    }
+  }
+
+  /* Telemetry readout — a strip of figures. */
+  .ps-readout {
+    @apply my-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4;
+  }
+  .ps-stat {
+    @apply bg-surface-1 p-4;
+  }
+  .ps-stat-num {
+    @apply font-mono text-[1.6rem] font-semibold leading-none text-text-1;
+  }
+  .ps-stat-label {
+    @apply mt-2 block font-mono text-[0.66rem] tracking-[0.12em] text-text-3 uppercase;
+  }
+
+  /* Callout note. */
+  .ps-note {
+    @apply my-6 flex gap-3 rounded-r-lg border-l-2 border-accent-500 bg-surface-1 p-4 text-[0.9rem] leading-relaxed text-text-2;
+
+    > .material-symbols-outlined {
+      @apply mt-0.5 shrink-0 !text-[1.2rem] text-accent-400;
+    }
+    strong {
+      @apply text-text-1;
+    }
+    a {
+      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+    }
+  }
+  .ps-note.warn {
+    border-left-color: #f59e0b;
+
+    > .material-symbols-outlined {
+      color: #f59e0b;
+    }
+  }
+
+  /* Code block with a filename header + optional caption. */
+  .ps-code {
+    @apply my-7 overflow-hidden rounded-xl border border-line bg-surface-2;
+  }
+  .ps-code-head {
+    @apply flex items-center gap-2 border-b border-line bg-surface-1 px-4 py-2 font-mono text-[0.72rem] text-text-3;
+
+    .material-symbols-outlined {
+      @apply !text-[1rem] text-accent-400;
+    }
+    b {
+      @apply font-medium text-text-2;
+    }
+  }
+  .ps-code pre {
+    @apply m-0 max-h-none overflow-x-auto rounded-none border-0 bg-transparent p-4 text-[0.82rem] sm:p-5;
+  }
+  .ps-code figcaption {
+    @apply border-t border-line bg-surface-1 px-4 py-3 text-[0.82rem] leading-relaxed text-text-3 sm:px-5;
+
+    strong {
+      @apply text-accent-300;
+    }
+  }
+
+  /* Screenshot frame with mission-control corner ticks. */
+  .ps-frame {
+    @apply relative my-2 rounded-xl border border-line bg-surface-2 p-2;
+  }
+  .ps-frame::before,
+  .ps-frame::after {
+    content: "";
+    @apply pointer-events-none absolute size-3 border-accent-400/60;
+  }
+  .ps-frame::before {
+    @apply top-1.5 left-1.5 border-t border-l;
+  }
+  .ps-frame::after {
+    @apply right-1.5 bottom-1.5 border-r border-b;
+  }
+  .ps-frame img {
+    @apply block w-full rounded-lg;
+  }
+  .ps-frame figcaption {
+    @apply px-1 pt-2 pb-1 text-center text-sm text-text-3;
+
+    code {
+      @apply font-mono text-[0.85em] text-accent-300;
+    }
+  }
+
+  /* Two screenshots side by side (stacks on narrow viewports). */
+  .ps-shots {
+    @apply my-2 grid gap-4 sm:grid-cols-2;
+  }
+  .ps-shots .ps-frame {
+    @apply my-0;
+  }
+
+  /* Numbered step list (the cache/refresh flow). */
+  .ps-steps {
+    @apply my-5 space-y-2.5 text-[0.95rem] leading-relaxed text-text-2;
+    counter-reset: step;
+  }
+  .ps-steps li {
+    @apply relative pl-10;
+    counter-increment: step;
+  }
+  .ps-steps li::before {
+    content: counter(step);
+    @apply absolute top-0 left-0 flex size-6 items-center justify-center rounded-full bg-accent-500/15 text-[0.72rem] font-semibold text-accent-300;
+  }
+  .ps-steps strong {
+    @apply text-text-1;
+  }
+
+  /* Entity-relationship schema diagram (inline SVG, classic-DB-modeling style). */
+  .ps-erd {
+    @apply my-6 overflow-x-auto rounded-xl border border-line bg-surface-1 p-3;
+  }
+  .ps-erd svg {
+    @apply mx-auto block h-auto;
+    width: 100%;
+    min-width: 560px;
+    max-width: 860px;
+  }
+  .ps-erd .erd-box {
+    fill: var(--color-surface-2);
+    stroke: var(--color-line);
+    stroke-width: 1;
+  }
+  .ps-erd .erd-hub {
+    stroke: var(--color-accent-400);
+    stroke-width: 1.5;
+  }
+  .ps-erd .erd-head {
+    fill: var(--color-accent-500);
+    opacity: 0.16;
+  }
+  .ps-erd text {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .ps-erd .erd-name {
+    fill: var(--color-text-1);
+    font-weight: 600;
+  }
+  .ps-erd .erd-col {
+    fill: var(--color-text-2);
+  }
+  .ps-erd .erd-key {
+    fill: var(--color-accent-300);
+    font-weight: 600;
+  }
+  .ps-erd .erd-fk {
+    fill: var(--color-text-3);
+  }
+  .ps-erd .erd-line {
+    stroke: var(--color-accent-500);
+    stroke-width: 1.2;
+    fill: none;
+    opacity: 0.65;
+  }
+  .ps-erd .erd-card {
+    fill: var(--color-text-3);
+  }
+
+  /* Data-model: a hub core + a list of relation channels. */
+  .ps-hub {
+    @apply my-8 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center;
+  }
+  .ps-hub-core {
+    @apply flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-accent-500/50 bg-accent-500/10 px-6 py-8 text-center;
+    box-shadow: 0 0 60px -18px color-mix(in srgb, var(--color-accent-600) 70%, transparent);
+
+    .material-symbols-outlined {
+      @apply !text-[2.4rem] text-accent-400;
+    }
+    b {
+      @apply text-lg text-text-1;
+    }
+    small {
+      @apply font-mono text-[0.68rem] tracking-wider text-text-3 uppercase;
+    }
+  }
+  .ps-channels {
+    @apply flex flex-col gap-2;
+  }
+  .ps-channel {
+    @apply flex items-center gap-3 rounded-lg border border-line bg-surface-1 px-4 py-2.5;
+
+    > .material-symbols-outlined {
+      @apply !text-[1.3rem] text-text-3;
+    }
+  }
+  .ps-channel-name {
+    @apply text-[0.92rem] font-medium text-text-1;
+  }
+  .ps-channel-sub {
+    @apply font-mono text-[0.66rem] text-text-3;
+  }
+  .ps-channel-kind {
+    @apply ms-auto shrink-0 rounded-full border border-line bg-surface-2 px-2 py-0.5 font-mono text-[0.6rem] tracking-wider text-accent-300 uppercase;
+  }
+
+  /* Data-flow pipe with a travelling signal (used in the live chapter). */
+  .ps-pipe {
+    @apply my-8 flex flex-col items-stretch gap-1.5 lg:flex-row lg:items-stretch;
+  }
+  .ps-pipe-node {
+    @apply relative flex grow basis-0 flex-col gap-1 rounded-xl border border-line bg-surface-1 p-4;
+
+    .material-symbols-outlined {
+      @apply !text-[1.5rem] text-accent-400;
+    }
+    b {
+      @apply mt-1 text-[0.92rem] text-text-1;
+    }
+    small {
+      @apply text-[0.8rem] leading-snug text-text-3;
+    }
+  }
+  .ps-pipe-node.fault {
+    @apply border-dashed;
+    border-color: color-mix(in srgb, #f59e0b 45%, var(--color-line));
+
+    .material-symbols-outlined {
+      color: #f59e0b;
+    }
+  }
+  .ps-pipe-seg {
+    @apply relative block h-7 w-px shrink-0 self-center overflow-hidden bg-line-strong lg:h-px lg:w-14;
+  }
+  .ps-flow-dot {
+    @apply absolute size-[5px] rounded-full bg-accent-400;
+    top: -2px;
+    left: 0;
+    animation: ps-flow-v 1.8s linear infinite;
+  }
+  @media (min-width: 64rem) {
+    .ps-flow-dot {
+      top: 0;
+      animation: ps-flow 1.8s linear infinite;
+    }
+  }
+
+  /* Final CTA block. */
+  .ps-cta {
+    @apply relative my-6 overflow-hidden rounded-2xl border border-accent-500/30 bg-surface-1 p-8 md:p-10;
+  }
+
+  .ps-actions {
+    @apply mt-7 flex flex-wrap gap-3;
+  }
+
 }
 
 /* Travelling signal along an lc-pipe segment. */
@@ -1425,6 +1779,27 @@
 @keyframes lc-flow-v {
   from { top: 0; }
   to { top: calc(100% - 5px); }
+}
+
+/* Travelling signal along a ps-pipe segment. */
+@keyframes ps-flow {
+  from { left: 0; }
+  to { left: calc(100% - 5px); }
+}
+@keyframes ps-flow-v {
+  from { top: 0; }
+  to { top: calc(100% - 5px); }
+}
+
+/* Periscope page: recolor the (reused) accent tokens to ocean aqua. The ps-
+   content classes use the same accent-* utilities as launch-control, so this
+   scoped override is all it takes to make the whole page read like water. */
+body.ps {
+  --color-accent-300: #7ee3f5;
+  --color-accent-400: #38c6e0;
+  --color-accent-500: #12a5c4;
+  --color-accent-600: #0c7e9c;
+  --color-violet: #2dd4bf;
 }
 
 /* Animated dot travelling along share-flow tracks */
