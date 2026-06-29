@@ -4,1811 +4,1977 @@
 @source "../content";
 
 @theme {
-  /* Palette — dark only */
-  --color-bg: #0b0b10;
-  --color-surface-1: #12131c;
-  --color-surface-2: #181a26;
-  --color-line: rgba(255, 255, 255, 0.08);
-  --color-line-strong: rgba(255, 255, 255, 0.16);
-  --color-text-1: #ecedf2;
-  --color-text-2: #a0a3b5;
-  --color-text-3: #6e7186;
-  --color-accent-300: #a5b4fc;
-  --color-accent-400: #818cf8;
-  --color-accent-500: #6366f1;
-  --color-accent-600: #4f46e5;
-  --color-violet: #8b5cf6;
-  --color-ok: #34d399;
+    /* Palette — dark only */
+    --color-bg: #0b0b10;
+    --color-surface-1: #12131c;
+    --color-surface-2: #181a26;
+    --color-line: rgba(255, 255, 255, 0.08);
+    --color-line-strong: rgba(255, 255, 255, 0.16);
+    --color-text-1: #ecedf2;
+    --color-text-2: #a0a3b5;
+    --color-text-3: #6e7186;
+    --color-accent-300: #a5b4fc;
+    --color-accent-400: #818cf8;
+    --color-accent-500: #6366f1;
+    --color-accent-600: #4f46e5;
+    --color-violet: #8b5cf6;
+    --color-ok: #34d399;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --text-display: clamp(2.2rem, 1.3rem + 3.8vw, 3.6rem);
-  --text-display--line-height: 1.08;
-  --text-display--letter-spacing: -0.025em;
-  --text-h2: clamp(1.6rem, 1.25rem + 1.5vw, 2.2rem);
-  --text-h2--line-height: 1.15;
-  --text-h2--letter-spacing: -0.02em;
-  --text-h3: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
-  --text-h3--line-height: 1.3;
+    --text-display: clamp(2.2rem, 1.3rem + 3.8vw, 3.6rem);
+    --text-display--line-height: 1.08;
+    --text-display--letter-spacing: -0.025em;
+    --text-h2: clamp(1.6rem, 1.25rem + 1.5vw, 2.2rem);
+    --text-h2--line-height: 1.15;
+    --text-h2--letter-spacing: -0.02em;
+    --text-h3: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
+    --text-h3--line-height: 1.3;
 }
 
 @layer base {
-  :root {
-    color-scheme: dark;
-  }
-
-  html {
-    scroll-padding-top: 5rem; /* sticky header offset for #anchors */
-  }
-
-  body {
-    @apply bg-bg font-sans text-[0.975rem] leading-relaxed text-text-2 antialiased;
-  }
-
-  body.no-scroll {
-    overflow: hidden;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold text-text-1 tracking-tight;
-  }
-
-  ::selection {
-    background: color-mix(in srgb, var(--color-accent-500) 35%, transparent);
-    color: var(--color-text-1);
-  }
-
-  a {
-    @apply transition-colors;
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--color-accent-400);
-    outline-offset: 2px;
-  }
-
-  pre {
-    @apply overflow-x-auto rounded-xl border border-line bg-surface-2 p-4 font-mono text-[0.82rem] leading-relaxed;
-  }
-
-  code {
-    @apply font-mono;
-  }
-
-  .material-symbols-outlined {
-    font-variation-settings: "opsz" 24, "wght" 400, "FILL" 0, "GRAD" 0;
-    font-size: 1.35rem;
-    line-height: 1;
-    vertical-align: -0.2em;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
+    :root {
+        color-scheme: dark;
     }
-  }
+
+    html {
+        scroll-padding-top: 5rem; /* sticky header offset for #anchors */
+    }
+
+    body {
+        @apply bg-bg font-sans text-[0.975rem] leading-relaxed text-text-2 antialiased;
+    }
+
+    body.no-scroll {
+        overflow: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-semibold text-text-1 tracking-tight;
+    }
+
+    ::selection {
+        background: color-mix(in srgb, var(--color-accent-500) 35%, transparent);
+        color: var(--color-text-1);
+    }
+
+    a {
+        @apply transition-colors;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-accent-400);
+        outline-offset: 2px;
+    }
+
+    pre {
+        @apply overflow-x-auto rounded-xl border border-line bg-surface-2 p-4 font-mono text-[0.82rem] leading-relaxed;
+    }
+
+    code {
+        @apply font-mono;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+            "opsz" 24,
+            "wght" 400,
+            "FILL" 0,
+            "GRAD" 0;
+        font-size: 1.35rem;
+        line-height: 1;
+        vertical-align: -0.2em;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
 }
 
 @layer components {
-  /* ---------- Typography helpers ---------- */
+    /* ---------- Typography helpers ---------- */
 
-  .kicker {
-    @apply font-mono text-[0.72rem] font-medium uppercase tracking-[0.18em] text-accent-400;
-  }
+    .kicker {
+        @apply font-mono text-[0.72rem] font-medium uppercase tracking-[0.18em] text-accent-400;
+    }
 
-  /* Rendered-markdown bodies (page content, changelog entries) */
-  .prose {
-    @apply text-text-2;
+    /* Rendered-markdown bodies (page content, changelog entries) */
+    .prose {
+        @apply text-text-2;
 
-    h2 {
-      @apply mt-12 mb-4 text-h2;
+        h2 {
+            @apply mt-12 mb-4 text-h2;
+        }
+        h3 {
+            @apply mt-9 mb-3 text-h3;
+        }
+        h4 {
+            @apply mt-6 mb-2 text-[1.02rem] text-text-1;
+        }
+        p {
+            @apply my-4;
+        }
+        a:not(.btn) {
+            @apply font-medium text-accent-300 underline decoration-accent-300/40 underline-offset-3 hover:text-accent-400 hover:decoration-accent-400;
+        }
+        strong,
+        b {
+            @apply font-semibold text-text-1;
+        }
+        ul,
+        ol {
+            @apply my-4 space-y-2 ps-5;
+        }
+        ul {
+            @apply list-disc marker:text-text-3;
+        }
+        ol {
+            @apply list-decimal marker:text-text-3;
+        }
+        code:not(pre code) {
+            @apply rounded-md border border-line bg-surface-2 px-1.5 py-0.5 text-[0.82em] text-accent-300;
+        }
+        hr {
+            @apply my-10 border-line;
+        }
+        blockquote {
+            @apply my-6 border-s-2 border-accent-500/60 ps-4 text-text-2 italic;
+        }
+        /* Zola's insert_anchor_links = "right" */
+        .zola-anchor {
+            @apply ms-2 align-middle text-[0.8em] text-text-3 no-underline opacity-0 transition-opacity;
+        }
+        h1:hover .zola-anchor,
+        h2:hover .zola-anchor,
+        h3:hover .zola-anchor,
+        h4:hover .zola-anchor {
+            @apply opacity-100;
+        }
     }
-    h3 {
-      @apply mt-9 mb-3 text-h3;
-    }
-    h4 {
-      @apply mt-6 mb-2 text-[1.02rem] text-text-1;
-    }
-    p {
-      @apply my-4;
-    }
-    a:not(.btn) {
-      @apply font-medium text-accent-300 underline decoration-accent-300/40 underline-offset-3 hover:text-accent-400 hover:decoration-accent-400;
-    }
-    strong, b {
-      @apply font-semibold text-text-1;
-    }
-    ul, ol {
-      @apply my-4 space-y-2 ps-5;
-    }
-    ul {
-      @apply list-disc marker:text-text-3;
-    }
-    ol {
-      @apply list-decimal marker:text-text-3;
-    }
-    code:not(pre code) {
-      @apply rounded-md border border-line bg-surface-2 px-1.5 py-0.5 text-[0.82em] text-accent-300;
-    }
-    hr {
-      @apply my-10 border-line;
-    }
-    blockquote {
-      @apply my-6 border-s-2 border-accent-500/60 ps-4 text-text-2 italic;
-    }
-    /* Zola's insert_anchor_links = "right" */
-    .zola-anchor {
-      @apply ms-2 align-middle text-[0.8em] text-text-3 no-underline opacity-0 transition-opacity;
-    }
-    h1:hover .zola-anchor,
-    h2:hover .zola-anchor,
-    h3:hover .zola-anchor,
-    h4:hover .zola-anchor {
-      @apply opacity-100;
-    }
-  }
 
-  /* ---------- Changelog (download page) ----------
+    /* ---------- Changelog (download page) ----------
      Each minor is a <details open> accordion. The version + date sit in the
      <summary>, so the entry's own `# Vantage x.y` h1 is hidden, and the inner
      section headings are toned down — no more page full of huge h1s. */
-  .changelog-entry {
-    @apply border-t border-line first-of-type:border-t-0;
-  }
-  .changelog-summary {
-    @apply flex cursor-pointer list-none items-center justify-between gap-4 py-6 select-none;
-  }
-  /* Drop the native disclosure triangle (we use our own chevron). */
-  .changelog-summary::-webkit-details-marker {
-    display: none;
-  }
-  .changelog-chevron {
-    @apply text-text-3 transition-transform duration-200;
-  }
-  .changelog-entry[open] .changelog-chevron {
-    @apply rotate-180;
-  }
-  .changelog-summary:hover .text-h3 {
-    @apply text-accent-300;
-  }
-  .changelog-body {
-    @apply pb-10;
-  }
-  /* The version name now lives in the summary; hide the markdown's own h1. */
-  .changelog-body .prose > h1:first-child {
-    @apply hidden;
-  }
-  /* Tone the per-release section headings down from h2 to h3 scale. */
-  .changelog-body .prose h2 {
-    @apply mt-8 text-h3;
-  }
-  .changelog-body .prose > :first-child {
-    @apply mt-0;
-  }
-
-  /* ---------- Navigation ---------- */
-
-  .topnav-scrolled {
-    @apply border-line;
-    box-shadow: 0 8px 32px -16px rgba(0, 0, 0, 0.6);
-  }
-
-  .nav-link {
-    @apply inline-flex cursor-pointer items-center gap-1 rounded-lg px-3 py-2 text-[0.88rem] font-medium text-text-2 no-underline transition-colors hover:bg-white/5 hover:text-text-1;
-  }
-
-  .nav-link[aria-expanded="true"] {
-    @apply bg-white/5 text-text-1;
-
-    svg {
-      transform: rotate(180deg);
+    .changelog-entry {
+        @apply border-t border-line first-of-type:border-t-0;
     }
-  }
-
-  .dropdown-panel {
-    @apply absolute start-0 top-full z-50 mt-2 w-64 rounded-xl border border-line bg-surface-1 p-1.5;
-    box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.8);
-  }
-
-  .dropdown-item {
-    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-[0.86rem] text-text-2 no-underline transition-colors hover:bg-white/5 hover:text-text-1;
-  }
-
-  .mobile-link {
-    @apply inline-flex items-center py-1 text-[0.95rem] text-text-2 no-underline hover:text-text-1;
-  }
-
-  /* ---------- Buttons (class names kept from the old theme — content/markdown uses them) ---------- */
-
-  .btn {
-    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-transparent px-4 py-2 text-[0.9rem] font-medium no-underline transition-all duration-150;
-
-    .material-symbols-outlined {
-      font-size: 1.15rem;
+    .changelog-summary {
+        @apply flex cursor-pointer list-none items-center justify-between gap-4 py-6 select-none;
     }
-  }
+    /* Drop the native disclosure triangle (we use our own chevron). */
+    .changelog-summary::-webkit-details-marker {
+        display: none;
+    }
+    .changelog-chevron {
+        @apply text-text-3 transition-transform duration-200;
+    }
+    .changelog-entry[open] .changelog-chevron {
+        @apply rotate-180;
+    }
+    .changelog-summary:hover .text-h3 {
+        @apply text-accent-300;
+    }
+    .changelog-body {
+        @apply pb-10;
+    }
+    /* The version name now lives in the summary; hide the markdown's own h1. */
+    .changelog-body .prose > h1:first-child {
+        @apply hidden;
+    }
+    /* Tone the per-release section headings down from h2 to h3 scale. */
+    .changelog-body .prose h2 {
+        @apply mt-8 text-h3;
+    }
+    .changelog-body .prose > :first-child {
+        @apply mt-0;
+    }
 
-  .btn-sm {
-    @apply px-3 py-1.5 text-[0.82rem];
-  }
+    /* ---------- Navigation ---------- */
 
-  .btn-lg {
-    @apply px-6 py-3 text-[0.98rem];
-  }
+    .topnav-scrolled {
+        @apply border-line;
+        box-shadow: 0 8px 32px -16px rgba(0, 0, 0, 0.6);
+    }
 
-  .btn-primary {
-    @apply bg-accent-600 text-white;
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-400) 35%, transparent),
-                0 4px 24px -8px color-mix(in srgb, var(--color-accent-500) 60%, transparent);
-  }
-  .btn-primary:hover {
-    @apply bg-accent-500 text-white;
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-300) 45%, transparent),
-                0 4px 32px -6px color-mix(in srgb, var(--color-accent-500) 80%, transparent);
-  }
+    .nav-link {
+        @apply inline-flex cursor-pointer items-center gap-1 rounded-lg px-3 py-2 text-[0.88rem] font-medium text-text-2 no-underline transition-colors hover:bg-white/5 hover:text-text-1;
+    }
 
-  .btn-outline-primary,
-  .btn-outline-light,
-  .btn-outline-secondary {
-    @apply border-line-strong bg-transparent text-text-1 hover:border-accent-400/60 hover:bg-accent-500/10 hover:text-text-1;
-  }
+    .nav-link[aria-expanded="true"] {
+        @apply bg-white/5 text-text-1;
 
-  .btn-soft-primary {
-    @apply border-accent-500/30 bg-accent-500/10 text-accent-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-300;
-  }
+        svg {
+            transform: rotate(180deg);
+        }
+    }
 
-  .btn-ghost {
-    @apply text-text-2 hover:bg-white/5 hover:text-text-1;
-  }
+    .dropdown-panel {
+        @apply absolute start-0 top-full z-50 mt-2 w-64 rounded-xl border border-line bg-surface-1 p-1.5;
+        box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.8);
+    }
 
-  /* ---------- Cards ---------- */
+    .dropdown-item {
+        @apply flex items-center gap-2 rounded-lg px-3 py-2 text-[0.86rem] text-text-2 no-underline transition-colors hover:bg-white/5 hover:text-text-1;
+    }
 
-  .card {
-    @apply rounded-xl border border-line bg-surface-1 transition-all duration-200;
-  }
+    .mobile-link {
+        @apply inline-flex items-center py-1 text-[0.95rem] text-text-2 no-underline hover:text-text-1;
+    }
 
-  .card-hover:hover {
-    @apply -translate-y-0.5 border-line-strong;
-    box-shadow: 0 12px 40px -16px rgba(0, 0, 0, 0.8);
-  }
+    /* ---------- Buttons (class names kept from the old theme — content/markdown uses them) ---------- */
 
-  /* ---------- Badges ---------- */
+    .btn {
+        @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-transparent px-4 py-2 text-[0.9rem] font-medium no-underline transition-all duration-150;
 
-  .badge-now,
-  .badge-soon {
-    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[0.66rem] font-medium uppercase tracking-wider;
-  }
+        .material-symbols-outlined {
+            font-size: 1.15rem;
+        }
+    }
 
-  .badge-now {
-    @apply border-ok/25 bg-ok/10 text-ok;
-  }
-  .badge-now::before {
-    content: "";
-    @apply size-1.5 rounded-full bg-ok;
-  }
+    .btn-sm {
+        @apply px-3 py-1.5 text-[0.82rem];
+    }
 
-  .badge-soon {
-    @apply border-line bg-white/5 text-text-3;
-  }
+    .btn-lg {
+        @apply px-6 py-3 text-[0.98rem];
+    }
 
-  .soon-tag {
-    @apply ms-1.5 inline-block translate-y-[-0.1em] rounded-full border border-violet/30 bg-violet/10 px-2 py-px font-mono text-[0.6rem] font-medium tracking-wider text-violet uppercase;
-  }
+    .btn-primary {
+        @apply bg-accent-600 text-white;
+        box-shadow:
+            0 0 0 1px color-mix(in srgb, var(--color-accent-400) 35%, transparent),
+            0 4px 24px -8px color-mix(in srgb, var(--color-accent-500) 60%, transparent);
+    }
+    .btn-primary:hover {
+        @apply bg-accent-500 text-white;
+        box-shadow:
+            0 0 0 1px color-mix(in srgb, var(--color-accent-300) 45%, transparent),
+            0 4px 32px -6px color-mix(in srgb, var(--color-accent-500) 80%, transparent);
+    }
 
-  /* ---------- Window-chrome frame for app screenshots ---------- */
+    .btn-outline-primary,
+    .btn-outline-light,
+    .btn-outline-secondary {
+        @apply border-line-strong bg-transparent text-text-1 hover:border-accent-400/60 hover:bg-accent-500/10 hover:text-text-1;
+    }
 
-  .window-frame {
-    @apply overflow-hidden rounded-xl border border-line bg-surface-2;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4),
-                0 24px 80px -24px rgba(0, 0, 0, 0.85),
-                0 0 64px -16px color-mix(in srgb, var(--color-accent-600) 25%, transparent);
-  }
+    .btn-soft-primary {
+        @apply border-accent-500/30 bg-accent-500/10 text-accent-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-300;
+    }
 
-  .window-frame::before {
-    content: "";
-    @apply block h-8 border-b border-line bg-surface-1;
-    background-image: radial-gradient(circle 5px at 1.25rem 50%, #ff5f57 5px, transparent 6px),
-                      radial-gradient(circle 5px at 2.45rem 50%, #febc2e 5px, transparent 6px),
-                      radial-gradient(circle 5px at 3.65rem 50%, #28c840 5px, transparent 6px);
-  }
+    .btn-ghost {
+        @apply text-text-2 hover:bg-white/5 hover:text-text-1;
+    }
 
-  .window-frame img {
-    @apply block w-full;
-  }
+    /* ---------- Cards ---------- */
 
-  /* ---------- Release-note screenshots + lightbox ---------- */
+    .card {
+        @apply rounded-xl border border-line bg-surface-1 transition-all duration-200;
+    }
 
-  /* Row of thumbnails under a changelog entry. The captures are trimmed
+    .card-hover:hover {
+        @apply -translate-y-0.5 border-line-strong;
+        box-shadow: 0 12px 40px -16px rgba(0, 0, 0, 0.8);
+    }
+
+    /* ---------- Badges ---------- */
+
+    .badge-now,
+    .badge-soon {
+        @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[0.66rem] font-medium uppercase tracking-wider;
+    }
+
+    .badge-now {
+        @apply border-ok/25 bg-ok/10 text-ok;
+    }
+    .badge-now::before {
+        content: "";
+        @apply size-1.5 rounded-full bg-ok;
+    }
+
+    .badge-soon {
+        @apply border-line bg-white/5 text-text-3;
+    }
+
+    .soon-tag {
+        @apply ms-1.5 inline-block translate-y-[-0.1em] rounded-full border border-violet/30 bg-violet/10 px-2 py-px font-mono text-[0.6rem] font-medium tracking-wider text-violet uppercase;
+    }
+
+    /* ---------- Window-chrome frame for app screenshots ---------- */
+
+    .window-frame {
+        @apply overflow-hidden rounded-xl border border-line bg-surface-2;
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.4),
+            0 24px 80px -24px rgba(0, 0, 0, 0.85),
+            0 0 64px -16px color-mix(in srgb, var(--color-accent-600) 25%, transparent);
+    }
+
+    .window-frame::before {
+        content: "";
+        @apply block h-8 border-b border-line bg-surface-1;
+        background-image:
+            radial-gradient(circle 5px at 1.25rem 50%, #ff5f57 5px, transparent 6px),
+            radial-gradient(circle 5px at 2.45rem 50%, #febc2e 5px, transparent 6px),
+            radial-gradient(circle 5px at 3.65rem 50%, #28c840 5px, transparent 6px);
+    }
+
+    .window-frame img {
+        @apply block w-full;
+    }
+
+    /* ---------- Release-note screenshots + lightbox ---------- */
+
+    /* Row of thumbnails under a changelog entry. The captures are trimmed
      window grabs (rounded corners on transparency), so no extra chrome. */
-  .shot-grid {
-    @apply mt-6 flex flex-wrap gap-3;
-  }
-
-  .shot-thumb {
-    @apply block cursor-pointer overflow-hidden rounded-lg border border-line bg-surface-2 p-0;
-    width: 13.5rem;
-    max-width: 100%;
-    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .shot-thumb:hover,
-  .shot-thumb:focus-visible {
-    @apply border-line-strong outline-none;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);
-  }
-
-  .shot-thumb img {
-    @apply block h-auto w-full;
-  }
-
-  .lightbox {
-    @apply fixed inset-0 z-[100] flex items-center justify-center p-6;
-    background: rgba(5, 5, 9, 0.88);
-    backdrop-filter: blur(4px);
-  }
-
-  .lightbox[hidden] {
-    display: none;
-  }
-
-  .lightbox-figure {
-    @apply m-0 flex max-h-full max-w-5xl flex-col items-center gap-3;
-  }
-
-  .lightbox-img {
-    @apply block max-h-[82vh] w-auto max-w-full rounded-xl;
-    box-shadow: 0 32px 90px -24px rgba(0, 0, 0, 0.9);
-  }
-
-  .lightbox-caption {
-    @apply max-w-2xl text-center text-sm text-text-2;
-  }
-
-  .lightbox-caption[hidden] {
-    display: none;
-  }
-
-  .lightbox-close {
-    @apply fixed top-5 right-5 flex size-10 items-center justify-center rounded-full border border-line bg-surface-1 text-text-2;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .lightbox-close:hover,
-  .lightbox-close:focus-visible {
-    @apply border-line-strong text-text-1 outline-none;
-  }
-
-  /* ---------- Hero / section glow ---------- */
-
-  .glow {
-    @apply pointer-events-none absolute rounded-full blur-3xl;
-    background: radial-gradient(closest-side,
-      color-mix(in srgb, var(--color-accent-600) 28%, transparent),
-      color-mix(in srgb, var(--color-violet) 12%, transparent) 60%,
-      transparent);
-  }
-
-  /* Faint dot grid for hero backdrops */
-  .grid-pattern {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-    background-size: 28px 28px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
-  }
-
-  /* ---------- Code cards (features/framework pages) ---------- */
-
-  .code-card {
-    @apply flex flex-col overflow-hidden rounded-xl border border-line bg-surface-2;
-  }
-
-  .code-card-head {
-    @apply flex items-center gap-2 border-b border-line bg-surface-1 px-4 py-2.5 font-mono text-[0.72rem] font-medium tracking-wider text-text-2 uppercase;
-  }
-
-  .code-card-head .dot {
-    @apply size-2 rounded-full;
-  }
-
-  .code-card-body {
-    @apply m-0 grow rounded-none border-0 bg-transparent;
-  }
-
-  .tool-chip {
-    @apply inline-block rounded-md border border-line bg-surface-2 px-2 py-1 font-mono text-[0.74rem] text-accent-300;
-  }
-
-  /* ---------- Backend explorer (features page) ---------- */
-
-  .backend-explorer {
-    @apply grid gap-4 md:grid-cols-[16rem_1fr];
-  }
-
-  .backend-list {
-    /* Mobile: horizontally scrolling chip strip; ≥md: vertical side list */
-    @apply flex snap-x gap-2 overflow-x-auto pb-2 md:flex-col md:overflow-visible md:pb-0;
-  }
-
-  .backend-item {
-    @apply flex shrink-0 snap-start cursor-pointer items-center gap-2.5 rounded-lg border border-line bg-surface-1 px-3.5 py-2.5 text-start transition-colors md:shrink;
-
-    .material-symbols-outlined {
-      @apply !text-[1.2rem] text-text-3;
+    .shot-grid {
+        @apply mt-6 flex flex-wrap gap-3;
     }
-  }
 
-  .backend-item:hover {
-    @apply border-line-strong;
-  }
+    .shot-thumb {
+        @apply block cursor-pointer overflow-hidden rounded-lg border border-line bg-surface-2 p-0;
+        width: 13.5rem;
+        max-width: 100%;
+        transition:
+            border-color 0.15s ease,
+            transform 0.15s ease,
+            box-shadow 0.15s ease;
+    }
 
-  .backend-item.active {
-    @apply border-accent-500/50 bg-accent-500/10;
+    .shot-thumb:hover,
+    .shot-thumb:focus-visible {
+        @apply border-line-strong outline-none;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);
+    }
 
-    .material-symbols-outlined,
+    .shot-thumb img {
+        @apply block h-auto w-full;
+    }
+
+    .lightbox {
+        @apply fixed inset-0 z-[100] flex items-center justify-center p-6;
+        background: rgba(5, 5, 9, 0.88);
+        backdrop-filter: blur(4px);
+    }
+
+    .lightbox[hidden] {
+        display: none;
+    }
+
+    .lightbox-figure {
+        @apply m-0 flex max-h-full max-w-5xl flex-col items-center gap-3;
+    }
+
+    .lightbox-img {
+        @apply block max-h-[82vh] w-auto max-w-full rounded-xl;
+        box-shadow: 0 32px 90px -24px rgba(0, 0, 0, 0.9);
+    }
+
+    .lightbox-caption {
+        @apply max-w-2xl text-center text-sm text-text-2;
+    }
+
+    .lightbox-caption[hidden] {
+        display: none;
+    }
+
+    .lightbox-close {
+        @apply fixed top-5 right-5 flex size-10 items-center justify-center rounded-full border border-line bg-surface-1 text-text-2;
+        transition:
+            color 0.15s ease,
+            border-color 0.15s ease;
+    }
+
+    .lightbox-close:hover,
+    .lightbox-close:focus-visible {
+        @apply border-line-strong text-text-1 outline-none;
+    }
+
+    /* ---------- Hero / section glow ---------- */
+
+    .glow {
+        @apply pointer-events-none absolute rounded-full blur-3xl;
+        background: radial-gradient(
+            closest-side,
+            color-mix(in srgb, var(--color-accent-600) 28%, transparent),
+            color-mix(in srgb, var(--color-violet) 12%, transparent) 60%,
+            transparent
+        );
+    }
+
+    /* Faint dot grid for hero backdrops */
+    .grid-pattern {
+        background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+    }
+
+    /* ---------- Code cards (features/framework pages) ---------- */
+
+    .code-card {
+        @apply flex flex-col overflow-hidden rounded-xl border border-line bg-surface-2;
+    }
+
+    .code-card-head {
+        @apply flex items-center gap-2 border-b border-line bg-surface-1 px-4 py-2.5 font-mono text-[0.72rem] font-medium tracking-wider text-text-2 uppercase;
+    }
+
+    .code-card-head .dot {
+        @apply size-2 rounded-full;
+    }
+
+    .code-card-body {
+        @apply m-0 grow rounded-none border-0 bg-transparent;
+    }
+
+    .tool-chip {
+        @apply inline-block rounded-md border border-line bg-surface-2 px-2 py-1 font-mono text-[0.74rem] text-accent-300;
+    }
+
+    /* ---------- Backend explorer (features page) ---------- */
+
+    .backend-explorer {
+        @apply grid gap-4 md:grid-cols-[16rem_1fr];
+    }
+
+    .backend-list {
+        /* Mobile: horizontally scrolling chip strip; ≥md: vertical side list */
+        @apply flex snap-x gap-2 overflow-x-auto pb-2 md:flex-col md:overflow-visible md:pb-0;
+    }
+
+    .backend-item {
+        @apply flex shrink-0 snap-start cursor-pointer items-center gap-2.5 rounded-lg border border-line bg-surface-1 px-3.5 py-2.5 text-start transition-colors md:shrink;
+
+        .material-symbols-outlined {
+            @apply !text-[1.2rem] text-text-3;
+        }
+    }
+
+    .backend-item:hover {
+        @apply border-line-strong;
+    }
+
+    .backend-item.active {
+        @apply border-accent-500/50 bg-accent-500/10;
+
+        .material-symbols-outlined,
+        .backend-name {
+            @apply text-text-1;
+        }
+    }
+
     .backend-name {
-      @apply text-text-1;
+        @apply text-[0.88rem] font-medium whitespace-nowrap text-text-2;
     }
-  }
 
-  .backend-name {
-    @apply text-[0.88rem] font-medium whitespace-nowrap text-text-2;
-  }
-
-  .backend-mode {
-    @apply ms-auto hidden font-mono text-[0.62rem] tracking-wider text-text-3 uppercase md:inline;
-  }
-
-  .backend-panels {
-    @apply relative;
-  }
-
-  .backend-panel {
-    @apply hidden rounded-xl border border-line bg-surface-1 p-6;
-  }
-
-  .backend-panel.active {
-    @apply block;
-  }
-
-  .cap-table {
-    @apply w-full border-collapse;
-  }
-
-  .cap-table td {
-    @apply border-t border-line py-2;
-  }
-
-  .cap-table tr:first-child td {
-    @apply border-t-0;
-  }
-
-  .cap-label {
-    @apply pe-3 text-[0.86rem] text-text-2;
-  }
-
-  .cap-val {
-    @apply w-10 text-end;
-  }
-
-  .cap-yes {
-    @apply !text-[1.15rem] text-ok;
-  }
-
-  .cap-no {
-    @apply !text-[1.15rem] text-text-3/50;
-  }
-
-  /* ---------- Agent flow (features page) ---------- */
-
-  .agent-flow {
-    @apply flex flex-col items-stretch gap-2 md:flex-row md:items-center md:justify-center md:gap-3;
-  }
-
-  .agent-step {
-    @apply flex items-center gap-2.5 rounded-lg border border-line bg-surface-1 px-4 py-3 text-[0.86rem] font-medium text-text-1;
-
-    .material-symbols-outlined {
-      @apply !text-[1.2rem] text-accent-400;
+    .backend-mode {
+        @apply ms-auto hidden font-mono text-[0.62rem] tracking-wider text-text-3 uppercase md:inline;
     }
-  }
 
-  .agent-arrow {
-    @apply self-center !text-[1.2rem] text-text-3 max-md:rotate-90;
-  }
-
-  /* ---------- Roadmap deck (features page) ---------- */
-
-  .roadmap-deck {
-    @apply relative mx-auto h-72 max-w-xl cursor-pointer select-none sm:h-64;
-  }
-
-  .roadmap-card {
-    @apply absolute inset-x-0 top-0 flex h-60 flex-col items-center rounded-xl border border-line bg-surface-2 p-6 text-center transition-all duration-300 sm:h-56;
-    box-shadow: 0 16px 48px -16px rgba(0, 0, 0, 0.7);
-  }
-
-  .roadmap-card.is-front {
-    @apply border-accent-500/40;
-  }
-
-  .roadmap-card.leaving {
-    opacity: 0 !important;
-    transform: translateY(-24px) scale(0.97) !important;
-  }
-
-  .deck-badge {
-    @apply absolute top-4 right-4;
-  }
-
-  .deck-icon {
-    @apply !text-[2rem] text-accent-400;
-  }
-
-  /* ---------- Layer map (framework page) ---------- */
-
-  .layer-map {
-    @apply relative flex flex-col gap-3;
-  }
-
-  .lm-step {
-    @apply relative flex gap-4 rounded-xl border border-line bg-surface-1 p-5 sm:gap-5;
-  }
-
-  .lm-num {
-    @apply flex size-8 shrink-0 items-center justify-center rounded-lg border border-accent-500/30 bg-accent-500/10 font-mono text-sm font-semibold text-accent-300;
-  }
-
-  .lm-body {
-    @apply min-w-0;
-
-    h4 {
-      @apply flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[1.02rem];
+    .backend-panels {
+        @apply relative;
     }
-    p {
-      @apply mt-2 text-sm leading-relaxed text-text-2;
+
+    .backend-panel {
+        @apply hidden rounded-xl border border-line bg-surface-1 p-6;
     }
-    code {
-      @apply font-mono text-[0.85em] text-accent-300;
+
+    .backend-panel.active {
+        @apply block;
     }
-  }
 
-  .lm-crate {
-    @apply inline-block rounded-md border border-line bg-surface-2 px-2 py-0.5 align-middle font-mono text-[0.68rem] font-normal text-accent-300 no-underline;
-  }
-
-  a.lm-crate:hover {
-    @apply border-accent-500/40 text-accent-300;
-  }
-
-  .lm-branch {
-    @apply mt-3 flex gap-2.5 rounded-lg border border-line bg-bg/60 p-3 !text-[0.82rem] text-text-3;
-
-    .material-symbols-outlined {
-      @apply mt-0.5 shrink-0 !text-[1.1rem] text-violet;
+    .cap-table {
+        @apply w-full border-collapse;
     }
-    a {
-      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+
+    .cap-table td {
+        @apply border-t border-line py-2;
     }
-    strong {
-      @apply font-semibold text-text-2;
+
+    .cap-table tr:first-child td {
+        @apply border-t-0;
     }
-  }
 
-  /* ---------- Snippet gallery (framework page) ---------- */
-
-  .snip {
-    @apply m-0 hidden;
-  }
-
-  .snip.active {
-    @apply block;
-  }
-
-  .snip-card {
-    @apply overflow-hidden rounded-xl border border-line bg-surface-1;
-  }
-
-  .snip-head {
-    @apply border-b border-line p-5 sm:p-6;
-
-    h3 {
-      @apply text-h3;
+    .cap-label {
+        @apply pe-3 text-[0.86rem] text-text-2;
     }
-    p {
-      @apply mt-2 text-sm leading-relaxed text-text-2;
+
+    .cap-val {
+        @apply w-10 text-end;
     }
-    code {
-      @apply rounded-md border border-line bg-surface-2 px-1.5 py-0.5 font-mono text-[0.82em] text-accent-300;
+
+    .cap-yes {
+        @apply !text-[1.15rem] text-ok;
     }
-  }
 
-  .snip-body {
-    @apply bg-surface-2;
-  }
-
-  .snip-code {
-    @apply m-0 max-h-[28rem] rounded-none border-0 bg-transparent p-5 sm:p-6;
-  }
-
-  .snip-note {
-    @apply border-t border-line bg-surface-1 p-4 text-[0.82rem] leading-relaxed text-text-3 sm:px-6;
-
-    strong {
-      @apply mb-1 block font-mono text-[0.68rem] font-semibold tracking-[0.14em] text-accent-400 uppercase;
+    .cap-no {
+        @apply !text-[1.15rem] text-text-3/50;
     }
-    a {
-      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+
+    /* ---------- Agent flow (features page) ---------- */
+
+    .agent-flow {
+        @apply flex flex-col items-stretch gap-2 md:flex-row md:items-center md:justify-center md:gap-3;
     }
-  }
 
-  .snip-nav {
-    @apply mt-6 flex items-center justify-center gap-4;
-  }
+    .agent-step {
+        @apply flex items-center gap-2.5 rounded-lg border border-line bg-surface-1 px-4 py-3 text-[0.86rem] font-medium text-text-1;
 
-  .snip-arrow {
-    @apply flex size-9 cursor-pointer items-center justify-center rounded-full border border-line bg-surface-1 text-text-2 transition-colors hover:border-line-strong hover:text-text-1;
-  }
-
-  .snip-dots {
-    @apply flex flex-wrap items-center justify-center gap-2;
-  }
-
-  .snip-dot {
-    @apply size-2 cursor-pointer rounded-full bg-white/15 transition-colors hover:bg-white/30;
-  }
-
-  .snip-dot.active {
-    @apply bg-accent-400;
-  }
-
-  /* ---------- Crate map (framework page) ---------- */
-
-  .crate-group {
-    @apply mt-8 first:mt-0 lg:first:mt-0;
-
-    h4 {
-      @apply mb-3 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-accent-400 uppercase;
+        .material-symbols-outlined {
+            @apply !text-[1.2rem] text-accent-400;
+        }
     }
-  }
 
-  .crate-row {
-    @apply flex flex-col gap-0.5 border-t border-line py-2.5 sm:flex-row sm:items-baseline sm:gap-4;
-  }
-
-  .crate-name {
-    @apply shrink-0 font-mono text-[0.82rem] sm:w-52;
-
-    a {
-      @apply text-accent-300 no-underline hover:text-text-1 hover:underline;
+    .agent-arrow {
+        @apply self-center !text-[1.2rem] text-text-3 max-md:rotate-90;
     }
-  }
 
-  .crate-purpose {
-    @apply text-[0.84rem] leading-relaxed text-text-3;
+    /* ---------- Roadmap deck (features page) ---------- */
 
-    code {
-      @apply font-mono text-[0.9em] text-text-2;
+    .roadmap-deck {
+        @apply relative mx-auto h-72 max-w-xl cursor-pointer select-none sm:h-64;
     }
-  }
 
-  /* ---------- Diagrams embedded in markdown (solutions pages) ---------- */
-
-  /* Journey timeline (developers page) */
-  .journey {
-    @apply my-8 flex flex-col;
-  }
-
-  .journey-phase {
-    @apply mb-4 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-ok uppercase;
-  }
-
-  .journey-phase.next-phase {
-    @apply mt-8 text-violet;
-  }
-
-  .journey-step {
-    @apply relative flex gap-4 pb-7 ps-1;
-  }
-
-  /* connector line */
-  .journey-step::before {
-    content: "";
-    @apply absolute top-9 bottom-0 left-[1.1rem] w-px bg-line-strong;
-  }
-
-  .journey-step.last::before,
-  .journey-step:last-child::before {
-    @apply hidden;
-  }
-
-  .journey-num {
-    @apply z-10 flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-sm font-semibold;
-  }
-
-  .journey-step.today .journey-num {
-    @apply border-ok/40 bg-ok/10 text-ok;
-  }
-
-  .journey-step.next .journey-num {
-    @apply border-violet/40 bg-violet/10 text-violet;
-  }
-
-  .journey-body {
-    h4 {
-      @apply text-[0.98rem];
+    .roadmap-card {
+        @apply absolute inset-x-0 top-0 flex h-60 flex-col items-center rounded-xl border border-line bg-surface-2 p-6 text-center transition-all duration-300 sm:h-56;
+        box-shadow: 0 16px 48px -16px rgba(0, 0, 0, 0.7);
     }
-    p {
-      @apply mt-1.5 text-sm leading-relaxed text-text-2;
+
+    .roadmap-card.is-front {
+        @apply border-accent-500/40;
     }
-  }
 
-  .journey-note {
-    @apply my-6 flex gap-3 rounded-xl border border-line bg-surface-1 p-4 text-[0.86rem] leading-relaxed text-text-2;
-
-    > .material-symbols-outlined {
-      @apply mt-0.5 shrink-0 !text-[1.25rem] text-accent-400;
+    .roadmap-card.leaving {
+        opacity: 0 !important;
+        transform: translateY(-24px) scale(0.97) !important;
     }
-    a {
-      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+
+    .deck-badge {
+        @apply absolute top-4 right-4;
     }
-  }
 
-  /* Stack swap (developers page) */
-  .stack-swap {
-    @apply my-8 flex flex-col gap-4;
-  }
-
-  .swap-row {
-    @apply flex flex-col gap-3 rounded-xl border border-line bg-surface-1 p-5 lg:flex-row lg:items-center lg:gap-6;
-  }
-
-  .swap-label {
-    @apply shrink-0 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-text-3 uppercase lg:w-28;
-  }
-
-  .swap-label.accent {
-    @apply text-accent-400;
-  }
-
-  .swap-flow {
-    @apply flex grow flex-col items-stretch gap-2 md:flex-row md:items-center md:gap-3;
-  }
-
-  .swap-node {
-    @apply flex grow basis-0 flex-col items-center gap-1 rounded-lg border border-line bg-surface-2 px-4 py-3 text-center;
-
-    > .material-symbols-outlined {
-      @apply !text-[1.4rem] text-text-3;
+    .deck-icon {
+        @apply !text-[2rem] text-accent-400;
     }
-    b {
-      @apply text-[0.88rem] font-semibold text-text-1;
+
+    /* ---------- Layer map (framework page) ---------- */
+
+    .layer-map {
+        @apply relative flex flex-col gap-3;
     }
-    small {
-      @apply font-mono text-[0.66rem] text-text-3;
+
+    .lm-step {
+        @apply relative flex gap-4 rounded-xl border border-line bg-surface-1 p-5 sm:gap-5;
     }
-  }
 
-  .swap-node.swap-legacy {
-    @apply border-dashed border-line-strong opacity-80;
-  }
-
-  .swap-node.swap-vantage {
-    @apply border-accent-500/50 bg-accent-500/10;
-
-    > .material-symbols-outlined {
-      @apply text-accent-400;
+    .lm-num {
+        @apply flex size-8 shrink-0 items-center justify-center rounded-lg border border-accent-500/30 bg-accent-500/10 font-mono text-sm font-semibold text-accent-300;
     }
-  }
 
-  .swap-arrow {
-    @apply self-center !text-[1.2rem] text-text-3 max-md:rotate-90;
-  }
+    .lm-body {
+        @apply min-w-0;
 
-  .swap-tags {
-    @apply mt-1.5 flex flex-wrap justify-center gap-1.5;
-
-    i {
-      @apply rounded-full border border-line bg-bg/60 px-2 py-px font-mono text-[0.6rem] not-italic text-text-2;
+        h4 {
+            @apply flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[1.02rem];
+        }
+        p {
+            @apply mt-2 text-sm leading-relaxed text-text-2;
+        }
+        code {
+            @apply font-mono text-[0.85em] text-accent-300;
+        }
     }
-  }
 
-  .swap-benefits {
-    @apply my-8 grid gap-4 md:grid-cols-3;
-  }
-
-  .swap-benefit {
-    @apply flex gap-3 rounded-xl border border-line bg-surface-1 p-5;
-
-    > .material-symbols-outlined {
-      @apply mt-0.5 shrink-0 !text-[1.4rem] text-accent-400;
+    .lm-crate {
+        @apply inline-block rounded-md border border-line bg-surface-2 px-2 py-0.5 align-middle font-mono text-[0.68rem] font-normal text-accent-300 no-underline;
     }
-    b {
-      @apply block text-[0.92rem] font-semibold text-text-1;
+
+    a.lm-crate:hover {
+        @apply border-accent-500/40 text-accent-300;
     }
-    p {
-      @apply mt-1 text-sm leading-relaxed text-text-2;
+
+    .lm-branch {
+        @apply mt-3 flex gap-2.5 rounded-lg border border-line bg-bg/60 p-3 !text-[0.82rem] text-text-3;
+
+        .material-symbols-outlined {
+            @apply mt-0.5 shrink-0 !text-[1.1rem] text-violet;
+        }
+        a {
+            @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+        }
+        strong {
+            @apply font-semibold text-text-2;
+        }
     }
-  }
 
-  /* Share flow (internal-tools page) */
-  .share-flow {
-    @apply my-8 flex flex-col items-stretch gap-1 lg:flex-row lg:items-stretch;
-  }
+    /* ---------- Snippet gallery (framework page) ---------- */
 
-  .share-node {
-    @apply relative flex grow basis-0 flex-col rounded-xl border border-line bg-surface-1 p-5;
-
-    h4 {
-      @apply mt-3 text-[0.98rem];
+    .snip {
+        @apply m-0 hidden;
     }
-    p {
-      @apply mt-1.5 text-sm leading-relaxed text-text-2;
+
+    .snip.active {
+        @apply block;
     }
-  }
 
-  .share-node.share-hub {
-    @apply border-accent-500/40 bg-accent-500/5;
-  }
-
-  .share-num {
-    @apply absolute top-4 right-4 flex size-7 items-center justify-center rounded-full border border-line bg-surface-2 font-mono text-xs font-semibold text-text-2;
-  }
-
-  .share-ico {
-    @apply !text-[1.8rem] text-accent-400;
-  }
-
-  .share-avatars {
-    @apply flex;
-
-    i {
-      @apply -ms-1.5 size-7 rounded-full border-2 border-surface-1 bg-gradient-to-br from-accent-400 to-violet first:ms-0;
+    .snip-card {
+        @apply overflow-hidden rounded-xl border border-line bg-surface-1;
     }
-    i:nth-child(2) {
-      @apply from-violet to-accent-600;
+
+    .snip-head {
+        @apply border-b border-line p-5 sm:p-6;
+
+        h3 {
+            @apply text-h3;
+        }
+        p {
+            @apply mt-2 text-sm leading-relaxed text-text-2;
+        }
+        code {
+            @apply rounded-md border border-line bg-surface-2 px-1.5 py-0.5 font-mono text-[0.82em] text-accent-300;
+        }
     }
-    i:nth-child(3) {
-      @apply from-accent-600 to-accent-400;
+
+    .snip-body {
+        @apply bg-surface-2;
     }
-  }
 
-  .share-link {
-    @apply flex shrink-0 flex-col items-center justify-center gap-1 px-2 py-1 lg:w-28 lg:px-1;
-  }
+    .snip-code {
+        @apply m-0 max-h-[28rem] rounded-none border-0 bg-transparent p-5 sm:p-6;
+    }
 
-  .share-tag {
-    @apply rounded-full border border-line bg-surface-2 px-2 py-px font-mono text-[0.62rem] tracking-wider text-text-3 uppercase;
-  }
+    .snip-note {
+        @apply border-t border-line bg-surface-1 p-4 text-[0.82rem] leading-relaxed text-text-3 sm:px-6;
 
-  .share-track {
-    @apply relative block h-8 w-px overflow-hidden bg-line-strong lg:h-px lg:w-full;
-  }
+        strong {
+            @apply mb-1 block font-mono text-[0.68rem] font-semibold tracking-[0.14em] text-accent-400 uppercase;
+        }
+        a {
+            @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+        }
+    }
 
-  .share-dot {
-    @apply absolute size-[5px] rounded-full bg-accent-400;
-    top: 0;
-    left: -2px;
-    animation: share-travel-v 2.2s linear infinite;
-  }
+    .snip-nav {
+        @apply mt-6 flex items-center justify-center gap-4;
+    }
 
-  @media (min-width: 64rem) {
+    .snip-arrow {
+        @apply flex size-9 cursor-pointer items-center justify-center rounded-full border border-line bg-surface-1 text-text-2 transition-colors hover:border-line-strong hover:text-text-1;
+    }
+
+    .snip-dots {
+        @apply flex flex-wrap items-center justify-center gap-2;
+    }
+
+    .snip-dot {
+        @apply size-2 cursor-pointer rounded-full bg-white/15 transition-colors hover:bg-white/30;
+    }
+
+    .snip-dot.active {
+        @apply bg-accent-400;
+    }
+
+    /* ---------- Crate map (framework page) ---------- */
+
+    .crate-group {
+        @apply mt-8 first:mt-0 lg:first:mt-0;
+
+        h4 {
+            @apply mb-3 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-accent-400 uppercase;
+        }
+    }
+
+    .crate-row {
+        @apply flex flex-col gap-0.5 border-t border-line py-2.5 sm:flex-row sm:items-baseline sm:gap-4;
+    }
+
+    .crate-name {
+        @apply shrink-0 font-mono text-[0.82rem] sm:w-52;
+
+        a {
+            @apply text-accent-300 no-underline hover:text-text-1 hover:underline;
+        }
+    }
+
+    .crate-purpose {
+        @apply text-[0.84rem] leading-relaxed text-text-3;
+
+        code {
+            @apply font-mono text-[0.9em] text-text-2;
+        }
+    }
+
+    /* ---------- Diagrams embedded in markdown (solutions pages) ---------- */
+
+    /* Journey timeline (developers page) */
+    .journey {
+        @apply my-8 flex flex-col;
+    }
+
+    .journey-phase {
+        @apply mb-4 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-ok uppercase;
+    }
+
+    .journey-phase.next-phase {
+        @apply mt-8 text-violet;
+    }
+
+    .journey-step {
+        @apply relative flex gap-4 pb-7 ps-1;
+    }
+
+    /* connector line */
+    .journey-step::before {
+        content: "";
+        @apply absolute top-9 bottom-0 left-[1.1rem] w-px bg-line-strong;
+    }
+
+    .journey-step.last::before,
+    .journey-step:last-child::before {
+        @apply hidden;
+    }
+
+    .journey-num {
+        @apply z-10 flex size-8 shrink-0 items-center justify-center rounded-full border font-mono text-sm font-semibold;
+    }
+
+    .journey-step.today .journey-num {
+        @apply border-ok/40 bg-ok/10 text-ok;
+    }
+
+    .journey-step.next .journey-num {
+        @apply border-violet/40 bg-violet/10 text-violet;
+    }
+
+    .journey-body {
+        h4 {
+            @apply text-[0.98rem];
+        }
+        p {
+            @apply mt-1.5 text-sm leading-relaxed text-text-2;
+        }
+    }
+
+    .journey-note {
+        @apply my-6 flex gap-3 rounded-xl border border-line bg-surface-1 p-4 text-[0.86rem] leading-relaxed text-text-2;
+
+        > .material-symbols-outlined {
+            @apply mt-0.5 shrink-0 !text-[1.25rem] text-accent-400;
+        }
+        a {
+            @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+        }
+    }
+
+    /* Stack swap (developers page) */
+    .stack-swap {
+        @apply my-8 flex flex-col gap-4;
+    }
+
+    .swap-row {
+        @apply flex flex-col gap-3 rounded-xl border border-line bg-surface-1 p-5 lg:flex-row lg:items-center lg:gap-6;
+    }
+
+    .swap-label {
+        @apply shrink-0 font-mono text-[0.72rem] font-medium tracking-[0.18em] text-text-3 uppercase lg:w-28;
+    }
+
+    .swap-label.accent {
+        @apply text-accent-400;
+    }
+
+    .swap-flow {
+        @apply flex grow flex-col items-stretch gap-2 md:flex-row md:items-center md:gap-3;
+    }
+
+    .swap-node {
+        @apply flex grow basis-0 flex-col items-center gap-1 rounded-lg border border-line bg-surface-2 px-4 py-3 text-center;
+
+        > .material-symbols-outlined {
+            @apply !text-[1.4rem] text-text-3;
+        }
+        b {
+            @apply text-[0.88rem] font-semibold text-text-1;
+        }
+        small {
+            @apply font-mono text-[0.66rem] text-text-3;
+        }
+    }
+
+    .swap-node.swap-legacy {
+        @apply border-dashed border-line-strong opacity-80;
+    }
+
+    .swap-node.swap-vantage {
+        @apply border-accent-500/50 bg-accent-500/10;
+
+        > .material-symbols-outlined {
+            @apply text-accent-400;
+        }
+    }
+
+    .swap-arrow {
+        @apply self-center !text-[1.2rem] text-text-3 max-md:rotate-90;
+    }
+
+    .swap-tags {
+        @apply mt-1.5 flex flex-wrap justify-center gap-1.5;
+
+        i {
+            @apply rounded-full border border-line bg-bg/60 px-2 py-px font-mono text-[0.6rem] not-italic text-text-2;
+        }
+    }
+
+    .swap-benefits {
+        @apply my-8 grid gap-4 md:grid-cols-3;
+    }
+
+    .swap-benefit {
+        @apply flex gap-3 rounded-xl border border-line bg-surface-1 p-5;
+
+        > .material-symbols-outlined {
+            @apply mt-0.5 shrink-0 !text-[1.4rem] text-accent-400;
+        }
+        b {
+            @apply block text-[0.92rem] font-semibold text-text-1;
+        }
+        p {
+            @apply mt-1 text-sm leading-relaxed text-text-2;
+        }
+    }
+
+    /* Share flow (internal-tools page) */
+    .share-flow {
+        @apply my-8 flex flex-col items-stretch gap-1 lg:flex-row lg:items-stretch;
+    }
+
+    .share-node {
+        @apply relative flex grow basis-0 flex-col rounded-xl border border-line bg-surface-1 p-5;
+
+        h4 {
+            @apply mt-3 text-[0.98rem];
+        }
+        p {
+            @apply mt-1.5 text-sm leading-relaxed text-text-2;
+        }
+    }
+
+    .share-node.share-hub {
+        @apply border-accent-500/40 bg-accent-500/5;
+    }
+
+    .share-num {
+        @apply absolute top-4 right-4 flex size-7 items-center justify-center rounded-full border border-line bg-surface-2 font-mono text-xs font-semibold text-text-2;
+    }
+
+    .share-ico {
+        @apply !text-[1.8rem] text-accent-400;
+    }
+
+    .share-avatars {
+        @apply flex;
+
+        i {
+            @apply -ms-1.5 size-7 rounded-full border-2 border-surface-1 bg-gradient-to-br from-accent-400 to-violet first:ms-0;
+        }
+        i:nth-child(2) {
+            @apply from-violet to-accent-600;
+        }
+        i:nth-child(3) {
+            @apply from-accent-600 to-accent-400;
+        }
+    }
+
+    .share-link {
+        @apply flex shrink-0 flex-col items-center justify-center gap-1 px-2 py-1 lg:w-28 lg:px-1;
+    }
+
+    .share-tag {
+        @apply rounded-full border border-line bg-surface-2 px-2 py-px font-mono text-[0.62rem] tracking-wider text-text-3 uppercase;
+    }
+
+    .share-track {
+        @apply relative block h-8 w-px overflow-hidden bg-line-strong lg:h-px lg:w-full;
+    }
+
     .share-dot {
-      top: -2px;
-      left: 0;
-      animation: share-travel 2.2s linear infinite;
+        @apply absolute size-[5px] rounded-full bg-accent-400;
+        top: 0;
+        left: -2px;
+        animation: share-travel-v 2.2s linear infinite;
     }
-  }
 
-  .share-footnote,
-  .connect-benefit {
-    @apply my-6 flex gap-2.5 text-[0.84rem] leading-relaxed text-text-3;
-
-    > .material-symbols-outlined {
-      @apply mt-0.5 shrink-0 !text-[1.15rem] text-accent-400;
+    @media (min-width: 64rem) {
+        .share-dot {
+            top: -2px;
+            left: 0;
+            animation: share-travel 2.2s linear infinite;
+        }
     }
-  }
 
-  /* Connect hub (internal-tools page) */
-  .connect-hub {
-    @apply relative my-8;
-  }
+    .share-footnote,
+    .connect-benefit {
+        @apply my-6 flex gap-2.5 text-[0.84rem] leading-relaxed text-text-3;
 
-  .connect-svg {
-    @apply absolute inset-6 hidden h-auto md:block;
-    width: calc(100% - 3rem);
-    height: calc(100% - 3rem);
-
-    line {
-      stroke: var(--color-line-strong);
-      stroke-width: 1px;
-      stroke-dasharray: 4 4;
+        > .material-symbols-outlined {
+            @apply mt-0.5 shrink-0 !text-[1.15rem] text-accent-400;
+        }
     }
-  }
 
-  .connect-grid {
-    @apply relative grid gap-3 md:grid-cols-3 md:gap-y-10;
-  }
-
-  .connect-node {
-    @apply flex items-center gap-3 rounded-xl border border-line bg-surface-1 px-4 py-3;
-  }
-
-  .cn-ico {
-    @apply !text-[1.4rem] text-text-3;
-  }
-
-  .cn-text {
-    b {
-      @apply block text-[0.88rem] font-semibold text-text-1;
+    /* Connect hub (internal-tools page) */
+    .connect-hub {
+        @apply relative my-8;
     }
-    small {
-      @apply font-mono text-[0.66rem] text-text-3;
+
+    .connect-svg {
+        @apply absolute inset-6 hidden h-auto md:block;
+        width: calc(100% - 3rem);
+        height: calc(100% - 3rem);
+
+        line {
+            stroke: var(--color-line-strong);
+            stroke-width: 1px;
+            stroke-dasharray: 4 4;
+        }
     }
-  }
 
-  .connect-node.cn-hub {
-    @apply flex-col gap-1 border-accent-500/50 bg-accent-500/10 py-5 text-center md:col-start-2 md:row-start-2;
-    box-shadow: 0 0 48px -12px color-mix(in srgb, var(--color-accent-600) 50%, transparent);
-
-    b {
-      @apply text-[0.95rem] text-text-1;
+    .connect-grid {
+        @apply relative grid gap-3 md:grid-cols-3 md:gap-y-10;
     }
-    small {
-      @apply font-mono text-[0.66rem] text-text-3;
+
+    .connect-node {
+        @apply flex items-center gap-3 rounded-xl border border-line bg-surface-1 px-4 py-3;
     }
-  }
 
-  .cn-hub-ico {
-    @apply !text-[1.8rem] text-accent-400;
-  }
-
-  .connect-node.cn-gh {
-    @apply md:row-start-3;
-  }
-
-  .connect-node.cn-tools {
-    @apply md:col-start-3 md:row-start-3;
-  }
-
-  /* Layer stack (app-builders page) */
-  .layer-stack {
-    @apply my-8 flex flex-col;
-  }
-
-  .layer {
-    @apply rounded-xl border border-line bg-surface-1 px-5 py-4 text-center;
-
-    h4 {
-      @apply text-[0.98rem];
+    .cn-ico {
+        @apply !text-[1.4rem] text-text-3;
     }
-    small {
-      @apply font-mono text-[0.7rem] text-text-3;
+
+    .cn-text {
+        b {
+            @apply block text-[0.88rem] font-semibold text-text-1;
+        }
+        small {
+            @apply font-mono text-[0.66rem] text-text-3;
+        }
     }
-  }
 
-  .layer.mid {
-    @apply border-accent-500/50 bg-accent-500/10;
-  }
+    .connect-node.cn-hub {
+        @apply flex-col gap-1 border-accent-500/50 bg-accent-500/10 py-5 text-center md:col-start-2 md:row-start-2;
+        box-shadow: 0 0 48px -12px color-mix(in srgb, var(--color-accent-600) 50%, transparent);
 
-  .layer-link {
-    @apply flex items-center justify-center gap-1.5 py-2 font-mono text-[0.68rem] tracking-wider text-text-3 uppercase;
-
-    .material-symbols-outlined {
-      @apply !text-[1.05rem] text-accent-400;
+        b {
+            @apply text-[0.95rem] text-text-1;
+        }
+        small {
+            @apply font-mono text-[0.66rem] text-text-3;
+        }
     }
-  }
 
-  /* Capability cards (app-builders page) */
-  .cap-card {
-    @apply h-full rounded-xl border border-line bg-surface-1 p-5;
-
-    h5 {
-      @apply mt-3 text-[0.95rem];
+    .cn-hub-ico {
+        @apply !text-[1.8rem] text-accent-400;
     }
-    p {
-      @apply mt-1.5 text-sm leading-relaxed text-text-2;
+
+    .connect-node.cn-gh {
+        @apply md:row-start-3;
     }
-    code {
-      @apply font-mono text-[0.85em] text-accent-300;
+
+    .connect-node.cn-tools {
+        @apply md:col-start-3 md:row-start-3;
     }
-  }
 
-  .cap-icon {
-    @apply !text-[1.7rem] text-accent-400;
-  }
-
-  /* Code-card dot colours (used in markdown + features page) */
-  .dot.yaml {
-    background: #6ee7b7;
-  }
-
-  .dot.rhai {
-    background: #c4b5fd;
-  }
-
-  /* ---------- Code highlighting (Prism, custom dark palette) ---------- */
-
-  .token.comment, .token.prolog, .token.doctype, .token.cdata {
-    color: #5b5f73;
-    font-style: italic;
-  }
-  .token.punctuation {
-    color: #8b8fa3;
-  }
-  .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted {
-    color: #f472b6;
-  }
-  .token.boolean, .token.number {
-    color: #fbbf24;
-  }
-  .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted {
-    color: #6ee7b7;
-  }
-  .token.operator, .token.entity, .token.url {
-    color: #93c5fd;
-  }
-  .token.atrule, .token.attr-value, .token.keyword {
-    color: #a5b4fc;
-  }
-  .token.function, .token.class-name {
-    color: #c4b5fd;
-  }
-  .token.regex, .token.important, .token.variable {
-    color: #fda4af;
-  }
-  .token.important, .token.bold {
-    font-weight: 600;
-  }
-
-  /* ============================================================= */
-  /* Launch Control — flagship example (bespoke "mission control")  */
-  /* A long-form journey page: a flight-rail ToC + a reading column. */
-  /* Self-contained `lc-` namespace so it owns its look.            */
-  /* ============================================================= */
-
-  /* Ascent bar: scroll progress pinned to the very top. */
-  .lc-progress {
-    @apply pointer-events-none fixed inset-x-0 top-0 z-50 h-[3px] bg-transparent;
-  }
-  .lc-progress > span {
-    @apply block h-full w-0 bg-gradient-to-r from-accent-600 via-accent-400 to-violet;
-    box-shadow: 0 0 14px color-mix(in srgb, var(--color-accent-400) 75%, transparent);
-    transition: width 0.1s linear;
-  }
-
-  /* Two-column shell: flight rail + reading column. */
-  .lc-shell {
-    @apply mx-auto grid max-w-6xl gap-10 px-4 pb-10 sm:px-6 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-16;
-  }
-
-  /* ---- Flight rail (table of contents + progress) ---- */
-  .lc-rail {
-    @apply hidden lg:block;
-  }
-  .lc-rail-inner {
-    @apply sticky top-24 self-start;
-  }
-  .lc-rail-title {
-    @apply mb-4 ps-5 font-mono text-[0.64rem] font-semibold tracking-[0.22em] text-text-3 uppercase;
-  }
-  .lc-rail-list {
-    @apply relative border-l border-line;
-  }
-  .lc-rail-item {
-    @apply relative flex items-baseline gap-2.5 py-2 ps-5 font-mono text-[0.74rem] leading-snug tracking-wide text-text-3 no-underline transition-colors;
-  }
-  .lc-rail-item::before {
-    content: "";
-    @apply absolute top-[0.7rem] left-[-4.5px] size-[8px] rounded-full border border-line bg-bg transition-all;
-  }
-  .lc-rail-item:hover {
-    @apply text-text-2;
-  }
-  .lc-rail-num {
-    @apply shrink-0 text-[0.62rem] text-text-3/80 tabular-nums;
-  }
-  .lc-rail-item.done {
-    @apply text-text-2;
-  }
-  .lc-rail-item.done::before {
-    @apply border-accent-500/50 bg-accent-500/40;
-  }
-  .lc-rail-item.active {
-    @apply text-accent-300;
-  }
-  .lc-rail-item.active .lc-rail-num {
-    @apply text-accent-400;
-  }
-  .lc-rail-item.active::before {
-    @apply border-accent-400 bg-accent-400;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-400) 18%, transparent);
-  }
-
-  /* ---- Reading column ---- */
-  .lc-doc {
-    @apply min-w-0;
-  }
-  .lc-chapter {
-    @apply scroll-mt-24 border-t border-line py-14 first:border-t-0 first:pt-6 md:py-16;
-  }
-
-  .lc-phase {
-    @apply mb-3 flex items-center gap-2.5 font-mono text-[0.72rem] font-medium tracking-[0.2em] text-accent-400 uppercase;
-  }
-  .lc-phase::before {
-    content: "";
-    @apply h-px w-7 bg-accent-500/60;
-  }
-  .lc-h {
-    @apply text-h2;
-  }
-  .lc-lead {
-    @apply mt-4 text-[1.14rem] leading-relaxed text-text-1;
-  }
-  .lc-body {
-    @apply mt-5 space-y-4 text-[0.99rem] leading-[1.7] text-text-2;
-
-    strong {
-      @apply font-semibold text-text-1;
+    /* Layer stack (app-builders page) */
+    .layer-stack {
+        @apply my-8 flex flex-col;
     }
-    code {
-      @apply rounded border border-line bg-surface-2 px-1 py-px font-mono text-[0.85em] text-accent-300;
-    }
-    a {
-      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
-    }
-    h3 {
-      @apply !mt-8 text-h3 text-text-1;
-    }
-  }
 
-  /* Telemetry readout — a strip of figures. */
-  .lc-readout {
-    @apply my-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4;
-  }
-  .lc-stat {
-    @apply bg-surface-1 p-4;
-  }
-  .lc-stat-num {
-    @apply font-mono text-[1.6rem] font-semibold leading-none text-text-1;
-  }
-  .lc-stat-label {
-    @apply mt-2 block font-mono text-[0.66rem] tracking-[0.12em] text-text-3 uppercase;
-  }
+    .layer {
+        @apply rounded-xl border border-line bg-surface-1 px-5 py-4 text-center;
 
-  /* Callout note. */
-  .lc-note {
-    @apply my-6 flex gap-3 rounded-r-lg border-l-2 border-accent-500 bg-surface-1 p-4 text-[0.9rem] leading-relaxed text-text-2;
-
-    > .material-symbols-outlined {
-      @apply mt-0.5 shrink-0 !text-[1.2rem] text-accent-400;
+        h4 {
+            @apply text-[0.98rem];
+        }
+        small {
+            @apply font-mono text-[0.7rem] text-text-3;
+        }
     }
-    strong {
-      @apply text-text-1;
-    }
-    a {
-      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
-    }
-  }
-  .lc-note.warn {
-    border-left-color: #f59e0b;
 
-    > .material-symbols-outlined {
-      color: #f59e0b;
+    .layer.mid {
+        @apply border-accent-500/50 bg-accent-500/10;
     }
-  }
 
-  /* Code block with a filename header + optional caption. */
-  .lc-code {
-    @apply my-7 overflow-hidden rounded-xl border border-line bg-surface-2;
-  }
-  .lc-code-head {
-    @apply flex items-center gap-2 border-b border-line bg-surface-1 px-4 py-2 font-mono text-[0.72rem] text-text-3;
+    .layer-link {
+        @apply flex items-center justify-center gap-1.5 py-2 font-mono text-[0.68rem] tracking-wider text-text-3 uppercase;
 
-    .material-symbols-outlined {
-      @apply !text-[1rem] text-accent-400;
+        .material-symbols-outlined {
+            @apply !text-[1.05rem] text-accent-400;
+        }
     }
-    b {
-      @apply font-medium text-text-2;
+
+    /* Capability cards (app-builders page) */
+    .cap-card {
+        @apply h-full rounded-xl border border-line bg-surface-1 p-5;
+
+        h5 {
+            @apply mt-3 text-[0.95rem];
+        }
+        p {
+            @apply mt-1.5 text-sm leading-relaxed text-text-2;
+        }
+        code {
+            @apply font-mono text-[0.85em] text-accent-300;
+        }
     }
-  }
-  .lc-code pre {
-    @apply m-0 max-h-none overflow-x-auto rounded-none border-0 bg-transparent p-4 text-[0.82rem] sm:p-5;
-  }
-  .lc-code figcaption {
-    @apply border-t border-line bg-surface-1 px-4 py-3 text-[0.82rem] leading-relaxed text-text-3 sm:px-5;
 
-    strong {
-      @apply text-accent-300;
+    .cap-icon {
+        @apply !text-[1.7rem] text-accent-400;
     }
-  }
 
-  /* Screenshot frame with mission-control corner ticks. */
-  .lc-frame {
-    @apply relative my-2 rounded-xl border border-line bg-surface-2 p-2;
-  }
-  .lc-frame::before,
-  .lc-frame::after {
-    content: "";
-    @apply pointer-events-none absolute size-3 border-accent-400/60;
-  }
-  .lc-frame::before {
-    @apply top-1.5 left-1.5 border-t border-l;
-  }
-  .lc-frame::after {
-    @apply right-1.5 bottom-1.5 border-r border-b;
-  }
-  .lc-frame img {
-    @apply block w-full rounded-lg;
-  }
-  .lc-frame figcaption {
-    @apply px-1 pt-2 pb-1 text-center text-sm text-text-3;
-
-    code {
-      @apply font-mono text-[0.85em] text-accent-300;
+    /* Code-card dot colours (used in markdown + features page) */
+    .dot.yaml {
+        background: #6ee7b7;
     }
-  }
 
-  /* Two screenshots side by side (stacks on narrow viewports). */
-  .lc-shots {
-    @apply my-2 grid gap-4 sm:grid-cols-2;
-  }
-  .lc-shots .lc-frame {
-    @apply my-0;
-  }
-
-  /* Numbered step list (the cache/refresh flow). */
-  .lc-steps {
-    @apply my-5 space-y-2.5 text-[0.95rem] leading-relaxed text-text-2;
-    counter-reset: step;
-  }
-  .lc-steps li {
-    @apply relative pl-10;
-    counter-increment: step;
-  }
-  .lc-steps li::before {
-    content: counter(step);
-    @apply absolute top-0 left-0 flex size-6 items-center justify-center rounded-full bg-accent-500/15 text-[0.72rem] font-semibold text-accent-300;
-  }
-  .lc-steps strong {
-    @apply text-text-1;
-  }
-
-  /* Entity-relationship schema diagram (inline SVG, classic-DB-modeling style). */
-  .lc-erd {
-    @apply my-6 overflow-x-auto rounded-xl border border-line bg-surface-1 p-3;
-  }
-  .lc-erd svg {
-    @apply mx-auto block h-auto;
-    width: 100%;
-    min-width: 560px;
-    max-width: 860px;
-  }
-  .lc-erd .erd-box {
-    fill: var(--color-surface-2);
-    stroke: var(--color-line);
-    stroke-width: 1;
-  }
-  .lc-erd .erd-hub {
-    stroke: var(--color-accent-400);
-    stroke-width: 1.5;
-  }
-  .lc-erd .erd-head {
-    fill: var(--color-accent-500);
-    opacity: 0.16;
-  }
-  .lc-erd text {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  .lc-erd .erd-name {
-    fill: var(--color-text-1);
-    font-weight: 600;
-  }
-  .lc-erd .erd-col {
-    fill: var(--color-text-2);
-  }
-  .lc-erd .erd-key {
-    fill: var(--color-accent-300);
-    font-weight: 600;
-  }
-  .lc-erd .erd-fk {
-    fill: var(--color-text-3);
-  }
-  .lc-erd .erd-line {
-    stroke: var(--color-accent-500);
-    stroke-width: 1.2;
-    fill: none;
-    opacity: 0.65;
-  }
-  .lc-erd .erd-card {
-    fill: var(--color-text-3);
-  }
-
-  /* Data-model: a hub core + a list of relation channels. */
-  .lc-hub {
-    @apply my-8 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center;
-  }
-  .lc-hub-core {
-    @apply flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-accent-500/50 bg-accent-500/10 px-6 py-8 text-center;
-    box-shadow: 0 0 60px -18px color-mix(in srgb, var(--color-accent-600) 70%, transparent);
-
-    .material-symbols-outlined {
-      @apply !text-[2.4rem] text-accent-400;
+    .dot.rhai {
+        background: #c4b5fd;
     }
-    b {
-      @apply text-lg text-text-1;
-    }
-    small {
-      @apply font-mono text-[0.68rem] tracking-wider text-text-3 uppercase;
-    }
-  }
-  .lc-channels {
-    @apply flex flex-col gap-2;
-  }
-  .lc-channel {
-    @apply flex items-center gap-3 rounded-lg border border-line bg-surface-1 px-4 py-2.5;
 
-    > .material-symbols-outlined {
-      @apply !text-[1.3rem] text-text-3;
-    }
-  }
-  .lc-channel-name {
-    @apply text-[0.92rem] font-medium text-text-1;
-  }
-  .lc-channel-sub {
-    @apply font-mono text-[0.66rem] text-text-3;
-  }
-  .lc-channel-kind {
-    @apply ms-auto shrink-0 rounded-full border border-line bg-surface-2 px-2 py-0.5 font-mono text-[0.6rem] tracking-wider text-accent-300 uppercase;
-  }
+    /* ---------- Code highlighting (Prism, custom dark palette) ---------- */
 
-  /* Data-flow pipe with a travelling signal (used in the live chapter). */
-  .lc-pipe {
-    @apply my-8 flex flex-col items-stretch gap-1.5 lg:flex-row lg:items-stretch;
-  }
-  .lc-pipe-node {
-    @apply relative flex grow basis-0 flex-col gap-1 rounded-xl border border-line bg-surface-1 p-4;
+    .token.comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata {
+        color: #5b5f73;
+        font-style: italic;
+    }
+    .token.punctuation {
+        color: #8b8fa3;
+    }
+    .token.property,
+    .token.tag,
+    .token.constant,
+    .token.symbol,
+    .token.deleted {
+        color: #f472b6;
+    }
+    .token.boolean,
+    .token.number {
+        color: #fbbf24;
+    }
+    .token.selector,
+    .token.attr-name,
+    .token.string,
+    .token.char,
+    .token.builtin,
+    .token.inserted {
+        color: #6ee7b7;
+    }
+    .token.operator,
+    .token.entity,
+    .token.url {
+        color: #93c5fd;
+    }
+    .token.atrule,
+    .token.attr-value,
+    .token.keyword {
+        color: #a5b4fc;
+    }
+    .token.function,
+    .token.class-name {
+        color: #c4b5fd;
+    }
+    .token.regex,
+    .token.important,
+    .token.variable {
+        color: #fda4af;
+    }
+    .token.important,
+    .token.bold {
+        font-weight: 600;
+    }
 
-    .material-symbols-outlined {
-      @apply !text-[1.5rem] text-accent-400;
-    }
-    b {
-      @apply mt-1 text-[0.92rem] text-text-1;
-    }
-    small {
-      @apply text-[0.8rem] leading-snug text-text-3;
-    }
-  }
-  .lc-pipe-node.fault {
-    @apply border-dashed;
-    border-color: color-mix(in srgb, #f59e0b 45%, var(--color-line));
+    /* ============================================================= */
+    /* Launch Control — flagship example (bespoke "mission control")  */
+    /* A long-form journey page: a flight-rail ToC + a reading column. */
+    /* Self-contained `lc-` namespace so it owns its look.            */
+    /* ============================================================= */
 
-    .material-symbols-outlined {
-      color: #f59e0b;
+    /* Ascent bar: scroll progress pinned to the very top. */
+    .lc-progress {
+        @apply pointer-events-none fixed inset-x-0 top-0 z-50 h-[3px] bg-transparent;
     }
-  }
-  .lc-pipe-seg {
-    @apply relative block h-7 w-px shrink-0 self-center overflow-hidden bg-line-strong lg:h-px lg:w-14;
-  }
-  .lc-flow-dot {
-    @apply absolute size-[5px] rounded-full bg-accent-400;
-    top: -2px;
-    left: 0;
-    animation: lc-flow-v 1.8s linear infinite;
-  }
-  @media (min-width: 64rem) {
+    .lc-progress > span {
+        @apply block h-full w-0 bg-gradient-to-r from-accent-600 via-accent-400 to-violet;
+        box-shadow: 0 0 14px color-mix(in srgb, var(--color-accent-400) 75%, transparent);
+        transition: width 0.1s linear;
+    }
+
+    /* Two-column shell: flight rail + reading column. */
+    .lc-shell {
+        @apply mx-auto grid max-w-6xl gap-10 px-4 pb-10 sm:px-6 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-16;
+    }
+
+    /* ---- Flight rail (table of contents + progress) ---- */
+    .lc-rail {
+        @apply hidden lg:block;
+    }
+    .lc-rail-inner {
+        @apply sticky top-24 self-start;
+    }
+    .lc-rail-title {
+        @apply mb-4 ps-5 font-mono text-[0.64rem] font-semibold tracking-[0.22em] text-text-3 uppercase;
+    }
+    .lc-rail-list {
+        @apply relative border-l border-line;
+    }
+    .lc-rail-item {
+        @apply relative flex items-baseline gap-2.5 py-2 ps-5 font-mono text-[0.74rem] leading-snug tracking-wide text-text-3 no-underline transition-colors;
+    }
+    .lc-rail-item::before {
+        content: "";
+        @apply absolute top-[0.7rem] left-[-4.5px] size-[8px] rounded-full border border-line bg-bg transition-all;
+    }
+    .lc-rail-item:hover {
+        @apply text-text-2;
+    }
+    .lc-rail-num {
+        @apply shrink-0 text-[0.62rem] text-text-3/80 tabular-nums;
+    }
+    .lc-rail-item.done {
+        @apply text-text-2;
+    }
+    .lc-rail-item.done::before {
+        @apply border-accent-500/50 bg-accent-500/40;
+    }
+    .lc-rail-item.active {
+        @apply text-accent-300;
+    }
+    .lc-rail-item.active .lc-rail-num {
+        @apply text-accent-400;
+    }
+    .lc-rail-item.active::before {
+        @apply border-accent-400 bg-accent-400;
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-400) 18%, transparent);
+    }
+
+    /* ---- Reading column ---- */
+    .lc-doc {
+        @apply min-w-0;
+    }
+    .lc-chapter {
+        @apply scroll-mt-24 border-t border-line py-14 first:border-t-0 first:pt-6 md:py-16;
+    }
+
+    .lc-phase {
+        @apply mb-3 flex items-center gap-2.5 font-mono text-[0.72rem] font-medium tracking-[0.2em] text-accent-400 uppercase;
+    }
+    .lc-phase::before {
+        content: "";
+        @apply h-px w-7 bg-accent-500/60;
+    }
+    .lc-h {
+        @apply text-h2;
+    }
+    .lc-lead {
+        @apply mt-4 text-[1.14rem] leading-relaxed text-text-1;
+    }
+    .lc-body {
+        @apply mt-5 space-y-4 text-[0.99rem] leading-[1.7] text-text-2;
+
+        strong {
+            @apply font-semibold text-text-1;
+        }
+        code {
+            @apply rounded border border-line bg-surface-2 px-1 py-px font-mono text-[0.85em] text-accent-300;
+        }
+        a {
+            @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+        }
+        h3 {
+            @apply !mt-8 text-h3 text-text-1;
+        }
+    }
+
+    /* Telemetry readout — a strip of figures. */
+    .lc-readout {
+        @apply my-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4;
+    }
+    .lc-stat {
+        @apply bg-surface-1 p-4;
+    }
+    .lc-stat-num {
+        @apply font-mono text-[1.6rem] font-semibold leading-none text-text-1;
+    }
+    .lc-stat-label {
+        @apply mt-2 block font-mono text-[0.66rem] tracking-[0.12em] text-text-3 uppercase;
+    }
+
+    /* Callout note. */
+    .lc-note {
+        @apply my-6 flex gap-3 rounded-r-lg border-l-2 border-accent-500 bg-surface-1 p-4 text-[0.9rem] leading-relaxed text-text-2;
+
+        > .material-symbols-outlined {
+            @apply mt-0.5 shrink-0 !text-[1.2rem] text-accent-400;
+        }
+        strong {
+            @apply text-text-1;
+        }
+        a {
+            @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+        }
+    }
+    .lc-note.warn {
+        border-left-color: #f59e0b;
+
+        > .material-symbols-outlined {
+            color: #f59e0b;
+        }
+    }
+
+    /* Code block with a filename header + optional caption. */
+    .lc-code {
+        @apply my-7 overflow-hidden rounded-xl border border-line bg-surface-2;
+    }
+    .lc-code-head {
+        @apply flex items-center gap-2 border-b border-line bg-surface-1 px-4 py-2 font-mono text-[0.72rem] text-text-3;
+
+        .material-symbols-outlined {
+            @apply !text-[1rem] text-accent-400;
+        }
+        b {
+            @apply font-medium text-text-2;
+        }
+    }
+    .lc-code pre {
+        @apply m-0 max-h-none overflow-x-auto rounded-none border-0 bg-transparent p-4 text-[0.82rem] sm:p-5;
+    }
+    .lc-code figcaption {
+        @apply border-t border-line bg-surface-1 px-4 py-3 text-[0.82rem] leading-relaxed text-text-3 sm:px-5;
+
+        strong {
+            @apply text-accent-300;
+        }
+    }
+
+    /* Screenshot frame with mission-control corner ticks. */
+    .lc-frame {
+        @apply relative my-2 rounded-xl border border-line bg-surface-2 p-2;
+    }
+    .lc-frame::before,
+    .lc-frame::after {
+        content: "";
+        @apply pointer-events-none absolute size-3 border-accent-400/60;
+    }
+    .lc-frame::before {
+        @apply top-1.5 left-1.5 border-t border-l;
+    }
+    .lc-frame::after {
+        @apply right-1.5 bottom-1.5 border-r border-b;
+    }
+    .lc-frame img {
+        @apply block w-full rounded-lg;
+    }
+    .lc-frame figcaption {
+        @apply px-1 pt-2 pb-1 text-center text-sm text-text-3;
+
+        code {
+            @apply font-mono text-[0.85em] text-accent-300;
+        }
+    }
+
+    /* Two screenshots side by side (stacks on narrow viewports). */
+    .lc-shots {
+        @apply my-2 grid gap-4 sm:grid-cols-2;
+    }
+    .lc-shots .lc-frame {
+        @apply my-0;
+    }
+
+    /* Numbered step list (the cache/refresh flow). */
+    .lc-steps {
+        @apply my-5 space-y-2.5 text-[0.95rem] leading-relaxed text-text-2;
+        counter-reset: step;
+    }
+    .lc-steps li {
+        @apply relative pl-10;
+        counter-increment: step;
+    }
+    .lc-steps li::before {
+        content: counter(step);
+        @apply absolute top-0 left-0 flex size-6 items-center justify-center rounded-full bg-accent-500/15 text-[0.72rem] font-semibold text-accent-300;
+    }
+    .lc-steps strong {
+        @apply text-text-1;
+    }
+
+    /* Entity-relationship schema diagram (inline SVG, classic-DB-modeling style). */
+    .lc-erd {
+        @apply my-6 overflow-x-auto rounded-xl border border-line bg-surface-1 p-3;
+    }
+    .lc-erd svg {
+        @apply mx-auto block h-auto;
+        width: 100%;
+        min-width: 560px;
+        max-width: 860px;
+    }
+    .lc-erd .erd-box {
+        fill: var(--color-surface-2);
+        stroke: var(--color-line);
+        stroke-width: 1;
+    }
+    .lc-erd .erd-hub {
+        stroke: var(--color-accent-400);
+        stroke-width: 1.5;
+    }
+    .lc-erd .erd-head {
+        fill: var(--color-accent-500);
+        opacity: 0.16;
+    }
+    .lc-erd text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .lc-erd .erd-name {
+        fill: var(--color-text-1);
+        font-weight: 600;
+    }
+    .lc-erd .erd-col {
+        fill: var(--color-text-2);
+    }
+    .lc-erd .erd-key {
+        fill: var(--color-accent-300);
+        font-weight: 600;
+    }
+    .lc-erd .erd-fk {
+        fill: var(--color-text-3);
+    }
+    .lc-erd .erd-line {
+        stroke: var(--color-accent-500);
+        stroke-width: 1.2;
+        fill: none;
+        opacity: 0.65;
+    }
+    .lc-erd .erd-card {
+        fill: var(--color-text-3);
+    }
+
+    /* Data-model: a hub core + a list of relation channels. */
+    .lc-hub {
+        @apply my-8 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center;
+    }
+    .lc-hub-core {
+        @apply flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-accent-500/50 bg-accent-500/10 px-6 py-8 text-center;
+        box-shadow: 0 0 60px -18px color-mix(in srgb, var(--color-accent-600) 70%, transparent);
+
+        .material-symbols-outlined {
+            @apply !text-[2.4rem] text-accent-400;
+        }
+        b {
+            @apply text-lg text-text-1;
+        }
+        small {
+            @apply font-mono text-[0.68rem] tracking-wider text-text-3 uppercase;
+        }
+    }
+    .lc-channels {
+        @apply flex flex-col gap-2;
+    }
+    .lc-channel {
+        @apply flex items-center gap-3 rounded-lg border border-line bg-surface-1 px-4 py-2.5;
+
+        > .material-symbols-outlined {
+            @apply !text-[1.3rem] text-text-3;
+        }
+    }
+    .lc-channel-name {
+        @apply text-[0.92rem] font-medium text-text-1;
+    }
+    .lc-channel-sub {
+        @apply font-mono text-[0.66rem] text-text-3;
+    }
+    .lc-channel-kind {
+        @apply ms-auto shrink-0 rounded-full border border-line bg-surface-2 px-2 py-0.5 font-mono text-[0.6rem] tracking-wider text-accent-300 uppercase;
+    }
+
+    /* Data-flow pipe with a travelling signal (used in the live chapter). */
+    .lc-pipe {
+        @apply my-8 flex flex-col items-stretch gap-1.5 lg:flex-row lg:items-stretch;
+    }
+    .lc-pipe-node {
+        @apply relative flex grow basis-0 flex-col gap-1 rounded-xl border border-line bg-surface-1 p-4;
+
+        .material-symbols-outlined {
+            @apply !text-[1.5rem] text-accent-400;
+        }
+        b {
+            @apply mt-1 text-[0.92rem] text-text-1;
+        }
+        small {
+            @apply text-[0.8rem] leading-snug text-text-3;
+        }
+    }
+    .lc-pipe-node.fault {
+        @apply border-dashed;
+        border-color: color-mix(in srgb, #f59e0b 45%, var(--color-line));
+
+        .material-symbols-outlined {
+            color: #f59e0b;
+        }
+    }
+    .lc-pipe-seg {
+        @apply relative block h-7 w-px shrink-0 self-center overflow-hidden bg-line-strong lg:h-px lg:w-14;
+    }
     .lc-flow-dot {
-      top: 0;
-      animation: lc-flow 1.8s linear infinite;
+        @apply absolute size-[5px] rounded-full bg-accent-400;
+        top: -2px;
+        left: 0;
+        animation: lc-flow-v 1.8s linear infinite;
     }
-  }
+}
 
-  /* Final CTA block. */
-  .lc-cta {
+/* Final CTA block. */
+.lc-cta {
     @apply relative my-6 overflow-hidden rounded-2xl border border-accent-500/30 bg-surface-1 p-8 md:p-10;
-  }
+}
 
-  .lc-actions {
+.lc-actions {
     @apply mt-7 flex flex-wrap gap-3;
-  }
+}
 
-  /* ============================================================= */
-  /* Periscope — Kubernetes example (bespoke "deep-sea dive")       */
-  /* Mirror of the `lc-` journey layout, self-contained `ps-`       */
-  /* namespace so it owns its look. Accent recolored aqua via the   */
-  /* `body.ps` override below.                                      */
-  /* ============================================================= */
+/* ============================================================= */
+/* Periscope — Kubernetes example (bespoke "deep-sea dive")       */
+/* Mirror of the `lc-` journey layout, self-contained `ps-`       */
+/* namespace so it owns its look. Accent recolored aqua via the   */
+/* `body.ps` override below.                                      */
+/* ============================================================= */
 
-  /* Ascent bar: scroll progress pinned to the very top. */
-  .ps-progress {
+/* Ascent bar: scroll progress pinned to the very top. */
+.ps-progress {
     @apply pointer-events-none fixed inset-x-0 top-0 z-50 h-[3px] bg-transparent;
-  }
-  .ps-progress > span {
+}
+.ps-progress > span {
     @apply block h-full w-0 bg-gradient-to-r from-accent-600 via-accent-400 to-violet;
     box-shadow: 0 0 14px color-mix(in srgb, var(--color-accent-400) 75%, transparent);
     transition: width 0.1s linear;
-  }
+}
 
-  /* Single wide reading column (no rail). */
-  .ps-shell {
+/* Single wide reading column (no rail). */
+.ps-shell {
     @apply mx-auto max-w-4xl px-4 pb-10 sm:px-6;
-  }
+}
 
-  /* ---- Flight rail (table of contents + progress) ---- */
-  .ps-rail {
+/* ---- Flight rail (table of contents + progress) ---- */
+.ps-rail {
     @apply hidden lg:block;
-  }
-  .ps-rail-inner {
+}
+.ps-rail-inner {
     @apply sticky top-24 self-start;
-  }
-  .ps-rail-title {
+}
+.ps-rail-title {
     @apply mb-4 ps-5 font-mono text-[0.64rem] font-semibold tracking-[0.22em] text-text-3 uppercase;
-  }
-  .ps-rail-list {
+}
+.ps-rail-list {
     @apply relative border-l border-line;
-  }
-  .ps-rail-item {
+}
+.ps-rail-item {
     @apply relative flex items-baseline gap-2.5 py-2 ps-5 font-mono text-[0.74rem] leading-snug tracking-wide text-text-3 no-underline transition-colors;
-  }
-  .ps-rail-item::before {
+}
+.ps-rail-item::before {
     content: "";
     @apply absolute top-[0.7rem] left-[-4.5px] size-[8px] rounded-full border border-line bg-bg transition-all;
-  }
-  .ps-rail-item:hover {
+}
+.ps-rail-item:hover {
     @apply text-text-2;
-  }
-  .ps-rail-num {
+}
+.ps-rail-num {
     @apply shrink-0 text-[0.62rem] text-text-3/80 tabular-nums;
-  }
-  .ps-rail-item.done {
+}
+.ps-rail-item.done {
     @apply text-text-2;
-  }
-  .ps-rail-item.done::before {
+}
+.ps-rail-item.done::before {
     @apply border-accent-500/50 bg-accent-500/40;
-  }
-  .ps-rail-item.active {
+}
+.ps-rail-item.active {
     @apply text-accent-300;
-  }
-  .ps-rail-item.active .ps-rail-num {
+}
+.ps-rail-item.active .ps-rail-num {
     @apply text-accent-400;
-  }
-  .ps-rail-item.active::before {
+}
+.ps-rail-item.active::before {
     @apply border-accent-400 bg-accent-400;
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-400) 18%, transparent);
-  }
+}
 
-  /* ---- Reading column ---- */
-  .ps-doc {
+/* ---- Reading column ---- */
+.ps-doc {
     @apply min-w-0;
-  }
-  .ps-chapter {
+}
+.ps-chapter {
     @apply scroll-mt-24 border-t border-line py-14 first:border-t-0 first:pt-6 md:py-16;
-  }
+}
 
-  .ps-phase {
+.ps-phase {
     @apply mb-3 flex items-center gap-2.5 font-mono text-[0.72rem] font-medium tracking-[0.2em] text-accent-400 uppercase;
-  }
-  .ps-phase::before {
+}
+.ps-phase::before {
     content: "";
     @apply h-px w-7 bg-accent-500/60;
-  }
-  .ps-h {
+}
+.ps-h {
     @apply text-h2;
-  }
-  .ps-lead {
+}
+.ps-lead {
     @apply mt-4 text-[1.14rem] leading-relaxed text-text-1;
-  }
-  .ps-body {
-    @apply mt-5 space-y-4 text-[0.99rem] leading-[1.7] text-text-2;
 
-    strong {
-      @apply font-semibold text-text-1;
-    }
-    code {
-      @apply rounded border border-line bg-surface-2 px-1 py-px font-mono text-[0.85em] text-accent-300;
-    }
     a {
-      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+        @apply text-accent-400 underline decoration-accent-400/40 underline-offset-2 transition-colors hover:text-accent-300 hover:decoration-accent-300;
     }
-    h3 {
-      @apply !mt-8 text-h3 text-text-1;
+
+    /* Final CTA block. */
+    .lc-cta {
+        @apply relative my-6 overflow-hidden rounded-2xl border border-accent-500/30 bg-surface-1 p-8 md:p-10;
     }
-  }
 
-  /* Telemetry readout — a strip of figures. */
-  .ps-readout {
-    @apply my-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4;
-  }
-  .ps-stat {
-    @apply bg-surface-1 p-4;
-  }
-  .ps-stat-num {
-    @apply font-mono text-[1.6rem] font-semibold leading-none text-text-1;
-  }
-  .ps-stat-label {
-    @apply mt-2 block font-mono text-[0.66rem] tracking-[0.12em] text-text-3 uppercase;
-  }
-
-  /* Callout note. */
-  .ps-note {
-    @apply my-6 flex gap-3 rounded-r-lg border-l-2 border-accent-500 bg-surface-1 p-4 text-[0.9rem] leading-relaxed text-text-2;
-
-    > .material-symbols-outlined {
-      @apply mt-0.5 shrink-0 !text-[1.2rem] text-accent-400;
+    .lc-actions {
+        @apply mt-7 flex flex-wrap gap-3;
     }
-    strong {
-      @apply text-text-1;
-    }
-    a {
-      @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
-    }
-  }
-  .ps-note.warn {
-    border-left-color: #f59e0b;
 
-    > .material-symbols-outlined {
-      color: #f59e0b;
+    /* ============================================================= */
+    /* Periscope — Kubernetes example (bespoke "deep-sea dive")       */
+    /* Mirror of the `lc-` journey layout, self-contained `ps-`       */
+    /* namespace so it owns its look. Accent recolored aqua via the   */
+    /* `body.ps` override below.                                      */
+    /* ============================================================= */
+
+    /* Ascent bar: scroll progress pinned to the very top. */
+    .ps-progress {
+        @apply pointer-events-none fixed inset-x-0 top-0 z-50 h-[3px] bg-transparent;
     }
-  }
-
-  /* Code block with a filename header + optional caption. */
-  .ps-code {
-    @apply my-7 overflow-hidden rounded-xl border border-line bg-surface-2;
-  }
-  .ps-code-head {
-    @apply flex items-center gap-2 border-b border-line bg-surface-1 px-4 py-2 font-mono text-[0.72rem] text-text-3;
-
-    .material-symbols-outlined {
-      @apply !text-[1rem] text-accent-400;
+    .ps-progress > span {
+        @apply block h-full w-0 bg-gradient-to-r from-accent-600 via-accent-400 to-violet;
+        box-shadow: 0 0 14px color-mix(in srgb, var(--color-accent-400) 75%, transparent);
+        transition: width 0.1s linear;
     }
-    b {
-      @apply font-medium text-text-2;
+
+    /* Single wide reading column (no rail). */
+    .ps-shell {
+        @apply mx-auto max-w-4xl px-4 pb-10 sm:px-6;
     }
-  }
-  .ps-code pre {
-    @apply m-0 max-h-none overflow-x-auto rounded-none border-0 bg-transparent p-4 text-[0.82rem] sm:p-5;
-  }
-  .ps-code figcaption {
-    @apply border-t border-line bg-surface-1 px-4 py-3 text-[0.82rem] leading-relaxed text-text-3 sm:px-5;
 
-    strong {
-      @apply text-accent-300;
+    /* ---- Flight rail (table of contents + progress) ---- */
+    .ps-rail {
+        @apply hidden lg:block;
     }
-  }
-
-  /* Screenshot frame with mission-control corner ticks. */
-  .ps-frame {
-    @apply relative my-2 rounded-xl border border-line bg-surface-2 p-2;
-  }
-  .ps-frame::before,
-  .ps-frame::after {
-    content: "";
-    @apply pointer-events-none absolute size-3 border-accent-400/60;
-  }
-  .ps-frame::before {
-    @apply top-1.5 left-1.5 border-t border-l;
-  }
-  .ps-frame::after {
-    @apply right-1.5 bottom-1.5 border-r border-b;
-  }
-  .ps-frame img {
-    @apply block w-full rounded-lg;
-  }
-  .ps-frame figcaption {
-    @apply px-1 pt-2 pb-1 text-center text-sm text-text-3;
-
-    code {
-      @apply font-mono text-[0.85em] text-accent-300;
+    .ps-rail-inner {
+        @apply sticky top-24 self-start;
     }
-  }
-
-  /* Two screenshots side by side (stacks on narrow viewports). */
-  .ps-shots {
-    @apply my-2 grid gap-4 sm:grid-cols-2;
-  }
-  .ps-shots .ps-frame {
-    @apply my-0;
-  }
-
-  /* Numbered step list (the cache/refresh flow). */
-  .ps-steps {
-    @apply my-5 space-y-2.5 text-[0.95rem] leading-relaxed text-text-2;
-    counter-reset: step;
-  }
-  .ps-steps li {
-    @apply relative pl-10;
-    counter-increment: step;
-  }
-  .ps-steps li::before {
-    content: counter(step);
-    @apply absolute top-0 left-0 flex size-6 items-center justify-center rounded-full bg-accent-500/15 text-[0.72rem] font-semibold text-accent-300;
-  }
-  .ps-steps strong {
-    @apply text-text-1;
-  }
-
-  /* Entity-relationship schema diagram (inline SVG, classic-DB-modeling style). */
-  .ps-erd {
-    @apply my-6 overflow-x-auto rounded-xl border border-line bg-surface-1 p-3;
-  }
-  .ps-erd svg {
-    @apply mx-auto block h-auto;
-    width: 100%;
-    min-width: 560px;
-    max-width: 860px;
-  }
-  .ps-erd .erd-box {
-    fill: var(--color-surface-2);
-    stroke: var(--color-line);
-    stroke-width: 1;
-  }
-  .ps-erd .erd-hub {
-    stroke: var(--color-accent-400);
-    stroke-width: 1.5;
-  }
-  .ps-erd .erd-head {
-    fill: var(--color-accent-500);
-    opacity: 0.16;
-  }
-  .ps-erd text {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  .ps-erd .erd-name {
-    fill: var(--color-text-1);
-    font-weight: 600;
-  }
-  .ps-erd .erd-col {
-    fill: var(--color-text-2);
-  }
-  .ps-erd .erd-key {
-    fill: var(--color-accent-300);
-    font-weight: 600;
-  }
-  .ps-erd .erd-fk {
-    fill: var(--color-text-3);
-  }
-  .ps-erd .erd-line {
-    stroke: var(--color-accent-500);
-    stroke-width: 1.2;
-    fill: none;
-    opacity: 0.65;
-  }
-  .ps-erd .erd-card {
-    fill: var(--color-text-3);
-  }
-
-  /* Data-model: a hub core + a list of relation channels. */
-  .ps-hub {
-    @apply my-8 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center;
-  }
-  .ps-hub-core {
-    @apply flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-accent-500/50 bg-accent-500/10 px-6 py-8 text-center;
-    box-shadow: 0 0 60px -18px color-mix(in srgb, var(--color-accent-600) 70%, transparent);
-
-    .material-symbols-outlined {
-      @apply !text-[2.4rem] text-accent-400;
+    .ps-rail-title {
+        @apply mb-4 ps-5 font-mono text-[0.64rem] font-semibold tracking-[0.22em] text-text-3 uppercase;
     }
-    b {
-      @apply text-lg text-text-1;
+    .ps-rail-list {
+        @apply relative border-l border-line;
     }
-    small {
-      @apply font-mono text-[0.68rem] tracking-wider text-text-3 uppercase;
+    .ps-rail-item {
+        @apply relative flex items-baseline gap-2.5 py-2 ps-5 font-mono text-[0.74rem] leading-snug tracking-wide text-text-3 no-underline transition-colors;
     }
-  }
-  .ps-channels {
-    @apply flex flex-col gap-2;
-  }
-  .ps-channel {
-    @apply flex items-center gap-3 rounded-lg border border-line bg-surface-1 px-4 py-2.5;
+    .ps-rail-item::before {
+        content: "";
+        @apply absolute top-[0.7rem] left-[-4.5px] size-[8px] rounded-full border border-line bg-bg transition-all;
+    }
+    .ps-rail-item:hover {
+        @apply text-text-2;
+    }
+    .ps-rail-num {
+        @apply shrink-0 text-[0.62rem] text-text-3/80 tabular-nums;
+    }
+    .ps-rail-item.done {
+        @apply text-text-2;
+    }
+    .ps-rail-item.done::before {
+        @apply border-accent-500/50 bg-accent-500/40;
+    }
+    .ps-rail-item.active {
+        @apply text-accent-300;
+    }
+    .ps-rail-item.active .ps-rail-num {
+        @apply text-accent-400;
+    }
+    .ps-rail-item.active::before {
+        @apply border-accent-400 bg-accent-400;
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-400) 18%, transparent);
+    }
 
-    > .material-symbols-outlined {
-      @apply !text-[1.3rem] text-text-3;
+    /* ---- Reading column ---- */
+    .ps-doc {
+        @apply min-w-0;
     }
-  }
-  .ps-channel-name {
-    @apply text-[0.92rem] font-medium text-text-1;
-  }
-  .ps-channel-sub {
-    @apply font-mono text-[0.66rem] text-text-3;
-  }
-  .ps-channel-kind {
-    @apply ms-auto shrink-0 rounded-full border border-line bg-surface-2 px-2 py-0.5 font-mono text-[0.6rem] tracking-wider text-accent-300 uppercase;
-  }
+    .ps-chapter {
+        @apply scroll-mt-24 border-t border-line py-14 first:border-t-0 first:pt-6 md:py-16;
+    }
 
-  /* Data-flow pipe with a travelling signal (used in the live chapter). */
-  .ps-pipe {
-    @apply my-8 flex flex-col items-stretch gap-1.5 lg:flex-row lg:items-stretch;
-  }
-  .ps-pipe-node {
-    @apply relative flex grow basis-0 flex-col gap-1 rounded-xl border border-line bg-surface-1 p-4;
+    .ps-phase {
+        @apply mb-3 flex items-center gap-2.5 font-mono text-[0.72rem] font-medium tracking-[0.2em] text-accent-400 uppercase;
+    }
+    .ps-phase::before {
+        content: "";
+        @apply h-px w-7 bg-accent-500/60;
+    }
+    .ps-h {
+        @apply text-h2;
+    }
+    .ps-lead {
+        @apply mt-4 text-[1.14rem] leading-relaxed text-text-1;
 
-    .material-symbols-outlined {
-      @apply !text-[1.5rem] text-accent-400;
+        a {
+            @apply text-white font-semibold underline decoration-white/40 decoration-2 underline-offset-4 hover:decoration-white;
+        }
     }
-    b {
-      @apply mt-1 text-[0.92rem] text-text-1;
-    }
-    small {
-      @apply text-[0.8rem] leading-snug text-text-3;
-    }
-  }
-  .ps-pipe-node.fault {
-    @apply border-dashed;
-    border-color: color-mix(in srgb, #f59e0b 45%, var(--color-line));
+    .ps-body {
+        @apply mt-6 space-y-4 text-[0.99rem] leading-[1.7] text-text-2;
 
-    .material-symbols-outlined {
-      color: #f59e0b;
+        strong {
+            @apply font-semibold text-text-1;
+        }
+        code {
+            @apply rounded border border-line bg-surface-2 px-1 py-px font-mono text-[0.85em] text-accent-300;
+        }
+        a {
+            @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+        }
+        h3 {
+            @apply !mt-8 text-h3 text-text-1;
+        }
     }
-  }
-  .ps-pipe-seg {
-    @apply relative block h-7 w-px shrink-0 self-center overflow-hidden bg-line-strong lg:h-px lg:w-14;
-  }
-  .ps-flow-dot {
-    @apply absolute size-[5px] rounded-full bg-accent-400;
-    top: -2px;
-    left: 0;
-    animation: ps-flow-v 1.8s linear infinite;
-  }
-  @media (min-width: 64rem) {
+
+    /* Telemetry readout — a strip of figures. */
+    .ps-readout {
+        @apply my-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4;
+    }
+    .ps-stat {
+        @apply bg-surface-1 p-4;
+    }
+    .ps-stat-num {
+        @apply font-mono text-[1.6rem] font-semibold leading-none text-text-1;
+    }
+    .ps-stat-label {
+        @apply mt-2 block font-mono text-[0.66rem] tracking-[0.12em] text-text-3 uppercase;
+    }
+
+    /* Callout note. */
+    .ps-note {
+        @apply my-6 flex gap-3 rounded-r-lg border-l-2 border-accent-500 bg-surface-1 p-4 text-[0.9rem] leading-relaxed text-text-2;
+
+        > .material-symbols-outlined {
+            @apply mt-0.5 shrink-0 !text-[1.2rem] text-accent-400;
+        }
+        strong {
+            @apply text-text-1;
+        }
+        a {
+            @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+        }
+    }
+    .ps-note.warn {
+        border-left-color: #f59e0b;
+
+        > .material-symbols-outlined {
+            color: #f59e0b;
+        }
+    }
+
+    /* Code block with a filename header + optional caption. */
+    .ps-code {
+        @apply my-7 overflow-hidden rounded-xl border border-line bg-surface-2;
+    }
+    .ps-code-head {
+        @apply flex items-center gap-2 border-b border-line bg-surface-1 px-4 py-2 font-mono text-[0.72rem] text-text-3;
+
+        .material-symbols-outlined {
+            @apply !text-[1rem] text-accent-400;
+        }
+        b {
+            @apply font-medium text-text-2;
+        }
+    }
+    .ps-code pre {
+        @apply m-0 max-h-none overflow-x-auto rounded-none border-0 bg-transparent p-4 text-[0.82rem] sm:p-5;
+    }
+    .ps-code figcaption {
+        @apply border-t border-line bg-surface-1 px-4 py-3 text-[0.82rem] leading-relaxed text-text-3 sm:px-5;
+
+        strong {
+            @apply text-accent-300;
+        }
+    }
+
+    /* Screenshot frame with mission-control corner ticks. */
+    .ps-frame {
+        @apply relative my-2 rounded-xl border border-line bg-surface-2 p-2;
+    }
+    .ps-frame::before,
+    .ps-frame::after {
+        content: "";
+        @apply pointer-events-none absolute size-3 border-accent-400/60;
+    }
+    .ps-frame::before {
+        @apply top-1.5 left-1.5 border-t border-l;
+    }
+    .ps-frame::after {
+        @apply right-1.5 bottom-1.5 border-r border-b;
+    }
+    .ps-frame img {
+        @apply block w-full rounded-lg;
+    }
+    .ps-frame figcaption {
+        @apply px-1 pt-2 pb-1 text-center text-sm text-text-3;
+
+        code {
+            @apply font-mono text-[0.85em] text-accent-300;
+        }
+    }
+
+    /* Two screenshots side by side (stacks on narrow viewports). */
+    .ps-shots {
+        @apply my-2 grid gap-4 sm:grid-cols-2;
+    }
+    .ps-shots .ps-frame {
+        @apply my-0;
+    }
+
+    /* Numbered step list (the cache/refresh flow). */
+    .ps-steps {
+        @apply my-5 space-y-2.5 text-[0.95rem] leading-relaxed text-text-2;
+        counter-reset: step;
+    }
+    .ps-steps li {
+        @apply relative pl-10;
+        counter-increment: step;
+    }
+    .ps-steps li::before {
+        content: counter(step);
+        @apply absolute top-0 left-0 flex size-6 items-center justify-center rounded-full bg-accent-500/15 text-[0.72rem] font-semibold text-accent-300;
+    }
+    .ps-steps strong {
+        @apply text-text-1;
+    }
+
+    /* Entity-relationship schema diagram (inline SVG, classic-DB-modeling style). */
+    .ps-erd {
+        @apply my-6 overflow-x-auto rounded-xl border border-line bg-surface-1 p-3;
+    }
+    .ps-erd svg {
+        @apply mx-auto block h-auto;
+        width: 100%;
+        min-width: 560px;
+        max-width: 860px;
+    }
+    .ps-erd .erd-box {
+        fill: var(--color-surface-2);
+        stroke: var(--color-line);
+        stroke-width: 1;
+    }
+    .ps-erd .erd-hub {
+        stroke: var(--color-accent-400);
+        stroke-width: 1.5;
+    }
+    .ps-erd .erd-head {
+        fill: var(--color-accent-500);
+        opacity: 0.16;
+    }
+    .ps-erd text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .ps-erd .erd-name {
+        fill: var(--color-text-1);
+        font-weight: 600;
+    }
+    .ps-erd .erd-col {
+        fill: var(--color-text-2);
+    }
+    .ps-erd .erd-key {
+        fill: var(--color-accent-300);
+        font-weight: 600;
+    }
+    .ps-erd .erd-fk {
+        fill: var(--color-text-3);
+    }
+    .ps-erd .erd-line {
+        stroke: var(--color-accent-500);
+        stroke-width: 1.2;
+        fill: none;
+        opacity: 0.65;
+    }
+    .ps-erd .erd-card {
+        fill: var(--color-text-3);
+    }
+
+    /* Data-model: a hub core + a list of relation channels. */
+    .ps-hub {
+        @apply my-8 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center;
+    }
+    .ps-hub-core {
+        @apply flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-accent-500/50 bg-accent-500/10 px-6 py-8 text-center;
+        box-shadow: 0 0 60px -18px color-mix(in srgb, var(--color-accent-600) 70%, transparent);
+
+        .material-symbols-outlined {
+            @apply !text-[2.4rem] text-accent-400;
+        }
+        b {
+            @apply text-lg text-text-1;
+        }
+        small {
+            @apply font-mono text-[0.68rem] tracking-wider text-text-3 uppercase;
+        }
+    }
+    .ps-channels {
+        @apply flex flex-col gap-2;
+    }
+    .ps-channel {
+        @apply flex items-center gap-3 rounded-lg border border-line bg-surface-1 px-4 py-2.5;
+
+        > .material-symbols-outlined {
+            @apply !text-[1.3rem] text-text-3;
+        }
+    }
+    .ps-channel-name {
+        @apply text-[0.92rem] font-medium text-text-1;
+    }
+    .ps-channel-sub {
+        @apply font-mono text-[0.66rem] text-text-3;
+    }
+    .ps-channel-kind {
+        @apply ms-auto shrink-0 rounded-full border border-line bg-surface-2 px-2 py-0.5 font-mono text-[0.6rem] tracking-wider text-accent-300 uppercase;
+    }
+
+    /* Data-flow pipe with a travelling signal (used in the live chapter). */
+    .ps-pipe {
+        @apply my-8 flex flex-col items-stretch gap-1.5 lg:flex-row lg:items-stretch;
+    }
+    .ps-pipe-node {
+        @apply relative flex grow basis-0 flex-col gap-1 rounded-xl border border-line bg-surface-1 p-4;
+
+        .material-symbols-outlined {
+            @apply !text-[1.5rem] text-accent-400;
+        }
+        b {
+            @apply mt-1 text-[0.92rem] text-text-1;
+        }
+        small {
+            @apply text-[0.8rem] leading-snug text-text-3;
+        }
+    }
+    .ps-pipe-node.fault {
+        @apply border-dashed;
+        border-color: color-mix(in srgb, #f59e0b 45%, var(--color-line));
+
+        .material-symbols-outlined {
+            color: #f59e0b;
+        }
+    }
+    .ps-pipe-seg {
+        @apply relative block h-7 w-px shrink-0 self-center overflow-hidden bg-line-strong lg:h-px lg:w-14;
+    }
     .ps-flow-dot {
-      top: 0;
-      animation: ps-flow 1.8s linear infinite;
+        @apply absolute size-[5px] rounded-full bg-accent-400;
+        top: -2px;
+        left: 0;
+        animation: ps-flow-v 1.8s linear infinite;
     }
-  }
+    @media (min-width: 64rem) {
+        .ps-flow-dot {
+            top: 0;
+            animation: ps-flow 1.8s linear infinite;
+        }
+    }
 
-  /* Final CTA block. */
-  .ps-cta {
-    @apply relative my-6 overflow-hidden rounded-2xl border border-accent-500/30 bg-surface-1 p-8 md:p-10;
-  }
+    /* Final CTA block. */
+    .ps-cta {
+        @apply relative my-6 overflow-hidden rounded-2xl border border-accent-500/30 bg-surface-1 p-8 md:p-10;
+    }
 
-  .ps-actions {
-    @apply mt-7 flex flex-wrap gap-3;
-  }
-
+    .ps-actions {
+        @apply mt-7 flex flex-wrap gap-3;
+    }
 }
 
 /* Travelling signal along an lc-pipe segment. */
 @keyframes lc-flow {
-  from { left: 0; }
-  to { left: calc(100% - 5px); }
+    from {
+        left: 0;
+    }
+    to {
+        left: calc(100% - 5px);
+    }
 }
 @keyframes lc-flow-v {
-  from { top: 0; }
-  to { top: calc(100% - 5px); }
+    from {
+        top: 0;
+    }
+    to {
+        top: calc(100% - 5px);
+    }
 }
 
 /* Travelling signal along a ps-pipe segment. */
 @keyframes ps-flow {
-  from { left: 0; }
-  to { left: calc(100% - 5px); }
+    from {
+        left: 0;
+    }
+    to {
+        left: calc(100% - 5px);
+    }
 }
 @keyframes ps-flow-v {
-  from { top: 0; }
-  to { top: calc(100% - 5px); }
+    from {
+        top: 0;
+    }
+    to {
+        top: calc(100% - 5px);
+    }
 }
 
 /* Periscope page: recolor the (reused) accent tokens to ocean aqua. The ps-
    content classes use the same accent-* utilities as launch-control, so this
    scoped override is all it takes to make the whole page read like water. */
 body.ps {
-  --color-accent-300: #7ee3f5;
-  --color-accent-400: #38c6e0;
-  --color-accent-500: #12a5c4;
-  --color-accent-600: #0c7e9c;
-  --color-violet: #2dd4bf;
+    --color-accent-300: #7ee3f5;
+    --color-accent-400: #38c6e0;
+    --color-accent-500: #12a5c4;
+    --color-accent-600: #0c7e9c;
+    --color-violet: #2dd4bf;
 }
 
 /* Animated dot travelling along share-flow tracks */
 @keyframes share-travel {
-  from { left: 0; }
-  to { left: calc(100% - 5px); }
+    from {
+        left: 0;
+    }
+    to {
+        left: calc(100% - 5px);
+    }
 }
 
 @keyframes share-travel-v {
-  from { top: 0; }
-  to { top: calc(100% - 5px); }
+    from {
+        top: 0;
+    }
+    to {
+        top: calc(100% - 5px);
+    }
 }

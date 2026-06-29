@@ -1,0 +1,523 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+{% block body_class %}ps{% endblock body_class %}
+
+{% block content %}
+
+{# ===== "Into the deep" backdrop — shared with the original Periscope page;
+   driven by --ps-depth / --ps-scroll / --ps-end (set in site.js). The page opens
+   in the normal theme and submerges as you scroll. CSS + one image; the bubble
+   field degrades to nothing without JS or under reduced-motion. ===== #}
+<style>
+  .ps-sea{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+    --d:var(--ps-depth,0);--s:var(--ps-scroll,0);--e:var(--ps-end,0)}
+  .ps-sea__water{position:absolute;inset:0;
+    background:linear-gradient(180deg,
+      #073a4e 0%,#06303f 16%,#042634 34%,#031c2b 54%,#02121f 74%,#010b15 88%,#01060f 100%);
+    background-size:100% 300%;background-position:0 calc(var(--s) * 100%);opacity:var(--d)}
+  .ps-sea__water::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 35%,rgba(0,3,9,.92) 100%);opacity:var(--e)}
+  .ps-rise{position:absolute;inset:0;overflow:hidden;opacity:var(--d)}
+  .ps-rise b{position:absolute;bottom:-6%;left:var(--x);width:var(--sz);height:var(--sz);border-radius:50%;
+    background:radial-gradient(circle, rgba(216,240,250,.5), rgba(216,240,250,0) 70%);
+    will-change:transform,opacity;animation:ps-rise-up var(--ttl) linear var(--dl) infinite}
+  /* Simple straight rise with a gentle fade in and out — subtle marine snow. */
+  @keyframes ps-rise-up{
+    0%{transform:translateY(0);opacity:0}
+    12%{opacity:var(--o)}
+    88%{opacity:var(--o)}
+    100%{transform:translateY(-105vh);opacity:0}}
+  .ps-sea__vignette{position:absolute;inset:0;
+    background:radial-gradient(78% 62% at 50% 42%, transparent 48%, rgba(0,4,12,.6) 100%);
+    opacity:calc(.3 * var(--d) + .42 * var(--e))}
+  .ps-seabed{position:absolute;inset:0;
+    background-position:center bottom;background-size:100% auto;background-repeat:no-repeat;
+    opacity:var(--e);transform:translateY(calc((1 - var(--e)) * 45%))}
+  .ps-seabed::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(1,8,18,.62) 0%, rgba(1,8,18,.34) 42%, rgba(1,6,15,.78) 100%)}
+
+  /* The agent's prompt — a small "bubble" card, reused for each move. */
+  .ps-bubble{position:relative;border-radius:16px;background:var(--color-surface-1);
+    border:1px solid color-mix(in srgb,var(--color-accent-500) 50%,var(--color-line));
+    box-shadow:0 22px 48px -26px rgba(0,0,0,.95),
+               0 0 36px -12px color-mix(in srgb,var(--color-accent-500) 45%,transparent);
+    padding:1.05rem 1.3rem}
+  .ps-bubble__meta{display:flex;align-items:center;gap:.5rem;
+    font-family:ui-monospace,Menlo,monospace;font-size:.66rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--color-accent-300)}
+  .ps-bubble__meta .material-symbols-outlined{font-size:1rem!important}
+  .ps-bubble__text{margin:.55rem 0 0;font-family:ui-monospace,Menlo,monospace;
+    font-size:1.05rem;line-height:1.5;color:var(--color-text-1)}
+
+  /* ===== Experiment-specific components (p2-) ===== */
+
+  /* Moves — the three prompts, condensed: kicker, the prompt, the outcome, a shot. */
+  .p2-moves{margin-top:1.6rem;display:flex;flex-direction:column;gap:1.7rem}
+  .p2-move{position:relative;border-left:2px solid color-mix(in srgb,var(--color-accent-500) 40%,var(--color-line));
+    padding-left:1.4rem}
+  .p2-move__n{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem}
+  .p2-move__badge{display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;
+    margin-left:-2.35rem;background:var(--color-surface-2);
+    border:1px solid color-mix(in srgb,var(--color-accent-500) 55%,var(--color-line));
+    font-family:ui-monospace,Menlo,monospace;font-size:.82rem;font-weight:600;color:var(--color-accent-300)}
+  .p2-move__k{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;font-weight:600;
+    letter-spacing:.15em;text-transform:uppercase;color:var(--color-accent-300)}
+  .p2-move h3{margin:0 0 .5rem;color:var(--color-text-1);font-size:1.18rem;font-weight:600;line-height:1.3}
+  .p2-move p{margin:0;color:var(--color-text-2);font-size:1rem;line-height:1.65}
+  .p2-move p + p{margin-top:.7rem}
+  .p2-move code{border:1px solid var(--color-line);background:var(--color-surface-2);border-radius:4px;
+    padding:0 .25em;font-family:ui-monospace,Menlo,monospace;font-size:.85em;color:var(--color-accent-300)}
+  .p2-move__out{display:flex;align-items:flex-start;gap:.55rem;margin-top:.9rem;
+    color:var(--color-text-1);font-size:.97rem;line-height:1.5}
+  .p2-move__out .material-symbols-outlined{color:var(--color-accent-400);font-size:1.25rem;flex:none}
+  .p2-move__out b{color:var(--color-text-1)}
+
+  /* Temporary: restore prose paragraph spacing regardless of the CSS build
+     (the compiled space-y rule is mis-scoped — to be fixed at the source later). */
+  .ps-body > * + * { margin-top: 1rem; }
+
+  /* ===== The comparison deck — a real slideshow; each metric its own slide. ===== */
+  .p2-deck{position:relative;margin-top:2rem;border:1px solid var(--color-line);border-radius:20px;
+    background:color-mix(in srgb,var(--color-surface-1) 84%,transparent);
+    backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);overflow:hidden;
+    box-shadow:0 34px 64px -42px rgba(0,0,0,.92)}
+  /* Slides share one grid cell, so the stage is as tall as the tallest slide
+     and nothing jumps or clips as they cross-fade. */
+  .p2-stage{display:grid}
+  .p2-slide{grid-area:1/1;display:flex;flex-direction:column;justify-content:center;gap:1.5rem;
+    padding:2.3rem 1.9rem 2.2rem;opacity:0;visibility:hidden;transform:translateY(10px);
+    transition:opacity .5s ease,transform .5s ease}
+  .p2-slide.is-active{opacity:1;visibility:visible;transform:none}
+  .p2-slide__kick{margin:0;display:flex;align-items:center;gap:.6rem;font-family:ui-monospace,Menlo,monospace;
+    font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
+  .p2-slide__kick .n{color:var(--color-accent-300);font-weight:700}
+  .p2-slide__kick .ttl{color:var(--color-text-1)}
+
+  /* Slide 1 — timeline: a six-year band of commits vs a single dot at the end. */
+  .p2-tl{display:flex;flex-direction:column;gap:.55rem}
+  .p2-tl__lane{display:flex;flex-direction:column;gap:.45rem}
+  .p2-tl__head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+  .p2-tl__tag{font-size:.84rem;color:var(--color-text-2)}
+  .p2-tl__big{font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:1.5rem;white-space:nowrap;color:#aab3c4}
+  .p2-tl__big.accent{color:var(--color-accent-300)}
+  .p2-tl__track{position:relative;height:26px;border-radius:7px;background:var(--color-surface-2);overflow:hidden}
+  .p2-tl__track.rk i{position:absolute;inset:0;
+    background-image:radial-gradient(circle, rgba(170,179,196,.85) 1.3px, transparent 1.7px);
+    background-size:8px 8px}
+  .p2-tl__track.va b{position:absolute;top:50%;right:6px;transform:translateY(-50%);width:12px;height:12px;
+    border-radius:50%;background:linear-gradient(135deg,var(--color-accent-400),var(--color-violet));
+    box-shadow:0 0 16px 2px var(--color-accent-400)}
+  .p2-tl__years{display:flex;justify-content:space-between;font-family:ui-monospace,Menlo,monospace;
+    font-size:.7rem;color:var(--color-text-3);padding:.15rem .1rem 0}
+
+  /* Slide 2 — two equal SVG circles, both scaled so a full 360° = 52k lines.
+     React fills it; Vantage is the same circle but only a ~21° sliver, rest empty.
+     SVG (not conic-gradient) keeps the edges crisp and seam-free. */
+  .p2-pies{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;align-items:start}
+  .p2-pie__g{display:flex;flex-direction:column;align-items:center}
+  .p2-pie{width:168px;height:168px;display:block;filter:drop-shadow(0 8px 16px rgba(0,0,0,.55))}
+  .p2-pie.vantage{filter:drop-shadow(0 8px 16px rgba(0,0,0,.55)) drop-shadow(0 0 9px rgba(129,140,248,.55))}
+  .p2-pie__bg{fill:var(--color-surface-2)}
+  .p2-pie__ring{fill:none;stroke:var(--color-line);stroke-width:1}
+  .p2-pie__cap{margin-top:.75rem;text-align:center;font-size:.82rem;color:var(--color-text-2)}
+  .p2-pie__cap b{display:block;color:var(--color-text-1);font-family:ui-monospace,Menlo,monospace;
+    font-size:1.05rem}
+  .p2-pie__legend{list-style:none;margin:.95rem 0 0;padding:0;width:100%;max-width:15rem;
+    display:flex;flex-direction:column;gap:.42rem}
+  .p2-pie__legend li{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--color-text-2)}
+  .p2-pie__legend i{width:.7rem;height:.7rem;border-radius:3px;flex:none}
+  .p2-pie__legend span{flex:1}
+  .p2-pie__legend .v{flex:none;font-family:ui-monospace,Menlo,monospace;font-size:.78rem;color:var(--color-text-3)}
+  /* "included / free" rows — what Vantage provides, that you don't write. */
+  .p2-pie__legend li.incl{color:var(--color-text-3);margin-top:.3rem;padding-top:.5rem;
+    border-top:1px solid var(--color-line)}
+  .p2-pie__legend li.incl + li.incl{margin-top:0;padding-top:0;border-top:0}
+  .p2-pie__legend li.incl .ck{flex:none;width:.7rem;text-align:center;font-size:.78rem;font-weight:700;
+    color:var(--color-accent-400)}
+  .p2-pie__legend li.incl .v{color:var(--color-accent-300)}
+  @media(max-width:560px){.p2-pies{gap:1rem}.p2-pie{width:128px;height:128px}}
+
+  /* Slide 3 — people: a faded crowd of dots vs one glowing node. */
+  .p2-pp{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.4rem}
+  .p2-pp__crowd{height:8rem;border-radius:12px;
+    background-image:radial-gradient(circle, rgba(170,179,196,.92) 2px, transparent 2.5px);
+    background-size:15px 15px;
+    -webkit-mask-image:radial-gradient(ellipse 75% 80% at 50% 50%, #000 58%, transparent 100%);
+            mask-image:radial-gradient(ellipse 75% 80% at 50% 50%, #000 58%, transparent 100%)}
+  .p2-pp__one{height:8rem;display:grid;place-items:center}
+  .p2-pp__one b{width:22px;height:22px;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%, rgba(255,255,255,.55), transparent 42%),
+               linear-gradient(135deg,var(--color-accent-400),var(--color-violet));
+    box-shadow:0 0 0 10px color-mix(in srgb,var(--color-accent-500) 13%,transparent),
+               0 0 0 22px color-mix(in srgb,var(--color-accent-500) 7%,transparent),
+               0 0 28px 3px var(--color-accent-400)}
+  .p2-pp__vs{font-family:ui-monospace,Menlo,monospace;font-size:.78rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--color-text-3)}
+  .p2-pp__cap{text-align:center;margin-top:.85rem;display:flex;flex-direction:column;gap:.1rem}
+  .p2-pp__cap .big{font-family:ui-monospace,Menlo,monospace;font-weight:800;font-size:1.8rem;color:#aab3c4}
+  .p2-pp__cap .big.accent{color:var(--color-accent-300)}
+  .p2-pp__cap .sm{font-size:.8rem;color:var(--color-text-2)}
+
+  /* Slide 4 — features: lit chips we matched vs dim chips React still owns. */
+  .p2-fe{display:grid;gap:1.5rem}
+  @media(min-width:680px){.p2-fe{grid-template-columns:1fr 1fr;gap:2rem}}
+  .p2-fe__h{display:block;margin-bottom:.85rem;font-family:ui-monospace,Menlo,monospace;font-size:.74rem;
+    letter-spacing:.08em;text-transform:uppercase}
+  .p2-fe__col.va .p2-fe__h{color:var(--color-accent-300)}
+  .p2-fe__col.rk .p2-fe__h{color:var(--color-text-3)}
+  .p2-fe__chips{display:flex;flex-wrap:wrap;gap:.45rem}
+  .p2-fe__chips span{font-size:.85rem;padding:.34rem .72rem;border-radius:999px;
+    border:1px solid var(--color-line);background:var(--color-surface-2);color:var(--color-text-3)}
+  .p2-fe__chips span.on{color:var(--color-text-1);
+    border-color:color-mix(in srgb,var(--color-accent-500) 50%,var(--color-line));
+    background:color-mix(in srgb,var(--color-accent-500) 15%,var(--color-surface-2))}
+
+  /* Deck nav — arrows + dots. */
+  .p2-deck__nav{display:flex;align-items:center;justify-content:center;gap:1.1rem;padding:.1rem 0 1.15rem}
+  .p2-arrow{width:2rem;height:2rem;border-radius:50%;border:1px solid var(--color-line);
+    background:var(--color-surface-2);color:var(--color-text-2);font-size:1.05rem;line-height:1;cursor:pointer;
+    display:grid;place-items:center;transition:color .15s,border-color .15s}
+  .p2-arrow:hover{color:var(--color-text-1);border-color:var(--color-line-strong)}
+  .p2-deck__dots{display:flex;gap:.5rem}
+  .p2-deck__dots button{width:.55rem;height:.55rem;border-radius:50%;border:0;padding:0;cursor:pointer;
+    background:var(--color-text-3);opacity:.4;transition:opacity .2s,transform .2s,background .2s}
+  .p2-deck__dots button:hover{opacity:.7}
+  .p2-deck__dots button.is-on{opacity:1;background:var(--color-accent-400);transform:scale(1.18)}
+  @media(max-width:560px){
+    .p2-pp{grid-template-columns:1fr;gap:.7rem}
+    .p2-pp__vs{justify-self:center}
+  }
+
+  @media (prefers-reduced-motion:reduce){.ps-rise{display:none}}
+</style>
+
+<div class="ps-sea" aria-hidden="true">
+  <div class="ps-sea__water"></div>
+  <div class="ps-rise"></div>{# independent bubbles, spawned in site.js #}
+  <div class="ps-seabed" style="background-image:url('{{ get_url(path='images/periscope/seabed.webp') }}')"></div>
+  <div class="ps-sea__vignette"></div>
+</div>
+
+{{ nav::header() }}
+
+{% set repo = "https://github.com/romaninsh/vantage-ui-examples" %}
+{% set app = repo ~ "/tree/main/apps/periscope" %}
+{% set crate_pr = "https://github.com/romaninsh/vantage/pull/323" %}
+{% set crate_src = "https://github.com/romaninsh/vantage/tree/main/vantage-kubernetes" %}
+{% set app_pr = repo ~ "/pull/17" %}
+
+<!-- Dive bar — scroll progress -->
+<div class="ps-progress" aria-hidden="true"><span></span></div>
+
+<div class="ps-shell pt-10 md:pt-14">
+    <main class="ps-doc">
+
+        <!-- 00 ───────────────────────────── THE CLAIM -->
+        <section id="surface" class="ps-chapter">
+            <p class="ps-phase">React vs Vantage</p>
+            <h1 class="text-display">Periscope</h1>
+            <p class="ps-lead">
+                Building a control room for a Kubernetes cluster — nodes, pods and deployments as
+                drillable tables, with live metrics — is normally a job for <strong>React</strong>,
+                and it is enormous. We built the same thing a different way: in
+                <strong>Vantage</strong>, with three prompts to Claude Opus 4.8, in an afternoon.
+            </p>
+            <p class="ps-body !mt-4">
+                The yardstick is <a href="https://headlamp.dev/">Headlamp</a> — the open-source,
+                CNCF-backed cluster UI, and about as good as the React way gets: six years of work,
+                ~330 contributors, 100,000+ lines. That's what building it yourself costs. Here is
+                the difference, graph by graph.
+            </p>
+
+            <div class="p2-deck !mt-8" aria-label="React versus Vantage, slide by slide">
+                <div class="p2-stage">
+
+                    <!-- 01 · Time -->
+                    <figure class="p2-slide is-active">
+                        <figcaption class="p2-slide__kick"><span class="n">01</span><span class="ttl">Time to build</span></figcaption>
+                        <div class="p2-tl">
+                            <div class="p2-tl__lane">
+                                <div class="p2-tl__head"><span class="p2-tl__tag">React · Headlamp</span><span class="p2-tl__big">~6 years</span></div>
+                                <div class="p2-tl__track rk"><i></i></div>
+                            </div>
+                            <div class="p2-tl__years"><span>2019</span><span>2026</span></div>
+                            <div class="p2-tl__lane">
+                                <div class="p2-tl__head"><span class="p2-tl__tag">Vantage · Periscope</span><span class="p2-tl__big accent">an afternoon</span></div>
+                                <div class="p2-tl__track va"><b></b></div>
+                            </div>
+                        </div>
+                    </figure>
+
+                    <!-- 02 · Lines -->
+                    <figure class="p2-slide">
+                        <figcaption class="p2-slide__kick"><span class="n">02</span><span class="ttl">Lines of code you write</span></figcaption>
+                        <div class="p2-pies">
+                            <div class="p2-pie__g">
+                                <svg class="p2-pie react" viewBox="0 0 100 100" role="img" aria-label="React, about 52,000 lines">
+                                    <circle class="p2-pie__bg" cx="50" cy="50" r="48"></circle>
+                                    <path d="M50 50 L50 2 A48 48 0 0 1 97.91 46.99 Z" fill="#6366f1"></path>
+                                    <path d="M50 50 L97.91 46.99 A48 48 0 0 1 24.28 90.53 Z" fill="#8b5cf6"></path>
+                                    <path d="M50 50 L24.28 90.53 A48 48 0 0 1 13.02 19.40 Z" fill="#5b8def"></path>
+                                    <path d="M50 50 L13.02 19.40 A48 48 0 0 1 50 2 Z" fill="#3f7d8c"></path>
+                                    <circle class="p2-pie__ring" cx="50" cy="50" r="48"></circle>
+                                </svg>
+                                <div class="p2-pie__cap">React · Headlamp<b>~52,000 lines</b></div>
+                                <ul class="p2-pie__legend">
+                                    <li><i style="background:#6366f1"></i><span>Resource views</span><span class="v">~12,600</span></li>
+                                    <li><i style="background:#8b5cf6"></i><span>Vantage UI</span><span class="v">~18,000</span></li>
+                                    <li><i style="background:#5b8def"></i><span>K8s client</span><span class="v">~14,000</span></li>
+                                    <li><i style="background:#3f7d8c"></i><span>Vantage Framework</span><span class="v">~8,000</span></li>
+                                </ul>
+                            </div>
+                            <div class="p2-pie__g">
+                                <svg class="p2-pie vantage" viewBox="0 0 100 100" role="img" aria-label="Vantage, about 3,100 lines">
+                                    <circle class="p2-pie__bg" cx="50" cy="50" r="48"></circle>
+                                    <path d="M50 50 L50 2 A48 48 0 0 1 63.10 3.82 Z" fill="#818cf8"></path>
+                                    <path d="M50 50 L63.10 3.82 A48 48 0 0 1 67.67 5.37 Z" fill="#c4b5fd"></path>
+                                    <circle class="p2-pie__ring" cx="50" cy="50" r="48"></circle>
+                                </svg>
+                                <div class="p2-pie__cap">Vantage · Periscope<b>~3,100 lines</b></div>
+                                <ul class="p2-pie__legend">
+                                    <li><i style="background:#818cf8"></i><span>Rust &middot; K8s protocol</span><span class="v">~2,300</span></li>
+                                    <li><i style="background:#c4b5fd"></i><span>YAML + Rhai &middot; the app</span><span class="v">~800</span></li>
+                                    <li class="incl"><span class="ck">&check;</span><span>Vantage UI</span><span class="v">included</span></li>
+                                    <li class="incl"><span class="ck">&check;</span><span>Framework</span><span class="v">Vantage (OSS)</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </figure>
+
+                    <!-- 03 · People -->
+                    <figure class="p2-slide">
+                        <figcaption class="p2-slide__kick"><span class="n">03</span><span class="ttl">People it took</span></figcaption>
+                        <div class="p2-pp">
+                            <div class="p2-pp__side rk">
+                                <div class="p2-pp__crowd"></div>
+                                <div class="p2-pp__cap"><span class="big">~330</span><span class="sm">React contributors</span></div>
+                            </div>
+                            <span class="p2-pp__vs">vs</span>
+                            <div class="p2-pp__side va">
+                                <div class="p2-pp__one"><b></b></div>
+                                <div class="p2-pp__cap"><span class="big accent">1</span><span class="sm">AI agent</span></div>
+                            </div>
+                        </div>
+                    </figure>
+
+                    <!-- 04 · Features -->
+                    <figure class="p2-slide">
+                        <figcaption class="p2-slide__kick"><span class="n">04</span><span class="ttl">What each gives you</span></figcaption>
+                        <div class="p2-fe">
+                            <div class="p2-fe__col va">
+                                <span class="p2-fe__h">Vantage · an afternoon</span>
+                                <div class="p2-fe__chips">
+                                    <span class="on">Browse resources</span><span class="on">Drill relationships</span>
+                                    <span class="on">Live dashboards</span><span class="on">Summary panels</span>
+                                    <span class="on">Sidebar &amp; theming</span>
+                                </div>
+                            </div>
+                            <div class="p2-fe__col rk">
+                                <span class="p2-fe__h">React · years more</span>
+                                <div class="p2-fe__chips">
+                                    <span>Edit &amp; apply</span><span>Plugins</span><span>Multi-cluster</span>
+                                    <span>RBAC</span><span>Port-forward</span><span>Helm</span>
+                                    <span>Topology map</span><span>Search</span>
+                                </div>
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+
+                <div class="p2-deck__nav">
+                    <button class="p2-arrow" type="button" data-dir="-1" aria-label="Previous slide">&lsaquo;</button>
+                    <div class="p2-deck__dots">
+                        <button type="button" class="is-on" aria-label="Time to build"></button>
+                        <button type="button" aria-label="Lines of code"></button>
+                        <button type="button" aria-label="People"></button>
+                        <button type="button" aria-label="Features"></button>
+                    </div>
+                    <button class="p2-arrow" type="button" data-dir="1" aria-label="Next slide">&rsaquo;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 01 ───────────────────────────── THE THREE MOVES -->
+        <section id="moves" class="ps-chapter">
+            <p class="ps-phase">The experiment</p>
+            <h2 class="ps-h">Three prompts, start to finish</h2>
+            <div class="ps-body">
+                <p>
+                    Vantage already turns SQL, REST and document stores into browsable, related
+                    tables — but it had never seen Kubernetes. So the run starts by teaching it,
+                    and ends with a running control room. Three prompts, each one move.
+                </p>
+            </div>
+
+            <div class="p2-moves">
+
+                <!-- Move 1 -->
+                <article class="p2-move">
+                    <div class="p2-move__n">
+                        <span class="p2-move__badge">1</span>
+                        <span class="p2-move__k">See the cluster</span>
+                    </div>
+                    <h3>Teach Vantage to read the Kubernetes API</h3>
+                    <div class="ps-bubble !mt-3">
+                        <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 1 · Claude Opus 4.8</span>
+                        <p class="ps-bubble__text">use the new persistence guide to add a data source for kubernetes, stop when done</p>
+                    </div>
+                    <p class="!mt-4">Kubernetes doesn't hand back flat rows — it returns deeply
+                        nested objects, with numbers hidden inside strings like
+                        <code>"16331752Ki"</code>, and relationships made of owner-references and
+                        label selectors instead of foreign keys. Following Vantage's
+                        own guide for adding a backend, the agent built a native data source that
+                        flattens all of it into typed, related rows.</p>
+                    <p class="p2-move__out"><span class="material-symbols-outlined">deployed_code</span>
+                        <span>Out came <b>vantage-kubernetes</b> — a new crate, <b>~5,900 lines</b>,
+                        17 tests green. Written by the agent, reusable by anyone.</span></p>
+                </article>
+
+                <!-- Move 2 -->
+                <article class="p2-move">
+                    <div class="p2-move__n">
+                        <span class="p2-move__badge">2</span>
+                        <span class="p2-move__k">Wire it in</span>
+                    </div>
+                    <h3>Make <code>kubernetes</code> a first-class data source</h3>
+                    <div class="ps-bubble !mt-3">
+                        <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 2 · Claude Opus 4.8</span>
+                        <p class="ps-bubble__text">register the new vantage-kubernetes crate as a Vantage data source</p>
+                    </div>
+                    <p class="!mt-4">A crate on its own is just a library. The second prompt threaded
+                        it through Vantage — a new data-source kind, a per-table query loader,
+                        connection plumbing that reads your kubeconfig, and an entry in the
+                        <em>Add data source</em> dialog — so any YAML app can say
+                        <code>type: kubernetes</code> and point at a cluster.</p>
+                    <p class="p2-move__out"><span class="material-symbols-outlined">rocket_launch</span>
+                        <span>Threaded through the whole app in one prompt — and shipped as
+                        <b>Vantage 0.20</b>.</span></p>
+                </article>
+
+                <!-- Move 3 -->
+                <article class="p2-move">
+                    <div class="p2-move__n">
+                        <span class="p2-move__badge">3</span>
+                        <span class="p2-move__k">Build the control room</span>
+                    </div>
+                    <h3>The whole app, described in YAML</h3>
+                    <div class="ps-bubble !mt-3">
+                        <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 3 · Claude Opus 4.8</span>
+                        <p class="ps-bubble__text">build a Kubernetes cluster browser on the kubernetes datasource</p>
+                    </div>
+                    <p class="!mt-4">With a datasource Vantage understands, the last prompt built the
+                        app itself: twelve resource tables, the relations that drill between them,
+                        two live dashboards, bespoke summary panels, a grouped sidebar and a theme.</p>
+                    <p class="p2-move__out"><span class="material-symbols-outlined">all_inclusive</span>
+                        <span>All of it as <b>32 YAML files</b> and <b>zero lines of UI code</b> —
+                        validated against the real loaders, clean against a live cluster.</span></p>
+                </article>
+            </div>
+
+            <div class="ps-shots !mt-8">
+                <figure class="ps-frame">
+                    <img src="{{ get_url(path='images/periscope/usage.webp') }}" width="1600" height="1061" alt="Periscope's Usage dashboard — live CPU and memory by node and by pod, with a namespace selector" loading="lazy">
+                    <figcaption>The <code>usage</code> dashboard — live CPU/memory, re-scoped by namespace.</figcaption>
+                </figure>
+                <figure class="ps-frame">
+                    <img src="{{ get_url(path='images/periscope/deployments.webp') }}" width="1600" height="1053" alt="The Deployments grid with a rollout Summary view — health badge, ready-replicas progress bar and per-ReplicaSet status" loading="lazy">
+                    <figcaption>A deployment's Summary view — badges, a rollout progress bar, stats.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- 02 ───────────────────────────── IT GENERALIZES -->
+        <section id="beyond" class="ps-chapter">
+            <p class="ps-phase">The real result</p>
+            <h2 class="ps-h">The cluster was just the demo</h2>
+            <div class="ps-body">
+                <p>
+                    The win was never a Kubernetes app. It's that Vantage is AI-ready end to end:
+                    point an agent at its guides and turn <em>any</em> backend — an API, a
+                    database, a CLI — into a drillable, related-table app, in an afternoon instead
+                    of a quarter. Periscope is what that looks like when the backend is a cluster.
+                    Yours could be anything you operate.
+                </p>
+            </div>
+
+            <div class="ps-note warn">
+                <span class="material-symbols-outlined">key</span>
+                <div>
+                    <p>The Kubernetes backend lives in the <strong>private Vantage UI
+                    repository</strong>, so Periscope won't open in a stock download just yet.</p>
+                    <p class="!mt-2">Want to point Vantage at your own cluster? I'm happy to make
+                    you a <strong>custom build</strong> —
+                    <a href="{{ repo }}/issues" target="_blank" rel="noopener">open an issue</a>
+                    and say hello.</p>
+                </div>
+            </div>
+
+            <div class="ps-cta">
+                <h3 class="text-h3">Build your own</h3>
+                <p class="ps-body !mt-3">Read the source, follow the three prompts that built it, or
+                    ask for a custom build to drive your own cluster.</p>
+                <div class="ps-actions">
+                    <a href="{{ repo }}/issues" class="btn btn-primary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">sailing</span>
+                        Request a custom build
+                    </a>
+                    <a href="{{ app }}" class="btn btn-outline-primary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">description</span>
+                        The YAML inventory
+                    </a>
+                    <a href="{{ crate_src }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">dns</span>
+                        The Kubernetes crate
+                    </a>
+                    <a href="/solutions/app-builders/" class="btn btn-outline-secondary">
+                        <span class="material-symbols-outlined">developer_board</span>
+                        How Vantage works
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+{# Comparison slideshow. Auto-advances on a timer; hovering the deck pauses it,
+   and dots/arrows navigate and re-arm. Without JS the first slide shows
+   statically; under reduced-motion it stays manual (no auto-advance). #}
+<script>
+(function () {
+  var deck = document.querySelector(".p2-deck");
+  if (!deck) return;
+  var slides = Array.prototype.slice.call(deck.querySelectorAll(".p2-slide"));
+  var dots   = Array.prototype.slice.call(deck.querySelectorAll(".p2-deck__dots button"));
+  if (slides.length < 2) return;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var DWELL = 16000;
+  var i = 0, timer = null, held = false;
+
+  function clear() { if (timer) { clearTimeout(timer); timer = null; } }
+  function schedule() { clear(); if (reduce || held) return; timer = setTimeout(function () { go(i + 1); }, DWELL); }
+  function go(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach(function (s, x) { s.classList.toggle("is-active", x === i); });
+    dots.forEach(function (d, x) { d.classList.toggle("is-on", x === i); });
+    schedule();
+  }
+
+  dots.forEach(function (d, x) { d.addEventListener("click", function () { go(x); }); });
+  deck.querySelectorAll("[data-dir]").forEach(function (b) {
+    b.addEventListener("click", function () { go(i + parseInt(b.getAttribute("data-dir"), 10)); });
+  });
+  deck.addEventListener("mouseenter", function () { held = true; clear(); });
+  deck.addEventListener("mouseleave", function () { held = false; schedule(); });
+
+  go(0);
+})();
+</script>
+
+{{ nav::footer() }}
+{% endblock content %}
