@@ -44,14 +44,24 @@
      whole field fades in with submersion (--d). */
   .ps-rise{position:absolute;inset:0;overflow:hidden;opacity:var(--d)}
   .ps-rise b{position:absolute;bottom:-6%;left:var(--x);width:var(--sz);height:var(--sz);border-radius:50%;
-    background:radial-gradient(circle, rgba(216,240,250,.5), rgba(216,240,250,0) 70%);
-    will-change:transform,opacity;animation:ps-rise-up var(--ttl) linear var(--dl) infinite}
-  /* Simple straight rise with a gentle fade in and out — subtle marine snow. */
+    /* off-centre highlight + faint rim reads as a real air bubble, not a flat dot */
+    background:radial-gradient(circle at 34% 30%,
+      rgba(255,255,255,.85), rgba(216,240,250,.42) 42%, rgba(216,240,250,.06) 72%, rgba(216,240,250,0) 100%);
+    box-shadow:inset 0 0 0 .5px rgba(232,248,255,.35);
+    will-change:transform,opacity;animation:ps-rise-up var(--ttl) ease-in-out var(--dl) infinite}
+  /* Rise with a side-to-side wobble (--sway), peaking mid-ascent — the buoyant
+     drift of a real bubble through water rather than a straight line. */
   @keyframes ps-rise-up{
-    0%{transform:translateY(0);opacity:0}
+    0%{transform:translate(0,0);opacity:0}
     12%{opacity:var(--o)}
+    25%{transform:translate(var(--sway),-26vh)}
+    50%{transform:translate(calc(var(--sway) * -1),-52vh)}
+    75%{transform:translate(var(--sway),-78vh)}
     88%{opacity:var(--o)}
-    100%{transform:translateY(-105vh);opacity:0}}
+    100%{transform:translate(0,-105vh);opacity:0}}
+  /* Rare, slow, fat bubbles that drift across while you read — the occasional
+     big one breaking loose from the deep. Wider wobble, softer edge. */
+  .ps-rise b.big{filter:blur(.4px)}
   /* Vignette deepens with submersion, crushing inward in the abyss. */
   .ps-sea__vignette{position:absolute;inset:0;
     background:radial-gradient(78% 62% at 50% 42%, transparent 48%, rgba(0,4,12,.6) 100%);
@@ -63,7 +73,8 @@
   .ps-seabed{position:absolute;inset:0;
     background-position:center bottom;background-size:100% auto;background-repeat:no-repeat;
     opacity:var(--e);
-    transform:translateY(calc((1 - var(--e)) * 45%))}
+    /* lift well clear of the (opaque) footer so the floor reads above its top edge */
+    transform:translateY(calc((1 - var(--e)) * 45% - 15%))}
   .ps-seabed::after{content:"";position:absolute;inset:0;
     background:linear-gradient(180deg,
       rgba(1,8,18,.62) 0%, rgba(1,8,18,.34) 42%, rgba(1,6,15,.78) 100%)}

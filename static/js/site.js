@@ -73,7 +73,9 @@
   const deck = document.getElementById("roadmapDeck");
   if (deck) {
     const cards = Array.from(deck.querySelectorAll(".roadmap-card"));
-    const OFFSET = 16, SCALE = 0.05, MAX_VISIBLE = 3;
+    const OFFSET = 16,
+      SCALE = 0.05,
+      MAX_VISIBLE = 3;
     let animating = false;
 
     const render = () => {
@@ -260,7 +262,7 @@
           const current = ids.find((id) => visible.has(id));
           if (current) setActive(current);
         },
-        { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+        { rootMargin: "-25% 0px -65% 0px", threshold: 0 },
       );
       chapters.forEach((c) => obs.observe(c));
     }
@@ -309,12 +311,19 @@
         const ttl = rnd(40, 64) - sz; // slow; larger ⇒ a touch faster
         const sway = (Math.random() < 0.5 ? -1 : 1) * rnd(4, 24);
         html +=
-          '<b style="--x:' + rnd(0, 100).toFixed(1) +
-          '%;--sz:' + sz.toFixed(1) +
-          'px;--ttl:' + ttl.toFixed(1) +
-          's;--dl:-' + rnd(0, ttl).toFixed(1) +
-          's;--sway:' + sway.toFixed(0) +
-          'px;--o:' + rnd(0.12, 0.42).toFixed(2) + '"></b>';
+          '<b style="--x:' +
+          rnd(0, 100).toFixed(1) +
+          "%;--sz:" +
+          sz.toFixed(1) +
+          "px;--ttl:" +
+          ttl.toFixed(1) +
+          "s;--dl:-" +
+          rnd(0, ttl).toFixed(1) +
+          "s;--sway:" +
+          sway.toFixed(0) +
+          "px;--o:" +
+          rnd(0.12, 0.42).toFixed(2) +
+          '"></b>';
       }
       rise.innerHTML = html;
     }
@@ -396,7 +405,7 @@
           const current = ids.find((id) => visible.has(id));
           if (current) setActive(current);
         },
-        { rootMargin: "-25% 0px -65% 0px", threshold: 0 }
+        { rootMargin: "-25% 0px -65% 0px", threshold: 0 },
       );
       chapters.forEach((c) => obs.observe(c));
     }
