@@ -146,6 +146,55 @@
   .ps-step ul{margin:.7rem 0 0;padding-left:1.15rem;list-style:disc}
   .ps-step li{margin:.25rem 0}
   .ps-step li::marker{color:var(--color-accent-400)}
+  /* ── Prompt-one steps: progressive-disclosure accordions ───────────────
+     Each guide step is a <details>. Its plain-language summary stays visible
+     so the section reads as a short, self-contained narrative; the Rust/Rhai
+     proof tucks into the expander. A numbered badge rides a continuous rail
+     down the feed — a depth gauge for the descent. Scoped to details.ps-step
+     and #datasource so the Prompt two/three feeds are untouched. */
+  .ps-h1-sub{font-size:.4em;font-weight:500;color:var(--color-text-3);letter-spacing:0;white-space:nowrap}
+  #datasource .ps-feed{gap:0}
+  details.ps-step{position:relative;padding:0 0 1.8rem 1.5rem;
+    border-left:2px solid color-mix(in srgb,var(--color-accent-500) 32%,var(--color-line))}
+  details.ps-step:last-child{padding-bottom:.3rem}
+  details.ps-step > summary{display:block;cursor:pointer;list-style:none;outline:none}
+  details.ps-step > summary::-webkit-details-marker{display:none}
+  details.ps-step > summary:focus-visible{outline:2px solid var(--color-accent-400);
+    outline-offset:5px;border-radius:8px}
+  .ps-step__top{display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem}
+  .ps-step__top .ps-step__k{margin-bottom:0}
+  .ps-step__n{flex:none;display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;
+    margin-left:-2.45rem;background:var(--color-surface-2);
+    border:1px solid color-mix(in srgb,var(--color-accent-500) 55%,var(--color-line));
+    font-family:ui-monospace,Menlo,monospace;font-size:.76rem;font-weight:600;color:var(--color-accent-300)}
+  /* Summaries read like the agent's thought bubbles — italic, conversational,
+     split into short lines, with technical terms introduced as code chips. */
+  .ps-step__sum{display:block;font-style:italic;color:var(--color-text-1);font-size:1.06rem;line-height:1.65}
+  .ps-step__sum + .ps-step__sum{margin-top:.55rem}
+  .ps-step__sum code{font-style:normal}
+  /* The agent's opening thought — its plan, before it works the steps. */
+  .ps-think{display:flex;gap:.55rem;margin:0 0 1.7rem;font-style:italic;
+    color:var(--color-text-1);font-size:1.06rem;line-height:1.65}
+  .ps-think .material-symbols-outlined{flex:none;margin-top:.1rem;font-style:normal;
+    font-size:1.3rem!important;color:var(--color-accent-400)}
+  .ps-step__more{display:inline-flex;align-items:center;gap:.3rem;margin-top:.6rem;
+    font-family:ui-monospace,Menlo,monospace;font-size:.7rem;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--color-accent-300)}
+  .ps-step__more .material-symbols-outlined{font-size:1.15rem!important;transition:transform .22s ease}
+  details.ps-step[open] .ps-step__more .material-symbols-outlined{transform:rotate(180deg)}
+  details.ps-step[open] .ps-step__more .lbl-show{display:none}
+  details.ps-step:not([open]) .ps-step__more .lbl-hide{display:none}
+  .ps-step__body{padding-top:.75rem}
+  .ps-step__body > .ps-step__h:first-child{margin-top:0}
+  .ps-step__further{margin-top:1.2rem}
+  .ps-step__further a{display:inline-flex;align-items:center;gap:.3rem;
+    font-family:ui-monospace,Menlo,monospace;font-size:.7rem;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--color-accent-300);text-decoration:none}
+  .ps-step__further a:hover{text-decoration:underline;text-underline-offset:2px}
+  .ps-step__further .material-symbols-outlined{font-size:1rem!important}
+  @media (prefers-reduced-motion:no-preference){
+    details.ps-step[open] .ps-step__body{animation:ps-step-in .22s ease both}
+    @keyframes ps-step-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}}
   /* Interactive capability ladder — pure-CSS radio tabs (relationship levels). */
   .ps-tier{margin:1.1rem 0 0;border:1px solid var(--color-line);border-radius:14px;overflow:hidden;
     background:color-mix(in srgb,var(--color-surface-1) 70%,transparent)}
@@ -231,6 +280,34 @@
     display:flex;align-items:center;gap:.6rem;color:var(--color-text-2);font-size:.97rem}
   .ps-outcome .material-symbols-outlined{color:var(--color-accent-400)}
   .ps-outcome strong{color:var(--color-text-1)}
+  /* Prompt two: a standalone prompt bubble (no sticky absorption), a soundbite
+     pull-quote, and a numbered release-pipeline list — plain, no expanders. */
+  .ps-bubble--solo{margin-top:1.75rem}
+  .ps-quote{margin:1.9rem 0;padding:.1rem 0 .1rem 1.4rem;font-style:italic;
+    border-left:3px solid color-mix(in srgb,var(--color-accent-500) 55%,var(--color-line));
+    font-size:1.18rem;line-height:1.55;color:var(--color-text-1)}
+  .ps-quote__by{display:block;margin-top:.7rem;font-style:normal;font-family:ui-monospace,Menlo,monospace;
+    font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-300)}
+  .ps-pipe{margin:1.2rem 0 0;padding:0;list-style:none;counter-reset:pipe}
+  .ps-pipe li{position:relative;padding-left:2.3rem;margin:.85rem 0;counter-increment:pipe;
+    color:var(--color-text-2);line-height:1.6}
+  .ps-pipe li::before{content:counter(pipe);position:absolute;left:0;top:0;
+    display:grid;place-items:center;width:1.55rem;height:1.55rem;border-radius:50%;
+    background:var(--color-surface-2);
+    border:1px solid color-mix(in srgb,var(--color-accent-500) 50%,var(--color-line));
+    font-family:ui-monospace,Menlo,monospace;font-size:.72rem;font-weight:600;color:var(--color-accent-300)}
+  .ps-pipe li strong{color:var(--color-text-1);font-weight:600}
+  /* Guarantee a gap between the opener prose and the hero button. */
+  #surface .ps-actions{margin-top:2rem}
+  /* Clickable screenshot thumbnails (prompt three) — click opens the full image. */
+  .ps-thumbs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.9rem;margin:1.4rem 0}
+  .ps-thumb{margin:0}
+  .ps-thumb a{display:block;border:1px solid var(--color-line);border-radius:10px;overflow:hidden;
+    background:var(--color-surface-2)}
+  .ps-thumb img{display:block;width:100%;height:150px;object-fit:cover;object-position:top center;
+    transition:transform .25s ease}
+  .ps-thumb a:hover img{transform:scale(1.05)}
+  .ps-thumb figcaption{margin-top:.45rem;font-size:.78rem;line-height:1.4;color:var(--color-text-3)}
   /* Temporary: restore prose paragraph spacing regardless of the CSS build
      (the compiled space-y rule is mis-scoped — to be fixed at the source later). */
   .ps-body > * + * { margin-top: 1rem; }
@@ -322,6 +399,7 @@
 
 {% set repo = "https://github.com/romaninsh/vantage-ui-examples" %}
 {% set app = repo ~ "/tree/main/apps/periscope" %}
+{% set install_url = "vantage://vantage-ui.com/examples/periscope.zip" %}
 {% set crate_pr = "https://github.com/romaninsh/vantage/pull/323" %}
 {% set crate_src = "https://github.com/romaninsh/vantage/tree/main/vantage-kubernetes" %}
 {% set app_pr = repo ~ "/pull/17" %}
@@ -337,19 +415,38 @@
         <!-- 00 ───────────────────────────── SURFACE -->
         <section id="surface" class="ps-chapter">
             <p class="ps-phase">React vs Vantage</p>
-            <h1 class="text-display">Periscope</h1>
+            <h1 class="text-display">Periscope <span class="ps-h1-sub">(Headlamp clone)</span></h1>
             <p class="ps-lead">
-                Building a control room for a Kubernetes cluster — nodes, pods and deployments as
-                drillable tables, with live metrics — is normally a job for <strong>React</strong>,
-                and it is enormous. We built the same thing a different way: in
-                <strong>Vantage</strong>, with three prompts to Claude Opus 4.8, in an afternoon.
+                <strong>Kubernetes</strong> (<strong>k8s</strong>) is the engine behind much of
+                today's infrastructure — it runs the containerised apps that power a huge share of
+                the modern web. <a href="https://headlamp.dev/">Headlamp</a> is a popular
+                window into it — a dashboard for seeing what's running across a <em>cluster</em>
+                (one Kubernetes setup). It's open-source, written in <strong>React</strong>,
+                backed by the CNCF, and built over six years by hundreds of contributors.
             </p>
-            <p class="ps-body !mt-4">
-                The yardstick is <a href="https://headlamp.dev/">Headlamp</a> — the open-source,
-                CNCF-backed cluster UI, and about as good as the React way gets: six years of work,
-                ~330 contributors, 100,000+ lines. That's what building it yourself costs. Here is
-                the difference, graph by graph.
-            </p>
+            <div class="ps-body !mt-4">
+                <p>
+                    A real test of Vantage is whether it can rebuild the kind of app our audience
+                    already relies on. So we set one: clone the core of Headlamp — the part that
+                    browses a cluster — with <strong>Vantage</strong> and three prompts to
+                    Claude Opus 4.8.
+                </p>
+                <p>
+                    The result surprised us. Vantage passed — and the finished app is pure
+                    <strong>YAML</strong> with a few <strong>Rhai</strong> formulas, about
+                    <strong>800 lines</strong>. It needed one new piece first: a driver teaching
+                    Vantage to speak Kubernetes. We wrote that once and shipped it in
+                    <strong>Vantage 0.20</strong>, so building Periscope today takes just those
+                    800 lines. Here is the difference, graph by graph.
+                </p>
+            </div>
+
+            <div class="ps-actions">
+                <a href="{{ install_url | safe }}" class="btn btn-lg btn-primary">
+                    <span class="material-symbols-outlined">rocket_launch</span>
+                    Open Periscope App
+                </a>
+            </div>
 
             <!-- Lines of code — two pies -->
             <p class="ps-ckick"><b>01</b> Lines of code you write</p>
@@ -372,16 +469,15 @@
                     </ul>
                 </div>
                 <div class="p2-pie__g">
-                    <svg class="p2-pie vantage" viewBox="0 0 100 100" role="img" aria-label="Vantage, about 3,100 lines">
+                    <svg class="p2-pie vantage" viewBox="0 0 100 100" role="img" aria-label="Vantage, about 800 lines">
                         <circle class="p2-pie__bg" cx="50" cy="50" r="48"></circle>
-                        <path d="M50 50 L50 2 A48 48 0 0 1 63.10 3.82 Z" fill="#818cf8"></path>
-                        <path d="M50 50 L63.10 3.82 A48 48 0 0 1 67.67 5.37 Z" fill="#c4b5fd"></path>
+                        <path d="M50 50 L50 2 A48 48 0 0 1 54.63 2.22 Z" fill="#818cf8"></path>
                         <circle class="p2-pie__ring" cx="50" cy="50" r="48"></circle>
                     </svg>
-                    <div class="p2-pie__cap">Vantage · Periscope<b>~3,100 lines</b></div>
+                    <div class="p2-pie__cap">Vantage · Periscope<b>~800 lines</b></div>
                     <ul class="p2-pie__legend">
-                        <li><i style="background:#818cf8"></i><span>Rust &middot; K8s protocol</span><span class="v">~2,300</span></li>
-                        <li><i style="background:#c4b5fd"></i><span>YAML + Rhai &middot; the app</span><span class="v">~800</span></li>
+                        <li><i style="background:#818cf8"></i><span>YAML + Rhai &middot; the app</span><span class="v">~800</span></li>
+                        <li class="incl"><span class="ck">&check;</span><span>K8s client</span><span class="v">built-in &middot; 0.20</span></li>
                         <li class="incl"><span class="ck">&check;</span><span>Vantage UI</span><span class="v">included</span></li>
                         <li class="incl"><span class="ck">&check;</span><span>Framework</span><span class="v">Vantage (OSS)</span></li>
                     </ul>
@@ -429,7 +525,7 @@
                     <tr><th>Helm, topology map, search</th><td class="col yes">✓</td><td class="col va no">—</td></tr>
 
                     <tr class="grp"><td colspan="3">Cost to build &amp; support</td></tr>
-                    <tr><th>Lines of code you write</th><td class="col">~52,000</td><td class="col va">~3,100</td></tr>
+                    <tr><th>Lines of code you write</th><td class="col">~52,000</td><td class="col va">~800</td></tr>
                     <tr><th>Time to build</th><td class="col">~6 years</td><td class="col va">an afternoon</td></tr>
                     <tr><th>People to build &amp; support</th><td class="col">~330 contributors</td><td class="col va">1 AI agent</td></tr>
                 </tbody>
@@ -443,23 +539,20 @@
         <!-- 01 ───────────────────────────── THE DATA SOURCE (PR #323) -->
         <section id="datasource" class="ps-chapter">
             <p class="ps-phase">Prompt one</p>
-            <h2 class="ps-h">The missing data source: the Kubernetes API</h2>
+            <h2 class="ps-h">First, teach Vantage to read your cluster</h2>
             <div class="ps-body">
                 <p>
-                    Vantage is a very young framework. It already speaks <strong>SQL</strong>, a
-                    <strong>REST API</strong> and document stores — but it had no notion of
-                    <strong>Kubernetes</strong> in particular.
+                    Before we can build the Periscope app, Vantage UI has to be able to talk to your
+                    <strong>Kubernetes</strong> cluster directly — to query it live, in real time, the
+                    way Headlamp does. At the time of this experiment Vantage was at release
+                    <strong>0.19</strong>, and it couldn't: it already connected to SQL databases,
+                    REST APIs and document stores, but Kubernetes was new to it.
                 </p>
                 <p>
-                    A cluster isn't a flat database, so we couldn't just reuse an existing
-                    connector. To unlock the Kubernetes API, we had to give Vantage a new, native
-                    <strong>data source</strong>.
-                </p>
-                <p>
-                    Luckily, adding one is a documented path — a <strong>nine-step guide, optimised
-                    for an AI agent to follow</strong>. Between the documentation and Rust's traits,
-                    the agent is held to implementing every feature faithfully. Watch each step
-                    slide up into the prompt that asked for it.
+                    Teaching it a brand-new backend is a documented path, <strong>written for an AI
+                    agent to follow</strong>. We pointed Claude Opus 4.8 at it and watched it work.
+                    Read the steps below for the plain-language story; expand any one to see how it
+                    was built.
                 </p>
             </div>
 
@@ -467,13 +560,20 @@
                 <div class="ps-prompt__sticky">
                     <div class="ps-bubble">
                         <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 1 · Claude Opus 4.8</span>
-                        <p class="ps-bubble__text">Using Vantage docs — read the "new persistence" section, then implement a DataSource for Vantage that speaks the Kubernetes API. Stop when all steps are fully completed and tested.</p>
+                        <p class="ps-bubble__text">Using Vantage docs and "vantage" open-source repository — implement a new DataSource that speaks the Kubernetes API. Stop when all steps are fully completed and tested.</p>
                         <div class="ps-bubble__count">Completed in ~15 minutes, cost under $5.00</div>
                     </div>
                 </div>
                 <div class="ps-feed">
-                    <div class="ps-step">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step1-types.html" target="_blank" rel="noopener">Step 1 · Type system</a></span>
+                    <p class="ps-think"><span class="material-symbols-outlined">psychology</span><span>Vantage's docs contain a special guide for creating a new <strong>DataSource</strong> (or <em>persistence</em>) in nine concrete steps that I'll follow closely. Once the work is done and built into Vantage UI, it will speak the Kubernetes API.</span></p>
+                    <details class="ps-step">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">1</span><span class="ps-step__k">Step 1 · Type system</span></span>
+                            <span class="ps-step__sum">Step 1 is about lining up the data types. A capable database like <code>PostgreSQL</code> has dozens of them — lists, geographic points, and more.</span>
+                            <span class="ps-step__sum">The Kubernetes API needs far fewer, with two all its own: a <code>Quantity</code> (an amount of CPU or memory) and a <code>Time</code>. I implement every type it supports — with tests — exactly as the guide lays out.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">How it's built</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">First, agree on what a value is</span>
                         <p>Every backend has its own type system, and they vary wildly in size. A
                         CSV gets by with one — everything is text. Vantage's <strong>SQLite</strong>
@@ -493,10 +593,18 @@
                         agent reads the guide and builds the right variants, so
                         <code>"16331752Ki"</code> becomes a real number you can sort and chart, and
                         <code>"250m"</code> a quarter of a CPU — not text.</p>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step1-types.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
 
-                    <div class="ps-step skip">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step2-expressions.html" target="_blank" rel="noopener">Step 2 · Expressions · skipped</a></span>
+                    <details class="ps-step skip">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">2</span><span class="ps-step__k">Step 2 · Expressions · skipped</span></span>
+                            <span class="ps-step__sum">A powerful database server can run expressions itself — doing the work server-side and sending back only the data asked for. Vantage takes advantage of that whenever it can.</span>
+                            <span class="ps-step__sum">So this step asks whether the Kubernetes API can run arbitrary expressions and server-side logic. The answer is no — so the implementation is skipped.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">See what's skipped</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">Expressions — the backend's own query language</span>
                         <p>Many backends ship a query engine — SQL, SurrealQL, GraphQL. Vantage
                         supplies the mechanics for <strong>type-safe expression building</strong>:
@@ -524,10 +632,18 @@
                         <p><em>Not needed for Kubernetes</em> — the API has no query language to
                         build against, so the agent skips this step and filters the fetched list
                         instead.</p>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step2-expressions.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
 
-                    <div class="ps-step skip">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step3-operators.html" target="_blank" rel="noopener">Step 3 · Operators &amp; conditions · skipped</a></span>
+                    <details class="ps-step skip">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">3</span><span class="ps-step__k">Step 3 · Operators &amp; conditions · skipped</span></span>
+                            <span class="ps-step__sum">Operators let a server filter rows before it sends them — <code>=</code>, <code>!=</code>, <code>&gt;</code>, <code>in()</code>. Where a backend supports them, Vantage pushes the filtering down to it.</span>
+                            <span class="ps-step__sum">Does the Kubernetes API take conditions like these? Only the plainest — a simple <code>=</code> on a few fields. So most of this step is skipped, and the rest happens after fetching.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">See what's skipped</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">Operators — typed conditions, not raw strings</span>
                         <p>Once a backend can run conditions, Vantage layers ergonomic, typed
                         operators onto columns — <code>.eq()</code>, <code>.gt()</code>,
@@ -552,10 +668,18 @@ table.add_condition(price.gt(100));</code></pre>
                         <p><em>Not needed for Kubernetes</em> — the API has no general query language
                         to push a condition into, so the agent filters the fetched list in memory
                         instead. Skipped.</p>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step3-operators.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
 
-                    <div class="ps-step skip">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step4-query-builder.html" target="_blank" rel="noopener">Step 4 · Query builder · skipped</a></span>
+                    <details class="ps-step skip">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">4</span><span class="ps-step__k">Step 4 · Query builder · skipped</span></span>
+                            <span class="ps-step__sum">A query language lets you compose a precise request — pick columns, narrow rows, sort, even nest queries inside queries. Where that exists, Vantage assembles it properly.</span>
+                            <span class="ps-step__sum">Can the Kubernetes API build a query like that? No — it just returns a whole list of resources. So this last query step is skipped too.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">See what's skipped</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">Query builder — composable SELECTs</span>
                         <p>For backends that run queries, Vantage wants them implemented properly,
                         not faked. It introduces the <code>Selectable</code> trait — the standard
@@ -582,10 +706,18 @@ table.add_condition(price.gt(100));</code></pre>
                         </div>
                         <p><em>Not needed for Kubernetes</em> — a resource list comes back whole,
                         with no SELECT to build, so the agent filters it in memory. Skipped.</p>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step4-query-builder.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
 
-                    <div class="ps-step">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step5-table-crud.html" target="_blank" rel="noopener">Step 5 · Table &amp; CRUD</a></span>
+                    <details class="ps-step">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">5</span><span class="ps-step__k">Step 5 · Table &amp; CRUD</span></span>
+                            <span class="ps-step__sum">So far I've focused on individual capabilities; now I assemble them together, through the power of Vantage <strong>Tables</strong>. A <code>Table</code> is a collection of records you can create, read, update or delete — <strong>CRUD</strong>.</span>
+                            <span class="ps-step__sum">For Kubernetes those tables are quite specific: <code>Pod</code>, <code>Node</code>, <code>Service</code>, <code>Deployment</code> and the rest — the resources you actually browse.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">How it's built</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">Where everything converges</span>
                         <p>Here the earlier pieces come together. The agent implements one trait,
                         <code>TableSource</code>, and on it <strong>declares the backend's types</strong>
@@ -631,10 +763,18 @@ for (_, pod) in pods.list_values().await? {
     let name  = pod.get("name");
     let ready = pod.get("ready");   // "1/1", "2/2", …
 }</code></pre>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step5-table-crud.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
 
-                    <div class="ps-step">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step6-relationships.html" target="_blank" rel="noopener">Step 6 · Relationships</a></span>
+                    <details class="ps-step">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">6</span><span class="ps-step__k">Step 6 · Relationships</span></span>
+                            <span class="ps-step__sum">Tables don't exist in a vacuum — they're connected. A deployment is made of pods; a pod lives on a node. Vantage links tables with <code>references</code>, and in the UI those turn into drill-downs and sub-lists.</span>
+                            <span class="ps-step__sum">In this step I connect all the base tables correctly, so an expression like <code>node.ref("pods")</code> resolves to exactly the right rows.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">How it's built</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">Switch on the relationship engine</span>
                         <p>Now Vantage's relationship engine comes on. You declare how records
                         relate — <code>with_one</code> for a belongs-to, <code>with_many</code> for
@@ -687,10 +827,18 @@ for (_, pod) in pods.list_values().await? {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step6-relationships.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
 
-                    <div class="ps-step">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step7-multi-backend.html" target="_blank" rel="noopener">Step 7 · Checkpoint</a></span>
+                    <details class="ps-step">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">7</span><span class="ps-step__k">Step 7 · Checkpoint</span></span>
+                            <span class="ps-step__sum">Time to check the work so far. The guide prompts me to build a simple command-line utility and test it against a real Kubernetes cluster (<code>minikube</code>) — verifying the types, tables and relations I've built.</span>
+                            <span class="ps-step__sum">For a more advanced data source this checkpoint would also cover expressions, custom queries and advanced conditions — but Kubernetes has none of those, so the essentials are enough.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">See it run</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">Prove it from a CLI</span>
                         <p>By now the data source has the whole stack — types, expressions,
                         conditions, queries, a typed <code>Table</code> and relations. The guide's
@@ -712,10 +860,18 @@ for (_, pod) in pods.list_values().await? {
                         <p>Exactly the three pods that deployment owns — fetched, filtered and
                         drilled, with no Kubernetes-specific code in the CLI at all. The checkpoint
                         passes.</p>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step7-multi-backend.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
 
-                    <div class="ps-step">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step8-vista-integration.html" target="_blank" rel="noopener">Step 8 · Vista</a></span>
+                    <details class="ps-step">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">8</span><span class="ps-step__k">Step 8 · Vista</span></span>
+                            <span class="ps-step__sum">So far this is perfect for a custom Rust project — but Vantage doesn't stop here. It turns to <code>type-erasure</code>, which lets tables be defined on the fly and connected to UI elements and API endpoints. The way Vantage seals a table like this is called a <strong>Vista</strong>.</span>
+                            <span class="ps-step__sum">With a Vista I can be honest about what each table can actually do — and given that reality check, Vantage auto-implements the missing capabilities <code>on-the-client</code>.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">How it's built</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">Seal the types — make it universal</span>
                         <p>So far everything has been type-rich Rust resources — ideal for Rust
                         code, and invisible to everything else. To use that <code>Table</code> —
@@ -760,10 +916,18 @@ for (_, pod) in pods.list_values().await? {
                         — a live <code>watch</code>, server-side field selectors. They can be added
                         later to make the driver more powerful, and swapped in <strong>without
                         touching a line of code that uses Vantage</strong> — Vantage UI included.</p>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step8-vista-integration.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
 
-                    <div class="ps-step">
-                        <span class="ps-step__k"><a href="https://romaninsh.github.io/vantage/new-persistence/step9-contained-relations.html" target="_blank" rel="noopener">Step 9 · Scripting</a></span>
+                    <details class="ps-step">
+                        <summary>
+                            <span class="ps-step__top"><span class="ps-step__n">9</span><span class="ps-step__k">Step 9 · Scripting</span></span>
+                            <span class="ps-step__sum">Vantage UI ships as one prebuilt app, so I can't add fresh Rust to it. Instead, tables are declared at runtime — in plain <code>YAML</code> or short <code>Rhai</code> scripts it reads as it runs.</span>
+                            <span class="ps-step__sum">That's the real unlock: with no rebuild, you can point Vantage at your own Kubernetes resources — even custom ones — and add them to the UI yourself.</span>
+                            <span class="ps-step__more"><span class="material-symbols-outlined">expand_more</span><span class="lbl-show">How it's built</span><span class="lbl-hide">Hide detail</span></span>
+                        </summary>
+                        <div class="ps-step__body">
                         <span class="ps-step__h">Declare tables without Rust</span>
                         <p>Vantage UI ships as one <strong>precompiled</strong> binary — you can't
                         drop new Rust into it. So tables are declared in <strong>YAML</strong> or
@@ -819,17 +983,22 @@ references:
                         <p>The Kubernetes driver itself shipped in <strong>Vantage 0.20</strong> and
                         stays a built-in capability — so a cluster works out of the box, and YAML or
                         Rhai is for the custom types you layer on top.</p>
-                    </div>
+                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step9-contained-relations.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        </div>
+                    </details>
                 </div>
             </div>
 
             <div class="ps-bonus">
                 <p>Claude Opus 4.8 implemented every step — and added the tests too — everything
                 fitting Vantage's specifications, from a single, simple prompt.</p>
-                <p><code>vantage-kubernetes</code> was added to
-                <a href="https://github.com/romaninsh/vantage">github.com/romaninsh/vantage</a>,
-                alongside several other incubating crates — so when a more dedicated, refined driver
-                comes along, it can simply take over.</p>
+                <p>This ran against Vantage <strong>0.19</strong>; the finished driver shipped in
+                <strong>0.20</strong> a few days later and is now built in. So the ~2,300 lines of
+                protocol code were a <strong>one-time cost</strong> — rebuild Periscope today and
+                it's just the ~800-line app. <code>vantage-kubernetes</code> lives in
+                <a href="https://github.com/romaninsh/vantage">github.com/romaninsh/vantage</a>
+                alongside several other incubating crates, so a more refined driver can later take
+                over without changing a line of the app.</p>
             </div>
 
             <div class="ps-sum">
@@ -859,63 +1028,55 @@ references:
         <!-- 02 ───────────────────────────── THE INTEGRATION (PR #112) -->
         <section id="integration" class="ps-chapter">
             <p class="ps-phase">Prompt two</p>
-            <h2 class="ps-h">Vantage learns to speak it</h2>
+            <h2 class="ps-h">Built into Vantage UI</h2>
             <div class="ps-body">
                 <p>
-                    A crate on its own is just a library. The second prompt wired it into
-                    Vantage as a <strong>first-class data source kind</strong> — mirroring the
-                    existing AWS loader, so any YAML app can say <code>type: kubernetes</code>
-                    and point at a cluster. Four pieces, again pulled into one ask:
+                    The work so far was a bit of a detour. Chances are Vantage UI <em>already</em>
+                    supports the database — or API protocol — you use; Kubernetes was the exception.
+                    Speaking it needed a brand-new <strong>DataSource</strong>, wired by hand into
+                    Vantage UI's single, static binary — so that every user benefits from the new
+                    integration, not just us.
+                </p>
+                <p>
+                    That wiring is a one-off, and it's mostly about shipping the
+                    <strong>Skills</strong> and <strong>Schemas</strong> that teach Vantage UI to
+                    use the driver. One prompt handles it:
                 </p>
             </div>
 
-            <div class="ps-prompt">
-                <div class="ps-prompt__sticky">
-                    <div class="ps-bubble">
-                        <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 2 · Claude Opus 4.8</span>
-                        <p class="ps-bubble__text">register the new vantage-kubernetes crate as a Vantage data source</p>
-                        <div class="ps-bubble__count"><span class="n">0</span> / 4 pieces</div>
-                    </div>
-                </div>
-                <div class="ps-feed">
-                    <p class="ps-step"><strong>A new data-source kind.</strong> First, Vantage
-                        learns that <code>kubernetes</code> is a thing you can connect to —
-                        <code>type: kubernetes</code>, with an optional <code>context</code> and
-                        <code>namespace</code> — so a YAML app can name it like any other source.</p>
-                    <p class="ps-step"><strong>A per-table query loader.</strong> Then the piece
-                        that turns each table's YAML columns into a live query surface against
-                        the cluster — built to mirror the existing AWS loader, so it slots into
-                        machinery the rest of Vantage already understands.</p>
-                    <p class="ps-step"><strong>Connection plumbing.</strong> The connection is
-                        threaded through the app's open, resolver and entity paths, loading your
-                        current kubeconfig context or, in-cluster, the pod's service account —
-                        the unglamorous wiring that makes "connect" actually connect.</p>
-                    <p class="ps-step"><strong>Surfaced in the UI.</strong> Finally the new kind
-                        shows up in the Add data source dialog, so it's a first-class choice and
-                        not a hidden config flag.</p>
-                </div>
-                <p class="ps-outcome"><span class="material-symbols-outlined">deployed_code_update</span><span>Threaded through the whole app in one prompt — and shipped as <strong>Vantage 0.20</strong>.</span></p>
+            <div class="ps-bubble ps-bubble--solo">
+                <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 2 · Claude Opus 4.8</span>
+                <p class="ps-bubble__text">add support for kubernetes to vantage-ui, using work you've done so far, exposing all capabilities, write the skill files and update version to 0.20</p>
+                <div class="ps-bubble__count">Integration in ~5 minutes — plus ~20 to run the production-release pipeline.</div>
             </div>
 
-            <figure class="ps-code">
-                <figcaption class="ps-code-head"><span class="material-symbols-outlined">dns</span><b>datasource/cluster.yaml</b></figcaption>
-<pre><code class="language-yaml">type: kubernetes
-context: minikube        # optional — defaults to the current kubeconfig context
-namespace: demo          # optional — the namespace pages open in</code></pre>
-                <figcaption>The entire datasource. One prompt to thread a new backend through the whole app; it shipped as <strong>Vantage 0.20</strong>, and <code>kubernetes</code> now appears in the Add data source dialog.</figcaption>
-            </figure>
+            <blockquote class="ps-quote">
+                Vantage UI simply bundles open-source components and builds a UI around them.
+                Adding a new data source is short, minimalistic work — a new dependency, and a
+                safe authentication mechanism.
+                <span class="ps-quote__by">Romans · Vantage</span>
+            </blockquote>
 
-            <div class="ps-note warn">
-                <span class="material-symbols-outlined">key</span>
-                <div>
-                    <p>This integration lives in the <strong>private Vantage UI repository</strong>,
-                    and the published builds don't yet ship the Kubernetes backend — so Periscope
-                    won't open in a stock download just yet.</p>
-                    <p class="!mt-2">If you want to point Vantage at your own cluster and try
-                    Periscope for real, I'm happy to make you a <strong>custom build</strong> —
-                    <a href="{{ repo }}/issues" target="_blank" rel="noopener">open an issue</a>
-                    and say hello.</p>
-                </div>
+            <div class="ps-body">
+                <p>From there the change rides the same release pipeline as every Vantage build:</p>
+            </div>
+            <ol class="ps-pipe">
+                <li><strong>Verify the DataSource.</strong> A suite of generic tests confirms the
+                    new implementation behaves like every other backend.</li>
+                <li><strong>Build a nightly.</strong> Vantage's rapid release channel publishes
+                    builds often, so the driver lands fast.</li>
+                <li><strong>BDD test-suite.</strong> An interactive behaviour suite checks the
+                    finished application against the sample apps.</li>
+                <li><strong>Release.</strong> The final pipeline publishes, and installed apps
+                    auto-update.</li>
+            </ol>
+
+            <div class="ps-body">
+                <p>
+                    For commercial partners we produce <strong>dedicated builds</strong> — the
+                    public version mirrored, with custom DataSources and tweaks added — running
+                    through the very same release process and automated testing.
+                </p>
             </div>
         </section>
 
@@ -925,60 +1086,64 @@ namespace: demo          # optional — the namespace pages open in</code></pre>
             <h2 class="ps-h">The control room, in YAML</h2>
             <div class="ps-body">
                 <p>
-                    With a datasource Vantage understands, the third prompt built the app
-                    itself — described in a sentence, delivered as YAML. Here's the whole
-                    control room being pulled into the ask:
+                    With the driver shipped in 0.20, building the app needs no setup of our own.
+                    We run <strong>Vantage 0.20</strong> and follow its prompts: the <em>Add data
+                    source</em> dialog offers to set things up with AI, and the wizard installs the
+                    right <strong>Skills</strong> — the agent's instructions — into a fresh project.
                 </p>
             </div>
 
-            <div class="ps-prompt">
-                <div class="ps-prompt__sticky">
-                    <div class="ps-bubble">
-                        <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 3 · Claude Opus 4.8</span>
-                        <p class="ps-bubble__text">build a Lens-style Kubernetes browser on the kubernetes datasource</p>
-                        <div class="ps-bubble__count"><span class="n">0</span> / 6 pieces</div>
-                    </div>
-                </div>
-                <div class="ps-feed">
-                    <p class="ps-step"><strong>Twelve resource tables.</strong> Nodes,
-                        namespaces, pods, deployments, replicasets, services, configmaps,
-                        secrets, jobs and events — plus live node and pod metrics — each a short
-                        YAML file naming the columns worth showing.</p>
-                    <p class="ps-step"><strong>Relations both ways.</strong> A <code>references:</code>
-                        block declares the drill-downs (namespace → workloads → pods, node →
-                        pods), and the same machinery lets a namespace or node cell drill back
-                        up — the traversal Prompt 1 built, now spent.</p>
-                    <p class="ps-step"><strong>Two dashboards.</strong> An <code>overview</code>
-                        of capacity, replicas and restarts, and a <code>usage</code> board of
-                        live CPU and memory — each with a Namespace control that re-scopes the
-                        namespaced charts.</p>
-                    <p class="ps-step"><strong>Three Summary views.</strong> Bespoke node,
-                        deployment and pod panels — badges, progress bars, stats and relation
-                        lists — so a selected row reads like a briefing, not a raw record.</p>
-                    <p class="ps-step"><strong>Both layouts.</strong> <code>binder</code> pages
-                        that auto-generate relation tabs alongside the Summary, and
-                        <code>burger</code> explorers for vertical drill-downs — two different
-                        ways to move through the same graph.</p>
-                    <p class="ps-step"><strong>A grouped sidebar and a theme.</strong> The
-                        navigation grouped into sections, and a Tokyo Night / Ayu Light theme —
-                        the finish that makes 32 YAML files feel like an app.</p>
-                </div>
-                <p class="ps-outcome"><span class="material-symbols-outlined">all_inclusive</span><span>All of it as <strong>32 YAML files</strong> — and <strong>zero lines of UI code</strong>.</span></p>
+            <div class="ps-thumbs">
+                <figure class="ps-thumb">
+                    <a href="{{ get_url(path='images/periscope/ui-add-datasource.png') }}" target="_blank" rel="noopener">
+                        <img src="{{ get_url(path='images/periscope/ui-add-datasource.png') }}" width="884" height="344" alt="Vantage's Add Datasource dialog offering to set up a data source with an AI agent" loading="lazy">
+                    </a>
+                    <figcaption>Add data source → <em>Set up with AI</em>.</figcaption>
+                </figure>
+                <figure class="ps-thumb">
+                    <a href="{{ get_url(path='images/periscope/ui-setup-with-ai.png') }}" target="_blank" rel="noopener">
+                        <img src="{{ get_url(path='images/periscope/ui-setup-with-ai.png') }}" width="1356" height="1358" alt="The Set up with AI wizard, picking the kinds of data and installing agent skills into a project" loading="lazy">
+                    </a>
+                    <figcaption>The wizard installs the Skills into a new project.</figcaption>
+                </figure>
             </div>
 
-            <figure class="ps-frame">
-                <img src="{{ get_url(path='images/periscope/usage.webp') }}" width="1600" height="1061" alt="Periscope's Usage dashboard — live CPU and memory by node and by pod, with a namespace selector that re-scopes the charts" loading="lazy">
-                <figcaption>The <code>usage</code> dashboard — live CPU/memory, with a Namespace control that re-scopes the namespaced charts.</figcaption>
-            </figure>
+            <div class="ps-body">
+                <p>Then we open that project folder with an AI agent and give it a single sentence:</p>
+            </div>
 
-            <div class="ps-shots">
-                <figure class="ps-frame">
-                    <img src="{{ get_url(path='images/periscope/deployments.webp') }}" width="1600" height="1053" alt="The Deployments grid with a rollout Summary view — health badge, ready-replicas progress bar and per-ReplicaSet status" loading="lazy">
-                    <figcaption>A deployment's Summary view — badges, a rollout progress bar, stats.</figcaption>
+            <div class="ps-bubble ps-bubble--solo">
+                <span class="ps-bubble__meta"><span class="material-symbols-outlined">smart_toy</span>Prompt 3 · Claude Opus 4.8</span>
+                <p class="ps-bubble__text">Build a Headlamp clone and test it with local minikube</p>
+                <div class="ps-bubble__count">32 YAML files · zero lines of UI code.</div>
+            </div>
+
+            <div class="ps-body">
+                <p>
+                    The agent wrote the whole control room as YAML — a dozen resource tables with
+                    drill-down relations, two live dashboards, bespoke Summary panels and a grouped,
+                    themed sidebar — then ran it against a local minikube cluster to check its work:
+                </p>
+            </div>
+
+            <div class="ps-thumbs">
+                <figure class="ps-thumb">
+                    <a href="{{ get_url(path='images/periscope/usage.webp') }}" target="_blank" rel="noopener">
+                        <img src="{{ get_url(path='images/periscope/usage.webp') }}" width="1600" height="1061" alt="Periscope's Usage dashboard — live CPU and memory by node and by pod, with a namespace selector" loading="lazy">
+                    </a>
+                    <figcaption>The <code>usage</code> dashboard — live CPU/memory.</figcaption>
                 </figure>
-                <figure class="ps-frame">
-                    <img src="{{ get_url(path='images/periscope/configmaps.webp') }}" width="1600" height="1221" alt="The ConfigMaps list with a master/detail binder panel showing a selected ConfigMap's fields" loading="lazy">
-                    <figcaption>ConfigMaps in a master/detail binder — list on the left, record on the right.</figcaption>
+                <figure class="ps-thumb">
+                    <a href="{{ get_url(path='images/periscope/deployments.webp') }}" target="_blank" rel="noopener">
+                        <img src="{{ get_url(path='images/periscope/deployments.webp') }}" width="1600" height="1053" alt="The Deployments grid with a rollout Summary view — health badge, ready-replicas progress bar" loading="lazy">
+                    </a>
+                    <figcaption>A deployment's Summary — badges, rollout bar.</figcaption>
+                </figure>
+                <figure class="ps-thumb">
+                    <a href="{{ get_url(path='images/periscope/configmaps.webp') }}" target="_blank" rel="noopener">
+                        <img src="{{ get_url(path='images/periscope/configmaps.webp') }}" width="1600" height="1221" alt="The ConfigMaps list with a master/detail binder panel showing a selected ConfigMap's fields" loading="lazy">
+                    </a>
+                    <figcaption>ConfigMaps in a master/detail binder.</figcaption>
                 </figure>
             </div>
 
@@ -1001,8 +1166,10 @@ namespace: demo          # optional — the namespace pages open in</code></pre>
                     There's no chest down here. The treasure at the bottom of the dive is what
                     three prompts produced: a native Kubernetes datasource, a UI that speaks it,
                     and a full control room over a real cluster — <strong>zero lines of UI
-                    code, no <code>kubectl</code></strong>, written and tested in an afternoon
-                    instead of a quarter. The prize was never the app. It's the speed.
+                    code</strong>, no <code>kubectl</code>. Two of those prompts were one-offs, and
+                    they've shipped: the driver is built into <strong>Vantage 0.20</strong>, so
+                    today the control room is just the third prompt — an afternoon's work, not a
+                    quarter's. The prize was never the app. It's the speed.
                 </p>
                 <p>
                     And it generalizes. Because Vantage is AI-ready end to end, you can point
@@ -1014,7 +1181,7 @@ namespace: demo          # optional — the namespace pages open in</code></pre>
 
             <div class="ps-cta">
                 <h3 class="text-h3">Surface with it</h3>
-                <p class="ps-body !mt-3">Read the source, follow the three prompts that built it, or ask for a custom build to drive your own cluster.</p>
+                <p class="ps-body !mt-3">Read the source, follow the three prompts that built it, open it in Vantage 0.20 to drive your own cluster, or ask for a custom build for your own data sources.</p>
                 <div class="ps-actions">
                     <a href="{{ repo }}/issues" class="btn btn-primary" target="_blank" rel="noopener">
                         <span class="material-symbols-outlined">sailing</span>
