@@ -452,4 +452,177 @@
       if (e.key === "Escape" && !lightbox.hidden) close();
     });
   }
+
+  /* ---------- Hero video: hover → centre lightbox; close → swap + re-slide ----------
+     Hovering the stationary hot-zone (#heroShot) FLIPs the video up to a
+     page-centred, fixed lightbox over a dimmed backdrop, with a caption.
+     Closing does NOT reverse the FLIP (that read janky) — it dismisses the
+     lightbox, advances to the next clip (data-clips), and replays the entrance
+     slide-in, so the next video slides in fresh from the right.
+     A placeholder holds the hot-zone's size while the video is position:fixed,
+     otherwise it collapses and mouseleave loops. */
+  const heroShot = document.getElementById("heroShot");
+  const heroVideo = document.getElementById("heroVideo");
+  const heroDim = document.getElementById("heroDim");
+  const heroCap = document.getElementById("heroCap");
+  const heroInvite = document.getElementById("heroInvite");
+  const heroInviteText = document.getElementById("heroInviteText");
+  if (heroShot && heroVideo && heroDim) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let clips = [];
+    try {
+      clips = JSON.parse(heroVideo.getAttribute("data-clips") || "[]");
+    } catch (_) {
+      clips = [];
+    }
+    const sources = heroVideo.querySelectorAll("source"); // [hdr, sdr]
+    const placeholder = document.createElement("div");
+    placeholder.setAttribute("aria-hidden", "true");
+    let zoomed = false;
+    let clip = 0;
+    let timer = null;
+
+    const setActive = (on) => {
+      heroDim.classList.toggle("is-active", on);
+      if (heroCap) heroCap.classList.toggle("is-active", on);
+    };
+
+    // Per-clip metadata: the click-through href, the handwritten invite, and
+    // the lightbox CTA — all swapped together with the video.
+    const applyMeta = (c) => {
+      if (c.href) heroShot.setAttribute("href", c.href);
+      if (heroInviteText && c.invite != null) heroInviteText.textContent = c.invite;
+      if (heroCap) {
+        if (c.cta != null) heroCap.textContent = c.cta;
+        if (c.href) heroCap.setAttribute("href", c.href);
+      }
+    };
+
+    const swapTo = (i) => {
+      const c = clips[i];
+      if (!c) return;
+      applyMeta(c);
+      if (sources.length >= 2) {
+        sources[0].src = c.hdr;
+        sources[1].src = c.sdr;
+      }
+      if (c.poster) heroVideo.poster = c.poster;
+      heroVideo.load();
+      const p = heroVideo.play();
+      if (p && p.catch) p.catch(() => {});
+    };
+
+    // Restart the CSS entrance keyframes (none → reflow → default).
+    const replaySlideIn = () => {
+      if (reduce) return;
+      heroVideo.style.animation = "none";
+      void heroVideo.offsetWidth;
+      heroVideo.style.animation = "";
+    };
+
+    const open = () => {
+      if (zoomed) return;
+      zoomed = true;
+      clearTimeout(timer);
+
+      const first = heroVideo.getBoundingClientRect();
+      placeholder.style.width = first.width + "px";
+      placeholder.style.height = first.height + "px";
+      heroVideo.parentNode.insertBefore(placeholder, heroVideo);
+
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const targetW = Math.min(vw * 0.86, 78 * 16);
+      const targetH = targetW * (first.height / first.width);
+      const targetLeft = (vw - targetW) / 2;
+      const targetTop = Math.max(16, (vh - targetH) / 2);
+
+      heroVideo.style.animation = "none"; // freeze any in-progress slide-in
+      heroVideo.classList.add("is-zoomed");
+      heroVideo.style.left = targetLeft + "px";
+      heroVideo.style.top = targetTop + "px";
+      heroVideo.style.width = targetW + "px";
+      if (heroInvite) heroInvite.classList.add("is-hidden");
+      // Park the caption directly under the video so there's no dim gap to
+      // cross — moving the mouse image→caption must not leave the hover zone.
+      if (heroCap) {
+        heroCap.style.bottom = "auto";
+        heroCap.style.top = targetTop + targetH + 12 + "px";
+      }
+      setActive(true);
+
+      if (reduce) return;
+      // FLIP: start visually at the origin, then transition to centred.
+      const dx = first.left - targetLeft;
+      const dy = first.top - targetTop;
+      const sx = first.width / targetW;
+      heroVideo.style.transformOrigin = "top left";
+      heroVideo.style.transition = "none";
+      heroVideo.style.transform = `translate(${dx}px, ${dy}px) scale(${sx})`;
+      requestAnimationFrame(() => {
+        heroVideo.style.transition = "";
+        heroVideo.style.transform = "translate(0, 0) scale(1)";
+      });
+    };
+
+    const close = () => {
+      if (!zoomed) return;
+      zoomed = false;
+      setActive(false);
+
+      // Dismiss the centred video (gentle fade + shrink), then reset it back
+      // into the flow, swap to the next clip, and slide it in from the right.
+      if (!reduce) {
+        heroVideo.style.transition = "opacity .25s ease, transform .25s ease";
+        heroVideo.style.opacity = "0";
+        heroVideo.style.transform = "translate(0, 0) scale(0.96)";
+      }
+      clearTimeout(timer);
+      timer = setTimeout(
+        () => {
+          heroVideo.classList.remove("is-zoomed");
+          heroVideo.removeAttribute("style");
+          if (heroCap) {
+            heroCap.style.top = "";
+            heroCap.style.bottom = "";
+          }
+          placeholder.remove();
+          if (clips.length > 1) {
+            clip = (clip + 1) % clips.length;
+            swapTo(clip);
+          }
+          if (heroInvite) heroInvite.classList.remove("is-hidden");
+          replaySlideIn();
+        },
+        reduce ? 0 : 260,
+      );
+    };
+
+    // The caption is a separate element below the video; leaving the video to
+    // reach it briefly exits the hot-zone. A short grace period lets the
+    // caption's mouseenter cancel the pending close so the group stays open.
+    let hoverTimer = null;
+    const scheduleClose = () => {
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(close, 90);
+    };
+    const cancelClose = () => clearTimeout(hoverTimer);
+
+    heroShot.addEventListener("mouseenter", () => {
+      cancelClose();
+      open();
+    });
+    heroShot.addEventListener("mouseleave", scheduleClose);
+    heroShot.addEventListener("focusin", open);
+    heroShot.addEventListener("focusout", scheduleClose);
+    if (heroCap) {
+      heroCap.addEventListener("mouseenter", cancelClose);
+      heroCap.addEventListener("mouseleave", scheduleClose);
+      heroCap.addEventListener("focusin", cancelClose);
+      heroCap.addEventListener("focusout", scheduleClose);
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+  }
 })();

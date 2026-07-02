@@ -405,6 +405,142 @@
         @apply border-line-strong text-text-1 outline-none;
     }
 
+    /* ---------- Hero video: load slide-in + hover centre-lightbox ----------
+       Resting: bled right (--hero-rest-x) with a small halo. On load it slides
+       in from further right with a slight rotation. On hover, site.js lifts it
+       to a fixed, page-centred lightbox (FLIP), dims the page and fades a
+       caption in. `position: fixed` escapes #hero's overflow-hidden. */
+    .hero-media {
+        --hero-rest-x: 0px;
+        /* Reserve the box before load so nothing shifts when the video inits. */
+        aspect-ratio: 2560 / 1666;
+        border-radius: 14px;
+        box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.55);
+        transform: translateX(var(--hero-rest-x));
+        animation: hero-slide-in 900ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+        will-change: transform;
+    }
+
+    @media (min-width: 1024px) {
+        .hero-media {
+            --hero-rest-x: 5rem;
+        }
+    }
+
+    @keyframes hero-slide-in {
+        from {
+            transform: translateX(calc(var(--hero-rest-x) + 9rem)) rotate(4deg);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(var(--hero-rest-x)) rotate(0);
+            opacity: 1;
+        }
+    }
+
+    /* Centred lightbox state — site.js sets left/top/width and drives the FLIP
+       transform; these are the destination styles it animates to. */
+    .hero-media.is-zoomed {
+        position: fixed;
+        z-index: 110;
+        margin: 0;
+        transform: translate(0, 0) scale(1);
+        transition:
+            transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.5s ease;
+        box-shadow: 0 40px 120px -24px rgb(0 0 0 / 0.85);
+    }
+
+    .hero-dim {
+        @apply pointer-events-none fixed inset-0;
+        z-index: 100;
+        background: rgb(4 5 10 / 0.82);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        transition: opacity 0.45s ease;
+    }
+
+    .hero-dim.is-active {
+        opacity: 1;
+    }
+
+    /* Lightbox CTA link (bottom-centre). Off until the lightbox opens. */
+    .hero-cap {
+        @apply pointer-events-none fixed bottom-[8vh] left-1/2 text-center font-semibold text-accent-300 no-underline;
+        z-index: 120;
+        max-width: min(92vw, 46rem);
+        font-size: clamp(1.05rem, 0.75rem + 1vw, 1.5rem);
+        line-height: 1.4;
+        transform: translateX(-50%) translateY(10px);
+        opacity: 0;
+        transition:
+            opacity 0.45s ease 0.1s,
+            transform 0.45s ease 0.1s,
+            color 0.15s ease;
+    }
+
+    .hero-cap.is-active {
+        @apply pointer-events-auto;
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .hero-cap:hover,
+    .hero-cap:focus-visible {
+        @apply text-text-1 underline outline-none;
+    }
+
+    /* Handwritten "click me" invite + squiggly arrow under the resting video.
+       Absolutely positioned so its (async web-font) height never affects the
+       hero grid row — otherwise `items-center` would nudge the title on font
+       load. Hidden on touch (no hover to open the lightbox anyway). */
+    .hero-invite {
+        @apply hidden items-start justify-center gap-2 text-accent-300;
+        position: absolute;
+        inset-inline: 0;
+        top: calc(100% + 0.5rem);
+        transition: opacity 0.3s ease;
+    }
+
+    @media (min-width: 1024px) and (hover: hover) {
+        .hero-invite {
+            display: flex;
+        }
+    }
+
+    .hero-invite.is-hidden {
+        opacity: 0;
+    }
+
+    .hero-invite__arrow {
+        width: 3.25rem;
+        height: auto;
+        flex: none;
+        transform: translateY(-0.35rem) rotate(-6deg);
+    }
+
+    .hero-invite__text {
+        font-family: "Caveat", ui-sans-serif, system-ui, cursive;
+        font-weight: 600;
+        font-size: clamp(1.35rem, 1rem + 1.4vw, 2rem);
+        line-height: 1.1;
+        max-width: 20rem;
+        transform: rotate(-2deg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .hero-media {
+            animation: none;
+        }
+
+        .hero-media.is-zoomed,
+        .hero-dim,
+        .hero-cap,
+        .hero-invite {
+            transition: none;
+        }
+    }
+
     /* ---------- Hero / section glow ---------- */
 
     .glow {

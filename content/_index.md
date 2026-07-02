@@ -3,8 +3,8 @@ title = "Vantage UI"
 template = "index.html"
 
 [extra]
-hero_headline = "An AI-native, config-as-code console for everything you operate."
-hero_subhead = "Databases, APIs, cloud infrastructure and CLI tools — in one native, local-first console. Describe the tool you need; an AI coding agent writes the config — declarative YAML plus Rhai logic — into your own git repo. No cloud, no lock-in, no data leaving your machine."
+hero_headline = "AI-first low-code App Builder"
+hero_subhead = "Build your app instantly with an AI-first low-code tool. Vantage UI taps into your databases, APIs and infrastructure, then visualizes your data declaratively — Tables, Widgets, Forms and Lists. Need a new column? The AI agent adds it in seconds."
 hero_caption = "**Free for macOS.** Built on the open-source, MIT-licensed [Vantage Framework](/framework/). Linux & Windows builds available."
 
 # ---- Feature tour ----
