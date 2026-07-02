@@ -412,6 +412,8 @@
        caption in. `position: fixed` escapes #hero's overflow-hidden. */
     .hero-media {
         --hero-rest-x: 0px;
+        /* Reserve the box before load so nothing shifts when the video inits. */
+        aspect-ratio: 2560 / 1666;
         border-radius: 14px;
         box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.55);
         transform: translateX(var(--hero-rest-x));
@@ -488,10 +490,22 @@
         @apply text-text-1 underline outline-none;
     }
 
-    /* Handwritten "click me" invite + squiggly arrow under the resting video. */
+    /* Handwritten "click me" invite + squiggly arrow under the resting video.
+       Absolutely positioned so its (async web-font) height never affects the
+       hero grid row — otherwise `items-center` would nudge the title on font
+       load. Hidden on touch (no hover to open the lightbox anyway). */
     .hero-invite {
-        @apply mt-4 flex items-start justify-center gap-2 text-accent-300;
+        @apply hidden items-start justify-center gap-2 text-accent-300;
+        position: absolute;
+        inset-inline: 0;
+        top: calc(100% + 0.5rem);
         transition: opacity 0.3s ease;
+    }
+
+    @media (min-width: 1024px) and (hover: hover) {
+        .hero-invite {
+            display: flex;
+        }
     }
 
     .hero-invite.is-hidden {

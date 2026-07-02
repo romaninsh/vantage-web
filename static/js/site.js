@@ -543,6 +543,12 @@
       heroVideo.style.top = targetTop + "px";
       heroVideo.style.width = targetW + "px";
       if (heroInvite) heroInvite.classList.add("is-hidden");
+      // Park the caption directly under the video so there's no dim gap to
+      // cross — moving the mouse image→caption must not leave the hover zone.
+      if (heroCap) {
+        heroCap.style.bottom = "auto";
+        heroCap.style.top = targetTop + targetH + 12 + "px";
+      }
       setActive(true);
 
       if (reduce) return;
@@ -576,6 +582,10 @@
         () => {
           heroVideo.classList.remove("is-zoomed");
           heroVideo.removeAttribute("style");
+          if (heroCap) {
+            heroCap.style.top = "";
+            heroCap.style.bottom = "";
+          }
           placeholder.remove();
           if (clips.length > 1) {
             clip = (clip + 1) % clips.length;
@@ -588,10 +598,29 @@
       );
     };
 
-    heroShot.addEventListener("mouseenter", open);
-    heroShot.addEventListener("mouseleave", close);
+    // The caption is a separate element below the video; leaving the video to
+    // reach it briefly exits the hot-zone. A short grace period lets the
+    // caption's mouseenter cancel the pending close so the group stays open.
+    let hoverTimer = null;
+    const scheduleClose = () => {
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(close, 90);
+    };
+    const cancelClose = () => clearTimeout(hoverTimer);
+
+    heroShot.addEventListener("mouseenter", () => {
+      cancelClose();
+      open();
+    });
+    heroShot.addEventListener("mouseleave", scheduleClose);
     heroShot.addEventListener("focusin", open);
-    heroShot.addEventListener("focusout", close);
+    heroShot.addEventListener("focusout", scheduleClose);
+    if (heroCap) {
+      heroCap.addEventListener("mouseenter", cancelClose);
+      heroCap.addEventListener("mouseleave", scheduleClose);
+      heroCap.addEventListener("focusin", cancelClose);
+      heroCap.addEventListener("focusout", scheduleClose);
+    }
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") close();
     });
