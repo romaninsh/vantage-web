@@ -64,12 +64,46 @@
 
         <!-- Screenshot bleeds off the right edge on desktop; the section's
              overflow-hidden clips it so no horizontal scrollbar appears. -->
-        <div class="relative min-w-0">
-            <div class="window-frame lg:w-[46rem] lg:max-w-none">
-                <img src="{{ get_url(path='images/vantage-ui-app.png') }}" width="884" height="768" alt="Vantage UI Screenshot">
+        <!-- `heroShot` is the stationary hover hot-zone AND the click-through to
+             the matching example page (href swapped per clip by site.js). When
+             the video lifts to the centre lightbox it becomes `position: fixed`,
+             so a placeholder (added by site.js) holds this box's size and
+             mouseleave stays stable. -->
+        <a id="heroShot" href="{{ get_url(path='examples/') }}" class="relative block min-w-0 no-underline">
+            <!-- The screen capture already includes the app's own window chrome,
+                 so no `.window-frame` wrapper here — that would double the border. -->
+            <div class="lg:w-[58rem] lg:max-w-none">
+                <video id="heroVideo" class="hero-media block h-auto w-full" width="1280" height="833"
+                       autoplay muted loop playsinline preload="metadata"
+                       poster="{{ get_url(path='videos/Vantage-0.21-poster.jpg') }}"
+                       aria-label="Vantage UI — live real-time dashboard demo"
+                       data-clips='[{"hdr":"{{ get_url(path="videos/Vantage-0.21.hdr.mp4") }}","sdr":"{{ get_url(path="videos/Vantage-0.21.mp4") }}","poster":"{{ get_url(path="videos/Vantage-0.21-poster.jpg") }}","invite":"Become CEO of a multi-national Gym Corporation","cta":"Explore the Gym Corporation example →","href":"{{ get_url(path="examples/") }}"},{"hdr":"{{ get_url(path="videos/Vantage-0.18-telemetry.hdr.mp4") }}","sdr":"{{ get_url(path="videos/Vantage-0.18-telemetry.mp4") }}","poster":"{{ get_url(path="videos/Vantage-0.18-telemetry-poster.jpg") }}","invite":"Launch a rocket into space","cta":"Explore the Launch Control example →","href":"{{ get_url(path="examples/launch-control/") }}"}]'>
+                    <!-- HDR (HEVC/BT.2020 PQ) first — Safari & Chrome on capable
+                         displays render true HDR; everyone else falls back to the
+                         tone-mapped SDR H.264 below. -->
+                    <source src="{{ get_url(path='videos/Vantage-0.21.hdr.mp4') }}" type="video/mp4; codecs=hvc1">
+                    <source src="{{ get_url(path='videos/Vantage-0.21.mp4') }}" type="video/mp4">
+                    <img src="{{ get_url(path='images/vantage-ui-app.png') }}" width="884" height="768" alt="Vantage UI Screenshot">
+                </video>
             </div>
-        </div>
+
+            <!-- Playful "click me" invite under the video (text swapped per clip). -->
+            <div id="heroInvite" class="hero-invite" aria-hidden="true">
+                <svg class="hero-invite__arrow" viewBox="0 0 120 104" fill="none" aria-hidden="true">
+                    <path d="M14,98 C40,80 24,54 52,46 C74,40 64,22 90,16" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M90,16 L72,18 M90,16 L88,34" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span id="heroInviteText" class="hero-invite__text">Become CEO of a multi-national Gym Corporation</span>
+            </div>
+        </a>
     </div>
+
+    <!-- Hover lightbox: dim backdrop + caption, driven by site.js. Both are
+         position:fixed, so their DOM location here is immaterial. -->
+    <div id="heroDim" class="hero-dim" aria-hidden="true"></div>
+    <!-- Lightbox CTA (text + href swapped per clip by site.js). Clicking the
+         video itself also navigates; this is the visible affordance. -->
+    <a id="heroCap" class="hero-cap" href="{{ get_url(path='examples/') }}">Explore the Gym Corporation example →</a>
 </section>
 
 <!-- Feature tour -->
