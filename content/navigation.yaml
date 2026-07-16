@@ -18,6 +18,8 @@ menu:
   - title: "Resources"
     url: "/download/"
     dropdown:
+      - title: "Build your first app"
+        url: "/library/"
       - title: "Releases & changelog"
         url: "/download/"
       - title: "Follow development"
