@@ -2,641 +2,494 @@
 {% import "macros/navigation.html" as nav %}
 
 {% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+{% block body_class %}fw3{% endblock body_class %}
 
 {% block content %}
 {{ nav::header() }}
 
-<!-- Page hero -->
-<section class="relative overflow-hidden">
-    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
-    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-12 text-center sm:px-6 md:pt-24 md:pb-16">
-        {% if page.extra.kicker %}<p class="kicker mb-4">{{ page.extra.kicker }}</p>{% endif %}
-        <h1 class="text-display mx-auto max-w-3xl">{{ page.title }}</h1>
-        <p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ page.description }}</p>
-        <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <a href="https://romaninsh.github.io/vantage/" class="btn btn-lg btn-primary" target="_blank" rel="noopener">
-                <span class="material-symbols-outlined">menu_book</span>
-                Read the Book
-            </a>
-            <a href="https://crates.io/search?q=vantage-" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
-                <span class="material-symbols-outlined">deployed_code</span>
-                crates.io
-            </a>
-        </div>
+{% set repo = "https://github.com/romaninsh/vantage-ui-examples" %}
+{% set book = "https://romaninsh.github.io/vantage/" %}
+
+<style>
+  /* ===== Framework 3 — "cut the stack open" ===== */
+
+  /* Snap scrolling for this page only. Proximity, so trackpads never fight it. */
+  html:has(body.fw3){scroll-snap-type:y proximity;scroll-behavior:smooth}
+
+  body.fw3{
+    background:
+      radial-gradient(110% 70% at 80% -8%, rgba(99,102,241,.16), transparent 55%),
+      radial-gradient(90% 70% at 8% 100%, rgba(34,211,238,.07), transparent 55%),
+      var(--color-bg);
+  }
+
+  /* The WebGL stage — fixed, full-bleed, behind everything. */
+  .fw3-canvas{position:fixed;inset:0;z-index:0;width:100%;height:100%;
+    pointer-events:none;opacity:0;transition:opacity 1.4s ease}
+  body.fw3-live .fw3-canvas{opacity:1}
+  body.fw3-live.fw3-dim .fw3-canvas,
+  body.fw3-live.fw3-hide .fw3-canvas{opacity:0}
+  body.fw3-flat .fw3-canvas{display:none}
+
+  /* Sections */
+  .fw3-sec{position:relative;z-index:1;min-height:100vh;scroll-snap-align:start;
+    display:flex;align-items:center}
+  .fw3-wrap{width:100%;max-width:72rem;margin:0 auto;padding:0 1.25rem}
+  @media (min-width:640px){.fw3-wrap{padding:0 1.5rem}}
+
+  /* Hero */
+  .fw3-hero{align-items:flex-start}
+  .fw3-hero .fw3-wrap{padding-top:7.5rem;text-align:center}
+  @media (min-width:768px){.fw3-hero .fw3-wrap{padding-top:9rem}}
+  .fw3-cue{position:absolute;left:50%;bottom:1.6rem;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:.3rem;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.72rem;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--color-text-3)}
+  .fw3-cue .material-symbols-outlined{animation:fw3-cue 1.8s ease-in-out infinite}
+  @keyframes fw3-cue{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(6px);opacity:1}}
+
+  /* Layer text panels — hidden until the transition lands, then slide in. */
+  .fw3-panel{position:relative;max-width:32rem;opacity:0;transform:translateY(28px);
+    transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);
+    background:color-mix(in srgb, var(--color-bg) 62%, transparent);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border:1px solid color-mix(in srgb, var(--hue) 22%, transparent);
+    border-radius:1rem;padding:1.75rem 1.9rem 1.9rem;
+    box-shadow:0 24px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05)}
+  .fw3-sec.fw3-on .fw3-panel{opacity:1;transform:none}
+  .fw3-sec[data-side="right"] .fw3-panel{margin-left:auto}
+  @media (max-width:1023px){
+    .fw3-sec .fw3-panel,.fw3-sec[data-side="right"] .fw3-panel{margin:0 auto;align-self:flex-end}
+    .fw3-sec{align-items:flex-end;padding-bottom:4.5rem}
+  }
+
+  .fw3-kicker{display:inline-flex;align-items:center;gap:.55rem;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem;
+    letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--hue)}
+  .fw3-kicker::before{content:"";width:1.6rem;height:2px;border-radius:2px;background:var(--hue)}
+  .fw3-name{margin-top:.8rem;font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:700;
+    letter-spacing:-.02em;line-height:1.08}
+  .fw3-body{margin-top:.9rem;display:grid;gap:.7rem;font-size:.98rem;line-height:1.65;color:var(--color-text-2)}
+  .fw3-body code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;color:var(--hue)}
+  .fw3-chips{margin-top:1.15rem;display:flex;flex-wrap:wrap;gap:.5rem}
+  .fw3-chip{display:inline-flex;align-items:center;gap:.4rem;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.72rem;color:var(--color-text-2);
+    border:1px solid color-mix(in srgb, var(--hue) 30%, transparent);
+    background:color-mix(in srgb, var(--hue) 8%, transparent);
+    border-radius:9999px;padding:.32rem .7rem}
+  .fw3-chip .material-symbols-outlined{font-size:.95rem;color:var(--hue)}
+  /* Out-of-the-box vs requires-Rust markers keep their own colours. */
+  .fw3-chip.ok{border-color:rgba(52,211,153,.38);background:rgba(52,211,153,.08)}
+  .fw3-chip.ok .material-symbols-outlined{color:#34d399}
+  .fw3-chip.rust{border-color:rgba(249,115,22,.42);background:rgba(249,115,22,.09)}
+  .fw3-chip.rust .material-symbols-outlined{color:#f97316}
+
+  /* Variant stack — alternatives crossfade in place; height = tallest variant. */
+  .fw3-varstack{display:grid}
+  .fw3-var{grid-area:1/1;opacity:0;transform:translateX(16px);visibility:hidden;
+    transition:opacity .45s ease,transform .45s ease,visibility 0s .45s;pointer-events:none}
+  .fw3-var.on{opacity:1;transform:none;visibility:visible;transition-delay:0s;pointer-events:auto}
+
+  .fw3-varnav{margin-top:1.25rem;display:flex;align-items:center;gap:.7rem}
+  /* Big module-swap arrows, floating outside the panel. */
+  .fw3-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+    display:grid;place-items:center;width:3.4rem;height:3.4rem;border-radius:9999px;
+    border:2px solid color-mix(in srgb, var(--hue) 55%, transparent);
+    background:color-mix(in srgb, var(--hue) 14%, rgba(11,11,16,.72));
+    color:var(--hue);cursor:pointer;
+    box-shadow:0 0 18px color-mix(in srgb, var(--hue) 25%, transparent);
+    transition:background .25s,box-shadow .25s,transform .15s}
+  .fw3-arrow:hover{background:color-mix(in srgb, var(--hue) 30%, rgba(11,11,16,.72));
+    box-shadow:0 0 28px color-mix(in srgb, var(--hue) 55%, transparent)}
+  .fw3-arrow:active{transform:translateY(-50%) scale(.92)}
+  .fw3-arrow .material-symbols-outlined{font-size:1.7rem}
+  .fw3-arrow.prev{left:-4.8rem}
+  .fw3-arrow.next{right:-4.8rem}
+  @media (max-width:1279px){.fw3-arrow.prev{left:-1rem}.fw3-arrow.next{right:-1rem}}
+  @media (max-width:1023px){.fw3-arrow{width:2.8rem;height:2.8rem}
+    .fw3-arrow .material-symbols-outlined{font-size:1.4rem}}
+  .fw3-vardots{display:flex;gap:.4rem}
+  .fw3-vardots i{width:6px;height:6px;border-radius:50%;background:var(--color-text-3);opacity:.45;transition:all .3s}
+  .fw3-vardots i.on{background:var(--hue);opacity:1;
+    box-shadow:0 0 8px color-mix(in srgb, var(--hue) 70%, transparent)}
+  .fw3-varcap{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.64rem;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--color-text-3)}
+
+  /* Outro */
+  .fw3-outro .fw3-wrap{text-align:center;max-width:46rem}
+  /* The assembled-configuration table: one row per layer, status dot
+     green = built into Vantage UI, red (blinking) = hand-coded component. */
+  .fw3-table{margin:1.6rem auto 0;width:100%;max-width:34rem;border-collapse:collapse;
+    text-align:left;font-size:.88rem}
+  .fw3-table th{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.62rem;
+    letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--color-text-3);
+    padding:.45rem .8rem;border-bottom:1px solid rgba(255,255,255,.14)}
+  .fw3-table td{padding:.6rem .8rem;border-bottom:1px solid rgba(255,255,255,.06);
+    color:var(--color-text-2)}
+  .fw3-table td.num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    color:var(--color-text-3);width:2.6rem}
+  .fw3-table td.comp{color:#fff;font-weight:500}
+  .fw3-status{display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem}
+  .fw3-status::before{content:"";width:7px;height:7px;border-radius:50%;
+    background:#22c55e;box-shadow:0 0 8px #22c55e}
+  .fw3-status.rust::before{background:#ff3b30;box-shadow:0 0 8px #ff3b30;
+    animation:fw3-blink 1.1s steps(2) infinite}
+  @keyframes fw3-blink{50%{opacity:.3}}
+
+  /* Get-in-touch form */
+  .fw3-form{margin:2rem auto 0;max-width:34rem;display:grid;gap:.75rem;
+    grid-template-columns:1fr 1fr;text-align:left}
+  .fw3-form input,.fw3-form textarea{width:100%;padding:.7rem .95rem;border-radius:.65rem;
+    border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.045);
+    color:#fff;font-size:.92rem;outline:none;transition:border-color .2s;font-family:inherit}
+  .fw3-form input:focus,.fw3-form textarea:focus{border-color:var(--color-accent-400)}
+  .fw3-form input::placeholder,.fw3-form textarea::placeholder{color:var(--color-text-3)}
+  .fw3-form .span2{grid-column:1/-1}
+  .fw3-form button{grid-column:1/-1;justify-self:center;min-width:15rem;margin-top:.4rem}
+  @media (max-width:640px){.fw3-form{grid-template-columns:1fr}}
+
+  /* Flat fallback (no WebGL / reduced motion): everything readable, no theatre. */
+  body.fw3-flat .fw3-panel{opacity:1;transform:none}
+  body.fw3-flat .fw3-sec{min-height:0;padding:4rem 0}
+  body.fw3-flat .fw3-cue{display:none}
+  @media (prefers-reduced-motion:reduce){
+    .fw3-panel,.fw3-var{transition:none}
+    .fw3-cue .material-symbols-outlined{animation:none}
+  }
+</style>
+
+<canvas class="fw3-canvas" id="fw3-canvas" aria-hidden="true"></canvas>
+
+<!-- ── Hero ─────────────────────────────────────────────── -->
+<section class="fw3-sec fw3-hero" data-fw3="hero">
+    <div class="fw3-wrap">
+        <p class="kicker mb-4">The Vantage framework</p>
+        <h1 class="text-display">One engine. Six layers.<br>Cut it open.</h1>
+        <p class="mx-auto mt-5 max-w-xl text-lg text-text-2">Under Vantage&nbsp;UI runs a compiled Rust data engine.
+        Scroll — each layer lifts away until you reach the query builder at the core. Every layer swaps.</p>
     </div>
+    <p class="fw3-cue"><span>Descend</span><span class="material-symbols-outlined">keyboard_double_arrow_down</span></p>
 </section>
 
-<!-- Intro -->
-<section class="mx-auto max-w-3xl px-4 sm:px-6">
-    <p class="prose text-center text-[1.05rem] text-text-2">
-        The <strong>Vantage framework</strong> is the open-source Rust data layer that powers Vantage&nbsp;UI.
-        It is shipping on crates.io at <code>0.5.x</code>, with per-crate docs on docs.rs and a full mdBook.
-        The API is still evolving — expected at 0.x — but it is production code: it builds Vantage&nbsp;UI itself.
-    </p>
-</section>
-
-<!-- The abstraction stack -->
-<section class="mx-auto mt-20 max-w-4xl px-4 sm:px-6 md:mt-24">
-    <div class="prose mx-auto mb-12 max-w-2xl text-center">
-        <h2 class="!mt-0 text-h2">Nine layers — go as far as you need</h2>
-        <p>A stack of thin abstractions, built from the foundation up. They're not independent — <code>Table</code> stands on the DataSource and DataSet crates beneath it — but you climb only as far as your app needs and ignore the rest. In plenty of cases, <code>Table</code> is the whole job.</p>
-    </div>
-
-    <div class="layer-map">
-                    <div class="lm-step">
-                        <div class="lm-num">1</div>
-                        <div class="lm-body">
-                            <h4>Data source <a class="lm-crate" href="https://docs.rs/vantage-sql" target="_blank" rel="noopener">vantage-sql</a> <a class="lm-crate" href="https://docs.rs/vantage-surrealdb" target="_blank" rel="noopener">vantage-surrealdb</a> <a class="lm-crate" href="https://docs.rs/vantage-mongodb" target="_blank" rel="noopener">vantage-mongodb</a> <a class="lm-crate" href="https://docs.rs/vantage-csv" target="_blank" rel="noopener">vantage-csv</a></h4>
-                            <p>Any backend — SQL, SurrealDB, MongoDB, a REST or GraphQL API, CSV, an append-only log, the AWS CLI — implements a small set of source traits.</p>
-                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> A <a href="https://romaninsh.github.io/vantage/new-persistence.html" target="_blank" rel="noopener">comprehensive guide</a> walks you through building a data source for any new datasource (e.g. Oracle, a message queue or your internal store). Code it yourself, or hand the guide to your AI coding agent.</span></p>
-                        </div>
+<!-- ── Layer 00 · Presentation ──────────────────────────── -->
+<section class="fw3-sec" id="fw3-l0" data-fw3="0" data-side="left" style="--hue:#818cf8">
+    <div class="fw3-wrap">
+        <div class="fw3-panel">
+            <span class="fw3-kicker">Layer 00 · Presentation</span>
+            <div class="fw3-varstack">
+                <div class="fw3-var on">
+                    <h2 class="fw3-name">Vantage UI</h2>
+                    <div class="fw3-body">
+                        <p>The zero-code default. Download, run, describe your app in YAML and Rhai — a native console renders it with no build step and no browser in sight.</p>
+                        <p>Everything below this slab exists to make that one-click experience fast, typed and reactive.</p>
                     </div>
-
-                    <div class="lm-step">
-                        <div class="lm-num">2</div>
-                        <div class="lm-body">
-                            <h4>DataSet traits &amp; Core <a class="lm-crate" href="https://docs.rs/vantage-dataset" target="_blank" rel="noopener">vantage-dataset</a> <a class="lm-crate" href="https://docs.rs/vantage-core" target="_blank" rel="noopener">vantage-core</a> <a class="lm-crate" href="https://docs.rs/vantage-types" target="_blank" rel="noopener">vantage-types</a> <a class="lm-crate" href="https://docs.rs/vantage-expressions" target="_blank" rel="noopener">vantage-expressions</a></h4>
-                            <p>Readable, Writable, Insertable and ActiveEntity — the contract for listing, reading and changing rows. Underneath sit the shared foundations: the error model, the persistence-aligned type system, and the database-agnostic expression layer.</p>
-                        </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip ok"><span class="material-symbols-outlined">sell</span>Free</span>
+                        <span class="fw3-chip ok"><span class="material-symbols-outlined">bolt</span>Built into Vantage UI</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">download</span>One-click download</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">code</span>YAML + Rhai</span>
                     </div>
-
-                    <div class="lm-step">
-                        <div class="lm-num">3</div>
-                        <div class="lm-body">
-                            <h4>Table <a class="lm-crate" href="https://docs.rs/vantage-table" target="_blank" rel="noopener">vantage-table</a></h4>
-                            <p><code>Table&lt;Source, Entity&gt;</code> plugs an arbitrary data source into those traits, then adds typed columns, composable conditions, relations and computed expressions.</p>
-                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> This is where you model your business entities as a compile-time type system — typed columns, relations and expressions. It's what earns you real compile-time safety in Rust across a large codebase.</span></p>
-                        </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">Vantage custom UI</h2>
+                    <div class="fw3-body">
+                        <p>Need widgets the standard packaging doesn't ship — dashboards, specialised graphs, bespoke controls? We extend Vantage&nbsp;UI with custom UI elements built for your workflows.</p>
+                        <p>A dedicated build only your organisation runs — the same engine underneath, a richer surface on top.</p>
                     </div>
-
-                    <div class="lm-step">
-                        <div class="lm-num">4</div>
-                        <div class="lm-body">
-                            <h4>Vista <a class="lm-crate" href="https://docs.rs/vantage-vista" target="_blank" rel="noopener">vantage-vista</a></h4>
-                            <p>Erases both the backend and the entity type into one universal, schema-bearing handle. Everything below this line talks to a Vista — never to your database directly.</p>
-                        </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">handshake</span>Built by our team</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">monitoring</span>Custom widgets</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">workspace_premium</span>Dedicated build</span>
                     </div>
-
-                    <div class="lm-step">
-                        <div class="lm-num">5</div>
-                        <div class="lm-body">
-                            <h4>Vista from a Table — or from YAML <a class="lm-crate" href="https://docs.rs/vantage-vista-factory" target="_blank" rel="noopener">vantage-vista-factory</a></h4>
-                            <p>Build a Vista straight from a typed <code>Table</code>, or from a YAML spec. Go through the YAML root and the factory catalog resolves references <em>across different persistences</em> — a Postgres row linked to a Mongo collection.</p>
-                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> The YAML path is itself the no-Rust route — declare a source, its schema and references entirely in config, and the factory builds the Vista.</span></p>
-                        </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">UI &amp; API adapters</h2>
+                    <div class="fw3-body">
+                        <p>Swap the console for your own shell. <code>vantage-ui-adapters</code> embeds the engine into your UI framework; <code>api-adapters</code> exposes it as REST and live-streaming endpoints.</p>
+                        <p>A thin layer of hand-written Rust wires it up — the engine underneath stays identical.</p>
                     </div>
-
-                    <div class="lm-step">
-                        <div class="lm-num">6</div>
-                        <div class="lm-body">
-                            <h4>Diorama <a class="lm-crate" href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></h4>
-                            <p>A bare Vista has only the capabilities of its source. Diorama wraps it with a local cache so a read-only CSV can count, paginate, search and sort — and it pushes real-time updates out to the UI elements bound to it (and to connected live clients, once a WebSocket connector lands).</p>
-                        </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">settings</span>Requires Coding</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">extension</span>vantage-ui-adapters</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">api</span>api-adapters</span>
                     </div>
-
-                    <div class="lm-step">
-                        <div class="lm-num">7</div>
-                        <div class="lm-body">
-                            <h4>Lens <a class="lm-crate" href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></h4>
-                            <p>The Lens decides caching <em>strategy</em>: which backend holds the cache (usually ReDB), how much to pre-fetch, and how to invalidate it.</p>
-                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> The Lens is where you own that strategy — set the pre-fetch window and invalidation rules, and route writes and events through your own callbacks.</span></p>
-                        </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">React + your code</h2>
+                    <div class="fw3-body">
+                        <p>Keep your frontend. Point React — or anything else — at the streaming API endpoints and consume the same typed, cached, reactive data.</p>
+                        <p>You own the UI code; Vantage owns the data path behind it.</p>
                     </div>
-
-                    <div class="lm-step">
-                        <div class="lm-num">8</div>
-                        <div class="lm-body">
-                            <h4>Scenery <a class="lm-crate" href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></h4>
-                            <p>Table, Record and Value sceneries drive a reactive UI. Each bumps a generation counter when its data moves, and the interface re-renders — no manual state-sync.</p>
-                        </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">settings</span>Requires Coding</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">web</span>Your frontend</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">stream</span>Live endpoints</span>
                     </div>
-
-                    <div class="lm-step">
-                        <div class="lm-num">9</div>
-                        <div class="lm-body">
-                            <h4>Your integration <a class="lm-crate" href="https://docs.rs/vantage-cli-util" target="_blank" rel="noopener">vantage-cli-util</a> <span class="lm-crate">vantage-ui-adapters</span></h4>
-                            <p>The top of the stack is yours — an API server, a command-line tool, a bespoke UI. You write it, but you don't start cold: Vantage ships connectors, including an axum server integration, DataGrid adapters for six Rust UI toolkits, and CLI helpers.</p>
-                            <p class="lm-branch"><span class="material-symbols-outlined">call_split</span><span><strong>Roll your own.</strong> Wrap any layer below in your own API or CLI. The connectors are a head start, not a cage — your surface, your logic.</span></p>
-                        </div>
-                    </div>
-    </div>
-
-    <p class="prose mt-8 text-center text-sm">It's all modular — depend only on the crates you need. Most data-source crates expose an optional <code>vista</code> feature, and an optional <code>rhai</code> feature layers scripting on top. Rolling your own tables? You generally need neither.</p>
-</section>
-
-<!-- Code gallery -->
-<section class="mt-20 border-y border-line bg-surface-1/60 py-16 md:mt-24 md:py-20">
-    <div class="mx-auto max-w-4xl px-4 sm:px-6">
-        <div class="mx-auto mb-12 max-w-2xl text-center">
-            <h2 class="text-h2">What the code feels like</h2>
-            <p class="mt-4 text-text-2">Real snippets from the book. Step through them.</p>
-        </div>
-
-        <div class="snip-gallery" id="snipGallery">
-                    <div class="snip-stage">
-                        <figure class="snip active">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Your first Vantage app</h3>
-                                <p>The minimum Vantage gives you — construct a SQL query, execute it, and map the rows. It also shows <code>VantageError</code> handling in practice: should the query fail, <code>e.report()</code> prints a lovely, readable error message.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-rust">use vantage_sql::prelude::*;
-use vantage_types::prelude::*;
-
-#[entity(SqliteType)]
-struct Product {
-    name: String,
-    price: i64,
-}
-
-#[tokio::main]
-async fn main() {
-    if let Err(e) = run().await {
-        e.report();
-    }
-}
-
-async fn run() -> VantageResult&lt;()&gt; {
-    let db = SqliteDB::connect("sqlite:products.db?mode=ro")
-        .await
-        .context("Failed to connect to products.db")?;
-
-    let select = SqliteSelect::new()
-        .with_source("product")
-        .with_field("name")
-        .with_field("price")
-        .with_condition(Column::&lt;bool&gt;::new("is_deleted").eq(false));
-
-    let raw = db.execute(&amp;select.expr()).await?;
-    let records = Vec::&lt;Record&lt;AnySqliteType&gt;&gt;::try_from(raw)?;
-
-    for rec in records {
-        let p = Product::from_record(rec)?;
-        println!("{:&lt;12} {:&gt;3} cents", p.name, p.price);
-    }
-
-    Ok(())
-}</code></pre>
-                                <figcaption class="snip-note"><strong>no SQL hardcoding ever</strong>Expressions and query builders are at the heart of all SQL data sources — designed not to limit you, but to make full use of your SQL server. <a href="https://github.com/romaninsh/vantage/blob/main/vantage-sql/tests/sqlite/3_complex_queries.rs" target="_blank" rel="noopener">See more complex example →</a></figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Business entity is your new Rust type</h3>
-                                <p>In Vantage a business entity is a first-class citizen, so <code>Table&lt;MysqlDB, Client&gt;</code> is a legit type too. Here are two constructors for the same <code>Client</code> — one over SQL on MySQL, the other over SurrealDB's own, incompatible <code>SurrealQL</code>.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-rust">pub fn mysql_table(db: MysqlDB) -> Table&lt;MysqlDB, Client&gt; {
-    Table::new("client", db)
-        .with_id_column("id")
-        .with_column_of::&lt;String&gt;("name")
-        .with_column_of::&lt;String&gt;("email")
-        .with_column_of::&lt;String&gt;("contact_details")
-        .with_column_of::&lt;bool&gt;("is_paying_client")
-        .with_column_of::&lt;String&gt;("bakery_id")
-        .with_one("bakery", "bakery_id", Bakery::mysql_table)
-        .with_many("orders", "client_id", Order::mysql_table)
-        .with_expression("order_count", |t| {
-            let orders = t.get_subquery_as::&lt;Order&gt;("orders").unwrap();
-            orders.get_count_query()
-        })
-}
-
-pub fn surreal_table(db: SurrealDB) -> Table&lt;SurrealDB, Client&gt; {
-    Table::new("client", db)
-        .with_id_column("id")
-        .with_column_of::&lt;String&gt;("name")
-        .with_column_of::&lt;String&gt;("email")
-        .with_column_of::&lt;String&gt;("contact_details")
-        .with_column_of::&lt;bool&gt;("is_paying_client")
-        .with_one("bakery", "bakery", Bakery::surreal_table)
-        .with_many("orders", "client", Order::surreal_table)
-        .with_expression("order_count", |t| {
-            let orders = t.get_subquery_as::&lt;Order&gt;("orders").unwrap();
-            orders.get_count_query()
-        })
-}</code></pre>
-                                <figcaption class="snip-note"><strong>What is SurrealDB?</strong>A new multi-modal, Rust-based DB engine with graph support. Never heard of it? Not a problem — your Vantage app can already use it.</figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Build a query at runtime with Rhai</h3>
-                                <p>The full query builder is scriptable. Drive joins, aggregates and ordering from a <code>Rhai</code> script evaluated at runtime — same primitives as Rust, no recompile. Here, an order-detail view across three tables.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-rust">// Q7: Order Detail View (all orders with totals)
-// INNER JOIN + LEFT JOIN, COUNT/SUM aggregates, GROUP BY
-
-let o = table("client_order").alias("o");
-let c = table("client").alias("c");
-let ol = table("order_line").alias("ol");
-
-select()
-    .from(o)
-    .expression(o["id"].alias("order_id"))
-    .expression(c["name"].alias("client"))
-    .expression(o["created_at"].alias("placed"))
-    .expression(count(ol["id"]).alias("lines"))
-    .expression(sum(mul(ol["quantity"], ol["price"])).alias("order_total"))
-    .expression(sum(ol["quantity"]).alias("total_items"))
-    .inner_join("client", "c", c["id"] == o["client_id"])
-    .left_join("order_line", "ol", ol["order_id"] == o["id"])
-    .group_by(o["id"])
-    .group_by(c["name"])
-    .group_by(o["created_at"])
-    .order_by(o["created_at"], "asc")</code></pre>
-                                <figcaption class="snip-note"><strong>queries as data</strong>Operators, joins and aggregates all live in the script — change the report without touching the binary. <a href="https://github.com/romaninsh/vantage/tree/main/vantage-sql/tests/rhai-tests" target="_blank" rel="noopener">More Rhai queries →</a></figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Turn a CLI into a typed table</h3>
-                                <p>A whole datasource in one YAML file: declare the columns, then let a <code>Rhai</code> <code>cmd</code> block shell out to the AWS CLI. Vantage pushes your <code>WHERE</code> conditions and <code>limit</code> straight into the command's arguments.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-yaml">name: s3.objects
-columns:
-  Key:          { type: string, flags: [id, title, searchable] }
-  Bucket:       { type: string, flags: [hidden] }
-  Size:         { type: int }
-  LastModified: { type: string }
-  StorageClass: { type: string }
-cmd:
-  rhai: |
-    let args = ["s3api", "list-objects-v2", "--output", "json"];
-    let bucket = "";
-    for c in conditions {
-        if c.field == "Bucket" { args += ["--bucket", c.value]; bucket = c.value; }
-    }
-    if type_of(limit) != "()" {
-        args += ["--max-items", limit.to_string()];
-    }
-    let out = run(args);
-    if out.exit_code != 0 { throw out.stderr; }
-    let parsed = parse_json(out.stdout);
-    // `Contents` is absent for an empty bucket.
-    let contents = if type_of(parsed.Contents) == "array" { parsed.Contents } else { [] };
-    for r in contents { r.Bucket = bucket; }
-    contents</code></pre>
-                                <figcaption class="snip-note"><strong>anything can be a table</strong>Wire up your own CLI scripts to feed data into your UI — and transform both the input and the output on the way through.</figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Teach your table new tricks</h3>
-                                <p>A <code>Table&lt;SqliteDB, User&gt;</code> is your own type — so a plain trait lets you bolt domain logic straight onto it. Define <code>reset_password</code> once and every <code>User</code> table in your codebase has it.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-rust">// A domain trait, implemented directly on the typed table.
-#[async_trait]
-pub trait UserOps {
-    async fn reset_password(&amp;self, id: &amp;str, new_password: &amp;str) -> VantageResult&lt;()&gt;;
-}
-
-#[async_trait]
-impl UserOps for Table&lt;SqliteDB, User&gt; {
-    async fn reset_password(&amp;self, id: &amp;str, new_password: &amp;str) -> VantageResult&lt;()&gt; {
-        let mut user = self
-            .get_record(id)
-            .await?
-            .ok_or_else(|| vantage_error!("no such user: {id}"))?;
-
-        // `Record` derefs to `User`, so mutate it like the struct it is.
-        user.password_hash = hash_password(new_password);
-        user.reset_token = None;
-        user.save().await
-    }
-}
-
-// ...then anywhere in your code, it reads like a method on the entity:
-let users = User::sqlite_table(db);
-users.reset_password("42", "hunter2").await?;</code></pre>
-                                <figcaption class="snip-note"><strong>your type, your methods</strong>No service layer, no repository boilerplate — domain behaviour lives right where the data does, and the compiler keeps it honest.</figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>One function, any backend</h3>
-                                <p>A Vista hides both the entity type and the database. This summary printer runs against SQLite, MongoDB or AWS — unchanged.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-rust">use vantage_vista::Vista;
-
-// A typed Table&lt;SqliteDB, Product&gt;
-// collapses into a backend-blind Vista:
-let vista = db
-    .vista_factory()
-    .from_table(Product::sqlite_table(db))?;
-print_vista(&amp;vista).await?;
-
-// ...and print_vista neither knows nor cares what's underneath:
-async fn print_vista(vista: &amp;Vista) -> VantageResult&lt;()&gt; {
-    let columns = vista.get_column_names();
-    let caps = vista.capabilities();
-
-    print!("  {:&gt;12} ", vista.get_id_column().unwrap_or("id"));
-    for col in &amp;columns {
-        print!("{:&gt;16} ", col);
-    }
-    println!();
-
-    if caps.can_count {
-        println!("  ({} rows)", vista.get_count().await?);
-    }
-
-    let rows = vista.list_values().await?;
-    for (id, record) in &amp;rows {
-        print!("  {:&gt;12} ", id);
-        for col in &amp;columns {
-            let val = record.get(col)
-                .map(|v| format!("{:?}", v))
-                .unwrap_or_default();
-            print!("{:&gt;16} ", val);
-        }
-        println!();
-    }
-    Ok(())
-}</code></pre>
-                                <figcaption class="snip-note"><strong>your boundary to other languages</strong>Rust generics can't cross an FFI or serialization boundary. A Vista erases them into a schema plus plain <code>CBOR</code> records — the form a Python or TypeScript SDK would consume. Want your <code>Table</code> reachable from another language? Wrap it in a Vista first.</figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Wire up a cache with a Lens</h3>
-                                <p>Lens and Diorama implement sophisticated local caching capabilities that you control. Here is a simple local cache that refreshes itself automatically.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-rust">use std::sync::Arc;
-use std::time::Duration;
-use vantage_diorama::Lens;
-
-let lens = Arc::new(
-    Lens::new()
-        .cache_at("./cache.redb")
-        .on_start(|dio| {
-            let dio = dio.clone();
-            async move {
-                let rows = dio.master().list_values().await?;
-                dio.cache().insert_values(rows).await?;
-                Ok(())
-            }
-        })
-        .refresh_every(Duration::from_secs(300))
-        .build()?,
-);</code></pre>
-                                <figcaption class="snip-note"><strong>UI, Edge, Mobile</strong>Each location needs a different caching strategy — it's up to you to fine-tune your cache.</figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Drive a reactive UI with Scenery</h3>
-                                <p>Lens and Diorama run on a separate local thread, coordinating data in and out of your datasource. A Scenery is a "window" into that local cache.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-rust">use vantage_diorama::scenery::SortDir;
-
-// Table view — ordered, paginated
-let table = dio
-    .table_scenery()
-    .sort("name", SortDir::Asc)
-    .page_size(50)
-    .open()
-    .await?;
-
-println!("{} rows loaded", table.row_count());
-
-// Single record
-let rec = dio.record_scenery("42").await?;
-
-// Live counter
-let count = dio.value_scenery().count().open().await?;
-let mut rx = count.subscribe();
-loop {
-    rx.changed().await?;
-    println!("count: {:?}", count.value());
-}</code></pre>
-                                <figcaption class="snip-note"><strong>Lazy caches</strong>Vantage UI uses Lens with lazy caching by default. Drop in a 1M-record table and scroll — data loads as you go, without ever holding up the UI.</figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Complex aggregates, without starting over</h3>
-                                <p>Dashboards need real aggregation. You don't hand-write SQL for it — you build on a table you already have. This "top products by units sold" comes straight off the <code>order</code> table.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-yaml">name: product_units
-datasource: bakery-surreal
-
-id_column: product
-columns:
-  product: { type: string, flags: [id, title] }
-  units:   { type: int }
-
-surreal:
-  rhai: |
-    select()
-        .from(                                  # base: the order table
-            select()
-                .expression(ident("lines").alias("line"))
-                .from("order")
-                .split("lines")                 # one row per order line
-                .subquery())
-        .expression(ident("line")["product"].alias("product"))
-        .expression(sum(ident("line")["quantity"]).alias("units"))
-        .group_by(ident("product"))
-        .order_by(ident("units"), "desc")
-        .limit(10, 0)</code></pre>
-                                <figcaption class="snip-note"><strong>build on what you have</strong>Every aggregate starts from an existing table as its base — so a dashboard query is composition, not a from-scratch rewrite.</figcaption>
-                            </div>
-                            </div>
-                        </figure>
-
-                        <figure class="snip">
-                            <div class="snip-card">
-                            <header class="snip-head">
-                                <h3>Vantage UI: app-as-a-config</h3>
-                                <p>Vantage UI takes all of this beautiful Vantage code and wraps it in a <a href="https://www.gpui.rs/" target="_blank" rel="noopener">GPUI</a> interface. Table definitions are parsed by the Vista factory, while the UI is driven by similarly structured page files.</p>
-                            </header>
-                            <div class="snip-body">
-<pre class="snip-code"><code class="language-yaml">title: Orders
-
-elements:
-  - kind: crud
-    spot: body
-    table: bakery-surreal/order
-    params:
-      columns:
-        id:         { pin: true, label: ID }
-        created_at: { label: Created }
-        status:
-          label: Status
-          color:
-            success: [paid]
-            yellow:  [in_production, ready]
-            red:     [cancelled]
-          labels:
-            in_production: In production
-            ready:         Ready
-            paid:          Paid
-            cancelled:     Cancelled
-    row_actions:
-      - label: Open
-        icon: ChevronRight
-        primary: true
-        navigate: order-detail         # drill down to another page
-        args: { id: row.id }
-      - label: "Start production"
-        icon: Factory
-        when: 'row.status == "confirmed"'   # only show the legal next step
-        action: |
-          row.status = "in_production";
-          row.save();
-      - label: "Mark paid"
-        icon: DollarSign
-        when: 'row.status == "delivered" || row.status == "picked_up"'
-        action: |
-          row.status = "paid";
-          row.save();</code></pre>
-                                <figcaption class="snip-note"><strong>Vantage UI is free</strong>Download it now and build your own custom app on the open stack you've just seen. <a href="/download/">Get Vantage UI →</a></figcaption>
-                            </div>
-                            </div>
-                        </figure>
-                    </div>
-
-            <div class="snip-nav">
-                <button type="button" class="snip-arrow snip-prev" aria-label="Previous snippet"><span class="material-symbols-outlined">chevron_left</span></button>
-                <div class="snip-dots" id="snipDots"></div>
-                <button type="button" class="snip-arrow snip-next" aria-label="Next snippet"><span class="material-symbols-outlined">chevron_right</span></button>
+                </div>
+            </div>
+            <button type="button" class="fw3-arrow prev" data-dir="-1" aria-label="Previous alternative"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button type="button" class="fw3-arrow next" data-dir="1" aria-label="Next alternative"><span class="material-symbols-outlined">chevron_right</span></button>
+            <div class="fw3-varnav">
+                <span class="fw3-vardots"><i class="on"></i><i></i><i></i><i></i></span>
+                <span class="fw3-varcap">Swap this layer</span>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Crate map -->
-<section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-24">
-    <div class="prose mx-auto mb-10 max-w-2xl text-center">
-        <h2 class="!mt-0 text-h2">The crate map</h2>
-        <p>Every published crate, all at <code>0.5.x</code>. Pull in only the layers you use.</p>
-    </div>
-
-    <div class="grid gap-x-10 lg:grid-cols-2">
-        <div>
-                        <div class="crate-group">
-                            <h4>Core</h4>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-core" target="_blank" rel="noopener">vantage-core</a></div><div class="crate-purpose">Result type, error model and base traits.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-types" target="_blank" rel="noopener">vantage-types</a></div><div class="crate-purpose">The persistence-aligned type system and <code>Record</code> types.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-expressions" target="_blank" rel="noopener">vantage-expressions</a></div><div class="crate-purpose">Database-agnostic expression AST with push-down.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-dataset" target="_blank" rel="noopener">vantage-dataset</a></div><div class="crate-purpose">The <code>DataSet</code> / <code>ValueSet</code> traits and idempotency rules.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-table" target="_blank" rel="noopener">vantage-table</a></div><div class="crate-purpose"><code>Table</code>, columns and operation traits over any backend.</div></div>
-                        </div>
-
-                        <div class="crate-group">
-                            <h4>Universal handle</h4>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-vista" target="_blank" rel="noopener">vantage-vista</a></div><div class="crate-purpose">Universal, schema-bearing data handle.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-vista-factory" target="_blank" rel="noopener">vantage-vista-factory</a></div><div class="crate-purpose">Multi-datasource catalog and cross-persistence reference traversal.</div></div>
-                        </div>
-
-                        <div class="crate-group">
-                            <h4>Reactive cache</h4>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-diorama" target="_blank" rel="noopener">vantage-diorama</a></div><div class="crate-purpose">Cached, composable, reactive surface — Lens, Dio and Scenery.</div></div>
-                        </div>
-        </div>
-
-        <div>
-                        <div class="crate-group">
-                            <h4>Backends</h4>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-sql" target="_blank" rel="noopener">vantage-sql</a></div><div class="crate-purpose">Postgres, MySQL and SQLite.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-surrealdb" target="_blank" rel="noopener">vantage-surrealdb</a></div><div class="crate-purpose">SurrealDB native client.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-mongodb" target="_blank" rel="noopener">vantage-mongodb</a></div><div class="crate-purpose">MongoDB with native pipeline support.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-api-client" target="_blank" rel="noopener">vantage-api-client</a></div><div class="crate-purpose">REST and GraphQL HTTP API backends.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-csv" target="_blank" rel="noopener">vantage-csv</a></div><div class="crate-purpose">CSV files as a dataset.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-redb" target="_blank" rel="noopener">vantage-redb</a></div><div class="crate-purpose">Embedded redb key-value store.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-log-writer" target="_blank" rel="noopener">vantage-log-writer</a></div><div class="crate-purpose">Append-only JSONL log files.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-aws" target="_blank" rel="noopener">vantage-aws</a></div><div class="crate-purpose">AWS API backend <span class="text-muted">— incubating</span>.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/surreal-client" target="_blank" rel="noopener">surreal-client</a></div><div class="crate-purpose">CBOR-based SurrealDB client.</div></div>
-                        </div>
-
-                        <div class="crate-group">
-                            <h4>Tooling &amp; adapters</h4>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-api-pool" target="_blank" rel="noopener">vantage-api-pool</a></div><div class="crate-purpose">Paginated REST client pool — rate limiting and cursors.</div></div>
-                            <div class="crate-row"><div class="crate-name"><a href="https://docs.rs/vantage-cli-util" target="_blank" rel="noopener">vantage-cli-util</a></div><div class="crate-purpose">CLI utilities for the framework.</div></div>
-                            <div class="crate-row"><div class="crate-name">vantage-ui-adapters</div><div class="crate-purpose">DataGrid adapters for GPUI, egui, Slint, Tauri, ratatui and Cursive. Ships with the UI.</div></div>
-                        </div>
-        </div>
-    </div>
-</section>
-
-<!-- Generic API export — coming -->
-<section class="mx-auto mt-20 max-w-4xl px-4 sm:px-6 md:mt-24">
-    <div class="card relative overflow-hidden border-violet/20 p-8">
-        <div class="glow -top-32 right-0 h-48 w-80 opacity-40"></div>
-        <div class="relative">
-            <span class="badge-soon mb-4">Roadmap</span>
-            <h3 class="text-h3">Your data, exported as an API</h3>
-            <div class="prose mt-3 text-sm">
-                <p>Today the framework <strong>consumes</strong> HTTP backends — <code>vantage-api-client</code> maps REST and GraphQL into tables, and <code>vantage-api-pool</code> handles paginated, rate-limited fetches.</p>
-                <p>The reverse is in progress: a generic, open-source crate that <strong>exports</strong> your typed entities as a clean REST/GraphQL endpoint from minimal boilerplate, without losing the framework's capabilities. A genuinely generic API layer is rare in Rust — and it's the foundation the Vantage&nbsp;UI <em>API-generation</em> feature will build on.</p>
+<!-- ── Layer 01 · Scenery ───────────────────────────────── -->
+<section class="fw3-sec" id="fw3-l1" data-fw3="1" data-side="right" style="--hue:#22d3ee">
+    <div class="fw3-wrap">
+        <div class="fw3-panel">
+            <span class="fw3-kicker">Layer 01 · Reactive viewport</span>
+            <div class="fw3-varstack">
+                <div class="fw3-var on">
+                    <h2 class="fw3-name">Scenery</h2>
+                    <div class="fw3-body">
+                        <p>A live viewport onto a fragment of your data. A Scenery subscribes and streams every change to the elements bound to it — sort, page and filter are part of the viewport itself.</p>
+                        <p>How data flows in is a <em>Lens</em> strategy. The on-device default just works.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip ok"><span class="material-symbols-outlined">bolt</span>Built into Vantage UI</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">stream</span>Streams changes</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">unfold_more</span>Virtualised paging</span>
+                    </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">Lens · API adapter</h2>
+                    <div class="fw3-body">
+                        <p>Rehome the Lens onto your API tier: sceneries fetch through your own service, with pre-warmed caches tuned for a large number of active viewports.</p>
+                        <p>You implement the Lens transport in Rust; every scenery keeps the same contract.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">settings</span>Requires Coding</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">hub</span>Server-side Lens</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">speed</span>Pre-warmed</span>
+                    </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">Lens · WebSocket</h2>
+                    <div class="fw3-body">
+                        <p>Stream scenery diffs over WebSocket — the same reactive contract, pushed across the wire to remote clients in real time.</p>
+                        <p>Push, not poll: your Rust service forwards the diff stream; screens stay live everywhere.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">settings</span>Requires Coding</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">swap_vert</span>Live diffs</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">bolt</span>Push, not poll</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="fw3-arrow prev" data-dir="-1" aria-label="Previous alternative"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button type="button" class="fw3-arrow next" data-dir="1" aria-label="Next alternative"><span class="material-symbols-outlined">chevron_right</span></button>
+            <div class="fw3-varnav">
+                <span class="fw3-vardots"><i class="on"></i><i></i><i></i></span>
+                <span class="fw3-varcap">Swap this layer</span>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Contribute a data source -->
-<section class="mx-auto mt-20 max-w-4xl px-4 sm:px-6 md:mt-24">
-    <div class="prose mb-8">
-        <h2 class="!mt-0 text-h2">Bring your own backend</h2>
-        <p>Vantage UI's reach is bounded by the framework's connector list. Adding a backend is a well-defined six-step process in the book's <a href="https://romaninsh.github.io/vantage/new-persistence.html" target="_blank" rel="noopener">Adding a New Persistence</a> chapter.</p>
+<!-- ── Layer 02 · Diorama ───────────────────────────────── -->
+<section class="fw3-sec" id="fw3-l2" data-fw3="2" data-side="left" style="--hue:#34d399">
+    <div class="fw3-wrap">
+        <div class="fw3-panel">
+            <span class="fw3-kicker">Layer 02 · Local cache</span>
+            <div class="fw3-varstack">
+                <div class="fw3-var on">
+                    <h2 class="fw3-name">Diorama</h2>
+                    <div class="fw3-body">
+                        <p>A high-performance local cache that keeps your working set close — reads come back in microseconds, refresh strategy is yours to script.</p>
+                        <p>Ships as an ephemeral memory + disk cache. When the network gets flaky, the screen above it never blanks.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip ok"><span class="material-symbols-outlined">bolt</span>Built into Vantage UI</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">speed</span>Latency collapsed</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">database</span>Memory + disk</span>
+                    </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">External cache</h2>
+                    <div class="fw3-body">
+                        <p>Point the Diorama at a cache your infrastructure already runs — shared between instances, surviving restarts, warmed by your own pipelines.</p>
+                        <p>A custom integration written in Rust against the cache contract.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">settings</span>Requires Coding</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">cloud</span>Shared cache</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">restart_alt</span>Survives restarts</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="fw3-arrow prev" data-dir="-1" aria-label="Previous alternative"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button type="button" class="fw3-arrow next" data-dir="1" aria-label="Next alternative"><span class="material-symbols-outlined">chevron_right</span></button>
+            <div class="fw3-varnav">
+                <span class="fw3-vardots"><i class="on"></i><i></i></span>
+                <span class="fw3-varcap">Swap this layer</span>
+            </div>
+        </div>
     </div>
-    <ol class="grid gap-2.5 sm:grid-cols-2">
-        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">1.</span>Define the type system</li>
-        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">2.</span>Implement expressions</li>
-        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">3.</span>Implement operators</li>
-        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">4.</span>Build the query builder</li>
-        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">5.</span>Wire CRUD on <code class="font-mono text-[0.85em] text-accent-300">Table</code></li>
-        <li class="rounded-lg border border-line bg-surface-1 px-4 py-3 text-sm text-text-2"><span class="me-2 font-mono text-accent-400">6.</span>Add relationships and multi-backend support</li>
-    </ol>
-    <p class="prose mt-6 text-sm">Bringing a new database, message broker or infrastructure source into Vantage UI? That's the path. Pull requests welcome on <a href="https://github.com/romaninsh/vantage" target="_blank" rel="noopener">github.com/romaninsh/vantage</a>.</p>
 </section>
 
-<!-- CTA -->
-<section class="mx-auto mt-20 max-w-6xl px-4 text-center sm:px-6 md:mt-24">
-    <div class="flex flex-col justify-center gap-3 sm:flex-row">
-        <a href="https://romaninsh.github.io/vantage/" class="btn btn-lg btn-primary" target="_blank" rel="noopener">
-            <span class="material-symbols-outlined">menu_book</span>
-            Read the Book
-        </a>
-        <a href="/solutions/app-builders/" class="btn btn-lg btn-outline-primary">
-            <span class="material-symbols-outlined">developer_board</span>
-            Build your own app
-        </a>
+<!-- ── Layer 03 · Vista ─────────────────────────────────── -->
+<section class="fw3-sec" id="fw3-l3" data-fw3="3" data-side="right" style="--hue:#a78bfa">
+    <div class="fw3-wrap">
+        <div class="fw3-panel">
+            <span class="fw3-kicker">Layer 03 · Universal interface</span>
+            <div class="fw3-varstack">
+                <div class="fw3-var on">
+                    <h2 class="fw3-name">Vista</h2>
+                    <div class="fw3-body">
+                        <p>One handle with the same read and write surface over every backend. SQL dialects, SurrealDB, MongoDB, REST and GraphQL APIs, AWS, CSV, CLI tools — the full list lives on the <a href="/features/">features page</a>.</p>
+                        <p>Vista is capability-aware: it exploits what your data server can do and compensates for what it can't.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip ok"><span class="material-symbols-outlined">bolt</span>Built into Vantage UI</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">hub</span>12+ backends</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">tune</span>Capability-aware</span>
+                    </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">Custom DataSource</h2>
+                    <div class="fw3-body">
+                        <p>Anything can become a Vista. Implement the <code>DataSource</code> contract for your internal store, private queue or vendor API — and every layer above gains it instantly.</p>
+                        <p>This is exactly what our dedicated commercial builds add for partners.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">settings</span>Requires Coding</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">extension</span>DataSource trait</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">join</span>One handle</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="fw3-arrow prev" data-dir="-1" aria-label="Previous alternative"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button type="button" class="fw3-arrow next" data-dir="1" aria-label="Next alternative"><span class="material-symbols-outlined">chevron_right</span></button>
+            <div class="fw3-varnav">
+                <span class="fw3-vardots"><i class="on"></i><i></i></span>
+                <span class="fw3-varcap">Swap this layer</span>
+            </div>
+        </div>
     </div>
 </section>
+
+<!-- ── Layer 04 · Entity Tables ─────────────────────────── -->
+<section class="fw3-sec" id="fw3-l4" data-fw3="4" data-side="left" style="--hue:#fbbf24">
+    <div class="fw3-wrap">
+        <div class="fw3-panel">
+            <span class="fw3-kicker">Layer 04 · Business logic</span>
+            <div class="fw3-varstack">
+                <div class="fw3-var on">
+                    <h2 class="fw3-name">Entity Tables</h2>
+                    <div class="fw3-body">
+                        <p>Business entities described declaratively through Vantage&nbsp;UI — columns, relations, computed expressions — in YAML and Rhai your coding agent is happy to write for you.</p>
+                        <p>Change a model without shipping a binary; it all lives in git next to everything else.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip ok"><span class="material-symbols-outlined">bolt</span>Built into Vantage UI</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">smart_toy</span>AI-written</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">description</span>Declarative</span>
+                    </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">Custom entity models</h2>
+                    <div class="fw3-body">
+                        <p>Promote entities to real Rust types — compile-time checked columns, relations and subqueries. Refactor a large codebase and the compiler walks every use with you.</p>
+                        <p>Built for type safety and robustness where it matters most.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">settings</span>Requires Coding</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">verified</span>Typed columns</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">account_tree</span>Relations &amp; subqueries</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="fw3-arrow prev" data-dir="-1" aria-label="Previous alternative"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button type="button" class="fw3-arrow next" data-dir="1" aria-label="Next alternative"><span class="material-symbols-outlined">chevron_right</span></button>
+            <div class="fw3-varnav">
+                <span class="fw3-vardots"><i class="on"></i><i></i></span>
+                <span class="fw3-varcap">Swap this layer</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Layer 05 · Query Builder ─────────────────────────── -->
+<section class="fw3-sec" id="fw3-l5" data-fw3="5" data-side="right" style="--hue:#fb7185">
+    <div class="fw3-wrap">
+        <div class="fw3-panel">
+            <span class="fw3-kicker">Layer 05 · The core</span>
+            <div class="fw3-varstack">
+                <div class="fw3-var on">
+                    <h2 class="fw3-name">Query Builder</h2>
+                    <div class="fw3-body">
+                        <p>A multi-dialect, composable query builder at the very bottom. One expression model that renders to SQL dialects, SurrealQL and more — nested, joined and aggregated without string glue.</p>
+                        <p>Scripted straight from Vantage&nbsp;UI in Rhai: joins, aggregates, drill-downs — no recompile.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip ok"><span class="material-symbols-outlined">bolt</span>Built into Vantage UI</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">translate</span>Multi-dialect</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">stacks</span>Composable</span>
+                    </div>
+                </div>
+                <div class="fw3-var">
+                    <h2 class="fw3-name">Custom queries</h2>
+                    <div class="fw3-body">
+                        <p>Go below the scripts: hand-craft queries in Rust, integrate stored procedures, or wrap a custom API as an expression — and every layer above can use it.</p>
+                        <p>The bedrock is open; this is where dedicated builds go deepest.</p>
+                    </div>
+                    <div class="fw3-chips">
+                        <span class="fw3-chip rust"><span class="material-symbols-outlined">settings</span>Requires Coding</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">functions</span>Stored procedures</span>
+                        <span class="fw3-chip"><span class="material-symbols-outlined">api</span>Custom APIs</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="fw3-arrow prev" data-dir="-1" aria-label="Previous alternative"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button type="button" class="fw3-arrow next" data-dir="1" aria-label="Next alternative"><span class="material-symbols-outlined">chevron_right</span></button>
+            <div class="fw3-varnav">
+                <span class="fw3-vardots"><i class="on"></i><i></i></span>
+                <span class="fw3-varcap">Swap this layer</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Outro ────────────────────────────────────────────── -->
+<section class="fw3-sec fw3-outro" data-fw3="outro" id="fw3-cta">
+    <div class="fw3-wrap">
+        <h2 class="text-h2">Let our team assemble the right stack for your organisation</h2>
+        <p class="mx-auto mt-4 max-w-xl text-text-2" id="fw3-cta-lead">You have selected custom components — our team would be happy to assemble this stack for your organisation:</p>
+        <table class="fw3-table" aria-label="Your selected stack">
+            <thead><tr><th>#</th><th>Layer</th><th>Component</th><th>Status</th></tr></thead>
+            <tbody id="fw3-config"></tbody>
+        </table>
+        <form id="fw3-form" class="fw3-form">
+            <input class="span2" name="org" placeholder="Organisation name" required autocomplete="organization">
+            <input type="email" name="email" placeholder="Contact email" required autocomplete="email">
+            <input type="tel" name="phone" placeholder="Phone (optional)" autocomplete="tel">
+            <textarea class="span2" name="notes" rows="3" placeholder="Additional notes — the sources you run, scale, timelines"></textarea>
+            <button type="submit" class="btn btn-lg btn-primary">
+                <span class="material-symbols-outlined">send</span>
+                Get in touch
+            </button>
+        </form>
+        <p class="mx-auto mt-6 max-w-xl text-sm text-text-3">Our customer care team will be in touch. Curious about the internals first? The <a href="{{ book }}" target="_blank" rel="noopener">book</a> has them.</p>
+    </div>
+</section>
+
+<script type="module" src="{{ get_url(path='js/framework.js') }}"></script>
+<script>
+  // Safety net: if the WebGL module never comes up (offline CDN, old browser),
+  // fall back to the flat readable page instead of hiding the panels forever.
+  setTimeout(() => {
+    if (!document.body.classList.contains("fw3-live") &&
+        !document.body.classList.contains("fw3-flat")) {
+      document.body.classList.add("fw3-flat");
+      document.querySelectorAll("[data-fw3]").forEach((s) => s.classList.add("fw3-on"));
+    }
+  }, 3000);
+</script>
 
 {{ nav::footer() }}
 {% endblock content %}
