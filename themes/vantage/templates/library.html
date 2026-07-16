@@ -1,0 +1,736 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+{% block body_class %}lib{% endblock body_class %}
+
+{% block content %}
+{{ nav::header() }}
+
+<style>
+  /* ===== The Library — a storybook tutorial =====================
+     Flat-first: everything below renders as a scrolling paper
+     article. library.js upgrades capable viewports to the book
+     (descent + page turns) by adding body.lib-live.            */
+
+  body.lib{
+    background:
+      radial-gradient(110% 70% at 78% -10%, rgba(99,102,241,.14), transparent 55%),
+      radial-gradient(90% 60% at 10% 100%, rgba(231,157,150,.05), transparent 55%),
+      var(--color-bg);
+  }
+  html:has(body.lib.lib-live){scroll-snap-type:y proximity;scroll-behavior:smooth}
+
+  /* Paper palette (from the cutout art: ink + salmon/sage/sky/ochre) */
+  body.lib{
+    --lib-paper:#f6efdf; --lib-paper-2:#eee4cc; --lib-paper-3:#e3d5b4;
+    --lib-ink:#2b241d; --lib-ink-2:#6d5e4c; --lib-ink-3:#98876f;
+    --lib-rose:#e79d96; --lib-sage:#9fc57e; --lib-sky:#8fc3e8; --lib-ochre:#d9bd8a;
+    --lib-link:#5b7340;
+    --lib-cover:#33304f; --lib-cover-2:#242240; --lib-cream:#ece1c6;
+  }
+
+  /* ── Hero (site-consistent surface) ─────────────────────── */
+  .lib-hero{position:relative;z-index:2;min-height:92vh;display:flex;align-items:flex-start;
+    scroll-snap-align:start;overflow:hidden}
+  .lib-hero-wrap{width:100%;max-width:72rem;margin:0 auto;padding:7.5rem 1.25rem 0;text-align:center}
+  @media (min-width:768px){.lib-hero-wrap{padding-top:9rem}}
+  .lib-hero .lib-leafscape{position:absolute;inset:0;pointer-events:none;z-index:-1}
+  .lib-leafscape svg{position:absolute;opacity:.9}
+  .lib-cue{margin-top:3.2rem;display:inline-flex;flex-direction:column;align-items:center;gap:.3rem;
+    font-family:"Caveat",cursive;font-size:1.25rem;color:var(--color-text-2)}
+  .lib-cue .material-symbols-outlined{animation:lib-bob 2.2s ease-in-out infinite}
+  @keyframes lib-bob{50%{transform:translateY(7px)}}
+  body.lib:not(.lib-live) .lib-cue{display:none}
+
+  /* ── Descent (theatre only — hidden in flat mode) ───────── */
+  .lib-theatre{display:none}
+  body.lib-live .lib-theatre{display:block}
+  .lib-desc{position:relative;z-index:2;min-height:100vh;scroll-snap-align:start;
+    display:flex;align-items:flex-start;justify-content:center;pointer-events:none}
+  .lib-desc-txt{margin-top:16vh;max-width:34rem;padding:0 1.5rem;text-align:center;
+    opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+  .lib-desc.on .lib-desc-txt{opacity:1;transform:none}
+  .lib-desc-txt p{font-family:"Lora",Georgia,serif;font-size:clamp(1.15rem,2.2vw,1.5rem);
+    line-height:1.6;color:var(--color-text-1,#fff)}
+  .lib-desc-txt .sub{margin-top:.7rem;font-family:"Caveat",cursive;font-size:1.35rem;color:var(--color-text-2)}
+
+  /* ── Book section + fixed stage ─────────────────────────── */
+  .lib-booksec{position:relative;z-index:1;min-height:100vh;scroll-snap-align:start}
+  .lib-stage{position:fixed;inset:0;z-index:1;display:none;align-items:center;justify-content:center;
+    pointer-events:none;opacity:0;transition:opacity .9s ease}
+  body.lib-live .lib-stage{display:flex}
+  body.lib-stage-on .lib-stage{opacity:1}
+  /* once landed the stage anchors inside its section, so scrolling past
+     carries the book away instead of leaving it floating over the footer */
+  body.lib-landed .lib-stage{position:absolute;inset:0;pointer-events:auto}
+
+  /* warm desk light behind the book */
+  .lib-stage::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(58% 52% at 50% 54%, rgba(217,189,138,.16), rgba(217,189,138,.05) 55%, transparent 75%)}
+
+  /* The book: --w spread width, --h page height */
+  /* --shift recentres the CLOSED book (only its right half is visible);
+     it sits inside the transform chain after scale() so the correction
+     shrinks together with the book at every descent step */
+  .lib-book{position:relative;width:min(94vw,1150px);height:min(80vh,720px);
+    transform:scale(.32) translateY(46vh) translateX(var(--shift,0%));
+    transition:transform 1s cubic-bezier(.22,1,.36,1);
+    perspective:2600px;perspective-origin:50% 50%}
+  body.lib-far .lib-book{transform:scale(.4) translateY(24vh) translateX(var(--shift,0%))}
+  body.lib-near .lib-book{transform:scale(.72) translateY(13vh) translateX(var(--shift,0%))}
+  body.lib-landed .lib-book{transform:translateX(var(--shift,0%))}
+  .lib-book.closed{--shift:-25%}
+  .lib-book.closed .lib-slot-l,.lib-book.closed .lib-edges-l{visibility:hidden}
+  .lib-book.closed .lib-corner,.lib-book.closed .lib-ribbon,.lib-book.closed .lib-hint{display:none}
+  /* the cover physically ends up UNDER the left page once open */
+  .lib-book.open.cover-done .lib-cover{visibility:hidden}
+  /* deep links open the book without the 1.25s theatre */
+  .lib-book.lib-skip,.lib-book.lib-skip .lib-cover{transition:none!important}
+  @media (max-height:700px){.lib-book{height:min(86vh,720px)}}
+
+  /* page slots */
+  .lib-slot{position:absolute;top:0;bottom:0;width:50%;background:var(--lib-paper);
+    box-shadow:0 18px 60px rgba(0,0,0,.55)}
+  .lib-slot-l{left:0;border-radius:14px 3px 3px 14px;
+    background:linear-gradient(90deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3));}
+  .lib-slot-r{right:0;border-radius:3px 14px 14px 3px;
+    background:linear-gradient(270deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3));}
+  /* spine shadow */
+  .lib-slot-l::after,.lib-slot-r::after{content:"";position:absolute;top:0;bottom:0;width:7%;
+    pointer-events:none;z-index:3}
+  .lib-slot-l::after{right:0;background:linear-gradient(270deg,rgba(43,36,29,.22),transparent)}
+  .lib-slot-r::after{left:0;background:linear-gradient(90deg,rgba(43,36,29,.22),transparent)}
+  /* running header + page number chrome */
+  .lib-slot::before{content:attr(data-running);position:absolute;top:1.05rem;left:0;right:0;z-index:2;
+    text-align:center;font-family:"Lora",Georgia,serif;font-style:italic;font-size:.72rem;
+    letter-spacing:.14em;color:var(--lib-ink-3)}
+  .lib-pageno{position:absolute;bottom:.85rem;z-index:2;font-family:"Lora",Georgia,serif;
+    font-size:.72rem;color:var(--lib-ink-3)}
+  .lib-slot-l .lib-pageno{left:1.4rem}
+  .lib-slot-r .lib-pageno{right:1.4rem}
+
+  /* stacked page edges left/right of the block — thickness follows progress */
+  .lib-edges{position:absolute;top:6px;bottom:6px;width:calc(6px + var(--edge,0px));z-index:-1;
+    background:repeating-linear-gradient(90deg,var(--lib-paper-3) 0 1px,var(--lib-paper) 1px 3px);
+    border-radius:8px;transition:width .9s ease}
+  .lib-edges-l{left:0;transform:translateX(-100%)}
+  .lib-edges-r{right:0;transform:translateX(100%)}
+
+  /* the turning leaf */
+  .lib-leaf{position:absolute;top:0;bottom:0;left:50%;width:50%;z-index:6;
+    transform-style:preserve-3d;transform-origin:left center;pointer-events:none}
+  .lib-leaf .face{position:absolute;inset:0;backface-visibility:hidden;overflow:hidden;
+    background:var(--lib-paper)}
+  .lib-leaf .face.front{border-radius:3px 14px 14px 3px;
+    background:linear-gradient(270deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3))}
+  .lib-leaf .face.back{transform:rotateY(180deg);border-radius:14px 3px 3px 14px;
+    background:linear-gradient(90deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3))}
+  @keyframes lib-turn-fwd{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
+  @keyframes lib-turn-back{from{transform:rotateY(-180deg)}to{transform:rotateY(0)}}
+  .lib-leaf.fwd{animation:lib-turn-fwd .95s cubic-bezier(.35,.06,.22,1) forwards}
+  .lib-leaf.back{animation:lib-turn-back .95s cubic-bezier(.35,.06,.22,1) forwards}
+  .lib-leaf .face::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg,rgba(43,36,29,.16),transparent 30%,transparent 70%,rgba(43,36,29,.08))}
+
+  /* the cover — a leaf hinged on the spine; overhangs the pages like a
+     real cover, so the hinge sits 8px in from its left edge */
+  .lib-cover{position:absolute;top:-6px;bottom:-6px;left:calc(50% - 8px);width:calc(50% + 16px);z-index:8;
+    transform-style:preserve-3d;transform-origin:8px center;
+    transition:transform 1.25s cubic-bezier(.4,.05,.2,1)}
+  .lib-book.open .lib-cover{transform:rotateY(-180deg)}
+  .lib-cover .face{position:absolute;inset:0;backface-visibility:hidden}
+  .lib-cover .front{border-radius:6px 16px 16px 6px;cursor:pointer;pointer-events:auto;
+    background:
+      radial-gradient(120% 130% at 20% 8%, rgba(255,255,255,.09), transparent 45%),
+      linear-gradient(150deg,var(--lib-cover),var(--lib-cover-2));
+    box-shadow:0 24px 70px rgba(0,0,0,.6), inset 0 0 0 1px rgba(236,225,198,.14);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;
+    padding:2.5rem}
+  .lib-cover .front::before{content:"";position:absolute;inset:14px;border-radius:10px;
+    border:1.5px solid rgba(236,225,198,.35);pointer-events:none}
+  .lib-cover .front::after{content:"";position:absolute;inset:20px;border-radius:8px;
+    border:1px solid rgba(236,225,198,.18);pointer-events:none}
+  .lib-cover-kicker{font-family:ui-monospace,Menlo,monospace;font-size:.62rem;letter-spacing:.3em;
+    text-transform:uppercase;color:rgba(236,225,198,.55)}
+  .lib-cover-title{font-family:"Lora",Georgia,serif;font-weight:600;letter-spacing:.06em;
+    font-size:clamp(1.6rem,3.4vw,2.6rem);color:var(--lib-cream);text-align:center}
+  .lib-cover-sub{font-family:"Caveat",cursive;font-size:1.35rem;color:rgba(236,225,198,.8)}
+  .lib-cover-open{margin-top:1.4rem;font-family:"Caveat",cursive;font-size:1.2rem;
+    color:rgba(236,225,198,.65)}
+  .lib-cover .back{transform:rotateY(180deg);border-radius:16px 6px 6px 16px;overflow:hidden;
+    background:var(--lib-paper-2)}
+  .lib-cover .back img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;opacity:.9}
+  .lib-spine-out{position:absolute;top:-6px;bottom:-6px;left:calc(50% - 10px);width:10px;z-index:7;
+    background:linear-gradient(90deg,var(--lib-cover-2),var(--lib-cover));
+    border-radius:4px 0 0 4px;opacity:0;transition:opacity .5s}
+  .lib-book.closed .lib-spine-out{opacity:0}
+
+  /* corner turn affordances */
+  .lib-corner{position:absolute;bottom:0;width:64px;height:64px;z-index:9;border:0;background:none;
+    cursor:pointer;pointer-events:auto;padding:0}
+  .lib-corner.next{right:0}
+  .lib-corner.prev{left:0}
+  .lib-corner i{position:absolute;inset:0;display:block;transition:transform .25s ease}
+  .lib-corner.next i{background:linear-gradient(315deg,var(--lib-paper-3) 0 50%,transparent 50%);
+    border-radius:0 0 14px 0;clip-path:polygon(100% 0,100% 100%,0 100%)}
+  .lib-corner.prev i{background:linear-gradient(45deg,var(--lib-paper-3) 0 50%,transparent 50%);
+    border-radius:0 0 0 14px;clip-path:polygon(0 0,100% 100%,0 100%)}
+  .lib-corner:hover i{transform:scale(1.18)}
+  .lib-corner[disabled]{display:none}
+  .lib-hint{position:absolute;bottom:14px;right:76px;z-index:9;font-family:"Caveat",cursive;
+    font-size:1.15rem;color:var(--lib-ink-2);pointer-events:none;white-space:nowrap;
+    opacity:0;transition:opacity .6s}
+  body.lib-hint-on .lib-hint{opacity:1}
+
+  /* bookmark ribbon */
+  .lib-ribbon{position:absolute;top:-10px;right:11%;z-index:10;width:38px;height:96px;
+    background:linear-gradient(180deg,#d98d86,var(--lib-rose));
+    clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%);
+    display:flex;align-items:flex-start;justify-content:center;padding-top:.6rem;
+    font-family:"Caveat",cursive;font-size:1.05rem;color:#4c2320;
+    box-shadow:0 6px 14px rgba(0,0,0,.25);pointer-events:none}
+
+  /* ── Page content (shared: book slots AND flat article) ─── */
+  .lib-flow{position:relative;z-index:2;max-width:46rem;margin:0 auto;padding:2rem 1.25rem 6rem}
+  body.lib-live .lib-flow{display:none}
+  .lib-ch{background:var(--lib-paper);color:var(--lib-ink);border-radius:14px;
+    box-shadow:0 14px 44px rgba(0,0,0,.45);margin-top:2.2rem;overflow:hidden}
+  .pg{padding:2.6rem 2.4rem 2.4rem;font-family:"Lora",Georgia,serif;font-size:.95rem;
+    line-height:1.72;color:var(--lib-ink)}
+  @media (max-height:760px){body.lib-live .pg{padding:2.2rem 2rem 1.8rem;font-size:.9rem}}
+  /* in book mode a pg fills its slot and may scroll */
+  .lib-slot .pg,.lib-leaf .pg{position:absolute;inset:0;overflow:auto;scrollbar-width:thin;
+    scrollbar-color:var(--lib-paper-3) transparent;padding-top:3rem;padding-bottom:2.6rem}
+  .pg p{margin-top:.85rem}
+  .pg p:first-of-type{margin-top:0}
+  .pg a{color:var(--lib-link);text-decoration:underline;text-underline-offset:2px}
+  .pg em{font-style:italic}
+  .pg code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.82em;
+    background:rgba(43,36,29,.07);padding:.1em .35em;border-radius:4px;color:#4c3f2f}
+
+  .ch-head{margin-bottom:1.3rem;text-align:center}
+  .ch-no{display:block;font-family:"Caveat",cursive;font-size:1.25rem;color:var(--lib-rose);
+    -webkit-text-stroke:0}
+  .ch-head h2{margin-top:.15rem;font-family:"Lora",Georgia,serif;font-weight:600;
+    font-size:1.5rem;letter-spacing:.01em;color:var(--lib-ink)}
+  .ch-head::after{content:"";display:block;width:5.5rem;height:2px;margin:.8rem auto 0;
+    background:linear-gradient(90deg,transparent,var(--lib-ochre),transparent)}
+  .ch-drop::first-letter{font-family:"Lora",Georgia,serif;font-weight:600;font-size:3.1em;
+    float:left;line-height:.82;padding:.06em .12em 0 0;color:var(--lib-cover)}
+
+  /* handwritten margin note */
+  .lib-note{margin-top:1.3rem;font-family:"Caveat",cursive;font-size:1.28rem;line-height:1.35;
+    color:#8a4f49;transform:rotate(-1.2deg)}
+  .lib-note::before{content:"✳ ";color:var(--lib-rose)}
+
+  /* prompt slip — a hand-drawn speech bubble to your assistant */
+  .lib-slip{position:relative;margin:1.4rem .2rem .6rem;background:#fffdf6;
+    border:2.5px solid var(--lib-ink);border-radius:24px 28px 26px 30px/30px 24px 30px 24px;
+    padding:1.05rem 1.2rem .95rem;transform:rotate(-.6deg)}
+  .lib-slip::after{content:"";position:absolute;left:2.2rem;bottom:-17px;width:26px;height:18px;
+    background:#fffdf6;border:2.5px solid var(--lib-ink);border-top:none;
+    border-radius:0 0 22px 4px;clip-path:polygon(0 0,100% 0,62% 100%,0 62%)}
+  .slip-label{position:absolute;top:-.95rem;left:1rem;font-family:"Caveat",cursive;
+    font-size:1.15rem;line-height:1.2;color:var(--lib-ink-2);
+    background:var(--lib-paper);padding:0 .45rem;border-radius:6px}
+  .lib-slip p{margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.8rem;
+    line-height:1.6;color:#37302a}
+  .lib-slip p+p{margin-top:.5rem}
+
+  /* steps list (chapter one has no assistant yet) */
+  .lib-steps{margin-top:1.2rem;counter-reset:step}
+  .lib-steps li{position:relative;list-style:none;margin-top:.7rem;padding-left:2.3rem;counter-increment:step}
+  .lib-steps li::before{content:counter(step);position:absolute;left:0;top:.05rem;width:1.55rem;height:1.55rem;
+    border:2px solid var(--lib-ink);border-radius:50% 46% 52% 48%;display:grid;place-items:center;
+    font-family:"Caveat",cursive;font-size:1.05rem;background:#fffdf6}
+
+  /* code block on paper (Prism output) */
+  .pg pre{margin-top:1.1rem;padding:1rem 1.1rem;background:#fffdf6;border:2px solid var(--lib-ink);
+    border-radius:10px 14px 12px 10px;font-size:.74rem;line-height:1.55;overflow:auto;
+    box-shadow:3px 4px 0 rgba(43,36,29,.12)}
+  .pg pre code{background:none;padding:0;font-size:1em;color:#37302a}
+
+  /* taped-in screenshot */
+  .lib-shot{position:relative;margin:1.5rem .3rem .4rem;background:#fff;padding:10px 10px 12px;
+    border-radius:3px;box-shadow:0 8px 22px rgba(43,36,29,.28);transform:rotate(1deg);cursor:zoom-in}
+  .lib-shot::before,.lib-shot::after{content:"";position:absolute;width:76px;height:24px;top:-11px;
+    background:color-mix(in srgb,var(--lib-sky) 55%,rgba(255,255,255,.5));opacity:.85;border-radius:2px;
+    box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .lib-shot::before{left:12%;transform:rotate(-5deg)}
+  .lib-shot::after{right:12%;transform:rotate(4deg);background:color-mix(in srgb,var(--lib-rose) 50%,rgba(255,255,255,.5))}
+  .lib-shot img{display:block;width:100%;border-radius:2px}
+  .lib-shot figcaption{padding-top:.55rem;text-align:center;font-family:"Caveat",cursive;
+    font-size:1.12rem;color:var(--lib-ink-2)}
+  .lib-shot.missing{cursor:default;background:transparent;box-shadow:none;padding:0}
+  .lib-shot.missing::before,.lib-shot.missing::after{display:none}
+  .lib-shot.missing img{display:none}
+  .lib-shot.missing figcaption{border:2px dashed var(--lib-ink-3);border-radius:10px;
+    padding:1.6rem 1rem;color:var(--lib-ink-2)}
+  .lib-shot.missing figcaption::before{content:"📷 ";font-family:inherit}
+
+  /* scrapbook cutouts (white-background art sits on paper via multiply) */
+  .lib-cut{position:relative;display:block;margin:1.2rem auto 0;width:min(58%,240px);
+    transform:rotate(var(--rot,-3deg))}
+  .lib-cut img{display:block;width:100%;mix-blend-mode:multiply}
+  .lib-cut.missing img{display:none}
+  .lib-cut.missing{border:2px dashed var(--lib-ink-3);border-radius:12px;min-height:7.5rem}
+  .lib-cut.missing::after{content:"✂️ " attr(data-label);position:absolute;inset:0;display:grid;
+    place-items:center;font-family:"Caveat",cursive;font-size:1.2rem;color:var(--lib-ink-2);
+    text-align:center;padding:0 1rem}
+  .lib-cut.tiny{width:min(34%,130px)}
+
+  /* contents page */
+  .lib-toc{margin-top:1.4rem}
+  .lib-toc a{display:flex;align-items:baseline;gap:.6rem;margin-top:.72rem;text-decoration:none;
+    color:var(--lib-ink);font-size:.93rem}
+  .lib-toc a:hover .t{color:var(--lib-link)}
+  .lib-toc .t{white-space:nowrap}
+  .lib-toc .dots{flex:1;border-bottom:2px dotted var(--lib-ink-3);transform:translateY(-4px)}
+  .lib-toc .n{font-family:"Caveat",cursive;font-size:1.2rem;color:var(--lib-ink-2)}
+  .lib-title-page{text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:100%}
+  .lib-title-page h1{font-family:"Lora",Georgia,serif;font-weight:600;font-size:2.2rem;
+    letter-spacing:.04em;color:var(--lib-ink)}
+  .lib-title-page .ded{margin-top:2.2rem;font-family:"Caveat",cursive;font-size:1.35rem;color:var(--lib-ink-2)}
+
+  /* colophon CTAs */
+  .lib-cta{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;margin-top:1.5rem}
+  .lib-cta a{font-family:"Lora",Georgia,serif;font-size:.9rem;color:var(--lib-ink);text-decoration:none;
+    border:2px solid var(--lib-ink);border-radius:24px 28px 26px 30px/30px 24px 30px 24px;
+    padding:.55rem 1.15rem;background:#fffdf6;transition:transform .15s ease,box-shadow .15s ease}
+  .lib-cta a:hover{transform:translateY(-2px) rotate(-.5deg);box-shadow:3px 4px 0 rgba(43,36,29,.18)}
+
+  /* hand-drawn leaf sprite colours */
+  .leaf-rose{fill:var(--lib-rose)} .leaf-sage{fill:var(--lib-sage)}
+  .leaf-sky{fill:var(--lib-sky)} .leaf-ochre{fill:var(--lib-ochre)}
+
+  /* flat-mode niceties */
+  body.lib:not(.lib-live) .lib-ch{max-width:46rem}
+  body.lib:not(.lib-live) .lib-flow::before{content:"";display:block}
+
+  @media (prefers-reduced-motion:reduce){
+    .lib-cue .material-symbols-outlined{animation:none}
+  }
+</style>
+
+<!-- hand-drawn leaf sprite (own path, palette from the cutout art) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="lib-leaf">
+      <path d="M50 94 C49 79 47 67 42 57 C31 63 20 61 11 50 C22 44 28 36 30 25 C38 34 44 34 50 27 C56 34 62 34 70 25 C72 36 78 44 89 50 C80 61 69 63 58 57 C53 67 51 79 50 94 Z"
+            stroke="#241f1a" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <g id="lib-spark">
+      <path d="M50 12 C54 34 62 42 84 48 C62 54 54 62 50 84 C46 62 38 54 16 48 C38 42 46 34 50 12 Z"
+            stroke="#241f1a" stroke-width="5" stroke-linejoin="round" fill="#fdf6e3"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- ── Act 1 · the surface ─────────────────────────────────── -->
+<section class="lib-hero" data-lib-sec="hero">
+  <div class="lib-leafscape" aria-hidden="true">
+    <svg class="leaf-rose"  style="top:18%;left:8%;width:34px;transform:rotate(-24deg)"  viewBox="0 0 100 100"><use href="#lib-leaf"/></svg>
+    <svg class="leaf-sage"  style="top:30%;left:16%;width:26px;transform:rotate(40deg)"  viewBox="0 0 100 100"><use href="#lib-leaf"/></svg>
+    <svg class="leaf-sky"   style="top:14%;right:12%;width:30px;transform:rotate(12deg)" viewBox="0 0 100 100"><use href="#lib-leaf"/></svg>
+    <svg class="leaf-ochre" style="top:36%;right:7%;width:24px;transform:rotate(-42deg)" viewBox="0 0 100 100"><use href="#lib-leaf"/></svg>
+    <svg class="leaf-rose"  style="top:52%;right:22%;width:20px;transform:rotate(66deg)" viewBox="0 0 100 100"><use href="#lib-leaf"/></svg>
+    <svg style="top:24%;left:28%;width:15px" viewBox="0 0 100 100"><use href="#lib-spark"/></svg>
+    <svg style="top:46%;right:15%;width:12px" viewBox="0 0 100 100"><use href="#lib-spark"/></svg>
+  </div>
+  <div class="lib-hero-wrap">
+    <p class="kicker mb-4">Your first app · a story in nine chapters</p>
+    <h1 class="text-display mx-auto max-w-3xl">The Library</h1>
+    <p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">A little library still runs on paper cards — and you're
+      going to fix that. Build a real app with Vantage&nbsp;UI and an AI assistant: no code, one story,
+      every feature on the way through.</p>
+    <div class="lib-cue"><span>scroll to begin</span><span class="material-symbols-outlined">arrow_downward</span></div>
+  </div>
+</section>
+
+<!-- ── Act 2 · the descent ─────────────────────────────────── -->
+<div class="lib-theatre" aria-hidden="true">
+  <section class="lib-desc" data-lib-sec="desc1">
+    <div class="lib-desc-txt">
+      <p>On Hollow Lane there is a library that still runs on paper. Cards in little drawers,
+         stamps and pencils — and lately, chaos.</p>
+      <p class="sub">this Saturday, you volunteered.</p>
+    </div>
+  </section>
+  <section class="lib-desc" data-lib-sec="desc2">
+    <div class="lib-desc-txt">
+      <p>Miss Odessa, the librarian, slides a heavy notebook across the desk.</p>
+      <p class="sub">“everything you need is in here.”</p>
+    </div>
+  </section>
+  <section class="lib-booksec" data-lib-sec="book" id="book">
+    <div class="lib-stage">
+      <div class="lib-book closed" id="lib-book">
+        <div class="lib-edges lib-edges-l"></div>
+        <div class="lib-edges lib-edges-r"></div>
+        <div class="lib-slot lib-slot-l" data-running=""><span class="lib-pageno"></span></div>
+        <div class="lib-slot lib-slot-r" data-running=""><span class="lib-pageno"></span></div>
+        <div class="lib-spine-out"></div>
+        <div class="lib-cover" id="lib-cover">
+          <div class="face front" role="button" tabindex="0" aria-label="Open the book">
+            <span class="lib-cover-kicker">a Vantage field guide</span>
+            <span class="lib-cover-title">THE&nbsp;LIBRARY</span>
+            <svg width="86" height="30" viewBox="0 0 300 100" aria-hidden="true">
+              <use href="#lib-leaf" class="leaf-rose"  transform="translate(0,10) scale(.8)"/>
+              <use href="#lib-leaf" class="leaf-sage"  transform="translate(105,0) scale(.9)"/>
+              <use href="#lib-leaf" class="leaf-sky"   transform="translate(215,12) scale(.75)"/>
+            </svg>
+            <span class="lib-cover-sub">as told by Miss Odessa</span>
+            <span class="lib-cover-open">— open me —</span>
+          </div>
+          <div class="face back">
+            <img src="{{ get_url(path='images/library/cutouts/hi-leaves.png') }}" alt="" loading="lazy">
+          </div>
+        </div>
+        <button class="lib-corner prev" type="button" aria-label="Previous page" disabled><i></i></button>
+        <button class="lib-corner next" type="button" aria-label="Next page"><i></i></button>
+        <span class="lib-hint">turn the page ↦</span>
+        <div class="lib-ribbon" id="lib-ribbon"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ── Act 3 · the book (single source of truth; flat article by default,
+        adopted into the book's page slots when the theatre is live) ── -->
+<main class="lib-flow" id="lib-flow">
+
+  <!-- Contents -->
+  <article class="lib-ch" id="contents" data-title="Contents" data-short="Contents">
+    <div class="pg pg-left">
+      <div class="lib-title-page">
+        <h1>The Library</h1>
+        <p style="margin-top:.6rem;font-style:italic;color:var(--lib-ink-2)">a Vantage field guide,<br>in nine chapters</p>
+        <span class="lib-cut tiny" style="--rot:3deg" data-label="drifting leaves">
+          <img src="{{ get_url(path='images/library/cutouts/leaves-cluster.png') }}" alt="" loading="lazy"
+               onerror="this.parentElement.classList.add('missing')">
+        </span>
+        <p class="ded">for anyone who ever loved a library</p>
+      </div>
+    </div>
+    <div class="pg pg-right">
+      <header class="ch-head"><span class="ch-no">herein</span><h2>Contents</h2></header>
+      <nav class="lib-toc">
+        <a href="#ch-1"><span class="t">Getting the tools</span><span class="dots"></span><span class="n">one</span></a>
+        <a href="#ch-2"><span class="t">A blank ledger</span><span class="dots"></span><span class="n">two</span></a>
+        <a href="#ch-3"><span class="t">A very fast assistant</span><span class="dots"></span><span class="n">three</span></a>
+        <a href="#ch-4"><span class="t">Opening the vault</span><span class="dots"></span><span class="n">four</span></a>
+        <a href="#ch-5"><span class="t">Cataloguing the books</span><span class="dots"></span><span class="n">five</span></a>
+        <a href="#ch-6"><span class="t">Everything is connected</span><span class="dots"></span><span class="n">six</span></a>
+        <a href="#ch-7"><span class="t">Judging books by their covers</span><span class="dots"></span><span class="n">seven</span></a>
+        <a href="#ch-8"><span class="t">The whole library at once</span><span class="dots"></span><span class="n">eight</span></a>
+        <a href="#ch-9"><span class="t">The librarian's stamp</span><span class="dots"></span><span class="n">nine</span></a>
+        <a href="#the-end"><span class="t">Where the road goes next</span><span class="dots"></span><span class="n">fin</span></a>
+      </nav>
+      <p class="lib-note">read in order, or turn straight to the chapter you need.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 1 -->
+  <article class="lib-ch" id="ch-1" data-title="The Library · Chapter One" data-short="1 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter one</span><h2>Getting the tools</h2></header>
+      <p class="ch-drop">The Hollow Lane Library keeps its whole world in a cabinet of little wooden drawers.
+        Every book, every member, every loan — a paper card. It worked for eighty years, right up until it
+        didn't: cards wander off, copies vanish, and nobody can say whether <em>The Left Hand of Darkness</em>
+        is on a shelf, in a bag, or under somebody's bed.</p>
+      <p>You have a plan. The library is getting a real system, and you're going to build it yourself —
+        this notebook is the guide.</p>
+      <p>First, the tools. Vantage&nbsp;UI is a <em>native app</em>: it runs on your machine and talks
+        straight to your data. Nothing gets sent anywhere you didn't point it at.</p>
+      <span class="lib-cut" data-label="the librarian" style="--rot:-4deg">
+        <img src="{{ get_url(path='images/library/cutouts/librarian.png') }}" alt="" loading="lazy"
+             onerror="this.parentElement.classList.add('missing')">
+      </span>
+    </div>
+    <div class="pg pg-right">
+      <ol class="lib-steps">
+        <li>Fetch Vantage&nbsp;UI from the <a href="/download/">download page</a>.</li>
+        <li>Open the disk image.</li>
+        <li>Drag <strong>Vantage</strong> into your <strong>Applications</strong> folder, then launch it.</li>
+      </ol>
+      <p style="margin-top:1rem;font-size:.85rem;color:var(--lib-ink-2)"><em>Vantage runs on the Mac today;
+        Windows, Linux and Web builds are on the way.</em></p>
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch1-install.png') }}"
+             alt="Dragging Vantage into the Applications folder" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>dragging Vantage into Applications</figcaption>
+      </figure>
+      <p class="lib-note">that's the whole install. chapter one: done.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 2 -->
+  <article class="lib-ch" id="ch-2" data-title="The Library · Chapter Two" data-short="2 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter two</span><h2>A blank ledger</h2></header>
+      <p class="ch-drop">Every catalogue starts empty. When Vantage opens, it greets you with a welcome
+        screen — choose <strong>Create New Project…</strong> and pick a fresh folder. Call it
+        <code>library</code>.</p>
+      <p>Vantage fills the folder with four drawers, and they'll feel familiar — they're the card
+        catalogue's drawers, reborn:</p>
+      <p><code>datasource/</code>&nbsp; where the data lives<br>
+         <code>table/</code>&nbsp; what kinds of things exist<br>
+         <code>page/</code>&nbsp; what you see on screen<br>
+         <code>menu/</code>&nbsp; how you move around</p>
+      <p>Everything in them is <em>plain YAML text</em>. You can read it, change it, and keep it in git
+        like any other work worth keeping.</p>
+    </div>
+    <div class="pg pg-right">
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch2-new-project.png') }}"
+             alt="The welcome screen with Create New Project" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>the welcome screen — create your project</figcaption>
+      </figure>
+      <p>Open the folder and look around. Each drawer holds a <code>README.md</code> explaining what
+        belongs inside — the notebook within the notebook.</p>
+      <p class="lib-note">already keep a project in git? <code>git clone</code> it, then use Open&nbsp;Project… and point at its folder.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 3 -->
+  <article class="lib-ch" id="ch-3" data-title="The Library · Chapter Three" data-short="3 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter three</span><h2>A very fast assistant</h2></header>
+      <p class="ch-drop">You could write all that YAML by hand. You could also alphabetise eighty years of
+        loan cards by hand. Neither is the plan.</p>
+      <p>Open a terminal in your <code>library</code> folder and start <strong>Claude&nbsp;Code</strong> —
+        or whichever coding agent you keep around. The project already carries <em>agent skills</em>:
+        instructions that teach your assistant exactly how Vantage projects work.</p>
+      <p>From here on, the rhythm is: <em>you describe, the assistant writes, Vantage hot-reloads.</em>
+        You stay the librarian-in-chief; the assistant is the world's fastest typist.</p>
+      <span class="lib-cut tiny" data-label="your assistant says hi" style="--rot:5deg">
+        <img src="{{ get_url(path='images/library/cutouts/hi-bubble.png') }}" alt="" loading="lazy"
+             onerror="this.parentElement.classList.add('missing')">
+      </span>
+    </div>
+    <div class="pg pg-right">
+      <div class="lib-slip"><span class="slip-label">say to your assistant</span>
+        <p>Have a look around this Vantage project. What's here so far, and what can you help me build?</p>
+      </div>
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch3-agent.png') }}"
+             alt="Claude Code opened inside the library project" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>your assistant, reporting for duty</figcaption>
+      </figure>
+      <p class="lib-note">keep the app and the terminal side by side — changes appear the moment they're saved.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 4 -->
+  <article class="lib-ch" id="ch-4" data-title="The Library · Chapter Four" data-short="4 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter four</span><h2>Opening the vault</h2></header>
+      <p class="ch-drop">A catalogue needs somewhere safe to keep its records. The library has one waiting:
+        a <strong>SurrealDB</strong> database in the cloud, already set up for this story.</p>
+      <p>A <em>datasource</em> is the connection card — one small YAML file that says where the data
+        lives and how to reach it. Secrets never go in the file itself: they live in the project's
+        <code>.env</code>, and the YAML refers to them as <code>${VARIABLES}</code>.</p>
+      <p>Hand your assistant the connection below and let it write the card.</p>
+    </div>
+    <div class="pg pg-right">
+      <div class="lib-slip"><span class="slip-label">say to your assistant</span>
+        <p>Create a SurrealDB datasource called library pointing at this instance:</p>
+        <p>url: wss://YOUR-INSTANCE.surreal.cloud<br>namespace: main<br>database: library</p>
+        <p>Put credentials in .env, not in the YAML.</p>
+      </div>
+      <p style="font-size:.85rem;color:var(--lib-ink-2)"><em>The demo instance address and credentials for
+        this tutorial will appear here.</em></p>
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch4-datasource.png') }}"
+             alt="The datasource connected in Vantage" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>the vault, open</figcaption>
+      </figure>
+      <p class="lib-note">green dot = connected. the library has a memory now.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 5 -->
+  <article class="lib-ch" id="ch-5" data-title="The Library · Chapter Five" data-short="5 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter five</span><h2>Cataloguing the books</h2></header>
+      <p class="ch-drop">Here's the first real librarian's insight, and it's subtle: <em>“a book” means two
+        different things.</em> There is the <strong>title</strong> — <em>Ursula K. Le Guin, 1969</em> —
+        and there are the three battered <strong>copies</strong> of it on the shelf.</p>
+      <p>So we keep two tables. <code>book</code> holds the idea: title, author, year. <code>physical_book</code>
+        holds the objects: barcode, shelf, and which title each copy belongs to. Three copies, one book —
+        no card ever written twice.</p>
+      <p>A <em>table</em> file lists its columns and their types. A <em>page</em> file puts a table on
+        screen. Ask, and both appear.</p>
+      <span class="lib-cut tiny" data-label="a stack of books" style="--rot:-5deg">
+        <img src="{{ get_url(path='images/library/cutouts/books.png') }}" alt="" loading="lazy"
+             onerror="this.parentElement.classList.add('missing')">
+      </span>
+    </div>
+    <div class="pg pg-right">
+      <div class="lib-slip"><span class="slip-label">say to your assistant</span>
+        <p>Create a book table (title, author, year, isbn) and a physical_book table (barcode, shelf,
+           acquired_on) where each copy references its book. Add pages for both and put them in the menu.</p>
+      </div>
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch5-tables.png') }}"
+             alt="The book table rendered as a browsable page" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>the first table, alive on screen</figcaption>
+      </figure>
+      <p class="lib-note">say “add a few classic sci-fi books” — the assistant will happily stock the shelves.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 6 -->
+  <article class="lib-ch" id="ch-6" data-title="The Library · Chapter Six" data-short="6 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter six</span><h2>Everything is connected</h2></header>
+      <p class="ch-drop">A library isn't a list — it's a web. A <strong>member</strong> takes out a
+        <strong>loan</strong>; the loan points at one <strong>physical copy</strong>; the copy belongs to
+        one <strong>title</strong>. Four tables, holding hands.</p>
+      <p>In Vantage these are <em>references</em>: a column in one table that points at a row in another.
+        Declare them, and the app understands the web — click a member and walk to their loans, from a
+        loan to the exact copy, from the copy to its title.</p>
+      <p>This is the moment the drawers stop being drawers. Paper cards can't follow a thread; your
+        catalogue now can.</p>
+    </div>
+    <div class="pg pg-right">
+      <div class="lib-slip"><span class="slip-label">say to your assistant</span>
+        <p>Add a member table (name, email, joined_on) and a loan table. A loan belongs to one member and
+           one physical_book, with borrowed_on and due_on dates. Show a member's loans when I open a member.</p>
+      </div>
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch6-relations.png') }}"
+             alt="Drilling from a member into their loans" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>member → loans → copy → title</figcaption>
+      </figure>
+      <p class="lib-note">references are the plot of this whole book. everything else is set dressing.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 7 -->
+  <article class="lib-ch" id="ch-7" data-title="The Library · Chapter Seven" data-short="7 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter seven</span><h2>Judging books by their covers</h2></header>
+      <p class="ch-drop">Miss Odessa inspects returned books the way a jeweller inspects stones. Your
+        columns can be just as particular.</p>
+      <p>Give each copy a <code>condition</code> that is a <em>choice</em>, not free text:
+        <em>mint → good → worn → retired</em>. Dates should be real dates. And a loan is never deleted
+        when a book comes back — <code>returned_on</code> simply gets filled in. An empty
+        <code>returned_on</code> <em>is</em> the definition of “still out”, and the filled ones are your
+        history, kept forever.</p>
+      <p>Columns can also <em>compute</em>: a little Rhai expression can mark a loan overdue by comparing
+        <code>due_on</code> with today — the table does the judging for you.</p>
+    </div>
+    <div class="pg pg-right">
+      <div class="lib-slip"><span class="slip-label">say to your assistant</span>
+        <p>Give physical_book a condition dropdown: mint, good, worn, retired. Add returned_on to loans,
+           and an is_overdue computed column — highlight overdue loans in red.</p>
+      </div>
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch7-fields.png') }}"
+             alt="Configuring the condition field as a dropdown" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>condition, as a proper dropdown</figcaption>
+      </figure>
+      <p class="lib-note">good data is opinionated data. dropdowns beat “pretty ok??” every time.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 8 -->
+  <article class="lib-ch" id="ch-8" data-title="The Library · Chapter Eight" data-short="8 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter eight</span><h2>The whole library at once</h2></header>
+      <p class="ch-drop">Tables answer questions one row at a time. Some questions are bigger: <em>What do
+        people actually borrow? Which shelves are wearing out? Was the summer reading club a hit?</em></p>
+      <p>For those, Vantage gives you <em>charts and dashboards</em> — pages that draw their answer instead
+        of listing it. Loans per month as a line. Top titles as bars. Conditions as a pie you can worry about.</p>
+      <p>And <em>views</em> compose richer detail screens: a book's summary card — cover, copies, current
+        borrowers — assembled from the web of references you built in chapter six.</p>
+      <span class="lib-cut tiny" data-label="the reading nook" style="--rot:4deg">
+        <img src="{{ get_url(path='images/library/cutouts/nook.png') }}" alt="" loading="lazy"
+             onerror="this.parentElement.classList.add('missing')">
+      </span>
+    </div>
+    <div class="pg pg-right">
+      <div class="lib-slip"><span class="slip-label">say to your assistant</span>
+        <p>Make a dashboard page: loans per month as a line chart, ten most-borrowed titles as bars,
+           and a pie of copies by condition. Put it first in the menu.</p>
+      </div>
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch8-dashboard.png') }}"
+             alt="The library dashboard with charts" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>the library, at a glance</figcaption>
+      </figure>
+      <p class="lib-note">this is the page Miss Odessa will leave open on the front desk all day.</p>
+    </div>
+  </article>
+
+  <!-- Chapter 9 -->
+  <article class="lib-ch" id="ch-9" data-title="The Library · Chapter Nine" data-short="9 / 9">
+    <div class="pg pg-left">
+      <header class="ch-head"><span class="ch-no">chapter nine</span><h2>The librarian's stamp</h2></header>
+      <p class="ch-drop">One ritual remains. When a member borrows a book, Miss Odessa doesn't edit three
+        cards — she <em>stamps</em> one. Your app deserves the same single, confident gesture.</p>
+      <p><em>Actions</em> are buttons with meaning. <strong>Check&nbsp;out</strong> on a copy: pick the
+        member, and a loan appears, due in three weeks. <strong>Return</strong> on a loan: stamp
+        <code>returned_on</code>, and nudge the copy's condition if the river got to it.
+        <strong>Send to repair</strong>: <em>worn</em> becomes <em>good</em> again. Each action is a
+        few lines of Rhai in the inventory — written, of course, by your assistant.</p>
+      <p>And with that, the drawers close for the last time. The Hollow Lane Library runs on your app now —
+        every copy accounted for, every loan remembered, every question one click away. Miss Odessa stamps
+        the final paper card and pins it to the wall. <em>For the museum,</em> she says.</p>
+    </div>
+    <div class="pg pg-right">
+      <div class="lib-slip"><span class="slip-label">say to your assistant</span>
+        <p>Add a "Check out" action on physical_book: choose a member, create a loan due in 21 days.
+           Add "Return" on loan: set returned_on to today and ask about the copy's condition.</p>
+      </div>
+      <figure class="lib-shot shot-thumb">
+        <img src="{{ get_url(path='images/library/screenshots/ch9-actions.png') }}"
+             alt="The Check out row action in the copies table" loading="lazy"
+             onerror="this.closest('.lib-shot').classList.add('missing')">
+        <figcaption>the stamp, reinvented</figcaption>
+      </figure>
+      <p class="lib-note">nine chapters. zero code. one very relieved librarian.</p>
+    </div>
+  </article>
+
+  <!-- Colophon -->
+  <article class="lib-ch" id="the-end" data-title="The Library" data-short="fin">
+    <div class="pg pg-left">
+      <div class="lib-title-page">
+        <h1 style="font-size:1.8rem">The End</h1>
+        <p class="ded">— and the beginning of your library.</p>
+        <span class="lib-cut tiny" style="--rot:-3deg" data-label="hi, hi">
+          <img src="{{ get_url(path='images/library/cutouts/hi-bubbles.png') }}" alt="" loading="lazy"
+               onerror="this.parentElement.classList.add('missing')">
+        </span>
+      </div>
+    </div>
+    <div class="pg pg-right">
+      <header class="ch-head"><span class="ch-no">where the road goes next</span><h2>Keep exploring</h2></header>
+      <p>Your library app is a folder of YAML — read it, commit it, share it. When you're ready for more:</p>
+      <div class="lib-cta">
+        <a href="/download/">Download Vantage&nbsp;UI</a>
+        <a href="/examples/">Open a bigger example</a>
+        <a href="/framework/">Cut the engine open</a>
+        <a href="https://romaninsh.github.io/vantage/" target="_blank" rel="noopener">Read the deep-dive book</a>
+      </div>
+      <p class="lib-note" style="text-align:center;margin-top:2rem">thank you for reading. come back any time —<br>the library never really closes.</p>
+    </div>
+  </article>
+
+</main>
+
+<script type="module" src="{{ get_url(path='js/library.js') }}"></script>
+
+{{ nav::footer() }}
+{% endblock content %}
