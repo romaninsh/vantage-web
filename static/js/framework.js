@@ -407,21 +407,58 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     }
   };
 
-  /* Get-in-touch form: composes a mail with the details + configuration. */
+  /* Get-in-touch form: submits the lead straight into SurrealDB via the
+     public insert-only record access (no secret in the page, no relay API);
+     falls back to a mailto if the request fails. */
+  const LEADS = {
+    endpoint: "https://close-wasp-06fmkfm5uhq2f77ih987dcdac4.aws-euw1.surreal.cloud/signup",
+    ns: "main", db: "vantage-leads", ac: "submit",
+  };
   const form = document.getElementById("fw3-form");
-  if (form) form.addEventListener("submit", (e) => {
+  if (form) form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const f = new FormData(form);
     const stack = varIndex
       .map((vi, i) => `0${i} ${LAYER_NAMES[i]}: ${variantName(i, vi)}`)
       .join("\n");
-    const body =
-      `Organisation: ${f.get("org")}\nEmail: ${f.get("email")}\nPhone: ${f.get("phone") || "-"}\n\n` +
-      `Selected stack:\n${stack}\n\nConfiguration link: ${location.href}\n\n` +
-      `Notes:\n${f.get("notes") || "-"}`;
-    location.href = "mailto:hello@vantage-ui.com" +
-      `?subject=${encodeURIComponent("Custom stack request — " + f.get("org"))}` +
-      `&body=${encodeURIComponent(body)}`;
+    const lead = {
+      organisation: f.get("org"),
+      email: f.get("email"),
+      phone: f.get("phone") || "",
+      notes: f.get("notes") || "",
+      stack,
+      config_url: location.href,
+    };
+
+    const mailtoFallback = () => {
+      const body =
+        `Organisation: ${lead.organisation}\nEmail: ${lead.email}\nPhone: ${lead.phone || "-"}\n\n` +
+        `Selected stack:\n${stack}\n\nConfiguration link: ${lead.config_url}\n\n` +
+        `Notes:\n${lead.notes || "-"}`;
+      location.href = "mailto:hello@vantage-ui.com" +
+        `?subject=${encodeURIComponent("Custom stack request — " + lead.organisation)}` +
+        `&body=${encodeURIComponent(body)}`;
+    };
+
+    const btn = form.querySelector("button[type=submit]");
+    if (btn) btn.disabled = true;
+    try {
+      const res = await fetch(LEADS.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ns: LEADS.ns, db: LEADS.db, ac: LEADS.ac, ...lead }),
+      });
+      const data = res.ok ? await res.json().catch(() => ({})) : {};
+      if (!res.ok || !data.token) throw new Error(`lead signup failed (${res.status})`);
+      const thanks = document.createElement("p");
+      thanks.className = "mx-auto max-w-xl text-text-2";
+      thanks.textContent =
+        "Thank you — we'll be in touch. Our team has your configuration and will reach out shortly.";
+      form.replaceChildren(thanks);
+    } catch (err) {
+      if (btn) btn.disabled = false;
+      mailtoFallback();
+    }
   });
 
   const stepVariant = (i, d) => {
