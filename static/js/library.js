@@ -1,301 +1,264 @@
-/* The Library — descent + page-turn engine.
+/* The Library, second printing.
  *
- * The page is flat-first: every chapter renders as a plain paper article
- * (SEO, no-JS, small screens, reduced motion). On capable viewports this
- * module adds body.lib-live and runs the theatre: a fixed book stage the
- * scroll descends onto, a cover that opens once, and CSS-3D leaf turns
- * between chapter spreads. Chapter content is MOVED (not copied) between
- * its home <article> and the book's page slots, so event listeners bound
- * at load (e.g. the site lightbox) survive; clones exist only on the
- * transient turning leaf.
+ * Flat-first: the page renders as stacked paper cards with no JS at all.
+ * On capable viewports this module adds body.lib2-live and the same DOM
+ * becomes a closed book below the hero. Scrolling engages the page the
+ * way periscope's dive does: a scroll-driven --lib-depth custom property
+ * fades a field of falling, 3D-tumbling leaves into the fixed backdrop
+ * (each leaf has its own appearance threshold, so the flurry thickens
+ * with depth), and the book flips its cover open as it enters the view.
+ *
+ * Robustness rules: exactly one .spread carries .active, everything else
+ * is CSS; nothing in the DOM ever moves; the page-turn leaf is a
+ * content-free scrap of paper appended per turn and removed after.
  */
 (() => {
   "use strict";
 
-  const flow = document.getElementById("lib-flow");
-  const book = document.getElementById("lib-book");
-  if (!flow || !book) return;
+  const book = document.getElementById("lib2-book");
+  if (!book) return;
 
+  const root = document.documentElement;
   const body = document.body;
-  const articles = Array.from(flow.querySelectorAll(".lib-ch"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ── scroll depth: 0 on arrival → 1 a third of the way down ── */
+  const updateDepth = () => {
+    const max = root.scrollHeight - root.clientHeight;
+    const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    const t = Math.min(1, p / 0.3);
+    root.style.setProperty("--lib-depth", (t * t * (3 - 2 * t)).toFixed(3));
+  };
+  window.addEventListener("scroll", updateDepth, { passive: true });
+  window.addEventListener("resize", updateDepth);
+  updateDepth();
+
+  /* ── the leaf flurry ─────────────────────────────────────────
+     Each leaf gets its own lane, size, fall time, sway, tumble
+     speed, peak opacity and — crucially — an appearance threshold
+     (--th): it only fades in once --lib-depth passes it, so the
+     backdrop starts empty and fills as you scroll. */
+  const fall = document.querySelector(".lib2-fall");
+  if (fall && !reduce) {
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const tints = ["leaf-rose", "leaf-sage", "leaf-sky", "leaf-ochre"];
+    const count = Math.max(12, Math.min(28, Math.round(window.innerWidth / 52)));
+    let html = "";
+    for (let i = 0; i < count; i++) {
+      const ttl = rnd(9, 18);
+      html +=
+        '<span style="--x:' + rnd(0, 100).toFixed(1) + "%" +
+        ";--sz:" + rnd(16, 38).toFixed(0) + "px" +
+        ";--ttl:" + ttl.toFixed(1) + "s" +
+        ";--dl:-" + rnd(0, ttl).toFixed(1) + "s" +
+        ";--sway:" + rnd(18, 70).toFixed(0) + "px" +
+        ";--spin:" + rnd(2.5, 6).toFixed(1) + "s" +
+        ";--th:" + ((i / count) * 0.8).toFixed(2) +
+        ";--o:" + rnd(0.45, 0.9).toFixed(2) + '">' +
+        '<svg viewBox="0 0 100 100" class="' + tints[i % 4] + '">' +
+        '<use href="#lib2-leafshape"/></svg></span>';
+    }
+    fall.innerHTML = html;
+
+    /* Power management, adopted from the framework page: the flurry
+       carries full energy for 7s after the user's last interaction,
+       winds down to a standstill by 10s, and then pauses entirely —
+       zero CPU — until the user returns and interacts. Slowing is
+       done through playbackRate, so leaves glide down gently instead
+       of freezing mid-air. */
+    let leafAnims = null;
+    const anims = () => {
+      if (!leafAnims || !leafAnims.length) {
+        leafAnims = fall
+          .getAnimations({ subtree: true })
+          .filter((a) => a.animationName === "lib2-fall" || a.animationName === "lib2-tumble");
+      }
+      return leafAnims;
+    };
+    const smooth = (a, b, x) => {
+      const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+      return t * t * (3 - 2 * t);
+    };
+    let lastActivity = performance.now();
+    let running = false;
+    const tick = (now) => {
+      const energy = document.hidden ? 0 : 1 - smooth(7, 10, (now - lastActivity) / 1000);
+      for (const a of anims()) {
+        if (energy === 0) a.pause();
+        else { a.play(); a.playbackRate = energy; }
+      }
+      if (energy === 0) { running = false; return; } // asleep until the next wake
+      requestAnimationFrame(tick);
+    };
+    const wakeLeaves = () => {
+      lastActivity = performance.now();
+      if (!running) { running = true; requestAnimationFrame(tick); }
+    };
+    ["scroll", "pointermove", "pointerdown", "keydown", "touchstart", "wheel"].forEach((ev) =>
+      window.addEventListener(ev, wakeLeaves, { passive: true }));
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { anims().forEach((a) => a.pause()); running = false; }
+      else wakeLeaves();
+    });
+    wakeLeaves();
+  }
+
+  /* ── book mode: flat <-> live is only ever a body class ────── */
   const capable = () =>
     window.matchMedia("(min-width: 960px)").matches &&
     window.matchMedia("(min-height: 560px)").matches &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    !reduce;
+  const live = () => body.classList.contains("lib2-live");
 
-  if (!capable() || !articles.length) return; // stay flat
-
-  body.classList.add("lib-live");
-
-  /* ── refs ─────────────────────────────────────────────── */
-  const cover = document.getElementById("lib-cover");
-  const slotL = book.querySelector(".lib-slot-l");
-  const slotR = book.querySelector(".lib-slot-r");
-  const pagenoL = slotL.querySelector(".lib-pageno");
-  const pagenoR = slotR.querySelector(".lib-pageno");
-  const edgesL = book.querySelector(".lib-edges-l");
-  const edgesR = book.querySelector(".lib-edges-r");
-  const cornerPrev = book.querySelector(".lib-corner.prev");
-  const cornerNext = book.querySelector(".lib-corner.next");
-  const ribbon = document.getElementById("lib-ribbon");
-  const bookSec = document.getElementById("book");
-
-  // cache the halves up front — they move between home article and the
-  // book's slots, so re-querying the article would come back empty
-  const pages = articles.map((a) => ({
-    l: a.querySelector(".pg-left"),
-    r: a.querySelector(".pg-right"),
-  }));
-  const pgL = (i) => pages[i].l;
-  const pgR = (i) => pages[i].r;
-
-  let current = -1; // spread index
-  let opened = false;
-  let turning = false;
-  let turned = false; // has the reader ever turned a page
-
-  /* ── chrome: running headers, numbers, ribbon, corners ── */
-  const chrome = (i) => {
-    const art = articles[i];
-    const title = art.dataset.title || "";
-    const chapter = art.querySelector(".ch-head h2");
-    slotL.dataset.running = title;
-    slotR.dataset.running = chapter ? chapter.textContent : title;
-    const isChapter = /^ch-\d+$/.test(art.id);
-    const n = isChapter ? parseInt(art.id.slice(3), 10) : 0;
-    pagenoL.textContent = isChapter ? String(n * 2) : "";
-    pagenoR.textContent = isChapter ? String(n * 2 + 1) : "";
-    ribbon.textContent = i === 0 ? "❦" : (art.dataset.short || "").replace(/\s+/g, "");
-    cornerPrev.disabled = i === 0;
-    cornerNext.disabled = i === articles.length - 1;
-    const p = i / (articles.length - 1);
-    edgesL.style.width = 6 + 14 * p + "px";
-    edgesR.style.width = 6 + 14 * (1 - p) + "px";
-  };
-
-  const syncHash = (i) =>
-    history.replaceState(null, "", "#" + articles[i].id);
-
-  const homePg = (pg) => {
-    if (!pg) return;
-    const home = articles.find((a) => a.id === pg.dataset.home);
-    if (home) home.appendChild(pg);
-  };
-  // remember each half's home article so it can be returned after a move
-  articles.forEach((a) => {
-    const l = a.querySelector(".pg-left");
-    const r = a.querySelector(".pg-right");
-    if (l) l.dataset.home = a.id;
-    if (r) r.dataset.home = a.id;
+  const applyMode = () => body.classList.toggle("lib2-live", capable());
+  applyMode();
+  let resizeT = 0;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(applyMode, 200);
   });
 
-  /* place a spread directly (no leaf) */
-  const place = (i) => {
-    if (current >= 0) {
-      homePg(slotL.querySelector(".pg"));
-      homePg(slotR.querySelector(".pg"));
-    }
-    slotL.appendChild(pgL(i));
-    slotR.appendChild(pgR(i));
-    chrome(i);
-    current = i;
-    syncHash(i);
-  };
+  /* ── spreads ─────────────────────────────────────────────── */
+  const spreads = Array.from(book.querySelectorAll(".spread"));
+  const cornerPrev = book.querySelector(".lib2-corner.prev");
+  const cornerNext = book.querySelector(".lib2-corner.next");
+  const coverFront = book.querySelector(".lib2-cover .front");
 
-  const clonePg = (pg) => {
-    const c = pg.cloneNode(true);
-    c.removeAttribute("id");
-    c.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
-    c.dataset.home = "";
-    return c;
-  };
-
-  /* ── the turn ─────────────────────────────────────────── */
-  const turn = (dir) => {
-    if (turning || !opened) return;
-    const next = current + dir;
-    if (next < 0 || next >= articles.length) return;
-    turning = true;
-    turned = true;
-    body.classList.remove("lib-hint-on");
-
+  const flip = (dir) => {
+    book.querySelectorAll(".lib2-leaf").forEach((l) => l.remove());
     const leaf = document.createElement("div");
-    leaf.className = "lib-leaf";
-    const front = document.createElement("div");
-    front.className = "face front";
-    const back = document.createElement("div");
-    back.className = "face back";
-    leaf.append(front, back);
+    leaf.className = "lib2-leaf " + (dir > 0 ? "fwd" : "back");
+    book.appendChild(leaf);
+    const done = () => leaf.remove();
+    leaf.addEventListener("animationend", done, { once: true });
+    setTimeout(done, 1200); // safety: never leave a leaf behind
+  };
 
-    if (dir > 0) {
-      // forward: current right lifts, revealing next right; lands as next left
-      front.appendChild(clonePg(pgR(current)));
-      back.appendChild(clonePg(pgL(next)));
-      homePg(slotR.querySelector(".pg"));
-      slotR.appendChild(pgR(next));
-      book.appendChild(leaf);
-      requestAnimationFrame(() => leaf.classList.add("fwd"));
+  const idxFromHash = (h) => spreads.findIndex((s) => "#" + s.id === h);
+  let current = 0;
+  let swapT = 0;
+
+  const show = (i) => {
+    spreads.forEach((s) => s.classList.remove("active", "out"));
+    spreads[i].classList.add("active");
+  };
+
+  /* a turn is: fade the old spread out, start the paper leaf, swap
+     the content mid-turn (while it's hidden), fade the new spread in
+     under the leaf's second half */
+  const setSpread = (i, animate) => {
+    if (i < 0 || i >= spreads.length || i === current) return;
+    const from = current;
+    const dir = i - current;
+    current = i;
+    book.style.setProperty("--prog", String(i / (spreads.length - 1)));
+    cornerPrev.disabled = i === 0;
+    cornerNext.disabled = i === spreads.length - 1;
+    history.replaceState(null, "", i === 0 ? location.pathname : "#" + spreads[i].id);
+    clearTimeout(swapT);
+    if (animate && live()) {
+      spreads[from].classList.add("out");
+      flip(dir);
+      swapT = setTimeout(() => show(i), 400);
     } else {
-      // back: the page lying on the left lifts and returns to the right
-      front.appendChild(clonePg(pgR(next)));
-      back.appendChild(clonePg(pgL(current)));
-      homePg(slotL.querySelector(".pg"));
-      slotL.appendChild(pgL(next));
-      leaf.style.transform = "rotateY(-180deg)";
-      book.appendChild(leaf);
-      requestAnimationFrame(() => leaf.classList.add("back"));
+      show(i);
     }
-
-    leaf.addEventListener(
-      "animationend",
-      () => {
-        if (dir > 0) {
-          homePg(slotL.querySelector(".pg"));
-          slotL.appendChild(pgL(next));
-        } else {
-          homePg(slotR.querySelector(".pg"));
-          slotR.appendChild(pgR(next));
-        }
-        leaf.remove();
-        chrome(next);
-        current = next;
-        syncHash(next);
-        turning = false;
-      },
-      { once: true }
-    );
   };
 
-  const goTo = (i) => {
-    if (!opened || i === current || turning) return;
-    if (Math.abs(i - current) === 1) turn(i - current);
-    else place(i);
-  };
-
-  /* ── opening the cover ────────────────────────────────── */
-  const idxFromHash = (h) => articles.findIndex((a) => "#" + a.id === h);
+  /* ── opening the cover: is-closed → opening → is-open ─────
+     The ceremony itself is pure CSS (see lib2-cover-open and
+     friends in the template); this just walks the states. */
+  const isClosed = () => book.classList.contains("is-closed");
+  const busy = () => isClosed() || book.classList.contains("opening");
 
   const openBook = (instant) => {
-    if (opened) return;
-    opened = true;
-    const target = Math.max(0, idxFromHash(location.hash));
-    place(target);
+    if (!isClosed()) return;
+    book.classList.remove("is-closed");
     if (instant) {
-      book.classList.add("lib-skip");
-      requestAnimationFrame(() =>
-        setTimeout(() => book.classList.remove("lib-skip"), 80)
-      );
+      book.classList.add("is-open");
+      return;
     }
-    book.classList.remove("closed");
-    book.classList.add("open");
-    cover.addEventListener(
-      "transitionend",
-      () => {
-        book.classList.add("cover-done");
-        if (!turned && current === 0) body.classList.add("lib-hint-on");
-      },
-      { once: true }
-    );
-    if (instant) {
-      book.classList.add("cover-done");
-      if (!turned && current === 0) body.classList.add("lib-hint-on");
-    }
+    book.classList.add("opening");
+    setTimeout(() => {
+      // turn done: the cover lies on the left, back face up. Now the
+      // fade-in act — the left page cross-fades in over it.
+      book.classList.remove("opening");
+      book.classList.add("is-open", "just-opened");
+      setTimeout(() => book.classList.remove("just-opened"), 700);
+    }, 1650); // just past the 1.6s ceremony
   };
 
-  cover.querySelector(".front").addEventListener("click", () => openBook(false));
-  cover.querySelector(".front").addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") openBook(false);
+  coverFront.addEventListener("click", () => openBook(false));
+  coverFront.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openBook(false); }
   });
 
-  /* ── descent choreography ─────────────────────────────── */
-  let openTimer = 0;
-  const setStep = (step) => {
-    body.classList.toggle("lib-stage-on", step !== "hero");
-    body.classList.toggle("lib-far", step === "desc1");
-    body.classList.toggle("lib-near", step === "desc2");
-    body.classList.toggle("lib-landed", step === "book");
-    clearTimeout(openTimer);
-    if (step === "book" && !opened) openTimer = setTimeout(() => openBook(false), 650);
-  };
-
-  const secObserver = new IntersectionObserver(
+  // the book peeks above the fold on arrival; scrolling it (almost)
+  // fully into view opens the cover — the second act of the
+  // engagement that the falling leaves begin
+  const opener = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
-        if (!e.isIntersecting) {
-          if (e.target.classList.contains("lib-desc")) e.target.classList.remove("on");
-          continue;
+        if (e.isIntersecting && live() && isClosed()) {
+          setTimeout(() => openBook(false), 250);
+          opener.disconnect();
         }
-        if (e.target.classList.contains("lib-desc")) e.target.classList.add("on");
-        setStep(e.target.dataset.libSec);
       }
     },
-    { threshold: 0.55 }
+    { threshold: 0.92 }
   );
-  document.querySelectorAll("[data-lib-sec]").forEach((s) => secObserver.observe(s));
+  opener.observe(book);
 
-  /* ── input: corners, keys, swipe, in-book anchors ─────── */
-  cornerNext.addEventListener("click", () => turn(1));
-  cornerPrev.addEventListener("click", () => turn(-1));
+  /* ── init: deep links land on their spread, book already open ── */
+  const target = idxFromHash(location.hash);
+  setSpread(Math.max(0, target), false);
+  if (target > 0) openBook(true);
+
+  /* ── input ───────────────────────────────────────────────── */
+  cornerNext.addEventListener("click", () => setSpread(current + 1, true));
+  cornerPrev.addEventListener("click", () => setSpread(current - 1, true));
 
   window.addEventListener("keydown", (e) => {
-    if (!opened || !body.classList.contains("lib-landed")) return;
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); turn(1); }
-    if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); turn(-1); }
+    if (!live() || busy() || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); setSpread(current + 1, true); }
+    if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); setSpread(current - 1, true); }
   });
 
   let touchX = null;
   book.addEventListener("touchstart", (e) => { touchX = e.touches[0].clientX; }, { passive: true });
   book.addEventListener("touchend", (e) => {
-    if (touchX === null) return;
+    if (touchX === null || !live() || busy()) return;
     const dx = e.changedTouches[0].clientX - touchX;
     touchX = null;
-    if (Math.abs(dx) > 60) turn(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > 60) setSpread(current + (dx < 0 ? 1 : -1), true);
   }, { passive: true });
 
-  // TOC + any in-book link to a chapter: turn instead of scrolling
+  // TOC + any in-page link to a spread: turn instead of scrolling (book mode)
   document.addEventListener("click", (e) => {
     const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
+    if (!a || !live()) return;
     const i = idxFromHash(a.getAttribute("href"));
     if (i < 0) return;
     e.preventDefault();
-    if (opened) goTo(i);
-    else {
-      bookSec.scrollIntoView({ behavior: "auto" });
-      openBook(true);
-      goTo(i);
-    }
+    openBook(true);
+    setSpread(i, true);
   });
 
   window.addEventListener("hashchange", () => {
     const i = idxFromHash(location.hash);
-    if (i >= 0 && opened) goTo(i);
+    if (i >= 0 && live()) { openBook(true); setSpread(i, true); }
   });
 
-  /* deep link: land on the book immediately, no theatre */
-  if (idxFromHash(location.hash) >= 0) {
-    const html = document.documentElement;
-    const prev = html.style.scrollBehavior;
-    html.style.scrollBehavior = "auto";
-    bookSec.scrollIntoView({ behavior: "auto" });
-    setStep("book");
-    openBook(true);
-    html.style.scrollBehavior = prev;
-  }
-
-  /* downgrade to the flat article if the viewport stops qualifying */
-  let resizeT = 0;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeT);
-    resizeT = setTimeout(() => {
-      if (capable() || !body.classList.contains("lib-live")) return;
-      if (current >= 0) {
-        homePg(slotL.querySelector(".pg"));
-        homePg(slotR.querySelector(".pg"));
-      }
-      body.classList.remove("lib-live", "lib-stage-on", "lib-far", "lib-near", "lib-landed", "lib-hint-on");
-    }, 250);
+  /* ── prompt slips copy themselves — they're meant to be pasted
+     straight into the reader's own assistant ─────────────────── */
+  document.querySelectorAll(".slip").forEach((slip) => {
+    slip.addEventListener("click", () => {
+      const p = slip.querySelector("p");
+      if (!p || !navigator.clipboard) return;
+      navigator.clipboard.writeText(p.innerText.replace(/\s+/g, " ").trim()).then(() => {
+        slip.classList.add("copied");
+        setTimeout(() => slip.classList.remove("copied"), 1400);
+      });
+    });
   });
 })();
