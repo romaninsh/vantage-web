@@ -1,5 +1,5 @@
 +++
 title = "The Library"
-description = "Build your first Vantage app by rescuing a paper card catalogue — a storybook tutorial in nine chapters: install, first project, an AI assistant, a cloud database, tables, relationships, fields, dashboards and custom actions."
+description = "A storybook tutorial in seven chapters: a librarian builds her own live catalogue with the AI assistant she already trusts — from a local SQLite prototype to a cloud database, a website API, a barcode scanner at the desk and text-message reminders."
 template = "library.html"
 +++
