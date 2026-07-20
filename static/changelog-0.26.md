@@ -61,3 +61,18 @@ in `~/Documents/vantage`.
   are documented as they actually work today — including chart tiles, summary views,
   terminal actions and per-column widths and colours — so agent-built apps validate on the
   first save far more often.
+
+## 0.26.3
+
+- **Aggregate views on every SQL database.** A table can now be defined by a query —
+  grouped totals, top-N rankings, filtered worklists, or a modified variant of another
+  table — on SQLite, Postgres and MySQL, just like SurrealDB. Dashboards chart these
+  directly, no views or stored procedures in your database needed, and your agent has a
+  dedicated guide for building them.
+
+## 0.26.4
+
+- **Choose where your projects live.** New projects still land in `~/Documents/vantage` by
+  default, but the welcome screen's "Connect your data" card now shows where the project will
+  be created, with a folder button in the name field to pick a different spot. The location
+  you pick is remembered and used for every project you create from then on.
