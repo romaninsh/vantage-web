@@ -25,3 +25,13 @@ trend badges and charts that shrink to fit, and hosted SurrealDB Cloud connects 
 - **Secrets stay out of your config.** REST datasources can pull auth tokens and credentials from
   environment variables instead of hard-coding them in the project, and can send fixed query
   parameters on every request.
+
+## 0.27.1
+
+- **Onboarding, one hop from your secrets.** The connect-your-data cards for backends that need a
+  stored credential now show a button that jumps straight to the secrets editor, so you can drop
+  in a connection string or API key without hunting for where it lives.
+- **Fix: the Mac download now installs properly.** The downloaded disk image opens an installer
+  window that asks you to drag Vantage into your Applications folder, instead of leaving you to
+  run it from the read-only image — which is what quietly blocked in-app updates. Install it, launch
+  it from Applications, and updates apply as they should.
