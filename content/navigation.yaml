@@ -7,7 +7,7 @@ menu:
     dropdown:
       - title: "Internal-tools teams"
         url: "/solutions/internal-tools-teams/"
-      - title: "Web & mobile backends"
+      - title: "Reactive web & mobile"
         url: "/solutions/developers/"
       - title: "Build your own apps"
         url: "/solutions/app-builders/"
