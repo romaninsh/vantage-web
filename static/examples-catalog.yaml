@@ -8,7 +8,7 @@
 apps:
   - slug: launch-control
     title: "Launch Control"
-    persona: "Web & mobile backends"
+    persona: "Reactive web & mobile"
     persona_url: "/solutions/developers/"
     status: "available"
     icon: "rocket_launch"
@@ -67,7 +67,7 @@ apps:
 
   - slug: spacex
     title: "SpaceX GraphQL explorer"
-    persona: "Web & mobile backends"
+    persona: "Reactive web & mobile"
     persona_url: "/solutions/developers/"
     status: "coming"
     icon: "rocket_launch"
