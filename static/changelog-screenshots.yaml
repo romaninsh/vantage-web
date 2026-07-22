@@ -74,3 +74,9 @@
     alt:    "Live CPU and memory usage per node and per pod, charted straight from the metrics API"
     width:  480
     height: 320
+"0.27":
+  - thumb:  images/changelog/0.27/01.webp
+    full:   images/changelog/0.27/01-full.webp
+    alt:    "The golf-2 Overview dashboard — stat tiles with trend badges over live charts of monthly activity"
+    width:  480
+    height: 164
