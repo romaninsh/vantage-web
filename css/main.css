@@ -366,6 +366,21 @@
         @apply block h-auto w-full;
     }
 
+    /* Full-width variant for feature-gallery cards: the card already
+     provides chrome, so the button contributes only the click target
+     and a zoom cursor — no fixed width, no lift. */
+    .shot-thumb--fill {
+        width: 100%;
+        cursor: zoom-in;
+        @apply rounded-none border-0 bg-transparent;
+    }
+
+    .shot-thumb--fill:hover,
+    .shot-thumb--fill:focus-visible {
+        transform: none;
+        box-shadow: none;
+    }
+
     .lightbox {
         @apply fixed inset-0 z-[100] flex items-center justify-center p-6;
         background: rgba(5, 5, 9, 0.88);
