@@ -132,14 +132,20 @@ model.get_ref("clients", row.id)
 <section class="mt-20 border-y border-line bg-surface-1/60 py-16 md:mt-28 md:py-20">
     <div class="mx-auto max-w-6xl px-4 sm:px-6">
         <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-h2">Build a real console — not just a grid</h2>
-            <p class="mt-4 text-text-2">Everything you'd expect from an operational tool, described in config and rendered natively.</p>
+            <h2 class="text-h2">Build a real App&mdash;not just a grid</h2>
+            <p class="mt-4 text-text-2">There are hundreds of enhancements and custom UI elements to achieve best UX.</p>
         </div>
         <div class="mt-10 grid gap-6 md:grid-cols-2">
             {% for item in page.extra.gallery %}
             <figure class="card card-hover flex flex-col overflow-hidden">
-                <div class="window-frame !rounded-none !border-x-0 !border-t-0 !shadow-none">
-                    <img src="{{ get_url(path=item.image) }}" alt="{{ item.title }}">
+                <div class="border-b border-line">
+                    {% if item.full %}
+                    <button type="button" class="shot-thumb shot-thumb--fill" data-full="{{ get_url(path=item.full) }}" data-caption="{{ item.title }}">
+                        <img class="block w-full" src="{{ get_url(path=item.image) }}" alt="{{ item.title }}" loading="lazy">
+                    </button>
+                    {% else %}
+                    <img class="block w-full" src="{{ get_url(path=item.image) }}" alt="{{ item.title }}">
+                    {% endif %}
                 </div>
                 <figcaption class="flex grow flex-col p-5">
                     <h3 class="text-[1.02rem]">{{ item.title }}</h3>

@@ -80,3 +80,9 @@
     alt:    "The golf-2 Overview dashboard — stat tiles with trend badges over live charts of monthly activity"
     width:  480
     height: 164
+"0.28":
+  - thumb:  images/changelog/0.28/01.webp
+    full:   images/changelog/0.28/01-full.webp
+    alt:    "Edit records in place — the Books grid with Add and Delete, and a Details form whose author field is a searchable dropdown"
+    width:  480
+    height: 315
