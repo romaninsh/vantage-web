@@ -20,6 +20,7 @@ retrieve_rows = [
   { key = "fetch_next", label = "Progressive (cursor) load" },
   { key = "traverse_record", label = "Drill to related record" },
   { key = "traverse_set", label = "Drill across a dataset (subquery)" },
+  { key = "watch", label = "Live updates — the source pushes changes" },
 ]
 edit_rows = [
   { key = "insert", label = "Add records" },
@@ -32,7 +33,7 @@ roadmap = [
   { icon = "conversion_path", title = "Wizards", body = "Multi-step flows for guided data entry and operations — collect input across screens, then commit in one go." },
   { icon = "api", title = "Server-side facade APIs", body = "Turn the same config — data sources plus Rhai logic — into real backend APIs your own frontend or mobile app can call. Start in the console; graduate to code." },
   { icon = "deployed_code", title = "Export to real code", body = "No lock-in: export your console to a code repository or container image you own and run anywhere. Start in low-code, leave with real code." },
-  { icon = "sensors", title = "Live tables", body = "Connect change-data-capture and live database events so tables update in real time, not just on refresh." },
+  { icon = "sensors", title = "Live tables everywhere", body = "SurrealDB tables already update themselves. Next: subscribe to the change-data-capture stream you already run, so Postgres, MySQL and Oracle go live the same way." },
 ]
 
 # UI gallery — `image` paths are placeholders; swap each for a real screenshot of
@@ -99,8 +100,8 @@ name = "SurrealDB"
 icon = "hub"
 mode = "Read / write"
 wire = "CBOR"
-note = "The most complete driver — full querying, aggregation, pagination and dataset-level traversal."
-caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true }
+note = "The most complete driver — full querying, aggregation, pagination and dataset-level traversal. It is also the one source that pushes: tables update themselves when data changes, with nothing to set up."
+caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true, watch = true }
 
 [[extra.backends]]
 slug = "sqlite"
@@ -109,7 +110,7 @@ icon = "database"
 mode = "Read / write"
 wire = "Native (sqlx)"
 note = "Full SQL driver via sqlx — sort, search, aggregation, offset pagination and subquery traversal."
-caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true }
+caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true, watch = false }
 
 [[extra.backends]]
 slug = "postgres"
@@ -117,8 +118,8 @@ name = "PostgreSQL"
 icon = "database"
 mode = "Read / write"
 wire = "Native (sqlx)"
-note = "CRUD, aggregation and dataset traversal via the SQL query builder; interactive sort/search push-down is being wired up."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = true, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true }
+note = "CRUD, aggregation and dataset traversal via the SQL query builder; interactive sort/search push-down is being wired up. The framework can also read live changes from a NOTIFY trigger you install — connecting that up from the console is next."
+caps = { filter = true, sort = false, search = false, count = true, aggregate = true, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true, watch = false }
 
 [[extra.backends]]
 slug = "mysql"
@@ -127,7 +128,7 @@ icon = "database"
 mode = "Read / write"
 wire = "Native (sqlx)"
 note = "CRUD, aggregation and dataset traversal via the SQL query builder; interactive sort/search push-down is being wired up."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = true, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true }
+caps = { filter = true, sort = false, search = false, count = true, aggregate = true, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true, watch = false }
 
 [[extra.backends]]
 slug = "mongodb"
@@ -136,7 +137,7 @@ icon = "data_object"
 mode = "Read / write"
 wire = "BSON"
 note = "Native aggregation pipeline with sort, search and pagination; record-level traversal."
-caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = false, insert = true, update = true, delete = true }
+caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = false, insert = true, update = true, delete = true, watch = false }
 
 [[extra.backends]]
 slug = "dynamodb"
@@ -145,7 +146,7 @@ icon = "table"
 mode = "Read-focused"
 wire = "JSON"
 note = "Key and scan-filter queries with cursor pagination. Often paired as a read source with writes routed elsewhere."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = true, fetch_page = false, fetch_next = true, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false }
+caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = true, fetch_page = false, fetch_next = true, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false, watch = false }
 
 [[extra.backends]]
 slug = "graphql"
@@ -154,7 +155,7 @@ icon = "polyline"
 mode = "Read-only"
 wire = "JSON"
 note = "Generic and Hasura dialects. Read rows, filter, and drill into related records."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false }
+caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false, watch = false }
 
 [[extra.backends]]
 slug = "rest"
@@ -163,7 +164,7 @@ icon = "api"
 mode = "Read-only"
 wire = "JSON"
 note = "Paginated REST endpoints as tables, with filtering and record-level drill-down."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false }
+caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false, watch = false }
 
 [[extra.backends]]
 slug = "aws"
@@ -172,7 +173,7 @@ icon = "cloud"
 mode = "Read-only"
 wire = "JSON"
 note = "Infrastructure (CloudWatch, IAM, S3 and more) browsed as tables, with equality filters pushed down to the API."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = false, update = false, delete = false }
+caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = false, update = false, delete = false, watch = false }
 
 [[extra.backends]]
 slug = "cli"
@@ -181,7 +182,7 @@ icon = "terminal"
 mode = "Read-only"
 wire = "JSON"
 note = "Wrap a command (aws, kubectl, gh…) and read the JSON it prints as rows."
-caps = { filter = false, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = false, update = false, delete = false }
+caps = { filter = false, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = false, update = false, delete = false, watch = false }
 
 [[extra.backends]]
 slug = "csv"
@@ -190,7 +191,7 @@ icon = "table_view"
 mode = "Read-only"
 wire = "Typed text"
 note = "Local files as tables, with in-memory filtering and record-level traversal."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false }
+caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false, watch = false }
 
 [[extra.backends]]
 slug = "logs"
@@ -198,6 +199,6 @@ name = "Append logs"
 icon = "receipt_long"
 mode = "Append-only"
 wire = "JSONL"
-note = "Append-only JSONL log files — write structured entries that the log viewer reads back live."
-caps = { filter = false, sort = false, search = false, count = false, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = true, update = false, delete = false }
+note = "Append-only JSONL log files — write structured entries that the log viewer picks up on its next refresh."
+caps = { filter = false, sort = false, search = false, count = false, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = true, update = false, delete = false, watch = false }
 +++

@@ -13,7 +13,7 @@ Engineering and SRE teams end up running a platform through a drawer full of old
 
 **Vantage UI is a third option.** Point an AI agent at your systems; it writes the control tool — declarative YAML plus Rhai logic — over a local MCP server. You get one console that fetches live state from anywhere in the organisation — databases, AWS, your own APIs, CI, CLI tools — as up-to-date records, logs and, when you want them, charts.
 
-Unlike a tool like DataDog, which pulls all your data into its own cloud to show it back to you, Vantage leaves the data where it already lives and reads it in real time. Nothing to ingest, nothing to ship out — and you can finally retire those old custom-built things.
+Unlike a tool like DataDog, which pulls all your data into its own cloud to show it back to you, Vantage leaves the data where it already lives and reads it straight from the source. Nothing to ingest, nothing to ship out — and you can finally retire those old custom-built things.
 
 ## Build once, share with the whole team
 
@@ -74,7 +74,7 @@ Internal work is scattered across tools: the AWS console in one tab, your own AP
 
 ## Why teams pick it
 
-- **Fast and reactive.** A smart local cache (Diorama) keeps big grids instant, tables refresh in the background, and logs stream in real time — no spinners, no manual reloads.
+- **Fast and reactive.** A smart local cache (Diorama) keeps big grids instant and tables refresh in the background — no spinners, no manual reloads. On a source that announces its own changes, like SurrealDB, updates land the moment they happen.
 - **Far less friction than the AWS console.** One purpose-built screen instead of clicking through a clunky web console hunting for the resource you need.
 - **Customise everything.** Make any cell clickable, define your own actions and workflows, and wire up exactly the buttons your team needs — not a fixed set someone else chose.
 - **Peace of mind, locally.** It all runs on your own machine. You can read every line of YAML and Rhai, see exactly what the tool does, and keep evolving it as the work changes.
