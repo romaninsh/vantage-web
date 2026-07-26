@@ -1,0 +1,678 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+{% block body_class %}lib2{% endblock body_class %}
+
+{% block content %}
+{{ nav::header() }}
+
+<style>
+  /* ===== The Library, second printing ==========================
+     At scroll 0 this looks like any other page on the site. As you
+     scroll, the page engages: autumn leaves start falling in the
+     backdrop (more the deeper you go — see --lib-depth, set by
+     library.js the way periscope drives its dive), and the book
+     waiting below flips its cover open when it enters the view.
+
+     Flat-first: every spread renders as stacked paper cards (SEO,
+     no-JS, small screens, reduced motion). library.js adds
+     body.lib2-live on capable viewports and the SAME DOM becomes a
+     book: spreads toggle an .active class, nothing in the DOM ever
+     moves. The turning leaf is a content-free scrap of paper
+     appended and removed per turn — it can never strand content. */
+
+  body.lib2{
+    background:
+      radial-gradient(110% 70% at 78% -10%, rgba(99,102,241,.14), transparent 55%),
+      radial-gradient(90% 60% at 10% 100%, rgba(231,157,150,.05), transparent 55%),
+      var(--color-bg);
+    /* paper palette */
+    --lib-paper:#f6efdf; --lib-paper-2:#eee4cc; --lib-paper-3:#e3d5b4;
+    --lib-ink:#2b241d; --lib-ink-2:#6d5e4c; --lib-ink-3:#98876f;
+    --lib-rose:#e79d96; --lib-sage:#9fc57e; --lib-sky:#8fc3e8; --lib-ochre:#d9bd8a;
+    /* witch-hat teal (capes + pointed hats) */
+    --lib-teal:#4d9a95; --lib-link:#3a7b77;
+    --lib-cover:#2e4a54; --lib-cover-2:#213840; --lib-cream:#ece1c6;
+    /* heartstopper pastels (logotype letters) */
+    --hs-1:#e2574c; --hs-2:#f0a132; --hs-3:#e0b32e;
+    --hs-4:#58ba63; --hs-5:#4f9bd9; --hs-6:#9b6bc6;
+  }
+
+  /* rainbow hand-lettering — every letter its own pastel */
+  .rb b{font:inherit;font-weight:inherit;font-style:inherit}
+  .rb b:nth-of-type(6n+1){color:var(--hs-1)}
+  .rb b:nth-of-type(6n+2){color:var(--hs-2)}
+  .rb b:nth-of-type(6n+3){color:var(--hs-3)}
+  .rb b:nth-of-type(6n+4){color:var(--hs-4)}
+  .rb b:nth-of-type(6n+5){color:var(--hs-5)}
+  .rb b:nth-of-type(6n+6){color:var(--hs-6)}
+
+  /* ── Falling-leaf backdrop ───────────────────────────────────
+     Fixed, behind everything, invisible at the top of the page.
+     library.js spawns the leaves (each with its own lane, size,
+     fall time, sway, tumble speed and appearance threshold) and
+     drives --lib-depth 0→1 over the first stretch of scroll. A
+     leaf only fades in once the depth passes its threshold, so
+     the flurry thickens as you go. Each leaf tumbles in 3D. */
+  .lib2-fall{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+  .lib2-fall span{position:absolute;top:-10%;left:var(--x);width:var(--sz);height:var(--sz);
+    opacity:calc(min(1, max(0, (var(--lib-depth,0) - var(--th)) * 4)) * var(--o));
+    transition:opacity .8s linear;
+    animation:lib2-fall var(--ttl) linear var(--dl) infinite}
+  .lib2-fall svg{display:block;width:100%;height:100%;overflow:visible;
+    animation:lib2-tumble var(--spin) ease-in-out var(--dl) infinite}
+  @keyframes lib2-fall{
+    0%  {transform:translate(0,-8vh)}
+    25% {transform:translate(var(--sway),20vh)}
+    50% {transform:translate(0,48vh)}
+    75% {transform:translate(calc(var(--sway) * -1),76vh)}
+    100%{transform:translate(0,110vh)}
+  }
+  @keyframes lib2-tumble{
+    0%  {transform:perspective(600px) rotate3d(1,.7,.2,0deg)}
+    100%{transform:perspective(600px) rotate3d(1,.7,.2,360deg)}
+  }
+
+  /* ── Hero — deliberately ordinary until you scroll ───────── */
+  .lib2-hero{position:relative;z-index:1}
+  .lib2-hero-wrap{max-width:72rem;margin:0 auto;padding:7.5rem 1.25rem 3rem;text-align:center}
+  @media (min-width:768px){.lib2-hero-wrap{padding-top:9rem}}
+  /* live mode keeps the hero compact so the closed book peeks up
+     from the bottom of the first viewport — about a third below
+     the fold, inviting the scroll that opens it */
+  body.lib2-live .lib2-hero-wrap{width:100%}
+  .leaf-rose{fill:var(--lib-rose)} .leaf-sage{fill:var(--lib-sage)}
+  .leaf-sky{fill:var(--lib-sky)} .leaf-ochre{fill:var(--lib-ochre)}
+  .lib2-cue{display:none}
+  body.lib2-live .lib2-cue{margin-top:3.2rem;display:inline-flex;flex-direction:column;align-items:center;gap:.3rem;
+    font-family:"Caveat",cursive;font-size:1.25rem;color:var(--color-text-2)}
+  .lib2-cue .material-symbols-outlined{animation:lib2-bob 2.2s ease-in-out infinite}
+  @keyframes lib2-bob{50%{transform:translateY(7px)}}
+
+  /* ── Stage + book frame ──────────────────────────────────── */
+  .lib2-stage{position:relative;z-index:1;padding:1rem 0 6rem}
+  body.lib2-live .lib2-stage{padding:1.5rem 0 7rem;
+    background:radial-gradient(58% 52% at 50% 48%, rgba(217,189,138,.14), rgba(217,189,138,.04) 55%, transparent 75%)}
+  .lib2-book{position:relative;max-width:46rem;margin:0 auto;padding:0 1.25rem}
+  body.lib2-live .lib2-book{width:min(94vw,1150px);max-width:none;height:min(80vh,720px);
+    padding:0;perspective:2600px;perspective-origin:50% 50%}
+  @media (max-height:700px){body.lib2-live .lib2-book{height:min(86vh,720px)}}
+  /* closed: only the cover shows; shift the book so the cover sits centred.
+     On arrival it slides up from behind the bottom edge — same invitation
+     as the hero video on the index page. */
+  body.lib2-live .lib2-book.is-closed{transform:translateX(-25%);
+    animation:lib2-arrive .9s cubic-bezier(.22,1,.36,1) backwards}
+  @keyframes lib2-arrive{
+    from{transform:translateX(-25%) translateY(60vh)}
+    to  {transform:translateX(-25%) translateY(0)}
+  }
+  /* while closed AND while the cover turns, the left side is empty air —
+     no page, no backdrop, no edges: nothing exists there until the cover
+     has landed */
+  body.lib2-live .lib2-book:is(.is-closed,.opening) :is(.lib2-edges-l,.pg-left,.bp-l){visibility:hidden}
+  body.lib2-live .lib2-book:is(.is-closed,.opening) :is(.lib2-corner,.lib2-ribbon,.hint){display:none}
+  body.lib2-live .lib2-book:is(.is-closed,.opening) .spread::before{display:none}
+
+  /* ── Opening ceremony — its own keyframes, shared with nothing.
+     The reader grips the cover (it rocks a few degrees and the book
+     lifts a touch), then it sweeps open past flat and settles back,
+     while the whole book glides from its closed centring to the
+     open one. The left page prints in only once the cover is out
+     of the way, and a puff of leaves escapes the spine at the end
+     (spawned by library.js). */
+  body.lib2-live .lib2-book.opening{animation:lib2-book-open 1.6s cubic-bezier(.25,.1,.25,1) forwards}
+  @keyframes lib2-book-open{
+    0%  {transform:translateX(-25%) scale(1)}
+    14% {transform:translateX(-25%) scale(1.018)}
+    30% {transform:translateX(-24%) scale(1.018)}
+    100%{transform:translateX(0) scale(1)}
+  }
+  body.lib2-live .lib2-book.opening .lib2-cover{animation:lib2-cover-open 1.6s ease-in-out forwards}
+  @keyframes lib2-cover-open{
+    0%  {transform:rotateY(0)}
+    10% {transform:rotateY(-13deg)}   /* grip the corner… */
+    24% {transform:rotateY(-7deg)}    /* …a small hesitation */
+    72% {transform:rotateY(-158deg)}  /* the sweep */
+    88% {transform:rotateY(-187deg)}  /* past flat */
+    100%{transform:rotateY(-180deg)}  /* settle */
+  }
+  /* after the cover lands (turn done) the left content fades in:
+     the cover stays lying there, back face up, and the real page
+     cross-fades in over it — same fade-out / turn / fade-in grammar
+     as every other page turn. The fade runs on the FACES, never on
+     the 3D container: animating the container's opacity flattens
+     preserve-3d and the front face would flash back into view. */
+  body.lib2-live .lib2-book.is-open.just-opened .lib2-cover{visibility:visible}
+  body.lib2-live .lib2-book.is-open.just-opened .lib2-cover .face{
+    animation:lib2-out .45s ease forwards}
+  body.lib2-live .lib2-book.just-opened .lib2-edges-l{animation:lib2-in .45s ease}
+
+  /* ── Spreads: flat by default, one-at-a-time when live ───── */
+  .spread{margin-top:2.2rem}
+  .spread:first-of-type{margin-top:0}
+  body.lib2-live .spread{display:none;margin:0}
+  body.lib2-live .spread.active{display:block;animation:lib2-in .45s ease}
+  body.lib2-live .spread.active.out{animation:lib2-out .3s ease forwards}
+  @keyframes lib2-in{from{opacity:0}to{opacity:1}}
+  @keyframes lib2-out{to{opacity:0}}
+
+  /* spine shadow where the pages meet */
+  body.lib2-live .spread::before{content:"";position:absolute;top:0;bottom:0;
+    left:43%;width:14%;z-index:3;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(43,36,29,.16) 46%,rgba(43,36,29,.2) 50%,rgba(43,36,29,.16) 54%,transparent)}
+
+  /* blank open-book backdrop — the empty paper you see while a
+     spread fades out/in during a turn; spreads render on top of it */
+  .lib2-blank{display:none}
+  body.lib2-live .lib2-blank{display:block;position:absolute;inset:0;pointer-events:none}
+  body.lib2-live .lib2-book.is-closed .lib2-blank{display:none}
+  .lib2-blank .bp{position:absolute;top:0;bottom:0;width:50%;
+    box-shadow:0 18px 60px rgba(0,0,0,.55)}
+  .lib2-blank .bp-l{left:0;
+    background:linear-gradient(90deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3))}
+  .lib2-blank .bp-r{right:0;
+    background:linear-gradient(270deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3))}
+  .lib2-blank::after{content:"";position:absolute;top:0;bottom:0;left:43%;width:14%;
+    background:linear-gradient(90deg,transparent,rgba(43,36,29,.16) 46%,rgba(43,36,29,.2) 50%,rgba(43,36,29,.16) 54%,transparent)}
+  body.lib2-live .lib2-book.opening .bp-l{animation:lib2-reveal 1.6s linear forwards}
+
+  /* ── Pages ───────────────────────────────────────────────── */
+  .pg{position:relative;background:var(--lib-paper);border-radius:14px;
+    box-shadow:0 14px 44px rgba(0,0,0,.45);margin-top:1.2rem}
+  body.lib2-live .pg{position:absolute;top:0;bottom:0;width:50%;margin:0;overflow:hidden;
+    box-shadow:0 18px 60px rgba(0,0,0,.55)}
+  /* paper is paper: square corners in book mode (cards stay rounded flat) */
+  body.lib2-live .pg-left{left:0;border-radius:0;
+    background:linear-gradient(90deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3))}
+  body.lib2-live .pg-right{right:0;border-radius:0;
+    background:linear-gradient(270deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3))}
+
+  /* page scroll area */
+  .ps{padding:2.6rem 2.4rem 2.4rem;font-family:"Lora",Georgia,serif;font-size:.95rem;
+    line-height:1.72;color:var(--lib-ink)}
+  /* pages don't scroll — chapters are written to fit the spread */
+  body.lib2-live .ps{position:absolute;inset:0;overflow:hidden;padding:3rem 2.4rem 2.6rem}
+  @media (max-height:760px){body.lib2-live .ps{padding:2.6rem 2rem 2.2rem;font-size:.9rem}}
+  .ps p{margin-top:.85rem}
+  .ps p:first-of-type{margin-top:0}
+  .ps a{color:var(--lib-link);text-decoration:underline;text-underline-offset:2px}
+  .ps em{font-style:italic}
+  .ps code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.82em;
+    background:rgba(43,36,29,.07);padding:.1em .35em;border-radius:4px;color:#4c3f2f}
+
+  /* running header + page number (book chrome, live only) */
+  .run,.pno{display:none}
+  body.lib2-live .run{display:block;position:absolute;top:1.05rem;left:0;right:0;z-index:4;
+    text-align:center;font-family:"Lora",Georgia,serif;font-style:italic;font-size:.72rem;
+    letter-spacing:.14em;color:var(--lib-ink-3);pointer-events:none}
+  body.lib2-live .pno{display:block;position:absolute;bottom:.85rem;z-index:4;
+    font-family:"Lora",Georgia,serif;font-size:.72rem;color:var(--lib-ink-3);pointer-events:none}
+  body.lib2-live .pg-left .pno{left:1.4rem}
+  body.lib2-live .pg-right .pno{right:1.4rem}
+
+  /* ── Chapter typography ──────────────────────────────────── */
+  .ch-head{margin-bottom:1.3rem;text-align:center}
+  .ch-no{display:block;font-family:"Caveat",cursive;font-size:1.25rem;color:var(--lib-teal)}
+  .ch-head h2{margin-top:.15rem;font-family:"Lora",Georgia,serif;font-weight:600;
+    font-size:1.5rem;letter-spacing:.01em;color:var(--lib-ink)}
+  .ch-head::after{content:"";display:block;width:5.5rem;height:2px;margin:.8rem auto 0;
+    background:linear-gradient(90deg,transparent,var(--lib-ochre),transparent)}
+  .ch-drop::first-letter{font-family:"Lora",Georgia,serif;font-weight:600;font-size:3.1em;
+    float:left;line-height:.82;padding:.06em .12em 0 0;color:var(--lib-cover)}
+
+  /* handwritten margin note */
+  .lib-note{margin-top:1.3rem;font-family:"Caveat",cursive;font-size:1.28rem;line-height:1.35;
+    color:#8a4f49;transform:rotate(-1.2deg)}
+  .lib-note::before{content:"✳ ";color:var(--lib-rose)}
+
+  /* steps list */
+  .lib-steps{margin-top:1.2rem;counter-reset:step}
+  .lib-steps li{position:relative;list-style:none;margin-top:.7rem;padding-left:2.3rem;counter-increment:step}
+  .lib-steps li::before{content:counter(step);position:absolute;left:0;top:.05rem;width:1.55rem;height:1.55rem;
+    border:2px solid var(--lib-ink);border-radius:50% 46% 52% 48%;display:grid;place-items:center;
+    font-family:"Caveat",cursive;font-size:1.05rem;background:#fffdf6}
+
+  /* taped-in screenshot (with dashed slot while art is missing) */
+  .lib-shot{position:relative;margin:1.5rem .3rem .4rem;background:#fff;padding:10px 10px 12px;
+    border-radius:3px;box-shadow:0 8px 22px rgba(43,36,29,.28);transform:rotate(1deg)}
+  .lib-shot::before,.lib-shot::after{content:"";position:absolute;width:76px;height:24px;top:-11px;
+    background:color-mix(in srgb,var(--lib-sky) 55%,rgba(255,255,255,.5));opacity:.85;border-radius:2px;
+    box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .lib-shot::before{left:12%;transform:rotate(-5deg)}
+  .lib-shot::after{right:12%;transform:rotate(4deg);background:color-mix(in srgb,var(--lib-rose) 50%,rgba(255,255,255,.5))}
+  .lib-shot img{display:block;width:100%;border-radius:2px}
+  .lib-shot figcaption{padding-top:.55rem;text-align:center;font-family:"Caveat",cursive;
+    font-size:1.12rem;color:var(--lib-ink-2)}
+  .lib-shot.missing{background:transparent;box-shadow:none;padding:0}
+  .lib-shot.missing::before,.lib-shot.missing::after{display:none}
+  .lib-shot.missing img{display:none}
+  .lib-shot.missing figcaption{border:2px dashed var(--lib-ink-3);border-radius:10px;
+    padding:1.6rem 1rem;color:var(--lib-ink-2)}
+  .lib-shot.missing figcaption::before{content:"📷 "}
+
+  /* sticker cutouts — transparent PNGs with a white sticker border,
+     stuck flat onto the paper (no shadow, no lift) */
+  .cut{position:relative;display:block;margin:1.4rem auto 0;width:min(56%,230px);
+    transform:rotate(var(--rot,-3deg))}
+  .cut img{display:block;width:100%}
+  .cut .cap{display:block;margin-top:.35rem;text-align:center;font-family:"Caveat",cursive;
+    font-size:1.15rem;color:var(--lib-ink-2);transform:rotate(1.5deg)}
+  .cut.tiny{width:min(38%,150px)}
+  .cut.wide{width:min(74%,310px)}
+  /* interim art that kept its white background — multiply melts it into the paper */
+  .cut.flat img{mix-blend-mode:multiply}
+  /* the two "hi" bubbles on the title page — off-centre, trading tilts */
+  .cut.bub-a{margin:1.6rem auto 0 16%}
+  .cut.bub-b{margin:.2rem 12% 0 auto}
+
+  /* prompt slip — a hand-drawn speech bubble to your assistant.
+     These are meant to be lifted: click one and it copies itself. */
+  .slip{position:relative;margin:1.4rem .2rem 1.5rem;background:#fffdf6;
+    border:2.5px solid var(--lib-ink);border-radius:24px 28px 26px 30px/30px 24px 30px 24px;
+    padding:1.05rem 1.2rem .95rem;transform:rotate(-.6deg);cursor:copy}
+  .slip::after{content:"";position:absolute;left:2.2rem;bottom:-17px;width:26px;height:18px;
+    background:#fffdf6;border:2.5px solid var(--lib-ink);border-top:none;
+    border-radius:0 0 22px 4px;clip-path:polygon(0 0,100% 0,62% 100%,0 62%)}
+  .slip-label{position:absolute;top:-.95rem;left:1rem;font-family:"Caveat",cursive;
+    font-size:1.15rem;line-height:1.2;color:var(--lib-ink-2);
+    background:var(--lib-paper);padding:0 .45rem;border-radius:6px}
+  .slip p{margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.8rem;
+    line-height:1.6;color:#37302a}
+  .slip-done{position:absolute;top:-.95rem;right:1rem;font-family:"Caveat",cursive;
+    font-size:1.1rem;color:var(--lib-link);background:var(--lib-paper);padding:0 .45rem;
+    border-radius:6px;opacity:0;transition:opacity .25s}
+  .slip.copied .slip-done{opacity:1}
+
+  /* chapter argument — the old-fashioned "in which…" summary */
+  .arg{font-style:italic;text-align:center;color:var(--lib-ink-2);
+    max-width:26rem;margin:0 auto}
+
+  /* placeholder slot for chapters not yet rebuilt */
+  .todo{margin-top:1.4rem;border:2px dashed var(--lib-ink-3);border-radius:12px;
+    padding:2rem 1.2rem;text-align:center;font-family:"Caveat",cursive;font-size:1.25rem;
+    line-height:1.4;color:var(--lib-ink-2)}
+  .todo::before{content:"✂️ "}
+
+  /* contents page */
+  .lib-toc{margin-top:1.4rem}
+  .lib-toc a{display:flex;align-items:baseline;gap:.6rem;margin-top:.72rem;text-decoration:none;
+    color:var(--lib-ink);font-size:.93rem}
+  .lib-toc a:hover .t{color:var(--lib-link)}
+  .lib-toc .t{white-space:nowrap}
+  .lib-toc .dots{flex:1;border-bottom:2px dotted var(--lib-ink-3);transform:translateY(-4px)}
+  .lib-toc .n{font-family:"Caveat",cursive;font-size:1.2rem;color:var(--lib-ink-2)}
+  .lib-title-page{text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:100%}
+  .lib-title-page h1{font-family:"Lora",Georgia,serif;font-weight:600;font-size:2.2rem;
+    letter-spacing:.04em;color:var(--lib-ink)}
+  .lib-title-page .ded{margin-top:2rem;font-family:"Caveat",cursive;font-size:1.35rem;color:var(--lib-ink-2)}
+
+  /* colophon CTAs */
+  .lib-cta{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;margin-top:1.5rem}
+  .lib-cta a{font-family:"Lora",Georgia,serif;font-size:.9rem;color:var(--lib-ink);text-decoration:none;
+    border:2px solid var(--lib-ink);border-radius:24px 28px 26px 30px/30px 24px 30px 24px;
+    padding:.55rem 1.15rem;background:#fffdf6;transition:transform .15s ease,box-shadow .15s ease}
+  .lib-cta a:hover{transform:translateY(-2px) rotate(-.5deg);box-shadow:3px 4px 0 rgba(43,36,29,.18)}
+
+  /* the "turn the page" hint */
+  .hint{display:none}
+  body.lib2-live .hint{display:block;position:absolute;bottom:14px;right:76px;z-index:9;
+    font-family:"Caveat",cursive;font-size:1.15rem;color:var(--lib-ink-2);pointer-events:none;
+    white-space:nowrap}
+
+  /* ── The cover: a hinged flap over the right half ────────────
+     Closed, it IS the book (the rest hides + the book recentres).
+     Scrolling the book into view — or clicking — flips it open
+     around the spine; after the flip it is hidden entirely. */
+  .lib2-cover{display:none}
+  body.lib2-live .lib2-cover{display:block;position:absolute;top:-6px;bottom:-6px;
+    left:calc(50% - 8px);width:calc(50% + 16px);z-index:8;
+    transform-style:preserve-3d;transform-origin:8px center;
+    transform:rotateY(-180deg)}
+  body.lib2-live .lib2-book.is-closed .lib2-cover{transform:rotateY(0)}
+  body.lib2-live .lib2-book.is-open .lib2-cover{visibility:hidden}
+  .lib2-cover .face{position:absolute;inset:0;backface-visibility:hidden}
+  .lib2-cover .front{border-radius:6px 16px 16px 6px;cursor:pointer;
+    background:
+      radial-gradient(120% 130% at 20% 8%, rgba(255,255,255,.09), transparent 45%),
+      linear-gradient(150deg,var(--lib-cover),var(--lib-cover-2));
+    box-shadow:0 24px 70px rgba(0,0,0,.6), inset 0 0 0 1px rgba(236,225,198,.14);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;
+    padding:2.5rem;text-align:center}
+  .lib2-cover .front::before{content:"";position:absolute;inset:14px;border-radius:10px;
+    border:1.5px solid rgba(236,225,198,.35);pointer-events:none}
+  .lib2-cover .front::after{content:"";position:absolute;inset:20px;border-radius:8px;
+    border:1px solid rgba(236,225,198,.18);pointer-events:none}
+  .lib2-cover .back{transform:rotateY(180deg);border-radius:16px 6px 6px 16px;
+    background:var(--lib-paper-2)}
+  .cover-kicker{font-family:ui-monospace,Menlo,monospace;font-size:.62rem;letter-spacing:.3em;
+    text-transform:uppercase;color:rgba(236,225,198,.55)}
+  .cover-title{font-family:"Lora",Georgia,serif;font-weight:600;letter-spacing:.08em;
+    font-size:clamp(1.6rem,3.4vw,2.6rem);color:var(--lib-cream)}
+  .cover-sub{font-family:"Caveat",cursive;font-size:1.35rem;color:rgba(236,225,198,.8)}
+  .cover-open{margin-top:1.4rem;font-family:"Caveat",cursive;font-size:1.2rem;
+    color:rgba(236,225,198,.65)}
+
+  /* ── Book chrome: edges, corners, ribbon, turn leaf ──────── */
+  .lib2-edges,.lib2-corner,.lib2-ribbon{display:none}
+  /* the closed-page stacks: square-cut, flush with the page block */
+  body.lib2-live .lib2-edges{display:block;position:absolute;top:0;bottom:0;z-index:-1;
+    background:repeating-linear-gradient(90deg,var(--lib-paper-3) 0 1px,var(--lib-paper) 1px 3px);
+    transition:width .9s ease}
+  body.lib2-live .lib2-edges-l{left:0;transform:translateX(-100%);width:calc(6px + 14px * var(--prog,0))}
+  body.lib2-live .lib2-edges-r{right:0;transform:translateX(100%);width:calc(6px + 14px * (1 - var(--prog,0)))}
+
+  body.lib2-live .lib2-corner{display:block;position:absolute;bottom:0;width:64px;height:64px;z-index:9;
+    border:0;background:none;cursor:pointer;padding:0}
+  .lib2-corner.next{right:0}
+  .lib2-corner.prev{left:0}
+  .lib2-corner i{position:absolute;inset:0;display:block;transition:transform .25s ease}
+  .lib2-corner.next i{background:linear-gradient(315deg,var(--lib-paper-3) 0 50%,transparent 50%);
+    clip-path:polygon(100% 0,100% 100%,0 100%)}
+  .lib2-corner.prev i{background:linear-gradient(45deg,var(--lib-paper-3) 0 50%,transparent 50%);
+    clip-path:polygon(0 0,100% 100%,0 100%)}
+  .lib2-corner:hover i{transform:scale(1.18)}
+  body.lib2-live .lib2-corner[disabled]{display:none}
+
+  body.lib2-live .lib2-ribbon{display:flex;position:absolute;top:-10px;right:11%;z-index:10;
+    width:38px;height:96px;
+    background:linear-gradient(180deg,var(--lib-teal),#3a7b77);
+    clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%);
+    align-items:flex-start;justify-content:center;padding-top:.6rem;
+    font-family:"Caveat",cursive;font-size:1.05rem;color:#eaf4f0;
+    box-shadow:0 6px 14px rgba(0,0,0,.25);pointer-events:none}
+
+  /* content-free turning leaf — pure flavor, removed after each turn */
+  .lib2-leaf{position:absolute;top:0;bottom:0;left:50%;width:50%;z-index:12;pointer-events:none;
+    transform-origin:left center;
+    background:linear-gradient(270deg,var(--lib-paper) 82%,var(--lib-paper-2) 97%,var(--lib-paper-3));
+    box-shadow:0 10px 30px rgba(0,0,0,.3)}
+  .lib2-leaf.fwd{animation:lib2-turnf .75s cubic-bezier(.35,.06,.22,1) forwards}
+  .lib2-leaf.back{animation:lib2-turnb .75s cubic-bezier(.35,.06,.22,1) forwards}
+  @keyframes lib2-turnf{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
+  @keyframes lib2-turnb{from{transform:rotateY(-180deg)}to{transform:rotateY(0)}}
+</style>
+
+<!-- hand-drawn leaf sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="lib2-leafshape">
+      <path d="M50 94 C49 79 47 67 42 57 C31 63 20 61 11 50 C22 44 28 36 30 25 C38 34 44 34 50 27 C56 34 62 34 70 25 C72 36 78 44 89 50 C80 61 69 63 58 57 C53 67 51 79 50 94 Z"
+            stroke="#241f1a" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- falling-leaf backdrop (leaves spawned by library.js) -->
+<div class="lib2-fall" aria-hidden="true"></div>
+
+<!-- ── Hero ────────────────────────────────────────────────── -->
+<section class="lib2-hero">
+  <div class="lib2-hero-wrap">
+    <p class="kicker mb-4">Your first app · a story in seven chapters</p>
+    <h1 class="text-display mx-auto max-w-3xl">The <span class="rb"><b>L</b><b>i</b><b>b</b><b>r</b><b>a</b><b>r</b><b>y</b></span></h1>
+    <p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">A little library still runs on paper cards — and you're
+      going to fix that. Build a real app with Vantage&nbsp;UI and an AI assistant: no code, one story,
+      every feature on the way through.</p>
+    <div class="lib2-cue"><span>scroll to begin</span><span class="material-symbols-outlined">arrow_downward</span></div>
+  </div>
+</section>
+
+<!-- ── The book ────────────────────────────────────────────── -->
+<section class="lib2-stage">
+  <div class="lib2-book is-closed" id="lib2-book">
+    <div class="lib2-edges lib2-edges-l" aria-hidden="true"></div>
+    <div class="lib2-edges lib2-edges-r" aria-hidden="true"></div>
+    <div class="lib2-blank" aria-hidden="true"><b class="bp bp-l"></b><b class="bp bp-r"></b></div>
+
+    <!-- Spread 0 · title + contents -->
+    <section class="spread active" id="contents">
+      <div class="pg pg-left">
+        <span class="run">Contents</span><span class="pno"></span>
+        <div class="ps">
+          <div class="lib-title-page">
+            <h1>The <span class="rb"><b>L</b><b>i</b><b>b</b><b>r</b><b>a</b><b>r</b><b>y</b></span></h1>
+            <p style="margin-top:.6rem;font-style:italic;color:var(--lib-ink-2)">a Vantage field guide,<br>in seven chapters</p>
+            <span class="cut tiny bub-a" style="--rot:-6deg">
+              <img src="{{ get_url(path='images/library/cutouts/hi-bubble-1.png') }}" alt="" loading="lazy">
+            </span>
+            <span class="cut tiny bub-b" style="--rot:5deg">
+              <img src="{{ get_url(path='images/library/cutouts/hi-bubble-2.png') }}" alt="" loading="lazy">
+            </span>
+            <p class="ded">for anyone who ever loved a library</p>
+          </div>
+        </div>
+      </div>
+      <div class="pg pg-right">
+        <span class="run">Contents</span><span class="pno"></span>
+        <div class="ps">
+          <header class="ch-head"><h2>Contents</h2></header>
+          <nav class="lib-toc">
+            <a href="#ch-1"><span class="t">The library on Hollow Lane</span><span class="dots"></span><span class="n">one</span></a>
+            <a href="#ch-2"><span class="t">A capable assistant</span><span class="dots"></span><span class="n">two</span></a>
+            <a href="#ch-3"><span class="t">A quiet install</span><span class="dots"></span><span class="n">three</span></a>
+            <a href="#ch-4"><span class="t">A cloud she trusts</span><span class="dots"></span><span class="n">four</span></a>
+            <a href="#ch-5"><span class="t">The library, online</span><span class="dots"></span><span class="n">five</span></a>
+            <a href="#ch-6"><span class="t">A scanner on the desk</span><span class="dots"></span><span class="n">six</span></a>
+            <a href="#ch-7"><span class="t">A gentle reminder</span><span class="dots"></span><span class="n">seven</span></a>
+            <a href="#ch-8"><span class="t">Knowledge should be free</span><span class="dots"></span><span class="n">fin</span></a>
+          </nav>
+        </div>
+      </div>
+      <span class="lib2-ribbon">❦</span>
+      <span class="hint">turn the page ↦</span>
+    </section>
+
+    <!-- Spread 1 · chapter one -->
+    <section class="spread" id="ch-1">
+      <div class="pg pg-left">
+        <span class="run">The Library · Chapter One</span><span class="pno">2</span>
+        <div class="ps">
+          <header class="ch-head"><span class="ch-no">chapter one</span><h2>The library on Hollow Lane</h2></header>
+          <p class="ch-drop">There is a library at the quiet end of Hollow Lane — a brass bell over the door,
+            radiators that tick all winter, and the good smell of old paper in every corner. Miss Odessa has
+            kept it for years the way she keeps her tea: strong, unhurried, exactly to her taste. Every book
+            on these shelves is one she chose; every reader gets walked to the right one.</p>
+          <p>The catalogue, though, lives in a cabinet of little wooden drawers. Every book, every member,
+            every loan — a paper card. It worked for eighty years, right up until it didn't: cards wander
+            off, copies vanish, and nobody can say whether <em>The Left Hand of Darkness</em> is on a shelf,
+            in a bag, or under somebody's bed.</p>
+          <p>What Miss Odessa wants is easy to say and surprisingly hard to buy: a <em>live</em> catalogue.
+            One that answers.</p>
+          <span class="cut" style="--rot:-4deg">
+            <img src="{{ get_url(path='images/library/cutouts/14A97C1D-BFCF-4D24-993C-AE9012B6E482.png') }}" alt="" loading="lazy">
+          </span>
+        </div>
+      </div>
+      <div class="pg pg-right">
+        <span class="run">The library on Hollow Lane</span><span class="pno">3</span>
+        <div class="ps">
+          <p>So she wrote a list on the back of a date-due slip:</p>
+          <ol class="lib-steps">
+            <li>Know where every copy is, the moment someone asks.</li>
+            <li>Know who borrowed what, and when it's due back.</li>
+            <li>Keep the records <em>in the library</em> — not in somebody else's cloud.</li>
+            <li>Change anything, any evening, without asking permission.</li>
+          </ol>
+          <p style="margin-top:1.1rem">The catalogue systems she looked at were built for other people's
+            libraries: subscriptions by the month, servers far away, screens crowded with features she'd
+            never touch — and not one would let her move so much as a shelf without a support ticket.
+            Renting a catalogue for her own books felt exactly backwards.</p>
+          <p>Then, one evening between returns, she found <strong>Vantage</strong> — an <em>AI-first app
+            builder</em>. You describe the app you want; it takes shape on your own machine, around your own
+            data, and stays yours. A free app, too — so trying it would cost her exactly one evening.</p>
+          <p>She looked at the drawers. She looked back at the screen.</p>
+          <p class="lib-note">her library, her rules — that's the whole requirement, really.</p>
+        </div>
+      </div>
+      <span class="lib2-ribbon">1/7</span>
+    </section>
+
+    <!-- Spread 2 · chapter two -->
+    <section class="spread" id="ch-2">
+      <div class="pg pg-left">
+        <span class="run">The Library · Chapter Two</span><span class="pno">4</span>
+        <div class="ps">
+          <header class="ch-head"><span class="ch-no">chapter two</span><h2>A capable assistant</h2></header>
+          <p class="ch-drop">Miss Odessa would not call herself technical, and has no plans to become so.
+            But she is no stranger to assistants. She already keeps one — the same AI she dictates the
+            newsletter to, the one that untangles the summer rota and once talked a stubborn printer down
+            from the ledge. She likes it. It knows how she works. She is not swapping it for anybody.</p>
+          <p>As it happens, nobody is asking her to. Vantage brings no chatbot of its own and hands her no
+            new thing to learn — it is built to work with <em>your</em> assistant, whichever one you already
+            trust. A tool designed for agentic use that never tries to take over your flow: the assistant
+            does the building, Vantage does the being-an-app.</p>
+          <p>So the first step is not an install, and not a form. It is a question, asked in her own words:</p>
+          <span class="cut tiny flat" style="--rot:3deg">
+            <img src="{{ get_url(path='images/library/cutouts/assistant-blob.jpeg') }}" alt="" loading="lazy">
+          </span>
+        </div>
+      </div>
+      <div class="pg pg-right">
+        <span class="run">A capable assistant</span><span class="pno">5</span>
+        <div class="ps">
+          <div class="slip"><span class="slip-label">miss odessa → her assistant</span><span class="slip-done">copied!</span>
+            <p>I found this vantage-ui.com tool. Check it out, can I use it to build my own app for running
+               my own book library? will i be able to keep track of books, loans? I'll need some dashboards
+               and reports too. Oh and I'll need some API integration.</p>
+          </div>
+          <p>The assistant went quiet for a moment — off reading the site — and came back sounding
+            genuinely pleased. Yes: books, members and loans, joined up so one click answers
+            <em>who has what</em>. Dashboards and charts, certainly. APIs it could read for lookups.
+            A free app, and every record staying in her own files, on her own machine.</p>
+          <p>“We could start small,” it offered. “Books, members, loans. An afternoon, not weeks.”</p>
+          <p>Miss Odessa put the kettle on. Her assistant, it turned out, had just gained a workshop.</p>
+          <p class="lib-note">try it yourself: click the bubble, paste her question into your own
+            assistant — word for word.</p>
+        </div>
+      </div>
+      <span class="lib2-ribbon">2/7</span>
+    </section>
+
+    <!-- Spread 3 · chapter three -->
+    <section class="spread" id="ch-3">
+      <div class="pg pg-left">
+        <span class="run">The Library · Chapter Three</span><span class="pno">6</span>
+        <div class="ps">
+          <header class="ch-head"><span class="ch-no">chapter three</span><h2>A quiet install</h2></header>
+          <p class="ch-drop">The download took less time than the kettle. No account to create, nothing to
+            sign, no card number “just in case” — Vantage opened and simply worked. Free meaning
+            <em>free</em>, not <em>free for now</em>.</p>
+          <p>Watching it settle in, Miss Odessa learned two things. First: Vantage and her assistant share
+            a folder — a drawer of small files that both of them read and write, sitting right there in her
+            Documents. Second: they share a bond called <em>MCP</em>, through which the assistant can peek
+            inside the running app — see the screens she sees, and catch errors before she ever does.</p>
+          <p>Vantage, it turned out, could keep her records in a dozen different places; most of the names
+            meant nothing to her. “We'll start in a single file on this machine,” her assistant decided.
+            “If you ever want it in a cloud you trust, we'll move it then.”</p>
+        </div>
+      </div>
+      <div class="pg pg-right">
+        <span class="run">A quiet install</span><span class="pno">7</span>
+        <div class="ps">
+          <p>The first job was the admin — the plain screens where records get added, found, corrected and
+            retired. (Her assistant called this “a CRUD admin”. She decided not to ask.)</p>
+          <div class="slip"><span class="slip-label">miss odessa → her assistant</span><span class="slip-done">copied!</span>
+            <p>brainstorm with me, then build a librarian app prototype - tracking books, members and
+               record book quality. My favourite authors are alice oseman and ursula k le guin. Store data
+               in SQLite. Don't forget a dashboard.</p>
+          </div>
+          <p>The assistant loaded a few Vantage skills — the app's own instruction cards for visiting
+            agents — and set to work. Miss Odessa placed its window beside Vantage's and watched her app
+            arrive in pieces: tables, then forms, then the dashboard, each coming to life the moment it was
+            written. The first shape was decent; the tweaks she asked for were done before the tea cooled.</p>
+          <p>And no scary code anywhere. She looked, once, out of curiosity: what the assistant writes
+            reads like a drawer of index cards — short, plain files, easy for it to read, change and
+            rewrite as often as she changes her mind.</p>
+        </div>
+      </div>
+      <span class="lib2-ribbon">3/7</span>
+    </section>
+
+    <!-- Spreads 4–9 · placeholders, content lands here later -->
+    {% set placeholders = [
+      "ch-4|chapter four|A cloud she trusts|369A8204-013E-4B05-8F1B-DBEACA590783|8|9|in which the catalogue outgrows a single file, Odessa signs up for AWS, and her assistant raises a small free-tier Postgres — big enough for tens of thousands of books, with backups she can keep an eye on from Vantage itself.",
+      "ch-5|chapter five|The library, online|5EA7391C-BBCF-456B-A5C0-85D6EBBCB227|10|11|in which a little container goes off to Lambda, the library's own website learns to ask the catalogue questions, and a REST API becomes the politest thing on Hollow Lane.",
+      "ch-6|chapter six|A scanner on the desk|B71969E0-AAA1-4DE1-9C6F-05940FB822B9|12|13|in which a Raspberry Pi and a barcode scanner take over the front desk, and checking a book in or out becomes a single cheerful beep — by way of one more API, naturally.",
+      "ch-7|chapter seven|A gentle reminder|B6180AF0-D074-47CE-A1DE-0C71E5240BEE|14|15|in which the catalogue learns to send a text message — a kindly nudge, two days before a book is due home — and the word overdue all but retires.",
+      "ch-8|fin|Knowledge should be free|D8E7A4D6-D6C2-4BAB-84D7-CFA4DDD92195|16|17|in which Odessa shares her app — and this very story — with the world, because knowledge should be free."
+    ] %}
+    {% for row in placeholders %}
+    {% set ch = row | split(pat="|") %}
+    <section class="spread" id="{{ ch.0 }}">
+      <div class="pg pg-left">
+        <span class="run">The Library · {{ ch.1 | title }}</span><span class="pno">{{ ch.4 }}</span>
+        <div class="ps">
+          <header class="ch-head"><span class="ch-no">{{ ch.1 }}</span><h2>{{ ch.2 }}</h2></header>
+          <p class="arg">{{ ch.6 }}</p>
+          <span class="cut" style="--rot:{{ loop.index % 2 * 6 - 3 }}deg">
+            <img src="{{ get_url(path='images/library/cutouts/' ~ ch.3 ~ '.png') }}" alt="" loading="lazy">
+          </span>
+        </div>
+      </div>
+      <div class="pg pg-right">
+        <span class="run">{{ ch.2 }}</span><span class="pno">{{ ch.5 }}</span>
+        <div class="ps">
+          <p class="todo">this chapter is being rebuilt for the second printing —<br>check back soon.</p>
+        </div>
+      </div>
+      <span class="lib2-ribbon">{% if ch.0 == "ch-8" %}fin{% else %}{{ loop.index + 3 }}/7{% endif %}</span>
+    </section>
+    {% endfor %}
+
+    <!-- Spread 10 · colophon -->
+    <section class="spread" id="the-end">
+      <div class="pg pg-left">
+        <span class="run">The Library</span><span class="pno"></span>
+        <div class="ps">
+          <div class="lib-title-page">
+            <h1 style="font-size:1.8rem">The End</h1>
+            <p class="ded">— and the beginning of your library.</p>
+            <span class="cut tiny" style="--rot:-3deg">
+              <img src="{{ get_url(path='images/library/cutouts/E1C567DA-6963-462A-A2FF-6257FA9D6F12.png') }}" alt="" loading="lazy">
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="pg pg-right">
+        <span class="run">Where the road goes next</span><span class="pno"></span>
+        <div class="ps">
+          <header class="ch-head"><span class="ch-no">where the road goes next</span><h2>Keep exploring</h2></header>
+          <p>Your library app is a folder of YAML — read it, commit it, share it. When you're ready for more:</p>
+          <div class="lib-cta">
+            <a href="/download/">Download Vantage&nbsp;UI</a>
+            <a href="/examples/">Open a bigger example</a>
+            <a href="/framework/">Cut the engine open</a>
+            <a href="https://romaninsh.github.io/vantage/" target="_blank" rel="noopener">Read the deep-dive book</a>
+          </div>
+          <p class="lib-note" style="text-align:center;margin-top:2rem">thank you for reading. come back any time —<br>the library never really closes.</p>
+        </div>
+      </div>
+      <span class="lib2-ribbon">❧</span>
+    </section>
+
+    <!-- the cover flap (closed on arrival; opens on scroll or click) -->
+    <div class="lib2-cover" id="lib2-cover">
+      <div class="face front" role="button" tabindex="0" aria-label="Open the book">
+        <span class="cover-kicker">a Vantage field guide</span>
+        <span class="cover-title rb"><b>T</b><b>H</b><b>E</b>&nbsp;<b>L</b><b>I</b><b>B</b><b>R</b><b>A</b><b>R</b><b>Y</b></span>
+        <svg width="86" height="30" viewBox="0 0 300 100" aria-hidden="true">
+          <use href="#lib2-leafshape" class="leaf-rose"  transform="translate(0,10) scale(.8)"/>
+          <use href="#lib2-leafshape" class="leaf-sage"  transform="translate(105,0) scale(.9)"/>
+          <use href="#lib2-leafshape" class="leaf-sky"   transform="translate(215,12) scale(.75)"/>
+        </svg>
+        <span class="cover-sub">as told by Miss Odessa</span>
+        <span class="cover-open">— open me —</span>
+      </div>
+      <div class="face back"></div>
+    </div>
+
+    <button class="lib2-corner prev" type="button" aria-label="Previous page" disabled><i></i></button>
+    <button class="lib2-corner next" type="button" aria-label="Next page"><i></i></button>
+  </div>
+</section>
+
+<script type="module" src="{{ get_url(path='js/library.js') }}"></script>
+
+{{ nav::footer() }}
+{% endblock content %}

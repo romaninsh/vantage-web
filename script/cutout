@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+#
+# cutout — turn a rectangular image on a white background into a "paper
+# cut-out" sticker: the subject isolated on a transparent background with a
+# solid white outline hugging its silhouette.
+#
+# Usage:
+#   script/cutout [--fuzz N] [--outline PX] [--rembg] [--force] <input> ...
+#
+# Example:
+#   script/cutout tmp/*.jpeg
+#   script/cutout --rembg tmp/751D4A00-263D-4276-B705-81FFAE13CB20_4_5005_c.jpeg
+#
+# Options:
+#   --fuzz N       White-background tolerance for the flood-fill, percent
+#                  (default 12). Higher removes more off-white / anti-aliasing.
+#   --outline PX   White outline width in pixels (default 10).
+#   --rembg        Isolate the subject with ML segmentation (rembg) instead of
+#                  the white flood-fill. Use for mostly-white subjects that a
+#                  colour flood-fill would eat.
+#   --force        Overwrite an existing output PNG (default: skip it).
+#
+# Each input is written as an RGBA PNG to static/images/library/cutouts/,
+# named after the input's basename. Originals are never modified.
+#
+# The default flood-fill isolates the subject by clearing the exterior white
+# from one corner — that connected region is the whole background, so interior
+# white (a cream dress, a white creature body) is preserved because the
+# subject's own dark line-art encloses it.
+
+set -euo pipefail
+
+# --- locate repo root (script lives in <root>/script) ---
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+OUTDIR="$ROOT/static/images/library/cutouts"
+
+FUZZ=12
+OUTLINE=10
+USE_REMBG=0
+FORCE=0
+
+inputs=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --fuzz)    FUZZ="$2"; shift 2 ;;
+    --outline) OUTLINE="$2"; shift 2 ;;
+    --rembg)   USE_REMBG=1; shift ;;
+    --force)   FORCE=1; shift ;;
+    -h|--help) sed -n '2,34p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -*)        echo "cutout: unknown option: $1" >&2; exit 2 ;;
+    *)         inputs+=("$1"); shift ;;
+  esac
+done
+
+if [[ ${#inputs[@]} -eq 0 ]]; then
+  echo "cutout: no input images given (try --help)" >&2
+  exit 2
+fi
+
+command -v magick >/dev/null 2>&1 || {
+  echo "cutout: ImageMagick 'magick' not found on PATH" >&2; exit 1; }
+
+if [[ $USE_REMBG -eq 1 ]] && ! command -v rembg >/dev/null 2>&1; then
+  echo "cutout: --rembg needs the 'rembg' CLI. Install it with:" >&2
+  echo "          pipx install rembg   # or:  pip install \"rembg[cli]\"" >&2
+  exit 1
+fi
+
+mkdir -p "$OUTDIR"
+
+# PAD gives the dilation room so the outline is not clipped at the canvas edge.
+PAD=$(( OUTLINE + 2 ))
+
+process() {
+  local in="$1"
+  local base name out tmp
+  base="$(basename "$in")"
+  name="${base%.*}"
+  out="$OUTDIR/$name.png"
+
+  if [[ -e "$out" && $FORCE -ne 1 ]]; then
+    echo "skip   $name.png (exists; use --force to overwrite)"
+    return 0
+  fi
+
+  tmp="$(mktemp -t cutout.XXXXXX).png"
+
+  if [[ $USE_REMBG -eq 1 ]]; then
+    # ML segmentation → transparent subject, then trim + pad.
+    rembg i "$in" "$tmp"
+    magick "$tmp" -trim +repage -bordercolor none -border "$PAD" "$tmp"
+  else
+    # Flood-fill the exterior white from a corner. The 1px white border makes
+    # the corner reliably white even if the subject touches the edge; -shave
+    # removes it again afterwards.
+    magick "$in" \
+      -bordercolor white -border 1 \
+      -alpha set -fuzz "${FUZZ}%" \
+      -fill none -draw 'color 0,0 floodfill' \
+      -shave 1x1 \
+      -trim +repage \
+      -bordercolor none -border "$PAD" \
+      "$tmp"
+  fi
+
+  # Grow the silhouette by OUTLINE px, paint it solid white, and lay the
+  # original subject over that white backing → subject + white ring.
+  magick "$tmp" \
+    \( +clone -alpha extract -morphology Dilate "Disk:${OUTLINE}" \) \
+    \( -clone 1 -background white -alpha shape \) \
+    -delete 1 \
+    +swap \
+    -compose over -composite \
+    "$out"
+
+  rm -f "$tmp"
+  echo "wrote  $name.png"
+}
+
+for in in "${inputs[@]}"; do
+  if [[ ! -f "$in" ]]; then
+    echo "cutout: no such file: $in" >&2
+    exit 1
+  fi
+  process "$in"
+done
