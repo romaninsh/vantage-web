@@ -132,14 +132,20 @@ model.get_ref("clients", row.id)
 <section class="mt-20 border-y border-line bg-surface-1/60 py-16 md:mt-28 md:py-20">
     <div class="mx-auto max-w-6xl px-4 sm:px-6">
         <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-h2">Build a real console — not just a grid</h2>
-            <p class="mt-4 text-text-2">Everything you'd expect from an operational tool, described in config and rendered natively.</p>
+            <h2 class="text-h2">Build a real App&mdash;not just a grid</h2>
+            <p class="mt-4 text-text-2">There are hundreds of enhancements and custom UI elements to achieve best UX.</p>
         </div>
         <div class="mt-10 grid gap-6 md:grid-cols-2">
             {% for item in page.extra.gallery %}
             <figure class="card card-hover flex flex-col overflow-hidden">
-                <div class="window-frame !rounded-none !border-x-0 !border-t-0 !shadow-none">
-                    <img src="{{ get_url(path=item.image) }}" alt="{{ item.title }}">
+                <div class="border-b border-line">
+                    {% if item.full %}
+                    <button type="button" class="shot-thumb shot-thumb--fill" data-full="{{ get_url(path=item.full) }}" data-caption="{{ item.title }}">
+                        <img class="block w-full" src="{{ get_url(path=item.image) }}" alt="{{ item.title }}" loading="lazy">
+                    </button>
+                    {% else %}
+                    <img class="block w-full" src="{{ get_url(path=item.image) }}" alt="{{ item.title }}">
+                    {% endif %}
                 </div>
                 <figcaption class="flex grow flex-col p-5">
                     <h3 class="text-[1.02rem]">{{ item.title }}</h3>
@@ -153,6 +159,30 @@ model.get_ref("clients", row.id)
             {% endfor %}
         </div>
     </div>
+</section>
+
+<!-- 3b. Ship it as an API -->
+<section id="api" class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
+    <div class="mx-auto max-w-2xl text-center">
+        <span class="badge-soon mb-4 inline-block">Coming soon</span>
+        <h2 class="text-h2">Ship it as an API, not just an app</h2>
+        <p class="mt-4 text-text-2">The same config you build the console from can serve your own frontend. Author the backend in Vantage&nbsp;UI — no hand-written Rust — then take it live two ways, both with zero code.</p>
+    </div>
+
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+        <div class="card p-6">
+            <span class="material-symbols-outlined mb-3 block !text-[2rem] text-accent-400">developer_mode_tv</span>
+            <h3 class="text-[1.02rem]">Run it locally</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-2">Start the API server on your machine and point your own React or mobile app at it — the same typed data surface the console speaks, now backing your frontend.</p>
+        </div>
+        <div class="card p-6">
+            <span class="material-symbols-outlined mb-3 block !text-[2rem] text-accent-400">deployed_code</span>
+            <h3 class="text-[1.02rem]">Deploy it</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-2">Export a standalone, dockerised Axum server — your project embedded straight from Vantage&nbsp;UI — and ship it to AWS&nbsp;Lambda or Kubernetes. Stateless, with a local cache.</p>
+        </div>
+    </div>
+
+    <p class="mt-6 text-center text-sm text-text-3">Transactional REST first; reactive (WebSocket) after. <a href="/framework/#api" class="text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400">See the engine that runs it →</a></p>
 </section>
 
 <!-- 4. Your agent does the typing -->

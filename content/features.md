@@ -39,7 +39,8 @@ roadmap = [
 # that element. Notes render under each image.
 [[extra.gallery]]
 title = "Data grids"
-image = "images/vantage-ui-app.png"
+image = "images/features/data-grids.webp"
+full = "images/features/data-grids-full.webp"
 notes = [
   "Virtualized — stays smooth past a million rows.",
   "Persistent sort, quick search and column resize, per project.",
@@ -48,7 +49,8 @@ notes = [
 
 [[extra.gallery]]
 title = "Tabs & drill-downs"
-image = "images/vantage-ui-app.png"
+image = "images/features/drill-downs.webp"
+full = "images/features/drill-downs-full.webp"
 notes = [
   "Open related records in child tabs; pin the ones you keep.",
   "Chain multi-hop drill-downs from a row's context menu.",
