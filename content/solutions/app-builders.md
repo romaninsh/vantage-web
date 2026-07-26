@@ -68,7 +68,7 @@ let lens = Lens::new()
 
 Build your model once as an ordinary Rust crate, version it internally, and let every team build on the same typed foundation. Because it's just a Rust library, you expose it to other languages with the usual binding crates — you can even link it straight into an existing service.
 
-- **Rust — first-class, today.** The core, query builders, the Diorama cache and reactive handles all ship on [crates.io](https://crates.io/search?q=vantage-) at 0.5.x.
+- **Rust — first-class, today.** The core, query builders, the Diorama cache and reactive handles all ship on [crates.io](https://crates.io/search?q=vantage-).
 - **Python — today, via PyO3.** A working binding keeps business logic in pure Rust and calls it from Python.
 - **TypeScript & Java — same pattern.** The type-erased core is built to bridge out; wire it up with the binding crate for your target.
 - **Rust UI toolkits.** Ready-made DataGrid adapters for GPUI, egui, Slint, Tauri, ratatui and Cursive (`vantage-ui-adapters`).
