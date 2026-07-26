@@ -2111,6 +2111,17 @@ body.ps {
     --color-violet: #2dd4bf;
 }
 
+/* Framework "code descent" — reuses the `lc-` journey layout, recolored to a
+   warm ember palette (surface light cools to a molten bedrock at the bottom).
+   The floating-Rust backdrop lives inline in framework.html as `.fw-code`. */
+body.fw {
+    --color-accent-300: #f6cd93;
+    --color-accent-400: #eaa14e;
+    --color-accent-500: #d97b2e;
+    --color-accent-600: #b4601f;
+    --color-violet: #e0632b;
+}
+
 /* Animated dot travelling along share-flow tracks */
 @keyframes share-travel {
     from {
