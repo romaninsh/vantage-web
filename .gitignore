@@ -3,3 +3,13 @@ public
 .DS_Store
 static/main.css
 node_modules
+
+# Screen-recording masters. Only the converted .mp4/.webm that a page actually
+# plays belongs in the repo — the .mov originals are hundreds of megabytes each.
+*.mov
+
+# Raw art straight off a camera or phone, kept alongside the exported asset.
+*.heic
+
+# Scratch space: upstream checkouts read while investigating something.
+tmp/
