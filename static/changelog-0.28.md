@@ -53,3 +53,15 @@ performance work made the whole app stop freezing.
   can ask the app about its version through MCP.
 - **New projects land in ~/Vantage.** Out of `~/Documents`, where iCloud eviction kept freezing
   cold starts.
+
+## 0.28.2
+
+- **Reference dropdowns show the current pick right away.** Flipping between records now names the
+  linked record (the batch's golf course, a book's author) the instant the form opens — no more
+  blank field while a big list loads. If the linked record changes elsewhere, the name updates on
+  its own.
+- **Reference dropdowns open faster and search as you type.** The list of choices loads when you
+  open the dropdown, not up front, and long lists stream in as you scroll. Typing filters them.
+- **Fix: phantom "unsaved change" on a reference field.** A form could show one unsaved change you
+  never made — and risk blanking the reference on Save. Reference and typed fields now compare
+  cleanly, so the count reflects only what you actually edited.
