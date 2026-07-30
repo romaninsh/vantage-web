@@ -478,12 +478,15 @@ A live screen you can't act from is a wall monitor. In Vantage, the same layer t
 <div class="ld-mrow"><span class="ld-mbackend">SpacetimeDB</span><span class="ld-mmech">subscriptions</span><span class="ld-msig ld-msig-push"><i class="ld-dot"></i>push<small>no setup</small></span></div>
 <div class="ld-mrow"><span class="ld-mbackend">PostgreSQL</span><span class="ld-mmech">notify channels</span><span class="ld-msig ld-msig-push"><i class="ld-dot"></i>push<small>one trigger · explicit opt-in</small></span></div>
 <div class="ld-mrow"><span class="ld-mbackend">SQLite · MySQL · MongoDB · REST · GraphQL · AWS · Kubernetes · CLI</span><span class="ld-mmech">background refresh</span><span class="ld-msig ld-msig-poll"><span class="material-symbols-outlined">schedule</span>poll<small>at an interval you choose</small></span></div>
-<div class="ld-mfoot"><span class="material-symbols-outlined">rule</span><span>A capability a backend doesn't have is an explicit <b>not supported</b> — never a silent guess. What the screen shows is what the source knows.</span></div>
+<div class="ld-mrow"><span class="ld-mbackend">Debezium + Kafka</span><span class="ld-mmech">change-data-capture stream</span><span class="ld-msig ld-msig-push"><i class="ld-dot"></i>push<small>brings push to any backend</small></span></div>
+<div class="ld-mfoot"><span class="material-symbols-outlined">rule</span><span><b>CDC — change-data-capture</b> — turns your database's own change log into a stream of events. Debezium reads it from Oracle, SQL Server, MySQL and most databases you already run, and publishes every change to Kafka; Vantage subscribes and delivers it as push to every open screen. And it isn't limited to Debezium — Vantage wires into any CDC mechanism through a custom cache strategy built on the open framework.</span></div>
 </div>
 
 ## Built to ride a bad backend
 
 Push is easy on a healthy network. The **Launch Control** example runs against a deliberately hostile API — injected latency, random 503s — because that is what production looks like on a bad day. Its grids ride straight through: rows never blank on an error, the last known state stays on screen, and when the backend recovers, the refresh catches up. The demo above plays that behaviour on a script; Launch Control does it against a real backend you can poke.
+
+Vantage can also stand *in front of* the problem. Run it as a gateway over a poorly implemented third-party API: it polls the API once, at a rate you control, and fans every change out as push to all the services and screens behind it. The flaky vendor sees one polite client instead of twenty hungry ones — your rate limit is spent once, and everything downstream still gets notifications the moment something changes.
 
 <div class="my-4">
     <a href="/examples/launch-control/" class="btn btn-primary me-2">Tour Launch Control</a>
