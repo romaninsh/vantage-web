@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" role="img" aria-label="Loose threads from partner services and internal systems pass through one declarative mesh definition and emerge below it as tightly woven fabric">
+  <!-- ── source labels ─────────────────────────────────────────── -->
+  <g font-family="'Inter',ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#a0a3b5" text-anchor="middle">
+    <text x="48"  y="20">email</text>
+    <text x="138" y="20">sales CRM</text>
+    <text x="228" y="20">image AI</text>
+    <text x="318" y="20">AI workflows</text>
+    <text x="408" y="20">big data</text>
+    <text x="498" y="20">Postgres</text>
+    <text x="588" y="20">your APIs</text>
+    <text x="672" y="20">Kubernetes</text>
+  </g>
+
+  <!-- ── loose threads: each source sags and crosses on its way to a reed slot ── -->
+  <g fill="none" stroke-width="2.5" stroke-linecap="round">
+    <path d="M48 30  C48 130,  300 150, 300 240" stroke="#f472b6" opacity=".85"/>
+    <path d="M138 30 C138 145, 220 155, 220 240" stroke="#eaa14e" opacity=".9"/>
+    <path d="M228 30 C228 125, 420 160, 420 240" stroke="#fbbf24" opacity=".85"/>
+    <path d="M318 30 C318 150, 260 150, 260 240" stroke="#a78bfa" opacity=".9"/>
+    <path d="M408 30 C408 130, 500 155, 500 240" stroke="#34d399" opacity=".85"/>
+    <path d="M498 30 C498 145, 340 150, 340 240" stroke="#38c6e0" opacity=".9"/>
+    <path d="M588 30 C588 125, 460 160, 460 240" stroke="#818cf8" opacity=".85"/>
+    <path d="M672 30 C672 150, 380 145, 380 240" stroke="#7ee3f5" opacity=".9"/>
+  </g>
+
+  <!-- ── the reed: one declarative definition every thread passes through ── -->
+  <g>
+    <rect x="180" y="240" width="360" height="44" rx="10" fill="#181a26" stroke="#ffffff29" stroke-width="1.5"/>
+    <text x="360" y="260" font-family="'Inter',ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#ecedf2" text-anchor="middle">Vantage</text>
+    <text x="360" y="276" font-family="'Inter',ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#6e7186" text-anchor="middle">one declarative mesh &#183; YAML + Rhai, shaped by your agent</text>
+  </g>
+
+  <!-- ── warp: the same threads, now parallel and ordered ── -->
+  <g stroke-width="3.5" opacity=".95">
+    <line x1="220" y1="284" x2="220" y2="418" stroke="#eaa14e"/>
+    <line x1="260" y1="284" x2="260" y2="418" stroke="#a78bfa"/>
+    <line x1="300" y1="284" x2="300" y2="418" stroke="#f472b6"/>
+    <line x1="340" y1="284" x2="340" y2="418" stroke="#38c6e0"/>
+    <line x1="380" y1="284" x2="380" y2="418" stroke="#7ee3f5"/>
+    <line x1="420" y1="284" x2="420" y2="418" stroke="#fbbf24"/>
+    <line x1="460" y1="284" x2="460" y2="418" stroke="#818cf8"/>
+    <line x1="500" y1="284" x2="500" y2="418" stroke="#34d399"/>
+  </g>
+
+  <!-- ── weft: rows interlace over/under alternating warps (dash gaps let the warp show through) ── -->
+  <g stroke="#a0a3b5" stroke-width="2.5" opacity=".8" stroke-dasharray="73 7">
+    <line x1="200" y1="296" x2="520" y2="296" stroke-dashoffset="56.5"/>
+    <line x1="200" y1="310" x2="520" y2="310" stroke-dashoffset="16.5"/>
+    <line x1="200" y1="324" x2="520" y2="324" stroke-dashoffset="56.5"/>
+    <line x1="200" y1="338" x2="520" y2="338" stroke-dashoffset="16.5"/>
+    <line x1="200" y1="352" x2="520" y2="352" stroke-dashoffset="56.5"/>
+    <line x1="200" y1="366" x2="520" y2="366" stroke-dashoffset="16.5"/>
+    <line x1="200" y1="380" x2="520" y2="380" stroke-dashoffset="56.5"/>
+    <line x1="200" y1="394" x2="520" y2="394" stroke-dashoffset="16.5"/>
+  </g>
+</svg>

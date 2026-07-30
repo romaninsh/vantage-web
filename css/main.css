@@ -366,9 +366,9 @@
         @apply block h-auto w-full;
     }
 
-    /* Full-width variant for feature-gallery cards: the card already
-     provides chrome, so the button contributes only the click target
-     and a zoom cursor — no fixed width, no lift. */
+    /* Full-width variant for feature-gallery cards: the card's window
+     frame already provides chrome, so the button contributes only the
+     click target and a zoom cursor — no fixed width, no lift. */
     .shot-thumb--fill {
         width: 100%;
         cursor: zoom-in;
