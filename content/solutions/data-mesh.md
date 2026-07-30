@@ -22,10 +22,67 @@ icon = "hub"
 .dm-cycle>span:nth-child(2){animation-delay:3s;}
 .dm-cycle>span:nth-child(3){animation-delay:6s;}
 @keyframes dm-cycle{0%{opacity:0;transform:translateY(.4em)}5%,30%{opacity:1;transform:none}38%,100%{opacity:0;transform:translateY(-.4em)}}
+/* ── card 1: drag-a-database-chip-into-the-field scene ── */
+.dm-swap-card{flex-wrap:wrap;}
+.dm-swap{flex:1 1 100%;min-width:0;margin-top:1rem;}
+.dm-swap-scene{position:relative;width:202px;height:86px;margin:0 auto;}
+.dm-slot{position:absolute;top:8px;left:0;right:0;height:32px;border:1px solid var(--color-line-strong);border-radius:7px;background:var(--color-bg);animation:dm-slot 12s linear infinite;}
+.dm-slot-label{position:absolute;top:-5px;left:7px;z-index:3;padding:0 4px;background:var(--color-surface-1);font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:.56rem;line-height:1;color:var(--color-text-3);}
+.dm-chip{position:absolute;top:60px;z-index:1;padding:3px 8px;border:1px solid var(--color-line-strong);border-radius:6px;background:var(--color-surface-2);box-shadow:0 1px 2px rgb(0 0 0/.4);font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:.62rem;line-height:1;white-space:nowrap;color:var(--color-text-1);animation:dm-chip 12s ease-in-out infinite;}
+.dm-chip-p{animation-delay:-8s;}
+.dm-chip-s{animation-delay:-4s;}
+.dm-cursor{position:absolute;top:0;left:0;z-index:5;width:15px;height:15px;filter:drop-shadow(0 1px 2px rgb(0 0 0/.5));animation:dm-cur 12s ease-in-out infinite;}
+.dm-swap-static{display:none;position:relative;margin:0 auto;max-width:220px;padding:8px 10px;border:1px solid var(--color-line-strong);border-radius:7px;background:var(--color-bg);font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:.66rem;text-align:center;color:var(--color-text-1);}
+/* one cyclic chip timeline, phase-shifted per chip: seated → pop out → back to shelf → idle → picked → dragged → dropped */
+@keyframes dm-chip{
+0%,30%{transform:translate(var(--dx),var(--dy));opacity:1;z-index:2}
+33%{transform:translate(var(--dx),calc(var(--dy) + 16px)) scale(.8);opacity:0;z-index:1}
+33.05%{transform:translate(0,8px) scale(.9);opacity:0;z-index:1}
+36.5%{transform:translate(0,0);opacity:1;z-index:1}
+86%{transform:translate(0,0);z-index:1}
+89%{transform:translate(0,-3px) scale(1.05);z-index:4}
+93.5%{transform:translate(calc(var(--dx)*.45),calc(var(--dy)*.5 - 10px)) scale(1.05) rotate(-4deg);z-index:4}
+98%{transform:translate(var(--dx),var(--dy)) scale(1.04);z-index:4}
+100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:1;z-index:4}
+}
+/* the cursor: three pick-drag-drop gestures per 12s, synced to the chips' pick (86%) and drag (89–98%) windows */
+@keyframes dm-cur{
+0%,6%{transform:translate(180px,2px)}
+19.3%{transform:translate(79px,64px)}
+19.8%,22.3%{transform:translate(79px,67px)}
+26.8%{transform:translate(52px,38px)}
+31.3%{transform:translate(24px,20px)}
+32.3%{transform:translate(28px,14px)}
+39.6%{transform:translate(180px,2px)}
+52.6%{transform:translate(151px,64px)}
+53.1%,55.6%{transform:translate(151px,67px)}
+60.1%{transform:translate(88px,38px)}
+64.6%{transform:translate(24px,20px)}
+65.6%{transform:translate(28px,14px)}
+72.9%{transform:translate(180px,2px)}
+86%{transform:translate(20px,64px)}
+86.5%,89%{transform:translate(20px,67px)}
+93.5%{transform:translate(22px,38px)}
+98%{transform:translate(24px,20px)}
+98.7%{transform:translate(28px,14px)}
+100%{transform:translate(180px,2px)}
+}
+/* the slot lights up as a drop target while a chip is dragged over it */
+@keyframes dm-slot{
+0%,25%{border-color:var(--color-line-strong);box-shadow:none}
+27.5%,33%{border-color:var(--color-accent-400);box-shadow:0 0 0 3px rgb(56 198 224/.15)}
+35.5%,58.4%{border-color:var(--color-line-strong);box-shadow:none}
+60.9%,66.3%{border-color:var(--color-accent-400);box-shadow:0 0 0 3px rgb(56 198 224/.15)}
+68.8%,91.7%{border-color:var(--color-line-strong);box-shadow:none}
+94.2%,99.6%{border-color:var(--color-accent-400);box-shadow:0 0 0 3px rgb(56 198 224/.15)}
+100%{border-color:var(--color-line-strong);box-shadow:none}
+}
 @media (prefers-reduced-motion: reduce){
 .dm-cycle{display:inline;}
 .dm-cycle>span{animation:none;opacity:1;}
 .dm-cycle>span:not(:last-child)::after{content:" → ";color:var(--color-text-3);}
+.dm-swap-scene{display:none;}
+.dm-swap-static{display:block;}
 }
 </style>
 
@@ -122,7 +179,18 @@ setRows(rs => ({ ...rs, [event.object.index]: event.object }))</code></pre>
 You don't cut over all at once. Stand a facade up in front of the databases you already have, move one screen onto it, and let the rest keep hitting the old backend. Migrate at your pace, then delete the legacy tier behind it — no risky big-bang.
 
 <div class="swap-benefits">
-<div class="swap-benefit"><span class="material-symbols-outlined">swap_horiz</span><div><b>Swap databases underneath</b><p>The facade is backend-agnostic. Move it — complex queries and all — with near-zero code change; your clients never notice.</p><span class="dm-ticker" aria-hidden="true">your queries, running on <span class="dm-cycle"><span>Oracle</span><span>Postgres</span><span>SurrealDB</span></span></span></div></div>
+<div class="swap-benefit dm-swap-card"><span class="material-symbols-outlined">swap_horiz</span><div><b>Swap databases underneath</b><p>The facade is backend-agnostic. Move it — complex queries and all — with near-zero code change; your clients never notice.</p></div>
+<div class="dm-swap" aria-hidden="true">
+<div class="dm-swap-scene">
+<div class="dm-slot"><span class="dm-slot-label">database</span></div>
+<span class="dm-chip" style="--dx:8px;--dy:-46px;left:0">Oracle</span>
+<span class="dm-chip dm-chip-p" style="--dx:-51px;--dy:-46px;left:59px">Postgres</span>
+<span class="dm-chip dm-chip-s" style="--dx:-123px;--dy:-46px;left:131px">SurrealDB</span>
+<svg class="dm-cursor" viewBox="0 0 16 16"><path d="M1 1 L1 12.5 L4.2 9.8 L6.3 14.6 L8.6 13.6 L6.5 8.9 L10.8 8.7 Z" fill="#ecedf2" stroke="#0b0b10" stroke-width="1"/></svg>
+</div>
+<div class="dm-swap-static"><span class="dm-slot-label">database</span>Oracle → Postgres → SurrealDB</div>
+</div>
+</div>
 <div class="swap-benefit"><span class="material-symbols-outlined">rocket_launch</span><div><b>From idea to production</b><p>Prototype over a CSV file, graduate to SQL, ship behind an API — the screens and the queries stay the same.</p><span class="dm-ticker" aria-hidden="true">the same app, backed by <span class="dm-cycle"><span>a CSV file</span><span>SQL</span><span>an API</span></span></span></div></div>
 <div class="swap-benefit"><span class="material-symbols-outlined">lock_open</span><div><b>Open-source &amp; yours</b><p>Modern Rust that runs on your own infrastructure — fully open-source, forever in your control, and with no code that counts your seats.</p></div></div>
 </div>
