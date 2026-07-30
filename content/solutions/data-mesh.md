@@ -1,6 +1,6 @@
 +++
 title = "Wire your organisation into a real-time data mesh"
-description = "Your business runs on dozens of partner services plus your own systems — today held together by consoles, credentials and polling scripts. Vantage weaves them into one live mesh, then mints facade APIs, sidecars and embedded data layers from it."
+description = "Your business runs on dozens of partner services plus your own systems — today held together by consoles, credentials and polling scripts. Vantage weaves them into one live mesh you serve natively in Rust, as a REST facade, or as an embedded sidecar."
 template = "page.html"
 weight = 3
 aliases = ["/solutions/developers/"]
@@ -29,19 +29,14 @@ An enterprise doesn't run on one database. It runs on dozens of external partner
 
 Vantage doesn't try to control everything; it gives you the tools to build your own thing. The tools underneath are free forever, MIT-licensed: a query builder, an entity manager, active record, and the machinery for live data in multi-threaded apps.
 
-## Mint artifacts from the mesh
+## Declare once, serve it three ways
 
-A defined mesh isn't only something to look at in a console — it's a die. Rust's versatility is the payoff: the same definitions that drive your screens compile into deployable software, struck from one metal.
-
-<figure class="dm-figure">
-  <img src="/images/solutions/dm-mint.svg" alt="A coin die engraved with the mesh weave stamps three coins bearing the same emblem: a sidecar or edge proxy, a facade API, and an embedded data layer" width="720" height="320" loading="lazy">
-  <figcaption class="dm-figcap">One die, three coins. Every artifact carries the same mesh definition — only the shape changes.</figcaption>
-</figure>
+A mesh you can only look at is a dashboard. What you declare in Vantage is a definition — and one definition has three ways out:
 
 <div class="swap-benefits">
-<div class="swap-benefit"><span class="material-symbols-outlined">cloud_done</span><div><b>Facade APIs</b><p>A cache-at-edge that reacts — instant reads for your web and mobile apps, changes streamed as they happen. The flagship artifact, detailed below.</p></div></div>
-<div class="swap-benefit"><span class="material-symbols-outlined">settings_ethernet</span><div><b>Sidecars &amp; edge proxies</b><p>Thin Rust services that sit beside your workloads — deployed as a Lambda or on Kubernetes, fully yours, no vendor runtime underneath.</p></div></div>
-<div class="swap-benefit"><span class="material-symbols-outlined">smartphone</span><div><b>Embedded in your apps</b><p>Link the data layer straight into a mobile, desktop or embedded app — a live cache on a background thread, reactive events to your UI.</p></div></div>
+<div class="swap-benefit"><span class="material-symbols-outlined">code</span><div><b>Natively in Rust</b><p>Full type safety, real-time or transactional, built for multi-threaded apps — as open-source crates your services link directly.</p></div></div>
+<div class="swap-benefit"><span class="material-symbols-outlined">api</span><div><b>As a REST facade</b><p>Roll the same definition into an API — poll, live-push or websocket, chosen per consumer. Detailed below.</p></div></div>
+<div class="swap-benefit"><span class="material-symbols-outlined">settings_ethernet</span><div><b>As an embedded sidecar</b><p>Drop it into your cloud or mobile apps: a high-frequency cache that knows your business logic, running right beside the code that needs it.</p></div></div>
 </div>
 
 ## The facade API, up close
@@ -66,6 +61,26 @@ The facade is a plain Rust service, so you run it wherever your users are — on
 <div class="swap-benefit"><span class="material-symbols-outlined">bolt</span><div><b>Instant reads</b><p>The screen paints from the local cache the moment it opens — no waiting on the backend for the first frame.</p></div></div>
 <div class="swap-benefit"><span class="material-symbols-outlined">sync</span><div><b>Changes stream in</b><p>Every open view holds a watch connection; when data changes, the update arrives on its own — no polling loop to write.</p></div></div>
 <div class="swap-benefit"><span class="material-symbols-outlined">visibility</span><div><b>Only what's on screen</b><p>The facade fetches details for the rows the user is actually looking at, so a million-row list stays cheap.</p></div></div>
+</div>
+
+## Inside the facade: a scenery
+
+The facade isn't a framework you configure — it's a handful of lines of Rust. A *scenery* is a standing live view onto the cache: open it, read it, subscribe to it. The same interface drives a desktop grid, a terminal, and this facade:
+
+<div class="code-card">
+<div class="code-card-head"><span class="dot rust"></span>Rust</div>
+<pre class="code-card-body"><code class="language-rust">// The same declaration your console runs — now inside your service.
+let dio = lens.make_dio(orders);
+let scenery = dio.table_scenery().open().await?;
+
+// Read it now, straight from the live cache…
+let row = scenery.row(0);
+
+// …and react when anything changes, from any source.
+let mut changes = scenery.subscribe();
+while changes.changed().await.is_ok() {
+    push_to_clients(&scenery);   // one update per burst of changes
+}</code></pre>
 </div>
 
 ## On the wire, and in the frontend
