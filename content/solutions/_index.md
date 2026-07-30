@@ -1,8 +1,8 @@
 +++
-title = "Solutions"
-description = "Vantage UI is built for technical teams who want to own their internal tools. Find your fit."
-template = "section.html"
+title = "Where Vantage fits"
+description = "Vantage adoption happens in stages — one console over your existing data, everything live, then a real-time data mesh. Each stage is useful on its own."
+template = "solutions.html"
 sort_by = "weight"
 +++
 
-Three kinds of teams get the most out of Vantage UI. They share the same wish: a real internal tool, built fast by an agent, owned as code, running on their own machines — without standing up a cloud platform or hand-rolling another CRUD backend.
+Nobody adopts a platform in one leap. Vantage climbs in stages — one console over the data you already have, then everything live, then a real-time mesh across the organisation. Each stage is useful on its own: stop anywhere and you still hold a tool worth keeping.
