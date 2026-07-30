@@ -22,9 +22,25 @@ icon = "hub"
 .dm-jstep:last-child b{border-color:color-mix(in srgb,var(--color-accent-400) 55%,transparent);color:var(--color-accent-300);}
 .dm-jstep small{position:absolute;top:-.95rem;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-3);white-space:nowrap;}
 .dm-jarrow{color:var(--color-text-3);font-size:.7rem;}
-/* ── card 1: drag-a-database-chip-into-the-field scene ── */
-.dm-swap-card{flex-wrap:wrap;}
-.dm-swap{flex:1 1 100%;min-width:0;margin-top:1rem;}
+/* ── gradual path: frameless columns with dividers ── */
+.dm-path{display:grid;grid-template-columns:repeat(3,1fr);margin:1.75rem 0;}
+.dm-path-col{padding:0 1.4rem;}
+.dm-path-col:first-child{padding-left:0;}
+.dm-path-col:last-child{padding-right:0;}
+.dm-path-col+.dm-path-col{border-left:1px solid var(--color-line);}
+.dm-path-col>b{display:block;font-size:.95rem;color:var(--color-text-1);}
+.dm-path-col>p{margin:.45rem 0 0;font-size:.83rem;line-height:1.55;color:var(--color-text-2);}
+.dm-oss{margin:.8rem 0 0;padding:0;list-style:none;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:.72rem;color:var(--color-text-2);}
+.dm-oss li{padding:.22rem 0;}
+.dm-oss li::before{content:"·";margin-right:.55rem;color:var(--color-accent-400);}
+@media (max-width:48rem){
+.dm-path{grid-template-columns:1fr;}
+.dm-path-col{padding:1.1rem 0;}
+.dm-path-col:first-child{padding-top:0;}
+.dm-path-col+.dm-path-col{border-left:none;border-top:1px solid var(--color-line);}
+}
+/* ── drag-a-database-chip-into-the-field scene ── */
+.dm-swap{margin-top:1.1rem;}
 .dm-swap-scene{position:relative;width:202px;height:86px;margin:0 auto;}
 .dm-slot{position:absolute;top:8px;left:0;right:0;height:32px;border:1px solid var(--color-line-strong);border-radius:7px;background:var(--color-bg);animation:dm-slot 12s linear infinite;}
 .dm-slot-label{position:absolute;top:-5px;left:7px;z-index:3;padding:0 4px;background:var(--color-surface-1);font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:.56rem;line-height:1;color:var(--color-text-3);}
@@ -99,9 +115,9 @@ Vantage doesn't try to control everything; it gives you the tools to build your 
 A mesh you can only look at is a dashboard. What you declare in Vantage is a definition — and one definition has three ways out:
 
 <div class="swap-benefits">
-<div class="swap-benefit"><span class="material-symbols-outlined">code</span><div><b>Natively in Rust</b><p>Full type safety, real-time or transactional, built for multi-threaded apps — as open-source crates your services link directly.</p></div></div>
-<div class="swap-benefit"><span class="material-symbols-outlined">api</span><div><b>As a REST facade</b><p>Roll the same definition into an API — poll, live-push or websocket, chosen per consumer. Detailed below.</p></div></div>
-<div class="swap-benefit"><span class="material-symbols-outlined">settings_ethernet</span><div><b>As an embedded sidecar</b><p>Drop it into your cloud or mobile apps: a high-frequency cache that knows your business logic, running right beside the code that needs it.</p></div></div>
+<div class="swap-benefit"><div><b>Natively in Rust</b><p>Full type safety, real-time or transactional, built for multi-threaded apps — as open-source crates your services link directly.</p></div></div>
+<div class="swap-benefit"><div><b>As a REST facade</b><p>Roll the same definition into an API — poll, live-push or websocket, chosen per consumer. Detailed below.</p></div></div>
+<div class="swap-benefit"><div><b>As an embedded sidecar</b><p>Drop it into your cloud or mobile apps: a high-frequency cache that knows your business logic, running right beside the code that needs it.</p></div></div>
 </div>
 
 ## The facade API, up close
@@ -123,9 +139,9 @@ The facade is a plain Rust service, so you run it wherever your users are — on
 ## What your frontend gets
 
 <div class="swap-benefits">
-<div class="swap-benefit"><span class="material-symbols-outlined">bolt</span><div><b>Instant reads</b><p>The screen paints from the local cache the moment it opens — no waiting on the backend for the first frame.</p></div></div>
-<div class="swap-benefit"><span class="material-symbols-outlined">sync</span><div><b>Changes stream in</b><p>Every open view holds a watch connection; when data changes, the update arrives on its own — no polling loop to write.</p></div></div>
-<div class="swap-benefit"><span class="material-symbols-outlined">visibility</span><div><b>Only what's on screen</b><p>The facade fetches details for the rows the user is actually looking at, so a million-row list stays cheap.</p></div></div>
+<div class="swap-benefit"><div><b>Instant reads</b><p>The screen paints from the local cache the moment it opens — no waiting on the backend for the first frame.</p></div></div>
+<div class="swap-benefit"><div><b>Changes stream in</b><p>Every open view holds a watch connection; when data changes, the update arrives on its own — no polling loop to write.</p></div></div>
+<div class="swap-benefit"><div><b>Only what's on screen</b><p>The facade fetches details for the rows the user is actually looking at, so a million-row list stays cheap.</p></div></div>
 </div>
 
 ## Inside the facade: a scenery
@@ -175,8 +191,8 @@ setRows(rs => ({ ...rs, [event.object.index]: event.object }))</code></pre>
 
 You don't cut over all at once. Stand a facade up in front of the databases you already have, move one screen onto it, and let the rest keep hitting the old backend. Migrate at your pace, then delete the legacy tier behind it — no risky big-bang.
 
-<div class="swap-benefits">
-<div class="swap-benefit dm-swap-card"><span class="material-symbols-outlined">swap_horiz</span><div><b>Swap databases underneath</b><p>The facade is backend-agnostic. Move it — complex queries and all — with near-zero code change; your clients never notice.</p></div>
+<div class="dm-path">
+<div class="dm-path-col"><b>Swap databases underneath</b><p>The facade is backend-agnostic. Move it — complex queries and all — with near-zero code change; your clients never notice.</p>
 <div class="dm-swap" aria-hidden="true">
 <div class="dm-swap-scene">
 <div class="dm-slot"><span class="dm-slot-label">database</span></div>
@@ -188,8 +204,15 @@ You don't cut over all at once. Stand a facade up in front of the databases you 
 <div class="dm-swap-static"><span class="dm-slot-label">database</span>Oracle → Postgres → SurrealDB</div>
 </div>
 </div>
-<div class="swap-benefit"><span class="material-symbols-outlined">rocket_launch</span><div><b>From idea to production</b><p>Prototype over a CSV file, graduate to SQL, ship behind an API — the screens and the queries stay the same.</p><span class="dm-journey" aria-hidden="true"><span class="dm-jstep"><small>idea</small><b>CSV file</b></span><span class="dm-jarrow">→</span><span class="dm-jstep"><b>SQL</b></span><span class="dm-jarrow">→</span><span class="dm-jstep"><small>production</small><b>API</b></span></span></div></div>
-<div class="swap-benefit"><span class="material-symbols-outlined">lock_open</span><div><b>Open-source &amp; yours</b><p>Modern Rust that runs on your own infrastructure — fully open-source, forever in your control, and with no code that counts your seats.</p></div></div>
+<div class="dm-path-col"><b>From idea to production</b><p>Prototype over a CSV file, graduate to SQL, ship behind an API — the screens and the queries stay the same.</p><span class="dm-journey" aria-hidden="true"><span class="dm-jstep"><small>idea</small><b>CSV file</b></span><span class="dm-jarrow">→</span><span class="dm-jstep"><b>SQL</b></span><span class="dm-jarrow">→</span><span class="dm-jstep"><small>production</small><b>API</b></span></span></div>
+<div class="dm-path-col"><b>Open-source &amp; yours</b><p>Modern Rust that runs on your own infrastructure — fully open-source, forever in your control, and with no code that counts your seats.</p>
+<ul class="dm-oss">
+<li>Query builder</li>
+<li>ORM</li>
+<li>Active Record</li>
+<li>Entity modeling</li>
+</ul>
+</div>
 </div>
 
 <p class="journey-note"><span class="material-symbols-outlined">construction</span><span>The framework — the live cache, the reactive views and the watch adapter — ships on <a href="https://crates.io/search?q=vantage-" target="_blank" rel="noopener">crates.io</a> with a <a href="https://romaninsh.github.io/vantage/intro/step5-sql-dio.html" target="_blank" rel="noopener">full guide</a> today; you can build the facade now. Generating and hosting these facades for you as a managed service, and managing API routes from inside Vantage UI, are on the <a href="/features/">roadmap</a>.</span></p>
