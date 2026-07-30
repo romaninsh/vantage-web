@@ -83,9 +83,9 @@ p.it-check { color: var(--color-ok); }
 }
 </style>
 
-Every platform team runs part of its stack out of a drawer: a deploy script with a wiki page that says run it twice, a forked dashboard nobody dares upgrade, an internal admin that only works on one person's laptop. Each one solved a real problem the day it was written — and each one is one more thing to keep alive. The usual way out is a Retool-class builder, which trades one drawer for four walls: components that bend only so far, full power only against its own database, role management on a vendor's server, and per-seat pricing.
+Every platform team runs part of its stack out of a drawer: a deploy script with a wiki page that says run it twice, a forked dashboard nobody dares upgrade, an internal admin that only works on one person's laptop. Each one solved a real problem the day it was written — and each one is one more thing to keep alive. The usual way out is a Retool-class builder — which swaps the drawer for a box: components that bend only so far, full power only against its own database, role management on a vendor's server, and per-seat pricing.
 
-**Vantage UI is the third option.** Point an AI agent at your systems and it authors the console for you — declarative YAML plus Rhai for the logic — over a local MCP loop, verifying its own work as it goes. Nothing is watered down on the way: Postgres with every subquery you'd write by hand, Salesforce, your internal APIs, AWS, any CLI your team already trusts. Months of internal-tool development becomes days.
+**Vantage UI is the third option.** Point an AI agent at your systems and it authors the console for you — declarative YAML plus Rhai for the logic — over a local MCP server, verifying its own work as it goes. Nothing is watered down on the way: Postgres with every subquery you'd write by hand, Salesforce, your internal APIs, AWS, any CLI your team already trusts. Months of internal-tool development become days.
 
 And unlike Datadog, nothing gets ingested anywhere. Your data stays where it lives; Vantage reads it there, live. Nothing to ship out, no second copy to keep in sync — and the drawer finally closes.
 
@@ -156,13 +156,13 @@ Those aren't three products. They're three groups in one sidebar:
 
 <p class="it-caption">Wildly different jobs, adjacent menu entries. If it holds data or takes a command, it can sit in this sidebar.</p>
 
-And it stays fast at any size — a smart local cache keeps big grids instant and refreshes them in the background, so nobody sits watching a spinner.
+It stays fast at any size — a smart local cache keeps big grids instant and refreshes them in the background, so the screen never keeps anyone waiting.
 
 ## The agent writes it, then checks its own work
 
 You describe the screen. The agent writes the config — and proves it works before you look up:
 
-<div class="it-agent" aria-label="An agent session building a console page over a local MCP loop">
+<div class="it-agent" aria-label="An agent session building a console page over a local MCP server">
   <div class="it-agent-head"><span class="material-symbols-outlined">smart_toy</span>your coding agent · local MCP session</div>
   <div class="it-agent-log">
     <p class="it-you"><span>you</span>One screen: deployments stuck across all three clusters, with a restart button per pod.</p>
@@ -172,7 +172,7 @@ You describe the screen. The agent writes the config — and proves it works bef
   </div>
 </div>
 
-That verification loop is why the result holds up. The agent isn't handing you code to go try — it runs the console on your machine, reads its own pages back over MCP, and fixes what it got wrong before reporting done. Ask for the next button and it appears: exactly the controls your team needs, not a fixed set someone else chose. And because the console speaks to your real backends, there is no capability ceiling to hit — if your database or API can answer it, the agent can put it on a screen.
+That verification loop is why the result holds up. The agent isn't handing you code to go try — it runs the console on your machine, reads its own pages back over MCP, and fixes what it got wrong before reporting done. Ask for the next button and it appears: exactly the controls your team needs. And because the console speaks to your real backends, there is no capability ceiling to hit — if your database or API can answer it, the agent can put it on a screen.
 
 ## Build once, share with the whole team
 
@@ -183,7 +183,7 @@ One person builds the tool; the whole team opens a link. A Vantage app is only c
     <span class="share-num">1</span>
     <span class="material-symbols-outlined share-ico">smart_toy</span>
     <h4>You build it</h4>
-    <p>Your agent wires up the pages, tables and actions over the local MCP loop — against dev credentials.</p>
+    <p>Your agent wires up the pages, tables and actions over the local MCP server — against dev credentials.</p>
   </div>
   <div class="it-join"><span>app config</span></div>
   <div class="it-step it-step-hub">
@@ -210,11 +210,11 @@ If a database client on a cleared laptop passes your security review, Vantage ha
 - **Dev credentials while building.** You and your agent work against the dev environment; production credentials exist only where the finished app runs.
 - **The agent reads; it doesn't write.** The agent's MCP access to a running console is read-only — page structure, debug queries, logs. Writes happen in the app, by whoever drives it, under their own credentials.
 - **The PII-cleared team gets the prod build.** Ship the finished app to the cleared team; they connect it with production access. Developers — and their agents — never see it.
-- **Nothing phones home, unqualified.** The free version bundles crash analytics; enterprise builds can disable it or point it at your own account.
+- **Telemetry, stated plainly.** The free version carries crash analytics — and an enterprise build can turn it off or route it to your own account.
 
 ## See it in action
 
-**Periscope** is this page's argument, built for Kubernetes — a full control room written entirely in YAML, drilling from namespaces to workloads to pods. The **AWS control console example** wraps the `aws` CLI to surface exactly the resources you operate, nothing more. (Landing in the examples repo soon.)
+**Periscope** shows this shape for Kubernetes — a full control room written entirely in YAML, drilling from namespaces to workloads to pods. The **AWS control console example** wraps the `aws` CLI to surface exactly the resources you operate, nothing more — it lands in the examples repo soon.
 
 <div class="my-4">
     <a href="/examples/" class="btn btn-primary me-2">Browse the examples</a>

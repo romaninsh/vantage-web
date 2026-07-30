@@ -5,4 +5,4 @@ template = "solutions.html"
 sort_by = "weight"
 +++
 
-Nobody adopts a platform in one leap. Vantage climbs in stages — one console over the data you already have, then everything live, then a real-time mesh across the organisation. Each stage is useful on its own: stop anywhere and you still hold a tool worth keeping.
+Nobody adopts a platform in one leap. The climb comes in stages — one console over the data you already have, then everything live, then a real-time mesh across the organisation. Each stage is useful on its own: stop anywhere and you still hold a tool worth keeping.

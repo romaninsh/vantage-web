@@ -4,12 +4,12 @@ template = "index.html"
 
 [extra]
 hero_headline = "AI-first low-code App Builder"
-hero_subhead = "Build your app instantly with an AI-first low-code tool. Vantage UI taps into your databases, APIs and infrastructure, then visualizes your data declaratively — Tables, Widgets, Forms and Lists. Need a new column? The AI agent adds it in seconds."
+hero_subhead = "Vantage UI taps into your databases, APIs and infrastructure, then visualises your data declaratively — tables, forms, dashboards and lists. Need a new column? The AI agent adds it in seconds."
 hero_caption = "**Free for macOS & Linux.** Built on the open-source, MIT-licensed [Vantage Framework](/framework/). Windows builds are delivered for enterprise customers."
 
 # ---- Feature tour ----
 [extra.features_intro]
-heading = "One console, the things you actually run"
+heading = "One console for the things you actually run"
 body = "A quick tour of what ships today. The full list lives on the Features page."
 
 [[extra.features]]
@@ -56,7 +56,7 @@ body = "From a fresh data source to a working console, with your agent doing the
 [[extra.howitworks_steps]]
 icon = "link"
 title = "1. Connect"
-body = "Point Vantage at a config folder. Data sources are described as YAML — connection strings, schemas, tables."
+body = "Point Vantage at a config folder. Datasources are described as YAML — connection strings, schemas, tables."
 
 [[extra.howitworks_steps]]
 icon = "smart_toy"
@@ -71,5 +71,5 @@ body = "Browse, search, filter and edit natively. Change the YAML or the data an
 # ---- Framework band ----
 [extra.framework_callout]
 heading = "Built on the open Vantage Framework"
-body = "Vantage UI is one expression of the open-source, MIT-licensed **[Vantage Framework](/framework/)** — a set of Rust crates for data abstraction across databases, APIs and infrastructure, published on crates.io with a full mdBook. Use the app as your console, or build directly on the crates to power facade services, middleware or your own tools."
+body = "Vantage UI is one expression of the open-source, MIT-licensed **[Vantage Framework](/framework/)** — a set of Rust crates for data abstraction across databases, APIs and infrastructure, published on crates.io with a full mdBook. Use the app as your console, or build directly on the crates to power APIs, middleware or your own tools."
 +++

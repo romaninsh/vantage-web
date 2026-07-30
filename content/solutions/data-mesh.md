@@ -1,6 +1,6 @@
 +++
 title = "Wire your organisation into a real-time data mesh"
-description = "Your business runs on dozens of partner services plus your own systems — today held together by consoles, credentials and polling scripts. Vantage weaves them into one live mesh you serve natively in Rust, as a REST facade, or as an embedded sidecar."
+description = "Your business runs on dozens of partner services plus your own systems — today held together by consoles, credentials and polling scripts. Vantage weaves them into one live mesh you serve natively in Rust, as a facade API, or as an embedded sidecar."
 template = "page.html"
 weight = 3
 aliases = ["/solutions/developers/"]
@@ -101,22 +101,22 @@ icon = "hub"
 
 An enterprise doesn't run on one database. It runs on dozens of external partners — one sends the email, one keeps the sales data, one analyses the images, one runs the AI workflows, one aggregates the big data — plus its own databases, APIs and infrastructure. Day to day, that is dozens of consoles, dozens of credentials, and a crontab of polling scripts written by people who have since left. There is no single fabric. There are threads — and right now, you are the loom.
 
-**Vantage wires it all into one internal, live data mesh.** The mesh is defined declaratively, and Vantage UI is where you see it and shape it — your AI agent doing the tweaking while the result runs in front of your eyes. And it is not a viewing gallery: the mesh carries writes, actions and scripts, so the fabric you monitor is the same fabric you operate.
+**Vantage wires it all into one internal, live data mesh.** The mesh is defined declaratively, and Vantage UI is where you see it and shape it — your AI agent making the changes while the result runs in front of your eyes. The mesh carries writes, actions and scripts, so the fabric you monitor is the same fabric you operate.
 
 <figure class="dm-figure">
   <img src="/images/solutions/dm-weave.svg" alt="Loose, crossing threads from email, CRM, image AI, AI workflows, big data, Postgres, your APIs and Kubernetes pass through a bar labelled Vantage — one declarative mesh — and emerge below as a tight over-under weave" width="720" height="430" loading="lazy">
   <figcaption class="dm-figcap">Disparate threads in, one fabric out. Every partner service and every internal system becomes a strand — named, typed and live — in a weave you define once.</figcaption>
 </figure>
 
-Vantage doesn't try to control everything; it gives you the tools to build your own thing. The tools underneath are free forever, MIT-licensed: a query builder, an entity manager, active record, and the machinery for live data in multi-threaded apps.
+Vantage doesn't try to control everything — it gives you the tools to build your own thing, free forever under MIT.
 
 ## Declare once, serve it three ways
 
-A mesh you can only look at is a dashboard. What you declare in Vantage is a definition — and one definition has three ways out:
+What you declare in Vantage is a definition — and one definition has three ways out:
 
 <div class="swap-benefits">
 <div class="swap-benefit"><div><b>Natively in Rust</b><p>Full type safety, real-time or transactional, built for multi-threaded apps — as open-source crates your services link directly.</p></div></div>
-<div class="swap-benefit"><div><b>As a REST facade</b><p>Roll the same definition into an API — poll, live-push or websocket, chosen per consumer. Detailed below.</p></div></div>
+<div class="swap-benefit"><div><b>As a facade API</b><p>Roll the same definition into a REST API — poll, live-push or websocket, chosen per consumer. Detailed below.</p></div></div>
 <div class="swap-benefit"><div><b>As an embedded sidecar</b><p>Drop it into your cloud or mobile apps: a high-frequency cache that knows your business logic, running right beside the code that needs it.</p></div></div>
 </div>
 
@@ -151,6 +151,7 @@ The facade isn't a framework you configure — it's a handful of lines of Rust. 
 <div class="code-card">
 <div class="code-card-head"><span class="dot rust"></span>Rust</div>
 <pre class="code-card-body"><code class="language-rust">// The same declaration your console runs — now inside your service.
+// `lens` holds the live cache; `orders` is a table from your mesh.
 let dio = lens.make_dio(orders);
 let scenery = dio.table_scenery().open().await?;
 
@@ -215,20 +216,20 @@ You don't cut over all at once. Stand a facade up in front of the databases you 
 </div>
 </div>
 
-<p class="journey-note"><span class="material-symbols-outlined">construction</span><span>The framework — the live cache, the reactive views and the watch adapter — ships on <a href="https://crates.io/search?q=vantage-" target="_blank" rel="noopener">crates.io</a> with a <a href="https://romaninsh.github.io/vantage/intro/step5-sql-dio.html" target="_blank" rel="noopener">full guide</a> today; you can build the facade now. Generating and hosting these facades for you as a managed service, and managing API routes from inside Vantage UI, are on the <a href="/features/">roadmap</a>.</span></p>
+<p class="journey-note"><span class="material-symbols-outlined">construction</span><span>The framework — the live cache, the reactive views and the watch adapter — ships on <a href="https://crates.io/search?q=vantage-" target="_blank" rel="noopener">crates.io</a> today; you can build the facade now, and the guide below walks through it. Generating and hosting these facades for you as a managed service, and managing API routes from inside Vantage UI, are on the <a href="/features/">roadmap</a>.</span></p>
 
 ## Start here
 
 <div class="my-4">
-    <a href="https://romaninsh.github.io/vantage/intro/step5-sql-dio.html" class="btn btn-lg btn-primary me-2" target="_blank" rel="noopener">
+    <a href="https://romaninsh.github.io/vantage/intro/step5-sql-dio.html" class="btn btn-primary me-2" target="_blank" rel="noopener">
         <span class="material-symbols-outlined align-middle me-1">menu_book</span>
         Read the guide
     </a>
-    <a href="/framework/" class="btn btn-lg btn-outline-primary me-2">
+    <a href="/framework/" class="btn btn-outline-primary me-2">
         Framework overview
     </a>
-    <a href="/examples/" class="btn btn-lg btn-outline-primary">
-        See an example
+    <a href="/examples/" class="btn btn-outline-primary">
+        Browse the examples
     </a>
 </div>
 

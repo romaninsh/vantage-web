@@ -34,9 +34,6 @@ icon = "corporate_fare"
   .ent-trust-list { display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.89rem; line-height: 1.6; color: var(--color-text-2); }
   .ent-trust-list b { color: var(--color-text-1); }
 
-  /* rust echo band */
-  .ent-echo { margin: 3rem 0 0; padding: 1.5rem 1rem; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); text-align: center; font-size: 1.02rem; line-height: 1.65; color: var(--color-text-1); }
-
   /* lead form */
   .ent-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; max-width: 34rem; margin: 1.75rem auto 0; }
   .ent-field { width: 100%; border: 1px solid var(--color-line-strong); border-radius: 0.6rem; background: var(--color-surface-1); padding: 0.7rem 1rem; font-size: 0.92rem; color: var(--color-text-1); }
@@ -55,7 +52,7 @@ icon = "corporate_fare"
   }
 </style>
 
-The previous pages describe stages — a console over the data you already have, screens that stay live, a mesh across your systems and partners. This page is all of it, packaged and partnered for an organisation. Not a seat license on somebody else's cloud: a build that is yours, a team that trains yours, and an exit position in writing.
+The previous pages describe stages — a console over the data you already have, screens that stay live, a mesh across your systems and partners. This page is all of it, packaged for an organisation — with a partner behind it. Not a seat license on somebody else's cloud: a build that is yours, a team that trains yours, and an exit position in writing.
 
 ## Your own distribution of Vantage UI
 
@@ -89,8 +86,8 @@ A license vendor hands you a login and an invoice. We sit down with your archite
 
 Then we train your people — two disciplines, taught together:
 
-- **Building with Vantage.** From the first console to minted artifacts — your engineers learn the stack they now own.
-- **Relying on AI properly.** Agents author most of a Vantage app. We teach your teams to direct and review that work, so agent-produced code stays reviewable engineering instead of turning into slop.
+- **Building with Vantage.** From the first console to facade APIs and sidecars — your engineers learn the stack they now own.
+- **Relying on AI properly.** Agents author most of a Vantage app, and a vibe-coded frontend is fine. The code that runs your business is different: we teach your teams to direct and review agent work, so it stays reviewable engineering instead of turning into slop.
 
 ## Built so you can leave
 
@@ -100,12 +97,10 @@ Lock-in is a design choice, and we made the opposite one. The exit is structural
   <img class="ent-trust-img" src="/images/solutions/ent-escrow.svg" alt="A sealed source-escrow envelope holding the Vantage UI source, released to you if Vantage is discontinued">
   <div class="ent-trust-list">
     <span><b>Source escrow.</b> If Vantage is discontinued — bankruptcy or acquisition — the Vantage UI source is released to you.</span>
-    <span><b>MIT underneath, forever.</b> The framework — query builder, entity manager, active record, the live-data tools — is open source and stays that way.</span>
+    <span><b>MIT underneath, forever.</b> The framework — query builder, ORM, active record, entity modeling — is open source and stays that way.</span>
     <span><b>Your facades, your domain.</b> Everything you deploy runs in your infrastructure. None of it contains code that counts your seats.</span>
   </div>
 </div>
-
-<p class="ent-echo">Java carried enterprise software in 2000. Rust is already in your phone and your kernel — with Vantage, it's ready to carry your business apps.</p>
 
 ## Talk to us
 

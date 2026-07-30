@@ -460,7 +460,7 @@ One scripted feed drives both panels below, live in this page. The right panel b
 </div>
 </div>
 
-<p class="ld-caption">The feed is scripted; the button is real. The left panel shows whatever you last fetched, and the counter keeps score of how far behind you've fallen — seconds, then minutes, then hours. The right panel just stays right: through the outage it keeps the last known state and catches up on reconnect.</p>
+<p class="ld-caption">The feed is scripted; the button is real. The left panel shows whatever you last fetched, and the counter keeps score of how far behind you've fallen — seconds, then minutes. The right panel just stays right: through the outage it keeps the last known state and catches up on reconnect.</p>
 
 ## Both directions
 
@@ -514,6 +514,6 @@ Vantage can also stand *in front of* the problem. Run it as a gateway over a poo
     <a href="/examples/" class="btn btn-outline-primary">Browse the examples</a>
 </div>
 
-<p class="journey-note"><span class="material-symbols-outlined">arrow_forward</span><span><b>Next rung:</b> your console is live on your desk — now ship that liveness to your users. <a href="/solutions/data-mesh/">Wire in a real-time data mesh →</a></span></p>
+<p class="journey-note"><span class="material-symbols-outlined">arrow_forward</span><span><b>Next rung:</b> one console is live — now wire every system and partner your business runs on into the same fabric. <a href="/solutions/data-mesh/">Wire in a real-time data mesh →</a></span></p>
 
 <script src="/js/ld-live-demo.js" defer></script>
