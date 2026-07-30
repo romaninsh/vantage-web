@@ -83,7 +83,7 @@ p.it-check { color: var(--color-ok); }
 }
 </style>
 
-Every platform team runs part of its stack out of a drawer: a deploy script with a wiki page that says run it twice, a forked dashboard nobody dares upgrade, an internal admin that only works on one person's laptop. Each one solved a real problem the day it was written — and each one is one more thing to keep alive. The usual way out is a Retool-class builder, which trades one drawer for four walls: components that bend only so far, full power only against its own database, role management on a vendor's server, and a bill that counts your seats.
+Every platform team runs part of its stack out of a drawer: a deploy script with a wiki page that says run it twice, a forked dashboard nobody dares upgrade, an internal admin that only works on one person's laptop. Each one solved a real problem the day it was written — and each one is one more thing to keep alive. The usual way out is a Retool-class builder, which trades one drawer for four walls: components that bend only so far, full power only against its own database, role management on a vendor's server, and per-seat pricing.
 
 **Vantage UI is the third option.** Point an AI agent at your systems and it authors the console for you — declarative YAML plus Rhai for the logic — over a local MCP loop, verifying its own work as it goes. Nothing is watered down on the way: Postgres with every subquery you'd write by hand, Salesforce, your internal APIs, AWS, any CLI your team already trusts. Months of internal-tool development becomes days.
 

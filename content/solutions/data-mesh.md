@@ -205,7 +205,7 @@ You don't cut over all at once. Stand a facade up in front of the databases you 
 </div>
 </div>
 <div class="dm-path-col"><b>From idea to production</b><p>Prototype over a CSV file, graduate to SQL, ship behind an API — the screens and the queries stay the same.</p><span class="dm-journey" aria-hidden="true"><span class="dm-jstep"><small>idea</small><b>CSV file</b></span><span class="dm-jarrow">→</span><span class="dm-jstep"><b>SQL</b></span><span class="dm-jarrow">→</span><span class="dm-jstep"><small>production</small><b>API</b></span></span></div>
-<div class="dm-path-col"><b>Open-source &amp; yours</b><p>Modern Rust that runs on your own infrastructure — fully open-source, forever in your control, and with no code that counts your seats.</p>
+<div class="dm-path-col"><b>Open-source &amp; yours</b><p>Modern Rust that runs on your own infrastructure — fully open-source and forever in your control.</p>
 <ul class="dm-oss">
 <li>Query builder</li>
 <li>ORM</li>
