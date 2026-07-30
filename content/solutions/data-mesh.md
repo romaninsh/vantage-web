@@ -16,6 +16,17 @@ icon = "hub"
 .dm-figcap{margin:1rem auto 0;max-width:34rem;font-size:.85rem;line-height:1.55;color:var(--color-text-3);text-align:center;}
 .dm-plumbing{margin:2rem 0;padding:1.1rem 1.4rem;border-left:3px solid var(--color-accent-400);border-radius:0 .75rem .75rem 0;background:var(--color-surface-1);color:var(--color-text-2);}
 .dm-plumbing b{color:var(--color-text-1);}
+.dm-ticker{display:block;margin-top:.55rem;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:.72rem;color:var(--color-text-3);}
+.dm-cycle{display:inline-grid;justify-items:start;vertical-align:bottom;}
+.dm-cycle>span{grid-area:1/1;color:var(--color-accent-300);opacity:0;animation:dm-cycle 9s infinite;}
+.dm-cycle>span:nth-child(2){animation-delay:3s;}
+.dm-cycle>span:nth-child(3){animation-delay:6s;}
+@keyframes dm-cycle{0%{opacity:0;transform:translateY(.4em)}5%,30%{opacity:1;transform:none}38%,100%{opacity:0;transform:translateY(-.4em)}}
+@media (prefers-reduced-motion: reduce){
+.dm-cycle{display:inline;}
+.dm-cycle>span{animation:none;opacity:1;}
+.dm-cycle>span:not(:last-child)::after{content:" → ";color:var(--color-text-3);}
+}
 </style>
 
 An enterprise doesn't run on one database. It runs on dozens of external partners — one sends the email, one keeps the sales data, one analyses the images, one runs the AI workflows, one aggregates the big data — plus its own databases, APIs and infrastructure. Day to day, that is dozens of consoles, dozens of credentials, and a crontab of polling scripts written by people who have since left. There is no single fabric. There are threads — and right now, you are the loom.
@@ -111,8 +122,8 @@ setRows(rs => ({ ...rs, [event.object.index]: event.object }))</code></pre>
 You don't cut over all at once. Stand a facade up in front of the databases you already have, move one screen onto it, and let the rest keep hitting the old backend. Migrate at your pace, then delete the legacy tier behind it — no risky big-bang.
 
 <div class="swap-benefits">
-<div class="swap-benefit"><span class="material-symbols-outlined">swap_horiz</span><div><b>Swap databases underneath</b><p>The facade is backend-agnostic — read from one store and write through another while you migrate, without your clients noticing.</p></div></div>
-<div class="swap-benefit"><span class="material-symbols-outlined">delete_sweep</span><div><b>Delete plumbing you own</b><p>No more hand-rolled caching, retry and state-sync in the client — the facade does it once, correctly, for every screen.</p></div></div>
+<div class="swap-benefit"><span class="material-symbols-outlined">swap_horiz</span><div><b>Swap databases underneath</b><p>The facade is backend-agnostic. Move it — complex queries and all — with near-zero code change; your clients never notice.</p><span class="dm-ticker" aria-hidden="true">your queries, running on <span class="dm-cycle"><span>Oracle</span><span>Postgres</span><span>SurrealDB</span></span></span></div></div>
+<div class="swap-benefit"><span class="material-symbols-outlined">rocket_launch</span><div><b>From idea to production</b><p>Prototype over a CSV file, graduate to SQL, ship behind an API — the screens and the queries stay the same.</p><span class="dm-ticker" aria-hidden="true">the same app, backed by <span class="dm-cycle"><span>a CSV file</span><span>SQL</span><span>an API</span></span></span></div></div>
 <div class="swap-benefit"><span class="material-symbols-outlined">lock_open</span><div><b>Open-source &amp; yours</b><p>Modern Rust that runs on your own infrastructure — fully open-source, forever in your control, and with no code that counts your seats.</p></div></div>
 </div>
 
