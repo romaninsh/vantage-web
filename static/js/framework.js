@@ -402,8 +402,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     const lead = document.getElementById("fw3-cta-lead");
     if (lead) {
       lead.textContent = varIndex.some((vi, i) => LAYERS[i].variants[vi].rust)
-        ? "You have selected custom components — our team would be happy to assemble this stack for your organisation:"
-        : "This is your stack — every layer built into Vantage UI. Swap any layer above, or let us shape one around your systems:";
+        ? "You have selected custom components — we can assemble this stack for your organisation:"
+        : "This is your stack — every layer built into Vantage UI. Swap any layer above, or ask us to shape one around your systems:";
     }
   };
 
