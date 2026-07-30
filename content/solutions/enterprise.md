@@ -85,7 +85,7 @@ macOS & Linux today; Windows builds are delivered for enterprise customers.
 
 ## An architecture partner, not a license vendor
 
-A license vendor hands you a login and counts your seats. We sit down with your architects and design the mesh: which sources can push, where the facades run, what the shared model crates look like, which team owns what.
+A license vendor hands you a login and an invoice. We sit down with your architects and design the mesh: which sources can push, where the facades run, what the shared model crates look like, which team owns what.
 
 Then we train your people — two disciplines, taught together:
 

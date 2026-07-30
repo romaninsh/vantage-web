@@ -49,6 +49,7 @@
 
     <!-- certification stamp -->
     <g transform="rotate(-8 524 336)">
+      <circle cx="524" cy="336" r="58" fill="#0b0b10"/>
       <circle cx="524" cy="336" r="58" fill="rgba(99,102,241,0.10)" stroke="#818cf8" stroke-width="1.5" opacity="0.9"/>
       <circle cx="524" cy="336" r="48" fill="none" stroke="#818cf8" opacity="0.45"/>
       <text x="524" y="318" font-size="7" fill="#6e7186" text-anchor="middle" textLength="42" lengthAdjust="spacing">VANTAGE</text>
