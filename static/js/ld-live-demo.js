@@ -1,7 +1,10 @@
 /* /solutions/live-data/ — scripted demos.
-   Demo 1 (24 s loop): one feed, two panels — a refresh-based dashboard
-   that polls every 6 s, and a live panel that receives pushes ~0.4 s
-   after each change. Midway through the loop the "backend" throws 503s.
+   Demo 1 (24 s loop): one feed, two panels. The live panel receives
+   pushes ~0.4 s after each change, automatically. The refresh-based
+   panel updates only when the READER clicks its Refresh button — it
+   pulls the feed's current values and its staleness counter (real
+   elapsed time, s → min → h) resets. Midway through each loop the
+   "backend" throws 503s; a click landing there gets the error bar.
    Demo 2 (12 s loop): the same order open on two devices — a desktop
    form where a user is slowly typing delivery notes, and a courier
    phone that marks the order shipped mid-cycle. The status flips on
@@ -33,7 +36,6 @@
 
   const PERIOD = 24;          // s — full loop
   const PUSH_DELAY = 0.4;     // s — source → live panel
-  const POLL_EVERY = 6;       // s — refresh-based panel
   const OUTAGE_START = 11.5;  // s — backend starts failing
   const OUTAGE_END = 17.5;    // s — backend recovers
 
@@ -89,30 +91,50 @@
 
   let lastT = 0;
 
-  const renderFeed = (total) => {
-    const t = total % PERIOD;
-    const flash = t >= lastT; // suppress flashes on loop wrap / resync
+  // Manual-refresh state: real and reader-driven, deliberately outside the
+  // scripted loop — the staleness counter grows in real elapsed time and
+  // never resets on a cycle boundary.
+  let refreshedAt = Date.now();
+  let refreshFailed = false;
 
-    // ── refresh-based panel ─────────────────────────────────────
-    const lastPoll = Math.floor(t / POLL_EVERY) * POLL_EVERY;
-    if (inOutage(lastPoll)) {
-      for (const k in pollCells) setCell(pollCells[k], "—", false);
-      if (pollErr) pollErr.hidden = false;
-      if (pollStatus) pollStatus.textContent =
-        "failed · retry in " + Math.ceil(lastPoll + POLL_EVERY - t) + " s";
-    } else {
-      const snap = truthAt(lastPoll);
-      for (const k in pollCells) setCell(pollCells[k], snap[k], flash);
-      if (pollErr) pollErr.hidden = true;
-      if (pollStatus) pollStatus.textContent =
-        "refreshed " + Math.floor(t - lastPoll) + " s ago";
-    }
-    if (flash && pollSpin && !reduced.matches &&
-        Math.floor(t / POLL_EVERY) !== Math.floor(lastT / POLL_EVERY)) {
+  const fmtAge = (s) => {
+    if (s < 60) return Math.floor(s) + " s ago";
+    if (s < 3600) return Math.floor(s / 60) + " min ago";
+    return Math.floor(s / 3600) + " h ago";
+  };
+
+  const doRefresh = () => {
+    const t = ((Date.now() - epoch) / 1000) % PERIOD;
+    refreshedAt = Date.now();
+    if (pollSpin && !reduced.matches) {
       pollSpin.classList.remove("ld-spinning");
       void pollSpin.offsetWidth;
       pollSpin.classList.add("ld-spinning");
     }
+    if (inOutage(t)) {
+      // The reader's click landed in the outage window: they get the 503.
+      refreshFailed = true;
+      for (const k in pollCells) setCell(pollCells[k], "—", false);
+      if (pollErr) pollErr.hidden = false;
+    } else {
+      refreshFailed = false;
+      const snap = truthAt(t);
+      for (const k in pollCells) setCell(pollCells[k], snap[k], true);
+      if (pollErr) pollErr.hidden = true;
+    }
+  };
+  const pollBtn = q("poll-btn");
+  if (pollBtn) pollBtn.addEventListener("click", doRefresh);
+
+  const renderFeed = (total) => {
+    const t = total % PERIOD;
+    const flash = t >= lastT; // suppress flashes on loop wrap / resync
+
+    // ── refresh-based panel: values persist from the reader's last
+    //    click; only the staleness counter moves on its own ────────
+    if (pollStatus) pollStatus.textContent =
+      (refreshFailed ? "failed " : "refreshed ") +
+      fmtAge((Date.now() - refreshedAt) / 1000);
 
     // ── live panel ──────────────────────────────────────────────
     const view = pushViewAt(t);

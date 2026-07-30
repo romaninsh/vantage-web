@@ -44,6 +44,7 @@ icon = "bolt"
     padding: 0.55rem 0.9rem;
     border-bottom: 1px solid var(--color-line);
 }
+.ld-head .ld-title { flex: 1 1 auto; }
 .ld-title {
     font-family: var(--ld-mono);
     font-size: 0.68rem;
@@ -52,6 +53,24 @@ icon = "bolt"
     text-transform: uppercase;
     color: var(--color-text-3);
 }
+.ld-refresh {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.28rem 0.6rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: var(--color-accent-500);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.12s ease, transform 0.08s ease;
+}
+.ld-refresh:hover { background: var(--color-accent-400); }
+.ld-refresh:active { transform: scale(0.94); }
+.ld-refresh .material-symbols-outlined { font-size: 0.95rem; }
 .ld-panel-live .ld-title { color: var(--color-text-1); }
 .ld-chip {
     display: inline-flex;
@@ -404,6 +423,8 @@ icon = "bolt"
     .ld-msig-push .ld-dot::after { animation: none !important; }
     .ld-ship { transition: none; }
     .ld-ship.ld-pressed { transform: none; }
+    .ld-refresh { transition: none; }
+    .ld-refresh:active { transform: none; }
 }
 </style>
 
@@ -415,20 +436,20 @@ If you built the stage-1 console, you have already watched this happen — table
 
 ## Same feed, two dashboards
 
-One scripted feed drives both panels below, on a 24-second loop, live in this page. The left panel refreshes on a timer, the way polling dashboards do. The right panel behaves like a Vantage screen: every change is pushed and lands in under a second. Midway through the loop, the backend starts throwing 503s — watch which side goes blank.
+One scripted feed drives both panels below, live in this page. The right panel behaves like a Vantage screen: every change is pushed and lands in under a second, on its own. The left panel is the other kind of dashboard — it updates when someone presses Refresh. That someone is you now. Keep it current. And mind the timing: for a stretch of every loop the backend throws 503s, and if your click lands there, you get what a polling dashboard gets.
 
-<div id="ld-demo" class="ld-demo" aria-hidden="true">
+<div id="ld-demo" class="ld-demo">
 <div class="ld-panel" data-panel="poll">
-<div class="ld-head"><span class="ld-title">Refresh-based</span><span class="ld-chip"><span class="material-symbols-outlined" data-ld="poll-spin">sync</span><span data-ld="poll-status">refreshed 0 s ago</span></span></div>
-<div class="ld-rows">
+<div class="ld-head"><span class="ld-title">Refresh-based</span><span class="ld-chip" aria-hidden="true"><span data-ld="poll-status">refreshed 0 s ago</span></span><button type="button" class="ld-refresh" data-ld="poll-btn" aria-label="Refresh this panel with the feed's current values"><span class="material-symbols-outlined" data-ld="poll-spin" aria-hidden="true">sync</span>Refresh</button></div>
+<div class="ld-rows" aria-hidden="true">
 <div class="ld-row"><span class="ld-lab">orders / min</span><span class="ld-val" data-row="orders">132</span></div>
 <div class="ld-row"><span class="ld-lab">queue depth</span><span class="ld-val" data-row="queue">7</span></div>
 <div class="ld-row"><span class="ld-lab">p95 latency</span><span class="ld-val" data-row="p95">210 ms</span></div>
 <div class="ld-row"><span class="ld-lab">workers</span><span class="ld-val" data-row="workers">12</span></div>
 </div>
-<div class="ld-errbar" data-ld="poll-err" hidden><span class="material-symbols-outlined">error</span>HTTP 503 — request failed</div>
+<div class="ld-errbar" data-ld="poll-err" aria-hidden="true" hidden><span class="material-symbols-outlined">error</span>HTTP 503 — request failed</div>
 </div>
-<div class="ld-panel ld-panel-live" data-panel="push">
+<div class="ld-panel ld-panel-live" data-panel="push" aria-hidden="true">
 <div class="ld-head"><span class="ld-title">Vantage</span><span class="ld-chip" data-ld="push-chip" data-state="live"><i class="ld-dot"></i><span data-ld="push-status">live · under a second behind</span></span></div>
 <div class="ld-rows">
 <div class="ld-row"><span class="ld-lab">orders / min</span><span class="ld-val" data-row="orders">132</span></div>
@@ -439,7 +460,7 @@ One scripted feed drives both panels below, on a 24-second loop, live in this pa
 </div>
 </div>
 
-<p class="ld-caption">A scripted demo — but the behaviours are the real ones: push latency, poll staleness, and what each side does when the backend fails. During the outage, the live panel keeps the last known state and catches up on reconnect; the polling side does what polling dashboards do.</p>
+<p class="ld-caption">The feed is scripted; the button is real. The left panel shows whatever you last fetched, and the counter keeps score of how far behind you've fallen — seconds, then minutes, then hours. The right panel just stays right: through the outage it keeps the last known state and catches up on reconnect.</p>
 
 ## Both directions
 
