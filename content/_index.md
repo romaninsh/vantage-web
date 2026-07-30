@@ -5,7 +5,7 @@ template = "index.html"
 [extra]
 hero_headline = "AI-first low-code App Builder"
 hero_subhead = "Build your app instantly with an AI-first low-code tool. Vantage UI taps into your databases, APIs and infrastructure, then visualizes your data declaratively — Tables, Widgets, Forms and Lists. Need a new column? The AI agent adds it in seconds."
-hero_caption = "**Free for macOS.** Built on the open-source, MIT-licensed [Vantage Framework](/framework/). Linux & Windows builds available."
+hero_caption = "**Free for macOS & Linux.** Built on the open-source, MIT-licensed [Vantage Framework](/framework/). Windows builds are delivered for enterprise customers."
 
 # ---- Feature tour ----
 [extra.features_intro]
