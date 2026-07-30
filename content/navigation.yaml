@@ -5,6 +5,9 @@ menu:
   - title: "Solutions"
     url: "/solutions/"
     dropdown:
+      - title: "Where Vantage fits"
+        url: "/solutions/"
+      - divider: true
       - title: "Internal tools"
         url: "/solutions/internal-tools/"
       - title: "Live data"
