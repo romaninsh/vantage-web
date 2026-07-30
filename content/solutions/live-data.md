@@ -107,7 +107,7 @@ icon = "bolt"
 }
 .ld-flash { animation: ld-flash-poll 0.9s ease-out 1; }
 .ld-panel-live .ld-flash,
-.ld-edit .ld-flash { animation-name: ld-flash-live; }
+.ld-devices .ld-flash { animation-name: ld-flash-live; }
 .ld-spinning { animation: ld-spin 0.7s linear 1; }
 .ld-errbar {
     position: absolute;
@@ -134,47 +134,86 @@ icon = "bolt"
     color: var(--color-text-3);
 }
 
-/* ── Draft-survives edit vignette ────────────────────────────── */
-.ld-edit {
-    max-width: 30rem;
-    margin: 1.75rem auto;
+/* ── Two-device demo ─────────────────────────────────────────── */
+.ld-devices {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.75rem 0 0.5rem;
+}
+.ld-desktop {
+    flex: 1 1 20rem;
+    max-width: 27rem;
     border: 1px solid var(--color-line);
     border-radius: 0.75rem;
     background: var(--color-surface-1);
-    padding: 0.9rem 1.1rem 1rem;
+    overflow: hidden;
 }
-.ld-edit-head {
+.ld-dev-chrome {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding-bottom: 0.55rem;
-    margin-bottom: 0.35rem;
+    gap: 0.32rem;
+    padding: 0.5rem 0.8rem;
     border-bottom: 1px solid var(--color-line);
-    font-family: var(--ld-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-2);
 }
-.ld-edit-mode { color: var(--color-accent-300); }
-.ld-field {
+.ld-dev-chrome i {
+    width: 0.52rem;
+    height: 0.52rem;
+    border-radius: 9999px;
+    background: var(--color-line-strong);
+}
+.ld-dev-title {
+    margin-left: 0.45rem;
+    font-family: var(--ld-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-3);
+}
+.ld-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.85rem 0.9rem 1rem;
+}
+.ld-field2 {
     display: grid;
-    grid-template-columns: 5.2rem 1fr auto;
+    grid-template-columns: 4.6rem 1fr auto;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.32rem 0;
     font-size: 0.85rem;
 }
+.ld-field2-area { align-items: start; }
 .ld-flab { font-size: 0.76rem; color: var(--color-text-3); }
-.ld-fval {
+.ld-field2-area .ld-flab { padding-top: 0.3rem; }
+.ld-fval2 {
     font-family: var(--ld-mono);
     color: var(--color-text-1);
     border: 1px solid var(--color-line);
     border-radius: 0.4rem;
     background: var(--color-surface-2);
-    padding: 0.22rem 0.5rem;
+    padding: 0.24rem 0.5rem;
 }
-.ld-fval-held { border-color: color-mix(in srgb, var(--color-accent-400) 55%, transparent); }
+.ld-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+}
+.ld-status .material-symbols-outlined { font-size: 1rem; color: var(--color-text-3); }
+.ld-status[data-state="pending"] .ld-sval { color: var(--ld-warn); }
+.ld-status[data-state="shipped"] .ld-sval { color: var(--ld-live); }
+.ld-sval { border-radius: 0.25rem; padding: 0 0.2rem; }
+.ld-area {
+    display: block;
+    min-height: 3.4rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    border-color: color-mix(in srgb, var(--color-accent-400) 55%, transparent);
+}
 .ld-caret {
     display: inline-block;
     width: 1px;
@@ -194,6 +233,7 @@ icon = "bolt"
     border-radius: 9999px;
     border: 1px solid;
 }
+.ld-tag[hidden] { display: none; }
 .ld-tag-held {
     color: var(--color-accent-300);
     border-color: color-mix(in srgb, var(--color-accent-400) 45%, transparent);
@@ -202,21 +242,88 @@ icon = "bolt"
     color: var(--ld-live);
     border-color: color-mix(in srgb, var(--ld-live) 35%, transparent);
 }
-.ld-toast {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-top: 0.7rem;
-    padding: 0.5rem 0.7rem;
-    border-radius: 0.5rem;
-    border: 1px solid color-mix(in srgb, var(--ld-err) 40%, transparent);
-    background: color-mix(in srgb, var(--ld-err) 10%, transparent);
-    font-size: 0.78rem;
-    line-height: 1.45;
-    color: #fca5a5;
+.ld-phone {
+    flex: 0 0 auto;
+    width: 10.5rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 1.4rem;
+    background: var(--color-surface-1);
+    padding: 0.55rem 0.55rem 0.8rem;
 }
-.ld-toast b { color: #fecaca; }
-.ld-toast .material-symbols-outlined { font-size: 1.05rem; margin-top: 0.05rem; color: var(--ld-err); }
+.ld-notch {
+    width: 4rem;
+    height: 0.8rem;
+    margin: 0 auto 0.55rem;
+    border-radius: 0 0 0.6rem 0.6rem;
+    border: 1px solid var(--color-line);
+    border-top: none;
+    background: var(--color-surface-2);
+}
+.ld-phone-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.35rem 0;
+    text-align: center;
+}
+.ld-phone-kicker {
+    font-family: var(--ld-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-3);
+}
+.ld-phone-order {
+    font-family: var(--ld-mono);
+    font-size: 1.05rem;
+    color: var(--color-text-1);
+}
+.ld-phone-status {
+    font-family: var(--ld-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.14rem 0.5rem;
+    border-radius: 9999px;
+    border: 1px solid;
+}
+.ld-phone-status[data-state="pending"] {
+    color: var(--ld-warn);
+    border-color: color-mix(in srgb, var(--ld-warn) 40%, transparent);
+}
+.ld-phone-status[data-state="shipped"] {
+    color: var(--ld-live);
+    border-color: color-mix(in srgb, var(--ld-live) 40%, transparent);
+}
+.ld-ship {
+    width: 100%;
+    margin-top: 0.35rem;
+    padding: 0.55rem 0.6rem;
+    border: none;
+    border-radius: 0.6rem;
+    background: var(--color-accent-500);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: default;
+    transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
+}
+.ld-ship.ld-pressed {
+    transform: scale(0.94);
+    background: var(--color-accent-600);
+}
+.ld-ship[data-state="shipped"] {
+    background: color-mix(in srgb, var(--ld-live) 20%, var(--color-surface-2));
+    color: var(--ld-live);
+}
+.ld-post {
+    min-height: 1rem;
+    font-family: var(--ld-mono);
+    font-size: 0.6rem;
+    color: var(--ld-live);
+}
+.ld-post[hidden] { display: block; visibility: hidden; }
 
 /* ── Freshness matrix ────────────────────────────────────────── */
 .ld-matrix {
@@ -295,6 +402,8 @@ icon = "bolt"
     .ld-flash, .ld-spinning, .ld-caret,
     .ld-chip .ld-dot, .ld-chip .ld-dot::after,
     .ld-msig-push .ld-dot::after { animation: none !important; }
+    .ld-ship { transition: none; }
+    .ld-ship.ld-pressed { transform: none; }
 }
 </style>
 
@@ -334,17 +443,31 @@ One scripted feed drives both panels below, on a 24-second loop, live in this pa
 
 ## Both directions
 
-A live screen you can't act from is a wall monitor. In Vantage, the same layer that streams reads carries writes: edit a cell, submit a form, fire an action — it goes back to the source. While you edit, the fields you haven't touched keep tracking upstream changes, so the record moves under you and you see it move. The fields you have touched hold your value. And if the save fails, nothing is discarded — a draft survives a failed save.
+A live screen you can't act from is a wall monitor. In Vantage, the same layer that streams reads carries writes — from every device at once. Below, the same order is open in two places: someone at a laptop is typing delivery notes, and a warehouse phone marks the order shipped. The status flips on the desktop within a second of the tap. The details field, mid-edit, never loses a character: fields you have touched hold, fields you haven't keep tracking upstream. And if a save fails, nothing is discarded — a draft survives a failed save.
 
-<div class="ld-edit" aria-hidden="true">
-<div class="ld-edit-head"><span>order #4127</span><span class="ld-edit-mode">editing</span></div>
-<div class="ld-field"><span class="ld-flab">status</span><span class="ld-fval ld-fval-held">on hold<i class="ld-caret"></i></span><span class="ld-tag ld-tag-held">yours · holds</span></div>
-<div class="ld-field"><span class="ld-flab">assignee</span><span class="ld-fval" data-row="track-assignee">m.reyes</span><span class="ld-tag ld-tag-live">tracking upstream</span></div>
-<div class="ld-field"><span class="ld-flab">items</span><span class="ld-fval" data-row="track-items">17</span><span class="ld-tag ld-tag-live">tracking upstream</span></div>
-<div class="ld-toast"><span class="material-symbols-outlined">error</span><span><b>503 — save failed.</b> The draft stays. Retry when you're ready — nothing was thrown away.</span></div>
+<div class="ld-devices" aria-hidden="true">
+<div class="ld-desktop">
+<div class="ld-dev-chrome"><i></i><i></i><i></i><span class="ld-dev-title">orders · desktop</span></div>
+<div class="ld-form">
+<div class="ld-field2"><span class="ld-flab">order</span><span class="ld-fval2" data-ld2="d-order">#4127</span><span></span></div>
+<div class="ld-field2"><span class="ld-flab">customer</span><span class="ld-fval2">A. Virtanen</span><span></span></div>
+<div class="ld-field2"><span class="ld-flab">status</span><span class="ld-fval2 ld-status" data-ld2="d-pill" data-state="pending"><span class="ld-sval" data-ld2="d-status">pending</span><span class="material-symbols-outlined">expand_more</span></span><span class="ld-tag ld-tag-live">tracking upstream</span></div>
+<div class="ld-field2 ld-field2-area"><span class="ld-flab">details</span><span class="ld-fval2 ld-area"><span data-ld2="d-details"></span><i class="ld-caret"></i></span><span class="ld-tag ld-tag-held" data-ld2="d-held" hidden>changed · holds</span></div>
+</div>
+</div>
+<div class="ld-phone">
+<div class="ld-notch"></div>
+<div class="ld-phone-app">
+<span class="ld-phone-kicker">courier app</span>
+<span class="ld-phone-order" data-ld2="m-order">#4127</span>
+<span class="ld-phone-status" data-ld2="m-status" data-state="pending">pending</span>
+<button type="button" class="ld-ship" data-ld2="m-btn" tabindex="-1">Mark as shipped</button>
+<span class="ld-post" data-ld2="m-post" hidden>POST /orders/4127/ship · 200</span>
+</div>
+</div>
 </div>
 
-<p class="ld-caption">The two tracking fields are wired to the same loop as the demo above — they keep moving while the draft holds.</p>
+<p class="ld-caption">The tap and the typing run on one scripted loop; each cycle is a new order. The push behaviour is the real thing: an action from another device updates every untouched field within a second — and never the one you're typing in.</p>
 
 ## Honest freshness, per backend
 

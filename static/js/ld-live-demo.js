@@ -1,15 +1,35 @@
-/* /solutions/live-data/ — scripted feed demo.
-   One 24-second loop drives two panels: a refresh-based dashboard that
-   polls every 6 s, and a live panel that receives pushes ~0.4 s after
-   each change. Midway through the loop the "backend" throws 503s.
-   Everything renders as a pure function of wall-clock phase, so the
-   demo is deterministic, survives tab throttling, and loops cleanly.
+/* /solutions/live-data/ — scripted demos.
+   Demo 1 (24 s loop): one feed, two panels — a refresh-based dashboard
+   that polls every 6 s, and a live panel that receives pushes ~0.4 s
+   after each change. Midway through the loop the "backend" throws 503s.
+   Demo 2 (12 s loop): the same order open on two devices — a desktop
+   form where a user is slowly typing delivery notes, and a courier
+   phone that marks the order shipped mid-cycle. The status flips on
+   the desktop within a second; the field being typed in is never
+   touched. Each cycle is a new order.
+   Everything renders as a pure function of wall-clock phase, so both
+   demos are deterministic, survive tab throttling, and loop cleanly.
    Plain JS, no dependencies. */
 (() => {
   "use strict";
 
   const root = document.getElementById("ld-demo");
-  if (!root) return;
+  const devices = document.querySelector(".ld-devices");
+  if (!root && !devices) return;
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const setCell = (el, v, flash) => {
+    if (!el || el.textContent === v) return;
+    el.textContent = v;
+    if (flash && !reduced.matches) {
+      el.classList.remove("ld-flash");
+      void el.offsetWidth; // restart the animation
+      el.classList.add("ld-flash");
+    }
+  };
+
+  /* ════ Demo 1: poll vs push ════════════════════════════════════ */
 
   const PERIOD = 24;          // s — full loop
   const PUSH_DELAY = 0.4;     // s — source → live panel
@@ -29,16 +49,6 @@
     { t: 16.0, row: "queue",   v: "6" },    // emitted mid-outage
     { t: 19.0, row: "p95",     v: "232 ms" },
     { t: 21.5, row: "workers", v: "12" },
-  ];
-
-  // Upstream nudges for the edit vignette: untouched fields keep tracking
-  // while the draft field holds.
-  const TRACK_BASE = { "track-items": "17", "track-assignee": "m.reyes" };
-  const TRACK = [
-    { t: 4.0,  row: "track-items",    v: "18" },
-    { t: 10.0, row: "track-assignee", v: "d.okafor" },
-    { t: 15.0, row: "track-items",    v: "21" },
-    { t: 22.0, row: "track-assignee", v: "m.reyes" },
   ];
 
   const inOutage = (t) => t >= OUTAGE_START && t < OUTAGE_END;
@@ -61,48 +71,29 @@
     for (const e of EVENTS) if (arrival(e) <= t) s[e.row] = e.v;
     return s;
   };
-  const trackViewAt = (t) => {
-    const s = Object.assign({}, TRACK_BASE);
-    for (const e of TRACK) if (e.t + PUSH_DELAY <= t) s[e.row] = e.v;
-    return s;
-  };
 
-  const collect = (scope, sel) => {
+  const collect = (sel) => {
     const m = {};
-    scope.querySelectorAll(sel + " [data-row]").forEach((el) => { m[el.dataset.row] = el; });
+    if (root) root.querySelectorAll(sel + " [data-row]").forEach((el) => { m[el.dataset.row] = el; });
     return m;
   };
-  const pollCells = collect(root, "[data-panel='poll']");
-  const pushCells = collect(root, "[data-panel='push']");
-  const trackCells = {};
-  document.querySelectorAll(".ld-edit [data-row]").forEach((el) => { trackCells[el.dataset.row] = el; });
+  const pollCells = collect("[data-panel='poll']");
+  const pushCells = collect("[data-panel='push']");
 
-  const pollStatus = root.querySelector("[data-ld='poll-status']");
-  const pollSpin = root.querySelector("[data-ld='poll-spin']");
-  const pollErr = root.querySelector("[data-ld='poll-err']");
-  const pushChip = root.querySelector("[data-ld='push-chip']");
-  const pushStatus = root.querySelector("[data-ld='push-status']");
+  const q = (name) => (root ? root.querySelector("[data-ld='" + name + "']") : null);
+  const pollStatus = q("poll-status");
+  const pollSpin = q("poll-spin");
+  const pollErr = q("poll-err");
+  const pushChip = q("push-chip");
+  const pushStatus = q("push-status");
 
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-  const setCell = (el, v, flash) => {
-    if (!el || el.textContent === v) return;
-    el.textContent = v;
-    if (flash && !reduced.matches) {
-      el.classList.remove("ld-flash");
-      void el.offsetWidth; // restart the animation
-      el.classList.add("ld-flash");
-    }
-  };
-
-  const epoch = Date.now();
   let lastT = 0;
 
-  const render = () => {
-    const t = ((Date.now() - epoch) / 1000) % PERIOD;
+  const renderFeed = (total) => {
+    const t = total % PERIOD;
     const flash = t >= lastT; // suppress flashes on loop wrap / resync
 
-    // ── refresh-based panel ─────────────────────────────────────────
+    // ── refresh-based panel ─────────────────────────────────────
     const lastPoll = Math.floor(t / POLL_EVERY) * POLL_EVERY;
     if (inOutage(lastPoll)) {
       for (const k in pollCells) setCell(pollCells[k], "—", false);
@@ -123,7 +114,7 @@
       pollSpin.classList.add("ld-spinning");
     }
 
-    // ── live panel ──────────────────────────────────────────────────
+    // ── live panel ──────────────────────────────────────────────
     const view = pushViewAt(t);
     for (const k in pushCells) setCell(pushCells[k], view[k], flash);
     const reconnecting = t >= OUTAGE_START + 0.8 && t < OUTAGE_END;
@@ -131,11 +122,82 @@
     if (pushStatus) pushStatus.textContent =
       reconnecting ? "reconnecting · last known kept" : "live · under a second behind";
 
-    // ── edit vignette ───────────────────────────────────────────────
-    const tv = trackViewAt(t);
-    for (const k in trackCells) setCell(trackCells[k], tv[k], flash);
-
     lastT = t;
+  };
+
+  /* ════ Demo 2: two devices, one order ══════════════════════════ */
+
+  const P2 = 12;              // s — one order per cycle
+  const MSG = "Leave with the neighbour at flat 12 if nobody answers the door.";
+  const TYPE_START = 0.6;     // s — typing begins
+  const CPS = 11;             // chars per second
+  const TAP_AT = 5.0;         // s — phone button presses itself
+  const TAP_LEN = 0.35;       // s — visible press state
+  const POST_AT = 5.4;        // s — "POST … 200" confirmation appears
+  const POST_END = 8.5;       // s — confirmation clears
+  const SHIP_MOBILE = 5.5;    // s — phone shows shipped
+  const SHIP_DESKTOP = 5.8;   // s — push lands on the desktop form
+
+  const q2 = (name) => (devices ? devices.querySelector("[data-ld2='" + name + "']") : null);
+  const dOrder = q2("d-order");
+  const dPill = q2("d-pill");
+  const dStatus = q2("d-status");
+  const dDetails = q2("d-details");
+  const dHeld = q2("d-held");
+  const mOrder = q2("m-order");
+  const mStatus = q2("m-status");
+  const mBtn = q2("m-btn");
+  const mPost = q2("m-post");
+
+  let lastCycle = 0;
+
+  const renderDevices = (total) => {
+    const t2 = total % P2;
+    const cycle = Math.floor(total / P2);
+    const flash2 = cycle === lastCycle; // no flashes across a cycle reset
+
+    const idNum = 4127 + (cycle % 8);
+    const id = "#" + idNum;
+    setCell(dOrder, id, false);
+    setCell(mOrder, id, false);
+
+    // Slow typing in the details field — never interrupted by the push.
+    const chars = reduced.matches
+      ? MSG.length
+      : Math.max(0, Math.min(MSG.length, Math.floor((t2 - TYPE_START) * CPS)));
+    const typed = MSG.slice(0, chars);
+    if (dDetails && dDetails.textContent !== typed) dDetails.textContent = typed;
+    if (dHeld) dHeld.hidden = chars === 0;
+
+    // The phone acts; the desktop hears about it within a second.
+    const shippedM = t2 >= SHIP_MOBILE;
+    const shippedD = t2 >= SHIP_DESKTOP;
+    if (mBtn) {
+      mBtn.classList.toggle("ld-pressed", t2 >= TAP_AT && t2 < TAP_AT + TAP_LEN);
+      mBtn.dataset.state = shippedM ? "shipped" : "pending";
+      const label = shippedM ? "Shipped ✓" : "Mark as shipped";
+      if (mBtn.textContent !== label) mBtn.textContent = label;
+    }
+    if (mStatus) mStatus.dataset.state = shippedM ? "shipped" : "pending";
+    setCell(mStatus, shippedM ? "shipped" : "pending", false);
+    if (mPost) {
+      mPost.hidden = !(t2 >= POST_AT && t2 < POST_END);
+      const post = "POST /orders/" + idNum + "/ship · 200";
+      if (mPost.textContent !== post) mPost.textContent = post;
+    }
+    if (dPill) dPill.dataset.state = shippedD ? "shipped" : "pending";
+    setCell(dStatus, shippedD ? "shipped" : "pending", flash2);
+
+    lastCycle = cycle;
+  };
+
+  /* ════ Shared clock ════════════════════════════════════════════ */
+
+  const epoch = Date.now();
+  const render = () => {
+    const total = (Date.now() - epoch) / 1000;
+    if (root) renderFeed(total);
+    if (devices) renderDevices(total);
   };
 
   render();
