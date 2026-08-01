@@ -17,6 +17,16 @@ datasource instead of guessing locally.
 - Fix: the same expression could print a number two ways — `3` in one place, `3.0` in another —
   depending on where on the page it appeared.
 
+## 0.31.2
+
+- **A data source can explain what it is doing.** Add `debug: true` to a data source's YAML and start
+  Vantage from a terminal. It then prints a line for every request it sends, every batch of rows it
+  stores, and every screen it paints without asking the source at all — and a summary of the session
+  when you quit. Only the data source you marked says anything; the others stay silent, and leaving
+  the flag off costs nothing.
+- Fix: sorting a large table could put the wrong rows at the top. The first screen showed rows you
+  had already scrolled past, re-ordered among themselves, instead of the true first rows of the sort.
+
 ## 0.31.1
 
 - Fix: a grid could open empty and stay empty, then fill instantly if you clicked the same menu item
