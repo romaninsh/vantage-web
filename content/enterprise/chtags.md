@@ -8,6 +8,7 @@ app_name = "Vantage Chtags"
 channel_key = "chtags"
 repo_url = "https://github.com/romaninsh/chtags"
 icon = "images/clients/chtags.svg"
+vantage_link = "vantage://new.chtags.com/vantage/chtags-admin.zip"
 +++
 
 **Vantage Chtags** is the enterprise build of Vantage for Club House
