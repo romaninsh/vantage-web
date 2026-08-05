@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Club House Tags enterprise icon: the Vantage V on a golf-bag tag. -->
+  <defs>
+    <linearGradient id="tag" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00805f"/>
+      <stop offset="1" stop-color="#00664F"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="#0d1117"/>
+  <!-- Tag body, tilted like a hanging bag tag. -->
+  <g transform="rotate(-18 256 256)">
+    <path d="M 156 120
+             L 316 120
+             Q 336 120 350 134
+             L 396 180
+             Q 410 194 410 214
+             L 410 356
+             Q 410 392 374 392
+             L 156 392
+             Q 120 392 120 356
+             L 120 156
+             Q 120 120 156 120 Z"
+          fill="url(#tag)" stroke="#dff5ec" stroke-width="10"/>
+    <!-- Eyelet. -->
+    <circle cx="362" cy="176" r="22" fill="#0d1117" stroke="#dff5ec" stroke-width="10"/>
+    <!-- Vantage V. -->
+    <path d="M 190 190 L 252 330 L 268 330 L 330 190 L 292 190 L 261 268 L 228 190 Z"
+          fill="#ffffff"/>
+  </g>
+</svg>
