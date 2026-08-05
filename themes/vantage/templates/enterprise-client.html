@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% import "macros/navigation.html" as nav %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+{{ nav::header() }}
+
+<!-- Page hero -->
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-10 text-center sm:px-6 md:pt-24">
+        <p class="kicker mb-4">Vantage Enterprise</p>
+        {% if page.extra.icon %}
+        <img src="{{ get_url(path=page.extra.icon) }}" alt="" class="mx-auto mb-6 h-20 w-20" width="80" height="80">
+        {% endif %}
+        <h1 class="text-display mx-auto max-w-3xl">{{ page.title }}</h1>
+    </div>
+</section>
+
+<main class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="mx-auto max-w-3xl">
+        <!-- Latest build. Filled from the live channel manifest in the
+             browser, so this page never goes stale between site deploys. -->
+        <div class="card relative overflow-hidden p-8 text-center">
+            <div class="glow -top-24 left-1/2 h-48 w-96 -translate-x-1/2 opacity-60"></div>
+            <div class="relative" id="latest-build">
+                <a href="#" id="dl-link" class="btn btn-lg btn-primary cursor-not-allowed opacity-50" aria-disabled="true">
+                    <span class="material-symbols-outlined">download</span>
+                    <span id="dl-label">Checking for the latest build…</span>
+                </a>
+                <p class="mt-4 text-sm text-text-2" id="dl-meta"></p>
+                <p class="mt-1 font-mono text-xs text-text-3" id="dl-sha"></p>
+            </div>
+        </div>
+
+        <article class="prose mt-12">
+            {{ page.content | safe }}
+        </article>
+
+        <!-- Client details -->
+        <section class="card mt-12 p-8">
+            <h2 class="text-h3 text-text-1">About this distribution</h2>
+            <dl class="mt-4 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-[max-content_1fr]">
+                <dt class="text-text-3">Application</dt>
+                <dd class="text-text-1">{{ page.extra.app_name }}</dd>
+                <dt class="text-text-3">Update channel</dt>
+                <dd class="font-mono text-text-1">{{ page.extra.channel_key }}</dd>
+                <dt class="text-text-3">Repository</dt>
+                <dd><a href="{{ page.extra.repo_url }}" class="text-text-2 underline decoration-line-strong underline-offset-2 hover:text-text-1">{{ page.extra.repo_url | replace(from="https://", to="") }}</a></dd>
+            </dl>
+            <p class="mt-6 text-sm leading-relaxed text-text-2">
+                The installed app updates itself from this channel: when a
+                newer build is published here, the in-app updater offers it
+                automatically. Bookmark this page — it always shows the most
+                recent build.
+            </p>
+        </section>
+    </div>
+</main>
+
+{{ nav::footer() }}
+
+<script>
+(function () {
+    var key = {{ page.extra.channel_key | json_encode | safe }};
+    var link = document.getElementById("dl-link");
+    var label = document.getElementById("dl-label");
+    var meta = document.getElementById("dl-meta");
+    var sha = document.getElementById("dl-sha");
+    fetch("https://vantage-releases.s3.eu-west-2.amazonaws.com/" + key + "/latest.json")
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (m) {
+            link.href = m.url;
+            link.classList.remove("cursor-not-allowed", "opacity-50");
+            link.removeAttribute("aria-disabled");
+            label.textContent = "Download for Mac";
+            // The build timestamp is embedded in the version:
+            // <base>-<key>.YYYYMMDDHHMMSS
+            var built = "";
+            var ts = m.version.match(/\.(\d{14})$/);
+            if (ts) {
+                var t = ts[1];
+                var d = new Date(Date.UTC(t.slice(0, 4), t.slice(4, 6) - 1,
+                    t.slice(6, 8), t.slice(8, 10), t.slice(10, 12)));
+                built = " · built " + d.toLocaleDateString(undefined,
+                    { day: "numeric", month: "long", year: "numeric" });
+            }
+            meta.textContent = "v" + m.version + " · Apple Silicon · macOS 13+" + built;
+            sha.textContent = "sha256: " + m.sha256.slice(0, 16) + "…";
+        })
+        .catch(function () {
+            label.textContent = "No build published yet";
+            meta.textContent = "Check back soon, or contact us.";
+        });
+})();
+</script>
+{% endblock content %}
