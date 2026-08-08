@@ -24,3 +24,8 @@ work account, and Vantage loads only what you are allowed to have.
 - Fix: credentials no longer leak into the terminal pane. Commands you run from an app can no
   longer read its passwords out of their environment, and switching apps no longer leaves the
   previous app's credentials behind.
+
+## 0.34.1
+
+- Fix: nightly and custom-built copies of Vantage refused app updates that named the version they
+  were already running, and kept asking you to update Vantage.
