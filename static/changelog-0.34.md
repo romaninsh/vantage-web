@@ -29,3 +29,55 @@ work account, and Vantage loads only what you are allowed to have.
 
 - Fix: nightly and custom-built copies of Vantage refused app updates that named the version they
   were already running, and kept asking you to update Vantage.
+
+## 0.34.2
+
+- **Actions that build their own form.** An app can offer an operation whose fields come from the
+  operation itself rather than from the app's configuration — you get the right boxes, in the right
+  order, with the right types, and they stay correct when the operation changes. Where the
+  operation offers a fixed set of choices, you get them.
+- Fix: an action that failed said nothing. The dialog closed and looked exactly like success, so
+  work that never happened — an email that didn't send, a record that didn't save — passed for
+  done. Failures now tell you, and say what went wrong.
+- Fix: a row action on a table whose key column isn't called "id" said you hadn't picked a row when
+  you had.
+- Fix: an action naming a feature this copy of Vantage can't offer used to complain about the app's
+  configuration. It now says the feature is unavailable, and points at the connection or credential
+  behind it.
+
+## 0.34.3
+
+- **Actions run in front of you.** Fill in the form, press Run, and the dialog stays put: a spinner
+  while the work happens, then what came back — the message, the reference, whatever the operation
+  reports — waiting for you to close it. You no longer have to guess from a dialog that vanished
+  whether the email went out.
+- **A failed action can be retried without starting over.** When something goes wrong you get the
+  reason in the dialog, with a button to copy it, and **Back** returns you to the form with
+  everything you typed still there. Fix the one wrong field and try again.
+
+## 0.34.4
+
+- Fix: the generated files Vantage keeps out of an app's version control are now matched by shape
+  rather than named one folder at a time, so a kind of screen added later is covered from the day
+  it appears.
+
+## 0.34.5
+
+- **You can see who you're signed in as.** On an app that keeps its credentials centrally, the
+  account sits under the app name in the sidebar — and reads **Not authenticated**, in warning
+  colour, when the app wants a sign-in it hasn't got. That line explains every empty page above it.
+- **Sign in and out from the app menu.** Both now live in the switcher dropdown next to the account,
+  where you're looking when you notice something is wrong.
+- Fix: signing in left the pages you already had open still showing their errors. They now rebuild,
+  so the screens that were empty fill in without you reopening them.
+- Fix: signing out left those pages showing the data they had already loaded. They now clear.
+- Fix: two copies of Vantage open on the same app fought over the same row cache, and the second
+  one reported every table as unavailable. Each copy — standard, nightly, and each custom build —
+  now keeps its own, so they can run side by side.
+- Fix: signing in to one app signed you in to another that happened to use the same account
+  settings, and a nightly build could pick up the sign-in from your standard one. Each app on each
+  copy of Vantage now holds its own; you'll be asked to sign in once more after updating.
+- **The splash leads with apps.** Installing something your organisation publishes is the first
+  card rather than the third, and on an app-channel build it's named for what it offers.
+- Fix: the title bar of a custom build said "Vantage" when everywhere else — the Dock, the window
+  title, the About box — used the build's own name.
