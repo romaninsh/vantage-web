@@ -81,3 +81,36 @@ work account, and Vantage loads only what you are allowed to have.
   card rather than the third, and on an app-channel build it's named for what it offers.
 - Fix: the title bar of a custom build said "Vantage" when everywhere else — the Dock, the window
   title, the About box — used the build's own name.
+
+## 0.34.6
+
+- Fix: columns a page hides, and columns worked out from other columns, turned up as editable boxes
+  on a record form. Typing free text over one of them could overwrite the values the rest of the
+  record was derived from.
+- Fix: a field with a default value came up empty when you created a record. Defaults now fill
+  themselves in, and a date field can start at today.
+- Fix: a read-only field looked editable — you could type in it and nothing you typed was kept. It
+  now shows as disabled.
+
+## 0.34.7
+
+- Fix: dates and times in an app built into Vantage showed as blank cells, or as a long run of
+  digits. They now read as dates and times.
+- Fix: a cell holding a list, or a record nested inside another record, looked empty. You now get a
+  short summary of what's in it.
+- Fix: opening the rows attached to a record threw away that table's own column names, widths and
+  formatting. They now look the way they do on the table's own page.
+
+## 0.34.8
+
+- **Check for Updates says what it found.** It used to look like nothing had happened. It now names
+  the version you're on when there's nothing newer, shows you the reason when the check couldn't be
+  made, and says so plainly when an app didn't come from a published list and so has no updates to
+  fetch.
+- Fix: a check that ran on its own and found a newer version kept quiet about it. You're now told
+  once, the first time each new version turns up.
+
+## 0.34.9
+
+- **A table can leave its Add button out.** Where rows only ever appear because you ran an
+  operation, the page no longer offers you an Add that was never going to work.
