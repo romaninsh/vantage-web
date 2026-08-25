@@ -86,3 +86,9 @@
     alt:    "Edit records in place — the Books grid with Add and Delete, and a Details form whose author field is a searchable dropdown"
     width:  480
     height: 315
+"0.36":
+  - thumb:  images/changelog/0.36/01.webp
+    full:   images/changelog/0.36/01-full.webp
+    alt:    "Dashboards: seven filter dropdowns narrow the query itself, so the KPI cards, stacked trajectory and breakdown list all recompute for the slice"
+    width:  480
+    height: 283
