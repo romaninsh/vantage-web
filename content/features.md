@@ -76,10 +76,12 @@ notes = [
 
 [[extra.gallery]]
 title = "Charts & dashboards"
-image = "images/vantage-ui-app.png"
+image = "images/features/charts-dashboards.webp"
+full = "images/features/charts-dashboards-full.webp"
 notes = [
-  "Bar, line and pie charts arranged on a dashboard grid.",
-  "Dropdown controls re-filter the whole dashboard reactively.",
+  "Stacked bars, lines, pies and KPI cards on one dashboard grid.",
+  "Filter dropdowns narrow the query itself, so every figure recomputes.",
+  "Deltas colour by meaning — a rising cost reads red, not green.",
 ]
 
 [[extra.gallery]]
