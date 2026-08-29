@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-{% import "macros/navigation.html" as nav %}
 
 {% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
 
 {% block content %}
-{{ nav::header() }}
+{{<nav.header />}}
 
 <!-- Page hero -->
 <section class="relative overflow-hidden">
@@ -117,5 +116,5 @@
     </div>
 </main>
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}

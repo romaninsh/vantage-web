@@ -1,11 +1,10 @@
 {% extends "base.html" %}
-{% import "macros/navigation.html" as nav %}
 
 {% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
 {% block body_class %}lib2{% endblock body_class %}
 
 {% block content %}
-{{ nav::header() }}
+{{<nav.header />}}
 
 <style>
   /* ===== The Library, second printing ==========================
@@ -599,24 +598,24 @@
     ] %}
     {% for row in placeholders %}
     {% set ch = row | split(pat="|") %}
-    <section class="spread" id="{{ ch.0 }}">
+    <section class="spread" id="{{ ch[0] }}">
       <div class="pg pg-left">
-        <span class="run">The Library · {{ ch.1 | title }}</span><span class="pno">{{ ch.4 }}</span>
+        <span class="run">The Library · {{ ch[1] | title }}</span><span class="pno">{{ ch[4] }}</span>
         <div class="ps">
-          <header class="ch-head"><span class="ch-no">{{ ch.1 }}</span><h2>{{ ch.2 }}</h2></header>
-          <p class="arg">{{ ch.6 }}</p>
+          <header class="ch-head"><span class="ch-no">{{ ch[1] }}</span><h2>{{ ch[2] }}</h2></header>
+          <p class="arg">{{ ch[6] }}</p>
           <span class="cut" style="--rot:{{ loop.index % 2 * 6 - 3 }}deg">
-            <img src="{{ get_url(path='images/library/cutouts/' ~ ch.3 ~ '.png') }}" alt="" loading="lazy">
+            <img src="{{ get_url(path='images/library/cutouts/' ~ ch[3] ~ '.png') }}" alt="" loading="lazy">
           </span>
         </div>
       </div>
       <div class="pg pg-right">
-        <span class="run">{{ ch.2 }}</span><span class="pno">{{ ch.5 }}</span>
+        <span class="run">{{ ch[2] }}</span><span class="pno">{{ ch[5] }}</span>
         <div class="ps">
           <p class="todo">this chapter is being rebuilt for the second printing —<br>check back soon.</p>
         </div>
       </div>
-      <span class="lib2-ribbon">{% if ch.0 == "ch-8" %}fin{% else %}{{ loop.index + 3 }}/7{% endif %}</span>
+      <span class="lib2-ribbon">{% if ch[0] == "ch-8" %}fin{% else %}{{ loop.index + 3 }}/7{% endif %}</span>
     </section>
     {% endfor %}
 
@@ -674,5 +673,5 @@
 
 <script type="module" src="{{ get_url(path='js/library.js') }}"></script>
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}

@@ -1,5 +1,5 @@
 {# ===== Example app cards (driven by the catalog manifest) ===== #}
-{% macro example_grid(apps, repo, limit=0) %}
+{% component blocks.example_grid(apps, repo, limit = 0) %}
 <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
     {% for app in apps %}
         {% if limit == 0 or loop.index <= limit %}
@@ -63,10 +63,10 @@ vantage-ui --config vantage-ui-examples/{{ app.repo_path }}</code></pre>
         {% endif %}
     {% endfor %}
 </div>
-{% endmacro %}
+{% endcomponent blocks.example_grid %}
 
 {# ===== Follow-development band ===== #}
-{% macro follow_band() %}
+{% component blocks.follow_band() %}
 <section id="follow" class="relative mt-24 overflow-hidden border-t border-line bg-surface-1/60 py-16 md:py-20">
     <div class="glow -bottom-48 left-1/2 h-72 w-[40rem] -translate-x-1/2 opacity-50"></div>
     <div class="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
@@ -93,4 +93,4 @@ vantage-ui --config vantage-ui-examples/{{ app.repo_path }}</code></pre>
         <p class="mt-5 text-[0.82rem] text-text-3">GitHub follows the open framework &amp; examples. The app itself ships from the Download page.</p>
     </div>
 </section>
-{% endmacro %}
+{% endcomponent blocks.follow_band %}
