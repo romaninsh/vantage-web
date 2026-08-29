@@ -13,10 +13,10 @@ heading = "Don't bootstrap that team yet, build the app yourself in minutes"
 body = "The Vantage app builder is on another level — compared to other low-code solutions, here's why:"
 
 [[extra.features]]
-title = "One console for everything"
-icon = "hub"
+title = "AI-first, by design"
+icon = "smart_toy"
 status = "now"
-description = "SQL, SurrealDB, MongoDB, GraphQL, REST APIs, AWS infrastructure and CLI tools — each shows up as its own group in one sidebar."
+description = "Appsmith and Retool bolted a \"copilot\" onto canvases designed for humans. Vantage was built from the ground up in 2025, for the era of AI: bring your own LLM, explain what you need, the app is ready in minutes."
 
 [[extra.features]]
 title = "Dashboards & charts"
