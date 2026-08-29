@@ -9,8 +9,8 @@ hero_caption = "**Free for personal use and SMEs.** Built on [Vantage Framework]
 
 # ---- Feature tour ----
 [extra.features_intro]
-heading = "One console for the things you actually run"
-body = "A quick tour of what ships today. The full list lives on the Features page."
+heading = "Don't bootstrap that team yet, build the app yourself in minutes"
+body = "The Vantage app builder is on another level — compared to other low-code solutions, here's why:"
 
 [[extra.features]]
 title = "One console for everything"
