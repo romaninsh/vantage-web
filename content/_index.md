@@ -46,7 +46,7 @@ description = "You might not be a software engineer — we respect that. Vantage
 title = "Enterprise: your own Vantage"
 icon = "corporate_fare"
 status = "now"
-description = "Enterprise clients get a dedicated build cycle — signed, linked to your SSO, easy to install on corporate laptops. Upgrade orchestration and your own app catalog. Your data models, API interfaces and custom UI widgets baked into every build, fully automated."
+description = "Enterprise clients get a dedicated build cycle — signed, linked to your SSO, easy to install on corporate laptops. Upgrade orchestration and your own app catalog. Bundle your own UI widgets, data models, API interfaces into your builds."
 
 # ---- How it works ----
 [extra.howitworks]
