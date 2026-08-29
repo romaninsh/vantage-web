@@ -16,37 +16,37 @@ body = "The Vantage app builder is on another level — compared to other low-co
 title = "AI-first, by design"
 icon = "smart_toy"
 status = "now"
-description = "Appsmith and Retool bolted a \"copilot\" onto canvases designed for humans. Vantage was built from the ground up in 2025, for the era of AI: bring your own LLM, explain what you need, the app is ready in minutes."
+description = "Appsmith and Retool bolted a \"copilot\" onto canvases designed for humans. Vantage was built from the ground up in 2025, for **the era of AI**: bring your own LLM, explain what you need, the app is ready in minutes."
 
 [[extra.features]]
-title = "Dashboards & charts"
-icon = "bar_chart"
+title = "Your data stays yours"
+icon = "database"
 status = "now"
-description = "Compose bar, line and pie charts onto a dashboard page, with dropdown controls that re-filter the whole view reactively."
+description = "The competition wants it in their managed database. Vantage plugs into the databases you already run — structure, types, relations and data flow respected. 15+ backends in community version."
 
 [[extra.features]]
-title = "Query-sourced tables"
-icon = "function"
+title = "Live data updates at scale"
+icon = "speed"
 status = "now"
-description = "Define a table whose rows come from an arbitrary SELECT — GROUP BY, joins, computed columns — written as a Rhai script. Sorting, filtering and drill-down still work."
+description = "We support billions of records, thousands of columns and tables that ingest hundreds of real-time changes per second — 60fps refresh rate, cached load, [CDC](https://en.wikipedia.org/wiki/Change_data_capture) and edit conflict resolution."
 
 [[extra.features]]
-title = "Tabs & drill-downs"
-icon = "account_tree"
+title = "Built in Rust, not JS"
+icon = "memory"
 status = "now"
-description = "Open related records in child tabs, pin the ones you keep, and chain multi-hop drill-downs from a row's context menu."
+description = "Rust is the safest, most secure and most scalable of the modern languages — Linux, Android and even JavaScript's own toolchain are being rewritten into it as we speak. Vantage is fully built in Rust and [GPUI](https://github.com/zed-industries/gpui)."
 
 [[extra.features]]
-title = "Million-row tables, reactive"
-icon = "table_rows"
-status = "now"
-description = "Only on-screen rows are fetched; a shared cache keeps every view in sync and refreshes in the background — no flicker, no reload."
+title = "From GUI to API/MCP backend"
+icon = "api"
+status = "soon"
+description = "You might not be a software engineer — we respect that. Vantage is UI-first: you work with components you can actually see — pages, tables, forms. Vantage will build and deploy your app as a backend."
 
 [[extra.features]]
-title = "Forms, dialogs & actions"
-icon = "edit_note"
+title = "Enterprise: your own Vantage"
+icon = "corporate_fare"
 status = "now"
-description = "Add and edit records in form dialogs, confirm destructive steps, run status workflows, and fire HTTP requests at your own services."
+description = "Enterprise clients get a dedicated build cycle — signed, linked to your SSO, easy to install on corporate laptops. Upgrade orchestration and your own app catalog. Your data models, API interfaces and custom UI widgets baked into every build, fully automated."
 
 # ---- How it works ----
 [extra.howitworks]

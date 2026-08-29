@@ -19,7 +19,7 @@
                     {% endif %}
                 </div>
                 <h3 class="text-[1.02rem]">{{ feature.title }}</h3>
-                <p class="mt-2 text-sm leading-relaxed text-text-2">{{ feature.description }}</p>
+                <p class="mt-2 text-sm leading-relaxed text-text-2">{{ feature.description | markdown(inline=true) | safe }}</p>
                 {% if feature.link %}
                 <a href="{{ feature.link }}" class="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-medium text-accent-400 no-underline hover:text-accent-300">
                     Learn More<span class="material-symbols-outlined !text-[1rem]">arrow_forward</span>
