@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-{% import "macros/navigation.html" as nav %}
 
 {% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
 
 {% block content %}
-{{ nav::header() }}
+{{<nav.header />}}
 
 <!-- Page hero -->
 <section class="relative overflow-hidden">
@@ -285,5 +284,5 @@ model.get_ref("clients", row.id)
     </div>
 </section>
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}

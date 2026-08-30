@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "macros/navigation.html" as nav %}
 
 {% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
 {% block body_class %}lc{% endblock body_class %}
@@ -121,7 +120,7 @@
   <div class="lc-space__vignette"></div>
 </div>
 
-{{ nav::header() }}
+{{<nav.header />}}
 
 {% set repo = "https://github.com/romaninsh/vantage-ui-examples" %}
 {% set app = repo ~ "/tree/main/apps/launch-control" %}
@@ -809,5 +808,5 @@ total_key: count</code></pre>
     </main>
 </div>
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}

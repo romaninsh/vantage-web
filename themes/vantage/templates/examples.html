@@ -1,11 +1,9 @@
 {% extends "base.html" %}
-{% import "macros/navigation.html" as nav %}
-{% import "macros/blocks.html" as blocks %}
 
 {% block title %}{{ section.title }} | {{ config.title }}{% endblock title %}
 
 {% block content %}
-{{ nav::header() }}
+{{<nav.header />}}
 
 {% set examples_repo = "https://github.com/romaninsh/vantage-ui-examples" %}
 {# Local dev (zola serve, 127.0.0.1) reads the working-copy catalog so edits
@@ -36,7 +34,7 @@
 
 <main class="mx-auto max-w-6xl px-4 sm:px-6">
     {% if catalog and catalog.apps %}
-    {{ blocks::example_grid(apps=catalog.apps, repo=examples_repo) }}
+    {{<blocks.example_grid apps={catalog.apps} repo={examples_repo} />}}
     {% else %}
     <p class="text-center text-text-2">The example catalog couldn't be loaded right now. Browse them directly on <a href="{{ examples_repo }}" class="text-accent-300 underline hover:text-accent-400" target="_blank" rel="noopener">GitHub</a>.</p>
     {% endif %}
@@ -50,5 +48,5 @@
     </div>
 </main>
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "macros/navigation.html" as nav %}
 
 {% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
 {% block body_class %}ps{% endblock body_class %}
@@ -395,7 +394,7 @@
   <div class="ps-sea__vignette"></div>
 </div>
 
-{{ nav::header() }}
+{{<nav.header />}}
 
 {% set repo = "https://github.com/romaninsh/vantage-ui-examples" %}
 {% set app = repo ~ "/tree/main/apps/periscope" %}
@@ -1220,5 +1219,5 @@ references:
 })();
 </script>
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}

@@ -1,10 +1,7 @@
 {% extends "base.html" %}
-{% import "macros/feature-grid.html" as components %}
-{% import "macros/navigation.html" as nav %}
-{% import "macros/blocks.html" as blocks %}
 
 {% block content %}
-{{ nav::header() }}
+{{<nav.header />}}
 
 {% set manifest = load_data(
     url="https://vantage-releases.s3.eu-west-2.amazonaws.com/stable/latest.json",
@@ -114,7 +111,7 @@
         <p class="mt-4 text-text-2">{{ section.extra.features_intro.body }}</p>
     </div>
 </section>
-{{ components::feature_grid(features=section.extra.features, content="") }}
+{{<components.feature_grid features={section.extra.features} content="" />}}
 <div class="text-center">
     <a href="{{ get_url(path='features/') }}" class="btn btn-outline-primary">
         See all features
@@ -165,7 +162,7 @@
             <h2 class="text-h2">See it on real apps</h2>
             <p class="mt-4 text-text-2">Self-contained example apps you can open in Vantage UI.</p>
         </div>
-        {{ blocks::example_grid(apps=catalog.apps, repo=examples_repo, limit=3) }}
+        {{<blocks.example_grid apps={catalog.apps} repo={examples_repo} limit={3} />}}
         <div class="mt-10 text-center">
             <a href="{{ get_url(path='examples/') }}" class="btn btn-outline-primary">
                 Browse all examples
@@ -199,7 +196,7 @@
 </section>
 
 <!-- Follow development -->
-{{ blocks::follow_band() }}
+{{<blocks.follow_band />}}
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}

@@ -1,4 +1,4 @@
-{% macro header() %}
+{% component nav.header() %}
 {% set nav_data = load_data(path="content/navigation.yaml") %}
 <header id="topnav" class="sticky top-0 z-50 border-b border-transparent bg-bg/85 backdrop-blur-md transition-colors duration-200">
     <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6" aria-label="Main">
@@ -97,9 +97,9 @@
         </div>
     </div>
 </header>
-{% endmacro %}
+{% endcomponent nav.header %}
 
-{% macro footer() %}
+{% component nav.footer() %}
 {% set nav_data = load_data(path="content/navigation.yaml") %}
 <footer class="mt-28 border-t border-line bg-surface-1">
     <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
@@ -135,4 +135,4 @@
         <p class="mx-auto max-w-6xl px-4 text-center font-mono text-xs text-text-3 sm:px-6">© {{ now() | date(format="%Y") }} Vantage. <a href="https://github.com/romaninsh/vantage" class="text-text-2 hover:text-text-1" target="_blank" rel="noopener"><strong class="font-semibold">Vantage Framework</strong> is open source, MIT licensed</a>.</p>
     </div>
 </footer>
-{% endmacro %}
+{% endcomponent nav.footer %}

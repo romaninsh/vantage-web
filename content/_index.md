@@ -4,49 +4,49 @@ template = "index.html"
 
 [extra]
 hero_headline = "AI-first low-code App Builder"
-hero_subhead = "Vantage UI taps into your databases, APIs and infrastructure, then visualises your data declaratively — tables, forms, dashboards and lists. Need a new column? The AI agent adds it in seconds."
-hero_caption = "**Free for macOS & Linux.** Built on the open-source, MIT-licensed [Vantage Framework](/framework/). Windows builds are delivered for enterprise customers."
+hero_subhead = "Vantage builds custom, real-time, data-heavy apps — forms, grids, wizards, dialogs, dashboards — for your existing databases, APIs and infrastructure. Enterprise-ready. Runs on your hardware."
+hero_caption = "**Free for personal use and SMEs.** Built on [Vantage Framework](https://github.com/romaninsh/vantage) (MIT). Windows/Web coming soon. [Contact us](/solutions/enterprise/) for custom enterprise builds."
 
 # ---- Feature tour ----
 [extra.features_intro]
-heading = "One console for the things you actually run"
-body = "A quick tour of what ships today. The full list lives on the Features page."
+heading = "Don't bootstrap that team yet, build the app yourself in minutes"
+body = "The Vantage app builder is on another level — compared to other low-code solutions, here's why:"
 
 [[extra.features]]
-title = "One console for everything"
-icon = "hub"
+title = "AI-first, by design"
+icon = "smart_toy"
 status = "now"
-description = "SQL, SurrealDB, MongoDB, GraphQL, REST APIs, AWS infrastructure and CLI tools — each shows up as its own group in one sidebar."
+description = "Appsmith and Retool bolted a \"copilot\" onto canvases designed for humans. Vantage was built from the ground up in 2025, for **the era of AI**: bring your own LLM, explain what you need, the app is ready in minutes."
 
 [[extra.features]]
-title = "Dashboards & charts"
-icon = "bar_chart"
+title = "Your data stays yours"
+icon = "database"
 status = "now"
-description = "Compose bar, line and pie charts onto a dashboard page, with dropdown controls that re-filter the whole view reactively."
+description = "The competition wants it in their managed database. Vantage plugs into the databases you already run — structure, types, relations and data flow respected. 15+ backends in community version."
 
 [[extra.features]]
-title = "Query-sourced tables"
-icon = "function"
+title = "Live data updates at scale"
+icon = "speed"
 status = "now"
-description = "Define a table whose rows come from an arbitrary SELECT — GROUP BY, joins, computed columns — written as a Rhai script. Sorting, filtering and drill-down still work."
+description = "We support billions of records, thousands of columns and tables that ingest hundreds of real-time changes per second — 60fps refresh rate, cached load, [CDC](https://en.wikipedia.org/wiki/Change_data_capture) and edit conflict resolution."
 
 [[extra.features]]
-title = "Tabs & drill-downs"
-icon = "account_tree"
+title = "Built in Rust, not JS"
+icon = "memory"
 status = "now"
-description = "Open related records in child tabs, pin the ones you keep, and chain multi-hop drill-downs from a row's context menu."
+description = "Rust is the safest, most secure and most scalable of the modern languages — Linux, Android and even JavaScript's own toolchain are being rewritten into it as we speak. Vantage is fully built in Rust and [GPUI](https://github.com/zed-industries/gpui)."
 
 [[extra.features]]
-title = "Million-row tables, reactive"
-icon = "table_rows"
-status = "now"
-description = "Only on-screen rows are fetched; a shared cache keeps every view in sync and refreshes in the background — no flicker, no reload."
+title = "From GUI to API/MCP backend"
+icon = "api"
+status = "soon"
+description = "You might not be a software engineer — we respect that. Vantage is UI-first: you work with components you can actually see — pages, tables, forms. Vantage will build and deploy your app as a backend."
 
 [[extra.features]]
-title = "Forms, dialogs & actions"
-icon = "edit_note"
+title = "Enterprise: your own Vantage"
+icon = "corporate_fare"
 status = "now"
-description = "Add and edit records in form dialogs, confirm destructive steps, run status workflows, and fire HTTP requests at your own services."
+description = "Enterprise clients get a dedicated build cycle — signed, linked to your SSO, easy to install on corporate laptops. Upgrade orchestration and your own app catalog. Bundle your own UI widgets, data models, API interfaces into your builds."
 
 # ---- How it works ----
 [extra.howitworks]

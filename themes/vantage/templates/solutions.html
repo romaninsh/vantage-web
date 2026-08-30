@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-{% import "macros/navigation.html" as nav %}
 
 {% block title %}{{ section.title }} | {{ config.title }}{% endblock title %}
 
 {% block content %}
-{{ nav::header() }}
+{{<nav.header />}}
 
 <style>
   /* ===== Solutions — the adoption ascent ===== */
@@ -220,5 +219,5 @@
 })();
 </script>
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}

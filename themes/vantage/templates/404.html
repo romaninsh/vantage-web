@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-{% import "macros/navigation.html" as nav %}
 
 {% block title %}Page Not Found | {{ config.title }}{% endblock title %}
 
 {% block content %}
-{{ nav::header() }}
+{{<nav.header />}}
 
 <main class="relative overflow-hidden">
     <div class="glow -top-32 left-1/2 h-72 w-[32rem] -translate-x-1/2 opacity-60"></div>
@@ -21,5 +20,5 @@
     </div>
 </main>
 
-{{ nav::footer() }}
+{{<nav.footer />}}
 {% endblock content %}
