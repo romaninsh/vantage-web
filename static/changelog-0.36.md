@@ -54,3 +54,12 @@
   previously they under-advertised, which is why grids trickle-loaded in small chunks.
 - **PostgreSQL joins the datasource wizard** with its own guidance for modelling existing
   databases and warehouses.
+
+## 0.36.1
+
+- Fix: the recent-projects list showed several identical "inventory" rows, because it named each
+  project after its folder and most apps keep their catalog in one called `inventory`. Names that
+  clash now grow a parent folder until they read apart — `bakery/inventory`, `space/inventory` —
+  while everything already unique stays short.
+- The Lens stats button has left the title bar. It opened an inspector for Vantage's own internals,
+  which is a debugging tool for people working on the app rather than something to use it with.
