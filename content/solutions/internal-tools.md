@@ -105,6 +105,9 @@ And unlike Datadog, nothing gets ingested anywhere. Your data stays where it liv
 
 <p class="it-caption">The drawer, before. Every item has an owner, a runbook and a failure mode. Vantage retires them into entries in one console's sidebar.</p>
 
+<div id="build-routes" class="br" aria-label="Choose how you would build your app: four routes with the cost of each step"></div>
+<script type="module" src="/js/build-routes.js"></script>
+
 ## One console, unlimited uses
 
 A Vantage console is not a dashboard product with a fixed shape — it's whatever your backends can answer. Three jobs from real teams:
