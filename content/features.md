@@ -1,6 +1,6 @@
 +++
 title = "Features"
-description = "A native console built from config you own — declarative YAML for structure, Rhai for logic, written by your AI agent."
+description = "Vantage reads files from your project folders and constructs a GUI. Vantage connects to your databases and APIs to retrieve data."
 template = "features.html"
 
 [extra]
