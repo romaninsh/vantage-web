@@ -160,7 +160,7 @@ model.get_ref("clients", row.id)
     </div>
 </section>
 
-<!-- 3b. Ship it as an API -->
+<!-- 3b. Free vs enterprise -->
 <section id="enterprise" class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
     <div class="mx-auto max-w-2xl text-center">
         <h2 class="text-h2">Vantage for the Enterprise</h2>
@@ -172,17 +172,55 @@ model.get_ref("clients", row.id)
         </p>
     </div>
 
-    <div class="mt-10 grid gap-6 md:grid-cols-2">
-        <div class="card p-6">
-            <span class="material-symbols-outlined mb-3 block !text-[2rem] text-accent-400">rocket_launch</span>
-            <h3 class="text-[1.02rem]">Your own build cycle</h3>
-            <p class="mt-2 text-sm leading-relaxed text-text-2">Signed, notarized binaries linked to your SSO. Installs cleanly on corporate laptops, with upgrades orchestrated on your schedule — no store, no self-hosting.</p>
-        </div>
-        <div class="card p-6">
-            <span class="material-symbols-outlined mb-3 block !text-[2rem] text-accent-400">extension</span>
-            <h3 class="text-[1.02rem]">Compiled-in extensions</h3>
-            <p class="mt-2 text-sm leading-relaxed text-text-2">Custom DataSources, strongly typed table definitions and UI widgets written in Rust, bundled into your build through a fully automated pipeline.</p>
-        </div>
+    <div class="cmp-wrap mt-10 max-w-4xl">
+        <table class="cmp-table">
+            <thead>
+                <tr>
+                    <th scope="col">Capability</th>
+                    <th scope="col">
+                        <span class="cmp-head">Free download</span>
+                        <span class="cmp-sub">One binary, everyone</span>
+                    </th>
+                    <th scope="col" class="cmp-col-ent">
+                        <span class="cmp-head">Enterprise build</span>
+                        <span class="cmp-sub">Assembled for you</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in page.extra.compare %}
+                {% if row.group %}
+                <tr class="cmp-group">
+                    <th scope="colgroup" colspan="3">{{ row.group }}</th>
+                </tr>
+                {% else %}
+                <tr>
+                    <td class="cmp-label">
+                        {%- if row.href -%}
+                        <a class="cmp-link" href="{{ row.href }}" target="_blank" rel="noopener">{{ row.label }}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span></a>
+                        {%- else -%}
+                        {{ row.label }}
+                        {%- endif -%}
+                    </td>
+                    {% for v in [row.free, row.ent] %}
+                    {% if loop.first %}{% set vh = row.free_href | default(value="") %}{% else %}{% set vh = row.ent_href | default(value="") %}{% endif %}
+                    <td class="cmp-val{% if loop.last %} cmp-col-ent{% endif %}">
+                        {% if v == "yes" %}
+                        <span class="material-symbols-outlined cap-yes" title="Included">check_circle</span>
+                        {% elif v == "no" %}
+                        <span class="material-symbols-outlined cap-no" title="Not included">remove</span>
+                        {% elif vh %}
+                        <a class="cmp-text cmp-link" href="{{ vh }}" target="_blank" rel="noopener">{{ v }}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span></a>
+                        {% else %}
+                        <span class="cmp-text">{{ v }}</span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <p class="mt-6 text-center text-sm text-text-3">Want your own distribution? <a href="/solutions/enterprise/" class="text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400">Talk to us →</a></p>
