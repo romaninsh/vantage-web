@@ -28,6 +28,51 @@ edit_rows = [
   { key = "delete", label = "Delete records" },
 ]
 
+# Free build vs. enterprise distribution. Each row is one capability; `free` and
+# `ent` render as a tick for "yes", a dash for "no", and as plain text otherwise.
+# A row with only `group` set draws a section heading instead of a comparison.
+compare = [
+  { group = "Build your app" },
+  { label = "Datasources out of the box", free = "12", ent = "12 + your own" },
+  { label = "Colour themes", free = "36", ent = "36 + one that's yours" },
+  { label = "Native types mapped per source", free = "up to 24", ent = "+ types you define" },
+  { label = "Grids past a million rows", free = "yes", ent = "yes" },
+  { label = "Charts, KPI cards, dashboards", free = "yes", ent = "yes" },
+  { label = "Multi-step wizards & CSV import", free = "yes", ent = "yes" },
+  { label = "Custom form layouts", free = "yes", ent = "yes" },
+  { label = "Auto-refresh in the background", free = "yes", ent = "yes" },
+  { label = "Push-style instant refresh", free = "SurrealDB, PostgreSQL", ent = "+ CDC: Kafka, Debezium, custom listeners" },
+  { label = "Your AI agent builds it over MCP", free = "yes", ent = "yes" },
+  { label = "MCP debugging — query preview, error check", free = "yes", ent = "+ BDD suite, run at build" },
+
+  { group = "Custom tables" },
+  { label = "Custom queries & aggregates", free = "Rhai", ent = "Rhai + Rust" },
+  { label = "Actions", free = "Rhai", ent = "Rhai + Rust" },
+  { label = "Internal API", free = "Rhai", ent = "Rhai + Rust" },
+  { label = "Custom datasources", free = "OSS, community", free_href = "https://github.com/romaninsh/vantage", ent = "yours or ours", href = "https://romaninsh.github.io/vantage/new-persistence.html" },
+  { label = "UI widgets", free = "21 built in", ent = "+ your own in Rust" },
+  { label = "Third-party WASM plugins", free = "no", ent = "yes" },
+
+  { group = "Internal distribution control" },
+  { label = "Application distribution", free = "vantage-ui.com, or clone by hand", ent = "internal catalog, apps auto-update" },
+  { label = "Platforms", free = "macOS, Linux", ent = "+ API/MCP" },
+  { label = "Verifiable builds, on demand", free = "no", ent = "your components in the binary" },
+  { label = "Your name, icon and About box", free = "no", ent = "yes" },
+  { label = "Turn off what you don't need", free = "no", ent = "yes" },
+  { label = "Your own release channel", free = "no", ent = "signed & notarised" },
+  { label = "vantage:// install allowlist", free = "no", ent = "your apps only" },
+  { label = "Central credentials & SSO sign-in", free = "no", ent = "yes" },
+  { label = "Credentials handed out per person", free = "no", ent = "one app, shaped per team" },
+  { label = "Crash telemetry", free = "optional", ent = "your own Sentry account" },
+
+  { group = "What you're standing on" },
+  { label = "MIT framework underneath", free = "forever", ent = "forever" },
+  { label = "Source escrow", free = "no", ent = "in writing" },
+  { label = "Architecture partner & training", free = "no", ent = "yes" },
+  { label = "Support", free = "community", ent = "a direct line to us" },
+  { label = "Price, personal or commercial", free = "$0 forever", ent = "one conversation" },
+]
+
 # Roadmap deck — click to flip through. Order here is the initial stack order.
 roadmap = [
   { icon = "conversion_path", title = "Wizards", body = "Multi-step flows for guided data entry and operations — collect input across screens, then commit in one go." },

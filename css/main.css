@@ -677,6 +677,85 @@
         @apply !text-[1.15rem] text-text-3/50;
     }
 
+    /* ---------- Free vs enterprise comparison (features page) ---------- */
+
+    /* Scrolls sideways on a phone rather than crushing three columns. */
+    .cmp-wrap {
+        @apply -mx-4 overflow-x-auto px-4 sm:mx-auto sm:px-0;
+    }
+
+    .cmp-table {
+        @apply w-full min-w-[21rem] border-collapse overflow-hidden rounded-xl border border-line bg-surface-1;
+    }
+
+    .cmp-table thead th {
+        @apply border-b border-line px-2.5 py-3.5 text-start align-bottom sm:px-4;
+    }
+
+    .cmp-table thead th:first-child {
+        @apply text-[0.86rem] font-medium text-text-3;
+    }
+
+    .cmp-head {
+        @apply block text-[0.82rem] font-semibold text-text-1 sm:text-[0.95rem];
+    }
+
+    /* The strapline is decoration; it goes rather than squeeze the columns on a phone. */
+    .cmp-sub {
+        @apply mt-0.5 hidden font-mono text-[0.62rem] tracking-wider text-text-3 uppercase sm:block;
+    }
+
+    /* The enterprise column stays tinted top to bottom, so the eye can follow it. */
+    .cmp-col-ent {
+        @apply bg-accent-500/5;
+    }
+
+    .cmp-table thead th.cmp-col-ent .cmp-sub {
+        @apply text-accent-400;
+    }
+
+    .cmp-group th {
+        @apply border-t border-line bg-surface-2/60 px-2.5 pt-3.5 pb-2 text-start font-mono text-[0.66rem] font-semibold tracking-widest text-accent-400 uppercase sm:px-4;
+    }
+
+    .cmp-table tbody tr:not(.cmp-group) td {
+        @apply border-t border-line px-2.5 py-2.5 sm:px-4;
+    }
+
+    /* No double rule where a section heading meets the header or its first row. */
+    .cmp-table tbody tr:first-child th {
+        @apply border-t-0;
+    }
+
+    .cmp-table tbody .cmp-group + tr td {
+        @apply border-t-0;
+    }
+
+    .cmp-label {
+        @apply text-[0.8rem] leading-snug text-text-2 sm:text-[0.88rem];
+    }
+
+    /* A row whose label points at the docs for doing it yourself. */
+    .cmp-link {
+        @apply inline-flex items-center gap-1 text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
+    }
+
+    .cmp-link-icon {
+        @apply !text-[0.85rem] opacity-70;
+    }
+
+    .cmp-val {
+        @apply w-[5.5rem] text-start sm:w-[12.5rem];
+    }
+
+    .cmp-text {
+        @apply text-[0.75rem] leading-snug font-medium text-text-1 sm:text-[0.82rem];
+    }
+
+    .cmp-col-ent .cmp-text {
+        @apply text-accent-300;
+    }
+
     /* ---------- Agent flow (features page) ---------- */
 
     .agent-flow {
