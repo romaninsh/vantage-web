@@ -739,6 +739,27 @@
         @apply text-text-1;
     }
 
+    /* The rule and the verdict appear only once the route has been run.
+       The page's prose styles put 40px around a bare <hr> and 16px around a
+       <p>, so both are forced back to the same rhythm as the rule above the
+       stats: 12px over the line, 10px under it. */
+    .br-rule {
+        @apply hidden border-0 border-t border-line !mt-3 !mb-0;
+    }
+
+    .br-verdict {
+        @apply hidden text-[0.76rem] leading-snug text-text-2 !mt-2.5 !mb-0;
+    }
+
+    .br-verdict.is-good {
+        @apply font-medium text-accent-300;
+    }
+
+    .br-option.is-solved .br-rule,
+    .br-option.is-solved .br-verdict {
+        @apply block;
+    }
+
     /* ── the expanded route ── */
 
     .br-panel {

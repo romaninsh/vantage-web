@@ -34,7 +34,7 @@ const ROUTES = [
   {
     id: "inhouse",
     name: "Build it in-house",
-    hook: "Your own team, from scratch",
+    hook: "Your own team",
     color: "#eaa14e",
     steps: [
       { icon: "code", label: "Vibe-code a PoC in React", note: "One developer, one working week.", people: 1, days: 5, elapsed: 5, poc: true },
@@ -46,6 +46,7 @@ const ROUTES = [
     ],
     perYear: A.retainedEngineers * A.workingDaysPerYear * A.dayRate,
     perYearNote: `${A.retainedEngineers} engineers kept on to keep it alive`,
+    verdict: "Best fit, but significant yearly cost.",
   },
   {
     id: "lowcode",
@@ -62,6 +63,7 @@ const ROUTES = [
     ],
     perYear: seatYear(A.lowCodeSeatPerMonth),
     perYearNote: `${A.seats} seats at $${A.lowCodeSeatPerMonth}/month`,
+    verdict: "Low cost, good fit, but non-compliant and has many limitations.",
   },
   {
     id: "shelf",
@@ -79,6 +81,7 @@ const ROUTES = [
     ],
     perYear: seatYear(A.offTheShelfSeatPerMonth),
     perYearNote: `${A.seats} seats at $${A.offTheShelfSeatPerMonth}/month`,
+    verdict: "Requires very costly migration. Painful long-term dependency.",
   },
   {
     id: "vantage",
@@ -100,6 +103,8 @@ const ROUTES = [
     perYear: A.vantageEnterprisePerYear,
     perYearLabel: A.vantageEnterprisePerYear ? null : "talk to us",
     perYearNote: "the enterprise build; the free one stays free",
+    verdict: "Fastest PoC. No-commitment build. Only pay if you scale.",
+    verdictGood: true,
   },
 ];
 
@@ -163,6 +168,8 @@ if (root) {
             <div><dt>PoC</dt><dd data-stat="poc">?</dd></div>
             <div><dt>ETA</dt><dd data-stat="eta">?</dd></div>
           </dl>
+          <hr class="br-rule">
+          <p class="br-verdict${r.verdictGood ? " is-good" : ""}"></p>
         </button>`).join("")}
     </div>
     <div class="br-panel" hidden></div>`;
@@ -197,6 +204,7 @@ if (root) {
     else countUp(card.querySelector('[data-stat="cost"]'), t.total);
     if (route.perYearLabel) set("year", route.perYearLabel, "br-talk");
     else countUp(card.querySelector('[data-stat="year"]'), route.perYear);
+    card.querySelector(".br-verdict").textContent = route.verdict;
     set("poc", t.poc != null ? dur(t.poc) : "—");
     // The elapsed is real work either way; red marks the routes that never shipped.
     set("eta", dur(t.eta), t.closed ? "br-bad" : "br-good");
