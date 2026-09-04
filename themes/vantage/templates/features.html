@@ -197,7 +197,8 @@ model.get_ref("clients", row.id)
                 <tr>
                     <td class="cmp-label">
                         {%- if row.href -%}
-                        <a class="cmp-link" href="{{ row.href }}" target="_blank" rel="noopener">{{ row.label }}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span></a>
+                        {%- set ext = row.href | truncate(length=4, end="") == "http" -%}
+                        <a class="cmp-link" href="{{ row.href }}"{% if ext %} target="_blank" rel="noopener"{% endif %}>{{ row.label }}{% if ext %}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span>{% endif %}</a>
                         {%- else -%}
                         {{ row.label }}
                         {%- endif -%}
@@ -210,7 +211,8 @@ model.get_ref("clients", row.id)
                         {% elif v == "no" %}
                         <span class="material-symbols-outlined cap-no" title="Not included">remove</span>
                         {% elif vh %}
-                        <a class="cmp-text cmp-link" href="{{ vh }}" target="_blank" rel="noopener">{{ v }}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span></a>
+                        {% set vext = vh | truncate(length=4, end="") == "http" %}
+                        <a class="cmp-text cmp-link" href="{{ vh }}"{% if vext %} target="_blank" rel="noopener"{% endif %}>{{ v }}{% if vext %}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span>{% endif %}</a>
                         {% else %}
                         <span class="cmp-text">{{ v }}</span>
                         {% endif %}

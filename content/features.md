@@ -62,15 +62,13 @@ compare = [
   { label = "Your own release channel", free = "no", ent = "signed & notarised" },
   { label = "vantage:// install allowlist", free = "no", ent = "your apps only" },
   { label = "Central credentials & SSO sign-in", free = "no", ent = "yes" },
-  { label = "Credentials handed out per person", free = "no", ent = "one app, shaped per team" },
   { label = "Crash telemetry", free = "optional", ent = "your own Sentry account" },
 
   { group = "What you're standing on" },
   { label = "MIT framework underneath", free = "forever", ent = "forever" },
-  { label = "Source escrow", free = "no", ent = "in writing" },
   { label = "Architecture partner & training", free = "no", ent = "yes" },
-  { label = "Support", free = "community", ent = "a direct line to us" },
-  { label = "Price, personal or commercial", free = "$0 forever", ent = "one conversation" },
+  { label = "Support", free = "community", ent = "Slack Connect", ent_href = "https://slack.com/intl/en-gb/blog/collaboration/slack-shared-channels" },
+  { label = "Price for personal and commercial use", free = "$0 forever", ent = "one conversation", href = "/solutions/enterprise/#ent-form" },
 ]
 
 # Roadmap deck — click to flip through. Order here is the initial stack order.
