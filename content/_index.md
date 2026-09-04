@@ -10,19 +10,19 @@ hero_caption = "**Free for personal use and SMEs.** Built on [Vantage Framework]
 # ---- Feature tour ----
 [extra.features_intro]
 heading = "Don't bootstrap that team yet, build the app yourself in minutes"
-body = "The Vantage app builder is on another level — compared to other low-code solutions, here's why:"
+body = "The Vantage app builder is on another level (compared to other low-code solutions), here is why:"
 
 [[extra.features]]
 title = "AI-first, by design"
 icon = "smart_toy"
 status = "now"
-description = "Appsmith and Retool bolted a \"copilot\" onto canvases designed for humans. Vantage was built from the ground up in 2025, for **the era of AI**: bring your own LLM, explain what you need, the app is ready in minutes."
+description = "Classic \"low-code\" is designed for a human operator with a bolted-on \"copilot\". Vantage is designed as a tool for your LLM, from day one. Keep your AI plan — **never share your prompts or data with us**."
 
 [[extra.features]]
-title = "Your data stays yours"
+title = "No migration required"
 icon = "database"
 status = "now"
-description = "The competition wants it in their managed database. Vantage plugs into the databases you already run — structure, types, relations and data flow respected. 15+ backends in community version."
+description = "The competition wants your data moved into their managed store — killing your initiative with a painful migration. Vantage works with your existing databases instead: structure, types and relations respected. Launch today."
 
 [[extra.features]]
 title = "Live data updates at scale"
@@ -40,33 +40,33 @@ description = "Rust is the safest, most secure and most scalable of the modern l
 title = "From GUI to API/MCP backend"
 icon = "api"
 status = "soon"
-description = "You might not be a software engineer — we respect that. Vantage is UI-first: you work with components you can actually see — pages, tables, forms. Vantage will build and deploy your app as a backend."
+description = "You work with the UI, your agent does the tweaking. One decision — publish — turns the result into an internal API or MCP service, for the rest of your company: humans and agents alike."
 
 [[extra.features]]
 title = "Enterprise: your own Vantage"
 icon = "corporate_fare"
 status = "now"
-description = "Enterprise clients get a dedicated build cycle — signed, linked to your SSO, easy to install on corporate laptops. Upgrade orchestration and your own app catalog. Bundle your own UI widgets, data models, API interfaces into your builds."
+description = "Enterprise clients get a dedicated build cycle — signed, linked to your SSO, easy to install on corporate laptops. Upgrade orchestration and your own app catalog. Bundle your UI widgets, data models and APIs into Vantage."
 
 # ---- How it works ----
 [extra.howitworks]
 heading = "How it works"
-body = "From a fresh data source to a working console, with your agent doing the typing."
+body = "With Vantage, you don't need a custom server or monthly payment plan:"
 
 [[extra.howitworks_steps]]
 icon = "link"
 title = "1. Connect"
-body = "Point Vantage at a config folder. Datasources are described as YAML — connection strings, schemas, tables."
+body = "Download Vantage from this site. Start a new project. Follow the instructions to connect your AI coding assistant and existing data sources (even just CSVs)."
 
 [[extra.howitworks_steps]]
 icon = "smart_toy"
 title = "2. Describe"
-body = "Ask your coding agent — in your IDE or CLI — to author the config (YAML and Rhai) from your schema, over the local MCP server. Pages, tables, forms, dashboards, logic."
+body = "You build your Vantage apps simply by describing what you need to your own AI agent. Vantage provides skills and means to debug your app."
 
 [[extra.howitworks_steps]]
 icon = "bolt"
-title = "3. Run"
-body = "Browse, search, filter and edit natively. Change the YAML or the data and the UI reacts live — no refresh, no rebuild."
+title = "3. Run & Share"
+body = "Commit your app to a Git repository or upload a ZIP to your intranet site. Never share credentials. This way your co-workers can also enjoy Vantage."
 
 # ---- Framework band ----
 [extra.framework_callout]

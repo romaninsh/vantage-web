@@ -1,6 +1,6 @@
 +++
 title = "Features"
-description = "A native console built from config you own — declarative YAML for structure, Rhai for logic, written by your AI agent."
+description = "Vantage reads files from your project folders and constructs a GUI. Vantage connects to your databases and APIs to retrieve data."
 template = "features.html"
 
 [extra]
@@ -67,11 +67,14 @@ notes = [
 ]
 
 [[extra.gallery]]
-title = "Detail sheet"
-image = "images/vantage-ui-app.png"
+title = "Wizards"
+image = "images/features/wizard.webp"
+full = "images/features/wizard-full.webp"
 notes = [
-  "Inspect a single row in a side sheet — every field, scrollable.",
-  "No widening columns or scrolling sideways to read a record.",
+  "Multi-step flows for guided data entry and operations.",
+  "Collect input across screens, then commit in one go.",
+  "Fully scripted interactions — full access to all tables.",
+  "A reactive UI to display progress bars or logs.",
 ]
 
 [[extra.gallery]]

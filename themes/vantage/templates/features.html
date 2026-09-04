@@ -18,8 +18,8 @@
 <!-- 1. Two languages, one config -->
 <section class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-h2">Two languages, one config</h2>
-        <p class="mt-4 text-text-2">Config in Vantage is two first-class languages, not one with an escape hatch. <strong class="font-semibold text-text-1">YAML</strong> declares the shape; <strong class="font-semibold text-text-1">Rhai</strong> carries the logic. Both live in the same git folder — and your agent writes both.</p>
+        <h2 class="text-h2">Your app = structure + code</h2>
+        <p class="mt-4 text-text-2">Menu items, page layout and widget types are described in <strong class="font-semibold text-text-1">YAML</strong>. Custom logic and behaviour live in <strong class="font-semibold text-text-1">Rhai</strong>. The project folder also ships <strong class="font-semibold text-text-1">.skills</strong> that teach your AI coding agent to write both.</p>
     </div>
     <div class="mt-8 grid gap-4 md:grid-cols-2">
         <div class="code-card">
@@ -49,14 +49,14 @@ model.get_ref("clients", row.id)
      .get_ref("orders", client_id)</code></pre>
         </div>
     </div>
-    <p class="mt-4 text-center text-sm text-text-3">Queries, drill-downs, actions, computed fields and visibility are all real, diffable code.</p>
+    <p class="mt-4 text-center text-sm text-text-3">When a file changes on disk, Vantage re-reads it and the UI updates live.</p>
 </section>
 
 <!-- 2. Connect anything -->
 <section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
     <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-h2">Connect anything</h2>
-        <p class="mt-4 text-text-2">One sidebar over every system you run. <strong class="font-semibold text-text-1">Reading and listing rows is baseline — every source does it.</strong> Beyond that, each driver advertises an honest capability contract, and the UI renders only the controls a backend really supports. Pick one to see what it can do.</p>
+        <h2 class="text-h2">Tables (or Models) and DataSources</h2>
+        <p class="mt-4 text-text-2">Vantage needs a <strong class="font-semibold text-text-1">DataSource</strong> to read data. Each DataSource has a unique set of <strong class="font-semibold text-text-1">capabilities</strong>. Once a connection is established, Vantage reads <strong class="font-semibold text-text-1">tables</strong> to learn about columns, record types and relations. <strong class="font-semibold text-text-1">Enterprise</strong> builds can also define strongly typed tables in <strong class="font-semibold text-text-1">Rust</strong>.</p>
     </div>
 
     <div class="backend-explorer mt-10">
@@ -124,15 +124,15 @@ model.get_ref("clients", row.id)
         </div>
     </div>
 
-    <p class="mt-4 text-center text-sm text-text-3">Create / update / delete also depend on whether the source is writable — a query-sourced (Rhai) table is read-only by design. You can also read from one backend and write through another.</p>
+    <p class="mt-4 text-center text-sm text-text-3">Every GUI element adapts to the table it's bound to — buttons and features follow the backend's capabilities.</p>
 </section>
 
 <!-- 3. Build a real console -->
 <section class="mt-20 border-y border-line bg-surface-1/60 py-16 md:mt-28 md:py-20">
     <div class="mx-auto max-w-6xl px-4 sm:px-6">
         <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-h2">Build a real App&mdash;not just a grid</h2>
-            <p class="mt-4 text-text-2">There are hundreds of enhancements and custom UI elements to achieve best UX.</p>
+            <h2 class="text-h2">Build a rich GUI&mdash;not just CRUD</h2>
+            <p class="mt-4 text-text-2">In Vantage, UI elements are reactive. YAML controls layout and visibility, while Rhai drives behaviour. Vantage satisfies the majority of use cases with generic widgets.</p>
         </div>
         <div class="mt-10 grid gap-6 md:grid-cols-2">
             {% for item in page.extra.gallery %}
@@ -161,27 +161,31 @@ model.get_ref("clients", row.id)
 </section>
 
 <!-- 3b. Ship it as an API -->
-<section id="api" class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
+<section id="enterprise" class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
     <div class="mx-auto max-w-2xl text-center">
-        <span class="badge-soon mb-4 inline-block">Coming soon</span>
-        <h2 class="text-h2">Ship it as an API, not just an app</h2>
-        <p class="mt-4 text-text-2">The same config you build the console from can serve your own frontend. Author the backend in Vantage&nbsp;UI — no hand-written Rust — then take it live two ways, both with zero code.</p>
+        <h2 class="text-h2">Vantage for the Enterprise</h2>
+        <p class="mt-4 text-text-2">
+            As an enterprise client, you get a custom release pipeline with your own
+            configuration of Vantage. Supply your own DataSources,
+            add table definitions in <strong class="font-semibold text-text-1">native Rust</strong>,
+            and bundle your own actions.
+        </p>
     </div>
 
     <div class="mt-10 grid gap-6 md:grid-cols-2">
         <div class="card p-6">
-            <span class="material-symbols-outlined mb-3 block !text-[2rem] text-accent-400">developer_mode_tv</span>
-            <h3 class="text-[1.02rem]">Run it locally</h3>
-            <p class="mt-2 text-sm leading-relaxed text-text-2">Start the API server on your machine and point your own React or mobile app at it — the same typed data surface the console speaks, now backing your frontend.</p>
+            <span class="material-symbols-outlined mb-3 block !text-[2rem] text-accent-400">rocket_launch</span>
+            <h3 class="text-[1.02rem]">Your own build cycle</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-2">Signed, notarized binaries linked to your SSO. Installs cleanly on corporate laptops, with upgrades orchestrated on your schedule — no store, no self-hosting.</p>
         </div>
         <div class="card p-6">
-            <span class="material-symbols-outlined mb-3 block !text-[2rem] text-accent-400">deployed_code</span>
-            <h3 class="text-[1.02rem]">Deploy it</h3>
-            <p class="mt-2 text-sm leading-relaxed text-text-2">Export a standalone, dockerised Axum server — your project embedded straight from Vantage&nbsp;UI — and ship it to AWS&nbsp;Lambda or Kubernetes. Stateless, with a local cache.</p>
+            <span class="material-symbols-outlined mb-3 block !text-[2rem] text-accent-400">extension</span>
+            <h3 class="text-[1.02rem]">Compiled-in extensions</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-2">Custom DataSources, strongly typed table definitions and UI widgets written in Rust, bundled into your build through a fully automated pipeline.</p>
         </div>
     </div>
 
-    <p class="mt-6 text-center text-sm text-text-3">Transactional REST first; reactive (WebSocket) after. <a href="/framework/#api" class="text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400">See the engine that runs it →</a></p>
+    <p class="mt-6 text-center text-sm text-text-3">Want your own distribution? <a href="/solutions/enterprise/" class="text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400">Talk to us →</a></p>
 </section>
 
 <!-- 4. Your agent does the typing -->
