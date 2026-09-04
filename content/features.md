@@ -73,6 +73,8 @@ full = "images/features/wizard-full.webp"
 notes = [
   "Multi-step flows for guided data entry and operations.",
   "Collect input across screens, then commit in one go.",
+  "Fully scripted interactions — full access to all tables.",
+  "A reactive UI to display progress bars or logs.",
 ]
 
 [[extra.gallery]]
