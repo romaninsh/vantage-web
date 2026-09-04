@@ -67,11 +67,12 @@ notes = [
 ]
 
 [[extra.gallery]]
-title = "Detail sheet"
-image = "images/vantage-ui-app.png"
+title = "Wizards"
+image = "images/features/wizard.webp"
+full = "images/features/wizard-full.webp"
 notes = [
-  "Inspect a single row in a side sheet — every field, scrollable.",
-  "No widening columns or scrolling sideways to read a record.",
+  "Multi-step flows for guided data entry and operations.",
+  "Collect input across screens, then commit in one go.",
 ]
 
 [[extra.gallery]]
