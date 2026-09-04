@@ -1,5 +1,5 @@
 +++
-title = "One console over the data you already have"
+title = "App that works with the data you already have"
 description = "Replace the drawer of homegrown tools with one AI-authored console over your databases, APIs, cloud and CLI tools — at the full power of your backends."
 template = "page.html"
 weight = 1

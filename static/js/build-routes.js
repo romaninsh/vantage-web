@@ -223,7 +223,7 @@ if (root) {
       at += s.elapsed || 0;
       if (s.closed) {
         items += `<li class="br-closed" style="--d:${shown++}">
-          <span class="br-closed-tag">closed</span>
+          <span class="br-closed-tag">likely rejected</span>
           <span>${s.closed(t.unreached)}</span>
           <span class="br-closed-when">${dur(s.elapsed)} of waiting</span>
         </li>`;
@@ -254,7 +254,7 @@ if (root) {
     panelEl.innerHTML = `
       <ol class="br-steps">${items}</ol>
       <div class="br-totals" aria-live="polite">
-        <div><small>${t.closed ? "spent before it closed" : "to production"}</small><b data-count="${t.reached}">${money(0)}</b></div>
+        <div><small>${t.closed ? "spent before rejection" : "to production"}</small><b data-count="${t.reached}">${money(0)}</b></div>
         <div><small>${t.closed ? "per year, had it shipped" : "per year"}</small>${
           route.perYearLabel
             ? `<b class="br-talk">${route.perYearLabel}</b>`
