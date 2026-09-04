@@ -68,7 +68,7 @@ compare = [
   { label = "MIT framework underneath", free = "forever", ent = "forever" },
   { label = "Architecture partner & training", free = "no", ent = "yes" },
   { label = "Support", free = "community", ent = "Slack Connect", ent_href = "https://slack.com/intl/en-gb/blog/collaboration/slack-shared-channels" },
-  { label = "Price for personal and commercial use", free = "$0 forever", ent = "one conversation", href = "/solutions/enterprise/#ent-form" },
+  { label = "Price for personal and commercial use", free = "$0 forever", ent = "talk to us", ent_href = "/solutions/enterprise/#ent-form" },
 ]
 
 # Roadmap deck — click to flip through. Order here is the initial stack order.
