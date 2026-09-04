@@ -677,6 +677,246 @@
         @apply !text-[1.15rem] text-text-3/50;
     }
 
+    /* ---------- Build routes: choose how you'd build it (internal-tools page) ---------- */
+    /* Each route paints itself through --br-c, set inline from the JS. */
+
+    .br {
+        @apply my-10 rounded-2xl border border-line bg-surface-1 p-5 sm:p-6;
+    }
+
+    .br-prompt {
+        @apply m-0 text-center text-[1.05rem] font-semibold text-text-1;
+    }
+
+    .br-options {
+        @apply mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4;
+    }
+
+    .br-option {
+        @apply flex cursor-pointer flex-col items-stretch gap-0.5 rounded-xl border border-line bg-surface-2 px-3.5 py-3 text-start transition-colors;
+
+        b {
+            @apply text-[0.9rem] font-semibold text-text-1;
+        }
+
+        > small {
+            @apply text-[0.74rem] leading-snug text-text-3;
+        }
+    }
+
+    .br-option:hover {
+        @apply border-line-strong;
+    }
+
+    .br-option[aria-pressed="true"] {
+        border-color: var(--br-c);
+        background: color-mix(in srgb, var(--br-c) 10%, var(--color-surface-2));
+    }
+
+    .br-option-dot {
+        @apply mb-1 block size-2.5 rounded-full;
+        background: var(--br-c);
+    }
+
+    /* Total / Yearly / PoC / ETA — question marks until the route has been run. */
+    .br-stats {
+        @apply mt-3 flex flex-col gap-1 border-t border-line pt-2.5;
+
+        > div {
+            @apply flex items-baseline justify-between gap-2;
+        }
+
+        dt {
+            @apply font-mono text-[0.58rem] tracking-wider text-text-3 uppercase;
+        }
+
+        dd {
+            @apply m-0 text-[0.82rem] font-semibold text-text-3 tabular-nums;
+        }
+    }
+
+    .br-option.is-solved .br-stats dd {
+        @apply text-text-1;
+    }
+
+    /* The rule and the verdict appear only once the route has been run.
+       The page's prose styles put 40px around a bare <hr> and 16px around a
+       <p>, so both are forced back to the same rhythm as the rule above the
+       stats: 12px over the line, 10px under it. */
+    .br-rule {
+        @apply hidden border-0 border-t border-line !mt-3 !mb-0;
+    }
+
+    .br-verdict {
+        @apply hidden text-[0.76rem] leading-snug text-text-2 !mt-2.5 !mb-0;
+    }
+
+    .br-verdict.is-good {
+        @apply font-medium text-accent-300;
+    }
+
+    .br-option.is-solved .br-rule,
+    .br-option.is-solved .br-verdict {
+        @apply block;
+    }
+
+    /* ── the expanded route ── */
+
+    .br-panel {
+        @apply mt-5 rounded-xl border border-line bg-bg/60 p-4 sm:p-5;
+    }
+
+    .br-steps {
+        @apply relative m-0 list-none p-0;
+    }
+
+    /* the line the stops hang from, behind the icons */
+    .br-steps::before {
+        content: "";
+        @apply absolute top-4 bottom-4 left-[3.9rem] w-0.5 rounded;
+        background: var(--br-c);
+        opacity: .4;
+    }
+
+    .br-step {
+        @apply relative grid grid-cols-[3rem_auto_1fr] items-start gap-x-3 py-2 sm:grid-cols-[3rem_auto_1fr_auto];
+    }
+
+    /* timeline gutter */
+    .br-when {
+        @apply mt-2 text-end font-mono text-[0.64rem] tracking-wider text-text-3 uppercase;
+    }
+
+    .br-dot {
+        @apply z-[1] flex size-8 items-center justify-center rounded-full border-2 bg-bg;
+        border-color: var(--br-c);
+
+        .material-symbols-outlined {
+            @apply !text-[1.05rem];
+            color: var(--br-c);
+        }
+    }
+
+    .br-step-body {
+        @apply pt-1;
+
+        b {
+            @apply block text-[0.88rem] font-medium text-text-1;
+        }
+
+        small {
+            @apply mt-0.5 block text-[0.76rem] leading-snug text-text-3;
+        }
+    }
+
+    .br-took {
+        @apply mt-1 block font-mono text-[0.62rem] tracking-wider text-text-3 uppercase;
+    }
+
+    .br-step-cost {
+        @apply col-start-3 mt-1 sm:col-start-4 sm:mt-2 sm:text-end;
+    }
+
+    .br-cost {
+        @apply inline-block rounded-md border border-line bg-surface-2 px-1.5 py-0.5 font-mono text-[0.76rem] font-medium whitespace-nowrap text-text-1;
+
+        s {
+            @apply text-text-3;
+        }
+    }
+
+    .br-cost-talk {
+        @apply border-accent-500/40 text-accent-300;
+    }
+
+    .br-step.is-unreached {
+        .br-dot {
+            @apply border-dashed;
+            border-color: color-mix(in srgb, var(--color-text-3) 70%, transparent);
+
+            .material-symbols-outlined {
+                @apply text-text-3;
+            }
+        }
+
+        .br-step-body b {
+            @apply text-text-3;
+        }
+
+        .br-cost {
+            @apply border-dashed;
+        }
+    }
+
+    .br-closed {
+        @apply relative my-2 ms-[3.9rem] flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-lg border border-red-400/30 bg-red-400/[0.06] px-3 py-2 text-[0.82rem] text-text-2;
+    }
+
+    .br-closed-tag {
+        @apply rounded bg-red-400 px-1.5 py-px font-mono text-[0.62rem] font-semibold tracking-widest text-bg uppercase;
+    }
+
+    .br-closed-when {
+        @apply font-mono text-[0.62rem] tracking-wider text-text-3 uppercase;
+    }
+
+    .br-divider {
+        @apply relative my-2 ms-[3.9rem] flex items-center gap-3;
+
+        span {
+            @apply rounded-full border border-accent-500/40 px-2 py-px font-mono text-[0.62rem] tracking-wider whitespace-nowrap text-accent-300 uppercase;
+        }
+    }
+
+    .br-divider::after {
+        content: "";
+        @apply h-px flex-1 bg-accent-500/30;
+    }
+
+    /* steps arrive one after another once a route is picked */
+    .br-anim .br-step,
+    .br-anim .br-closed,
+    .br-anim .br-divider {
+        opacity: 0;
+        animation: br-in .34s ease-out forwards;
+        animation-delay: calc(var(--d) * 70ms);
+    }
+
+    @keyframes br-in {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: none; }
+    }
+
+    /* ── totals for the open route ── */
+
+    .br-totals {
+        @apply mt-4 grid gap-3 border-t border-line pt-4 sm:grid-cols-3;
+
+        small {
+            @apply block font-mono text-[0.62rem] tracking-wider text-text-3 uppercase;
+        }
+
+        b {
+            @apply mt-1 block text-[1.15rem] font-semibold text-text-1 tabular-nums;
+        }
+
+        em {
+            @apply mt-0.5 block text-[0.72rem] leading-snug text-text-3 not-italic;
+        }
+    }
+
+    .br-talk {
+        @apply text-accent-300;
+    }
+
+    .br-good {
+        @apply !text-ok;
+    }
+
+    .br-bad {
+        @apply !text-red-400;
+    }
+
     /* ---------- Free vs enterprise comparison (features page) ---------- */
 
     /* Scrolls sideways on a phone rather than crushing three columns. */

@@ -1,5 +1,5 @@
 +++
-title = "One console over the data you already have"
+title = "App that works with the data you already have"
 description = "Replace the drawer of homegrown tools with one AI-authored console over your databases, APIs, cloud and CLI tools — at the full power of your backends."
 template = "page.html"
 weight = 1
@@ -104,6 +104,9 @@ And unlike Datadog, nothing gets ingested anywhere. Your data stays where it liv
 </div>
 
 <p class="it-caption">The drawer, before. Every item has an owner, a runbook and a failure mode. Vantage retires them into entries in one console's sidebar.</p>
+
+<div id="build-routes" class="br" aria-label="Choose how you would build your app: four routes with the cost of each step"></div>
+<script type="module" src="/js/build-routes.js"></script>
 
 ## One console, unlimited uses
 
