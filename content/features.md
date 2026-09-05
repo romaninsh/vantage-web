@@ -62,23 +62,21 @@ compare = [
   { label = "Your own release channel", free = "no", ent = "signed & notarised" },
   { label = "vantage:// install allowlist", free = "no", ent = "your apps only" },
   { label = "Central credentials & SSO sign-in", free = "no", ent = "yes" },
-  { label = "Credentials handed out per person", free = "no", ent = "one app, shaped per team" },
   { label = "Crash telemetry", free = "optional", ent = "your own Sentry account" },
 
   { group = "What you're standing on" },
   { label = "MIT framework underneath", free = "forever", ent = "forever" },
-  { label = "Source escrow", free = "no", ent = "in writing" },
   { label = "Architecture partner & training", free = "no", ent = "yes" },
-  { label = "Support", free = "community", ent = "a direct line to us" },
-  { label = "Price, personal or commercial", free = "$0 forever", ent = "one conversation" },
+  { label = "Support", free = "community", ent = "Slack Connect", ent_href = "https://slack.com/intl/en-gb/blog/collaboration/slack-shared-channels" },
+  { label = "Price for personal and commercial use", free = "$0 forever", ent = "talk to us", ent_href = "/solutions/enterprise/#ent-form" },
 ]
 
 # Roadmap deck — click to flip through. Order here is the initial stack order.
 roadmap = [
-  { icon = "conversion_path", title = "Wizards", body = "Multi-step flows for guided data entry and operations — collect input across screens, then commit in one go." },
-  { icon = "api", title = "Server-side facade APIs", body = "Turn the same config — data sources plus Rhai logic — into real backend APIs your own frontend or mobile app can call. Start in the console; graduate to code." },
-  { icon = "deployed_code", title = "Export to real code", body = "No lock-in: export your console to a code repository or container image you own and run anywhere. Start in low-code, leave with real code." },
-  { icon = "sensors", title = "Live tables everywhere", body = "SurrealDB tables already update themselves. Next: subscribe to the change-data-capture stream you already run, so Postgres, MySQL and Oracle go live the same way." },
+  { icon = "desktop_windows", title = "Windows", body = "macOS and Linux today. A signed Windows build brings the same app to the laptops most of your colleagues actually use — no VM, no remote desktop." },
+  { icon = "language", title = "The web", body = "The same YAML and Rhai, rendered in a browser. Hand someone a link instead of an install, and put a screen in front of people who will never open a terminal." },
+  { icon = "api", title = "Server-side facade APIs", body = "Turn the same config — data sources plus Rhai logic — into real backend APIs your own frontend or mobile app can call. Start in the app; graduate to code." },
+  { icon = "deployed_code", title = "Export to real code", body = "No lock-in: export your app to a code repository or container image you own and run anywhere. Start in low-code, leave with real code." },
 ]
 
 # UI gallery — `image` paths are placeholders; swap each for a real screenshot of

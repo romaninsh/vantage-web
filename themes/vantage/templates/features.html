@@ -197,7 +197,8 @@ model.get_ref("clients", row.id)
                 <tr>
                     <td class="cmp-label">
                         {%- if row.href -%}
-                        <a class="cmp-link" href="{{ row.href }}" target="_blank" rel="noopener">{{ row.label }}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span></a>
+                        {%- set ext = row.href | truncate(length=4, end="") == "http" -%}
+                        <a class="cmp-link" href="{{ row.href }}"{% if ext %} target="_blank" rel="noopener"{% endif %}>{{ row.label }}{% if ext %}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span>{% endif %}</a>
                         {%- else -%}
                         {{ row.label }}
                         {%- endif -%}
@@ -210,7 +211,8 @@ model.get_ref("clients", row.id)
                         {% elif v == "no" %}
                         <span class="material-symbols-outlined cap-no" title="Not included">remove</span>
                         {% elif vh %}
-                        <a class="cmp-text cmp-link" href="{{ vh }}" target="_blank" rel="noopener">{{ v }}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span></a>
+                        {% set vext = vh | truncate(length=4, end="") == "http" %}
+                        <a class="cmp-text cmp-link" href="{{ vh }}"{% if vext %} target="_blank" rel="noopener"{% endif %}>{{ v }}{% if vext %}<span class="material-symbols-outlined cmp-link-icon">open_in_new</span>{% endif %}</a>
                         {% else %}
                         <span class="cmp-text">{{ v }}</span>
                         {% endif %}
@@ -223,78 +225,13 @@ model.get_ref("clients", row.id)
         </table>
     </div>
 
-    <p class="mt-6 text-center text-sm text-text-3">Want your own distribution? <a href="/solutions/enterprise/" class="text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400">Talk to us →</a></p>
 </section>
 
-<!-- 4. Your agent does the typing -->
-<section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
-    <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-h2">Your agent does the typing</h2>
-        <p class="mt-4 text-text-2">Vantage UI embeds a local <strong class="font-semibold text-text-1">MCP server</strong>, so the coding agent you already use — Claude Code, Cursor, any MCP client — builds your console without leaving the editor.</p>
-    </div>
-
-    <div class="agent-flow mt-10">
-        <div class="agent-step"><span class="material-symbols-outlined">chat</span><span>Describe the tool</span></div>
-        <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
-        <div class="agent-step"><span class="material-symbols-outlined">travel_explore</span><span>Agent introspects over MCP</span></div>
-        <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
-        <div class="agent-step"><span class="material-symbols-outlined">data_object</span><span>Writes YAML + Rhai</span></div>
-        <span class="agent-arrow material-symbols-outlined">arrow_forward</span>
-        <div class="agent-step"><span class="material-symbols-outlined">bolt</span><span>App hot-reloads</span></div>
-    </div>
-
-    <div class="mt-8 grid gap-4 md:grid-cols-[1.4fr_1fr]">
-        <div class="card p-6">
-            <h3 class="text-[0.95rem]">Read-only tools the agent gets</h3>
-            <div class="mt-4 flex flex-wrap gap-2">
-                <code class="tool-chip">list_data_sources</code>
-                <code class="tool-chip">introspect_schema</code>
-                <code class="tool-chip">sample_records</code>
-                <code class="tool-chip">current_project_layout</code>
-                <code class="tool-chip">get_json_schema</code>
-                <code class="tool-chip">validate_config</code>
-                <code class="tool-chip">list_logs</code>
-            </div>
-            <p class="mt-4 text-sm leading-relaxed text-text-3">The agent writes config to disk via plain file I/O; the tools only read and validate. You review and commit — it's early and gets better every release.</p>
-        </div>
-        <div class="card p-6">
-            <h3 class="text-[0.95rem]">Bundled skills</h3>
-            <p class="mt-3 text-sm leading-relaxed text-text-3">Vantage ships <a href="https://agentskills.io" class="text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400" target="_blank" rel="noopener">agentskills.io</a>-style skills (<code class="tool-chip">vantage-ui-builder</code>) that teach any agent how to author pages, charts, Rhai expressions and drill-downs — no extra subscription, kept in sync with the app.</p>
-        </div>
-    </div>
-</section>
-
-<!-- 5. Native, local-first, reactive -->
-<section class="mt-20 border-y border-line bg-surface-1/60 py-14 md:mt-28">
-    <div class="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 text-center sm:px-6 md:grid-cols-4">
-        <div>
-            <span class="material-symbols-outlined mb-3 block !text-[2.2rem] text-accent-400">speed</span>
-            <h3 class="text-[0.95rem]">Native &amp; GPU-accelerated</h3>
-            <p class="mt-1.5 text-sm text-text-3">Built on GPUI, not a web view.</p>
-        </div>
-        <div>
-            <span class="material-symbols-outlined mb-3 block !text-[2.2rem] text-accent-400">sync</span>
-            <h3 class="text-[0.95rem]">Reactive, no refresh</h3>
-            <p class="mt-1.5 text-sm text-text-3">Edit YAML or data — the UI updates in place.</p>
-        </div>
-        <div>
-            <span class="material-symbols-outlined mb-3 block !text-[2.2rem] text-accent-400">lock</span>
-            <h3 class="text-[0.95rem]">Local &amp; private</h3>
-            <p class="mt-1.5 text-sm text-text-3">Your data and config stay on your machine — only crash analytics leave it, and enterprise builds can turn that off.</p>
-        </div>
-        <div>
-            <span class="material-symbols-outlined mb-3 block !text-[2.2rem] text-accent-400">code</span>
-            <h3 class="text-[0.95rem]">Config-as-code</h3>
-            <p class="mt-1.5 text-sm text-text-3">YAML + Rhai you version, diff and hand off.</p>
-        </div>
-    </div>
-</section>
-
-<!-- 6. Coming next — roadmap deck -->
+<!-- 4. Coming next — roadmap deck -->
 <section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6 md:mt-28">
     <div class="mx-auto max-w-2xl text-center">
         <h2 class="text-h2">On the roadmap</h2>
-        <p class="mt-4 text-text-2">Where Vantage is heading. Tap the deck to flip through.</p>
+        <p class="mt-4 text-text-2">Where Vantage is heading. Everything we ship reaches every build — free and enterprise alike. Tap the deck to flip through.</p>
     </div>
     <div class="roadmap-deck mt-10" id="roadmapDeck" role="button" tabindex="0" aria-label="Roadmap cards — activate to see the next">
         {% for r in page.extra.roadmap %}
