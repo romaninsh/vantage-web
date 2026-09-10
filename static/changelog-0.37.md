@@ -32,3 +32,14 @@
 - Fix: on a new record, picking a related row stored its id as text instead of a link, and a date
   set by a script was stored as nothing at all.
 - Fix: closing a wizard with the Escape key left its background work running.
+
+## 0.37.1
+
+- Fix: an expression that opened a brace stopped early. `${ if x { "a" } else { "b" } }` in a page
+  or view read only as far as the first `}`, so it failed to compile and the value never appeared.
+  Braces now nest, and a brace inside a quoted string counts as text.
+- Fix: when an expression failed, the error pointed at the first line of the value instead of the
+  spot that broke, which sent you looking in the wrong place in a long block of YAML.
+- A step's `worker` script now stops if it runs away. It had no ceiling at all, so a loop that
+  never finished kept a step busy forever with nothing to show for it; a runaway now fails the
+  step and offers Retry, the same as any other worker error.
