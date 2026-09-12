@@ -8,8 +8,8 @@ menu:
       - title: "Where Vantage fits"
         url: "/solutions/"
       - divider: true
-      - title: "Internal tools"
-        url: "/solutions/internal-tools/"
+      - title: "Legacy apps"
+        url: "/solutions/rewriting-the-legacy/"
       - title: "Live data"
         url: "/solutions/live-data/"
       - title: "Data mesh"

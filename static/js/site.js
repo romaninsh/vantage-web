@@ -69,9 +69,9 @@
     });
   });
 
-  /* ---------- Roadmap deck (features page) ---------- */
-  const deck = document.getElementById("roadmapDeck");
-  if (deck) {
+  /* ---------- Card decks (roadmap deck on /features, reused elsewhere) ----------
+     Any number of .roadmap-deck blocks are supported; each cycles independently. */
+  document.querySelectorAll(".roadmap-deck").forEach((deck) => {
     const cards = Array.from(deck.querySelectorAll(".roadmap-card"));
     const OFFSET = 16,
       SCALE = 0.05,
@@ -108,7 +108,7 @@
       }
     });
     render();
-  }
+  });
 
   /* ---------- Snippet galleries (framework + example pages) ----------
      Any number of .snip-gallery blocks are supported. The framework page's
