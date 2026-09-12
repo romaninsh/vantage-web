@@ -26,8 +26,8 @@ apps:
 
   - slug: periscope
     title: "Periscope"
-    persona: "Internal tools"
-    persona_url: "/solutions/internal-tools/"
+    persona: "Legacy apps"
+    persona_url: "/solutions/rewriting-the-legacy/"
     status: "available"
     min_version: "0.20.0"
     icon: "lan"
@@ -43,8 +43,8 @@ apps:
 
   - slug: library-story
     title: "Library Story"
-    persona: "Internal tools"
-    persona_url: "/solutions/internal-tools/"
+    persona: "Legacy apps"
+    persona_url: "/solutions/rewriting-the-legacy/"
     status: "available"
     icon: "auto_stories"
     blurb: "A storybook tutorial: Miss Odessa builds a live catalogue for her little library with the AI assistant she already trusts. Read along, copy her prompts into your own agent, and end up with an app of your own."
@@ -57,8 +57,8 @@ apps:
 
   - slug: bakery
     title: "Bakery franchise"
-    persona: "Internal tools"
-    persona_url: "/solutions/internal-tools/"
+    persona: "Legacy apps"
+    persona_url: "/solutions/rewriting-the-legacy/"
     status: "available"
     icon: "storefront"
     blurb: "A back-office admin for a bakery franchise — products, clients and orders, with dashboards and an order-status workflow."
@@ -85,8 +85,8 @@ apps:
 
   - slug: aws-console
     title: "AWS control console"
-    persona: "Internal tools"
-    persona_url: "/solutions/internal-tools/"
+    persona: "Legacy apps"
+    persona_url: "/solutions/rewriting-the-legacy/"
     status: "coming"
     icon: "cloud"
     blurb: "Build the AWS console you actually need — surface only the resources you operate, by wrapping the aws CLI as tables."

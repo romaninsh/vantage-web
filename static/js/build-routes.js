@@ -155,7 +155,6 @@ if (root) {
   const solved = new Set();
 
   root.innerHTML = `
-    <p class="br-prompt">Choose how you would build your app</p>
     <div class="br-options" role="group" aria-label="Four ways to build an internal tool">
       ${ROUTES.map((r) => `
         <button type="button" class="br-option" data-route="${r.id}" aria-pressed="false" style="--br-c:${r.color}">

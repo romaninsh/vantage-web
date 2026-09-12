@@ -22,6 +22,7 @@
 
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    --font-serif: "Lora", Georgia, serif;
 
     --text-display: clamp(2.2rem, 1.3rem + 3.8vw, 3.6rem);
     --text-display--line-height: 1.08;
@@ -681,15 +682,11 @@
     /* Each route paints itself through --br-c, set inline from the JS. */
 
     .br {
-        @apply my-10 rounded-2xl border border-line bg-surface-1 p-5 sm:p-6;
-    }
-
-    .br-prompt {
-        @apply m-0 text-center text-[1.05rem] font-semibold text-text-1;
+        @apply my-6;
     }
 
     .br-options {
-        @apply mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4;
+        @apply grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4;
     }
 
     .br-option {
@@ -1249,6 +1246,28 @@
         a {
             @apply text-accent-300 underline decoration-accent-300/40 underline-offset-2 hover:text-accent-400;
         }
+    }
+
+    /* Pull quote — oversized, right-aligned customer quote, reused across solutions pages */
+    .it-quote {
+        @apply relative my-8 w-full pe-2 text-end;
+    }
+
+    .it-quote::before {
+        content: "\201C";
+        @apply absolute -end-2 -top-10 font-serif text-[7rem] leading-none text-accent-500/25;
+    }
+
+    .it-quote p {
+        @apply relative z-10 m-0 font-serif text-[clamp(1.05rem,2.4vw,1.4rem)] leading-snug font-normal text-text-2 italic;
+    }
+
+    .it-quote p code {
+        @apply rounded-md border border-line bg-surface-2 px-1.5 py-0.5 font-mono text-[0.7em] text-accent-300 not-italic;
+    }
+
+    .it-quote cite {
+        @apply relative z-10 mt-3 block font-mono text-[0.72rem] font-semibold tracking-[0.12em] text-accent-300 uppercase not-italic;
     }
 
     /* Stack swap (developers page) */
