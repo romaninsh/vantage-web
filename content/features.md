@@ -1,6 +1,6 @@
 +++
 title = "Features"
-description = "Vantage reads files from your project folders and constructs a GUI. Vantage connects to your databases and APIs to retrieve data."
+description = "Use Vantage to build your own data-heavy applications. Vantage stores its project files in a folder, constantly monitoring them for changes — so the app can be easily modified from the outside."
 template = "features.html"
 
 [extra]
