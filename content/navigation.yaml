@@ -8,7 +8,7 @@ menu:
       - title: "Where Vantage fits"
         url: "/solutions/"
       - divider: true
-      - title: "Legacy apps"
+      - title: "Rewrite Legacy Apps"
         url: "/solutions/rewriting-the-legacy/"
       - title: "Live data"
         url: "/solutions/live-data/"

@@ -103,14 +103,11 @@
     return Math.floor(s / 3600) + " h ago";
   };
 
-  const doRefresh = () => {
-    const t = ((Date.now() - epoch) / 1000) % PERIOD;
+  // A real refresh takes a moment, and not always the same moment — the
+  // spinner runs for a random stretch (sometimes longer) before the panel
+  // shows anything, with the old values cleared rather than lingering stale.
+  const applyRefresh = (t) => {
     refreshedAt = Date.now();
-    if (pollSpin && !reduced.matches) {
-      pollSpin.classList.remove("ld-spinning");
-      void pollSpin.offsetWidth;
-      pollSpin.classList.add("ld-spinning");
-    }
     if (inOutage(t)) {
       // The reader's click landed in the outage window: they get the 503.
       refreshFailed = true;
@@ -122,6 +119,27 @@
       for (const k in pollCells) setCell(pollCells[k], snap[k], true);
       if (pollErr) pollErr.hidden = true;
     }
+  };
+  const doRefresh = () => {
+    const t = ((Date.now() - epoch) / 1000) % PERIOD;
+    if (reduced.matches) {
+      applyRefresh(t);
+      return;
+    }
+    if (pollBtn) pollBtn.disabled = true;
+    if (pollErr) pollErr.hidden = true;
+    for (const k in pollCells) setCell(pollCells[k], "—", false);
+    if (pollSpin) {
+      pollSpin.classList.remove("ld-spinning");
+      void pollSpin.offsetWidth;
+      pollSpin.classList.add("ld-spinning");
+    }
+    const spinFor = 500 + Math.random() * 900; // 0.5s–1.4s
+    setTimeout(() => {
+      if (pollSpin) pollSpin.classList.remove("ld-spinning");
+      if (pollBtn) pollBtn.disabled = false;
+      applyRefresh(t);
+    }, spinFor);
   };
   const pollBtn = q("poll-btn");
   if (pollBtn) pollBtn.addEventListener("click", doRefresh);

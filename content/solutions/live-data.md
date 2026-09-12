@@ -127,7 +127,7 @@ icon = "bolt"
 .ld-flash { animation: ld-flash-poll 0.9s ease-out 1; }
 .ld-panel-live .ld-flash,
 .ld-devices .ld-flash { animation-name: ld-flash-live; }
-.ld-spinning { animation: ld-spin 0.7s linear 1; }
+.ld-spinning { animation: ld-spin 0.7s linear infinite; }
 .ld-errbar {
     position: absolute;
     left: 0.6rem;
@@ -227,7 +227,7 @@ icon = "bolt"
 .ld-sval { border-radius: 0.25rem; padding: 0 0.2rem; }
 .ld-area {
     display: block;
-    min-height: 3.4rem;
+    min-height: 5rem;
     font-size: 0.78rem;
     line-height: 1.5;
     white-space: pre-wrap;
@@ -426,17 +426,48 @@ icon = "bolt"
     .ld-refresh { transition: none; }
     .ld-refresh:active { transform: none; }
 }
+
+/* ── Founder quote ────────────────────────────────────────────── */
+.ld-founder {
+    margin: 0 0 2.5rem;
+    padding: 1.5rem 1.75rem;
+    border-left: 3px solid var(--color-accent-400);
+    border-radius: 0 0.75rem 0.75rem 0;
+    background: var(--color-surface-1);
+}
+.ld-founder p {
+    margin: 0 0 0.85rem;
+    font-family: var(--font-serif, Georgia, serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--color-text-1);
+}
+.ld-founder p:last-of-type { margin-bottom: 0.9rem; }
+.ld-founder cite {
+    display: block;
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent-300);
+}
 </style>
 
-Dashboards lie. Whatever is on screen is the world as of the last poll — the refresh button is a confession that it isn't current, and the stale row between polls is where the wrong call gets made. Retool-class tools poll. A fast poll is still a poll.
+<blockquote class="ld-founder">
+  <p>"In my teenage years, I was into photography. Standing at the summit, you have an immeasurable amount of detail and movement before you — yet your camera can capture only a small portion of it. How do you convey the completeness of that view, with precision and without distortion?</p>
+  <p>I pursue the same goal with the Vantage framework and Vantage UI. The amount of data your organisation operates on is massive. A Vantage app is a window into that data — it has to respect the ecosystem while becoming part of it.</p>
+  <p>It took me two years to build Vantage — the culmination of 35 years as a software engineer and framework architect. This page is dedicated to the technical excellence at its foundation."</p>
+  <cite>— Romans, author of Vantage</cite>
+</blockquote>
 
-**In Vantage, open screens update by themselves.** When a row changes anywhere in your organisation, every screen showing it catches up within about a second — pushed straight from the source, wherever the source can push. And whichever way freshness arrives, the local cache paints the screen instantly: no spinner standing in for data you already had.
+## The moment something changes..
 
-If you built the stage-1 console, you have already watched this happen — tables that just stay right. This page is what's underneath, and how far it goes.
+Are you a fan of the "refresh" button, or Ctrl+R? If you find them annoying — why is this a feature all apps have?
 
-## Same feed, two dashboards
-
-One scripted feed drives both panels below, live in this page. The right panel behaves like a Vantage screen: every change is pushed and lands in under a second, on its own. The left panel is the other kind of dashboard — it updates when someone presses Refresh. That someone is you now. Keep it current. And mind the timing: for a stretch of every loop the backend throws 503s, and if your click lands there, you get what a polling dashboard gets.
+Go ahead — click the refresh one last time:
 
 <div id="ld-demo" class="ld-demo">
 <div class="ld-panel" data-panel="poll">
@@ -460,11 +491,13 @@ One scripted feed drives both panels below, live in this page. The right panel b
 </div>
 </div>
 
-<p class="ld-caption">The feed is scripted; the button is real. The left panel shows whatever you last fetched, and the counter keeps score of how far behind you've fallen — seconds, then minutes. The right panel just stays right: through the outage it keeps the last known state and catches up on reconnect.</p>
+Let's never have refresh buttons again. Vantage offers a solution to live data — and not just for the UI app you're building, but for your entire organisation. I won't lie — it's a hard, comprehensive challenge, but I've done most of the work for you.
 
-## Both directions
+Any application you build with Vantage has an inherent ability to be real-time. Dashboards, forms, drop-downs and search fields in your Vantage app will update in real-time without data loss or visible flicker.
 
-A live screen you can't act from is a wall monitor. In Vantage, the same layer that streams reads carries writes — from every device at once. Below, the same order is open in two places: someone at a laptop is typing delivery notes, and a warehouse phone marks the order shipped. The status flips on the desktop within a second of the tap. The details field, mid-edit, never loses a character: fields you have touched hold, fields you haven't keep tracking upstream. And if a save fails, nothing is discarded — a draft survives a failed save.
+## The art of making a change
+
+Observing changes in real-time is only half the solution. Making a change is an entirely different problem. Once again, Vantage has a perfect solution — built in, no extra cost:
 
 <div class="ld-devices" aria-hidden="true">
 <div class="ld-desktop">
@@ -488,11 +521,11 @@ A live screen you can't act from is a wall monitor. In Vantage, the same layer t
 </div>
 </div>
 
-<p class="ld-caption">The tap and the typing run on one scripted loop; each cycle is a new order. The push behaviour is the real thing: an action from another device updates every untouched field within a second — and never the one you're typing in.</p>
+Vantage has configurable mechanisms for change resolution during data entry or during a save event — such as change patching and change routing for event-driven system designs. Vantage's architecture is fully idempotent.
 
-## Honest freshness, per backend
+## Change event support by backends
 
-"Live" is a marketing word until someone tells you the mechanism. Not every backend can push, and Vantage never pretends otherwise — every connection states exactly what it delivers, up front:
+Vantage will take advantage of databases or APIs that support "push updates" without additional configuration. For unsupported databases, however, there are still ways around it — either low-level cache polling/invalidation checks, or CDC streams:
 
 <div class="ld-matrix">
 <div class="ld-mrow"><span class="ld-mbackend">SurrealDB</span><span class="ld-mmech">live queries</span><span class="ld-msig ld-msig-push"><i class="ld-dot"></i>push<small>no setup</small></span></div>
@@ -503,11 +536,26 @@ A live screen you can't act from is a wall monitor. In Vantage, the same layer t
 <div class="ld-mfoot"><span class="material-symbols-outlined">rule</span><span><b>CDC — change-data-capture</b> — turns your database's own change log into a stream of events. Debezium reads it from Oracle, SQL Server, MySQL and most databases you already run, and publishes every change to Kafka; Vantage subscribes and delivers it as push to every open screen. And it isn't limited to Debezium — Vantage wires into any CDC mechanism through a custom cache strategy built on the open framework.</span></div>
 </div>
 
-## Built to ride a bad backend
+## Vantage live API export
 
-Push is easy on a healthy network. The **Launch Control** example runs against a deliberately hostile API — injected latency, random 503s — because that is what production looks like on a bad day. Its grids ride straight through: rows never blank on an error, the last known state stays on screen, and when the backend recovers, the refresh catches up. The demo above plays that behaviour on a script; Launch Control does it against a real backend you can poke.
+Vantage can export APIs that support live protocols — WebSocket, or a [Kubernetes-style](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes) `?watch=true` stream delivered as [NDJSON](https://en.wikipedia.org/wiki/JSON_streaming). Read more about how to make one in [The Vantage Book](https://romaninsh.github.io/vantage/intro/step5-sql-dio.html).
 
-Vantage can also stand *in front of* the problem. Run it as a gateway over a poorly implemented third-party API: it polls the API once, at a rate you control, and fans every change out as push to all the services and screens behind it. The flaky vendor sees one polite client instead of twenty hungry ones — your rate limit is spent once, and everything downstream still gets notifications the moment something changes.
+## Built for a bumpy ride
+
+The network is not always reliable. Vantage is built to handle it — latency spikes, random 503s, whatever production looks like on a bad day. Failed requests retry on their own; nothing needs a manual refresh to recover. The [**Launch Control**](/examples/launch-control/) example proves it: its grids run against a deliberately hostile API and ride straight through.
+
+## Vantage as an edge proxy
+
+The resilience, and the ability to produce live API endpoints, make Vantage ideal as your regional "edge" proxy — or even a sidecar for your distributed application. Mechanisms include:
+
+- Cache pre-warming on start
+- Memory and persistent disk cache
+- Decentralised patching and invalidation strategies
+- Two-way — reads and eventual writes
+- Custom change-conflict resolution
+- Horizontally scalable
+- Multithreaded
+- WASM @ edge support (early access)
 
 <div class="my-4">
     <a href="/examples/launch-control/" class="btn btn-primary me-2">Tour Launch Control</a>
