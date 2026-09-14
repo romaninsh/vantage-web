@@ -92,3 +92,24 @@
     alt:    "Dashboards: seven filter dropdowns narrow the query itself, so the KPI cards, stacked trajectory and breakdown list all recompute for the slice"
     width:  480
     height: 283
+"0.40":
+  - thumb:  images/changelog/0.40/01.webp
+    full:   images/changelog/0.40/01-full.webp
+    alt:    "The setup wizard runs the bakery's own SurrealDB in a container — Start, watch the green dot, seed, done"
+    width:  480
+    height: 298
+  - thumb:  images/changelog/0.40/02.webp
+    full:   images/changelog/0.40/02-full.webp
+    alt:    "Every ✨ magic process opens as a form — pick the bakery, write the slogan, launch the campaign"
+    width:  480
+    height: 298
+  - thumb:  images/changelog/0.40/03.webp
+    full:   images/changelog/0.40/03-full.webp
+    alt:    "The campaign runs in a real container and narrates every signup, order and invoice as it lands"
+    width:  480
+    height: 298
+  - thumb:  images/changelog/0.40/04.webp
+    full:   images/changelog/0.40/04-full.webp
+    alt:    "Clients build up orders, invoices and balances live, while background jobs report on the Services sheet"
+    width:  480
+    height: 298
