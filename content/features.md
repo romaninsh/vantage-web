@@ -1,6 +1,6 @@
 +++
 title = "Features"
-description = "Vantage reads files from your project folders and constructs a GUI. Vantage connects to your databases and APIs to retrieve data."
+description = "Use Vantage to build your own data-heavy applications. Vantage stores its project files in a folder, constantly monitoring them for changes — so the app can be easily modified from the outside."
 template = "features.html"
 
 [extra]
@@ -28,12 +28,55 @@ edit_rows = [
   { key = "delete", label = "Delete records" },
 ]
 
+# Free build vs. enterprise distribution. Each row is one capability; `free` and
+# `ent` render as a tick for "yes", a dash for "no", and as plain text otherwise.
+# A row with only `group` set draws a section heading instead of a comparison.
+compare = [
+  { group = "Build your app" },
+  { label = "Datasources out of the box", free = "12", ent = "12 + your own" },
+  { label = "Colour themes", free = "36", ent = "36 + one that's yours" },
+  { label = "Native types mapped per source", free = "up to 24", ent = "+ types you define" },
+  { label = "Grids past a million rows", free = "yes", ent = "yes" },
+  { label = "Charts, KPI cards, dashboards", free = "yes", ent = "yes" },
+  { label = "Multi-step wizards & CSV import", free = "yes", ent = "yes" },
+  { label = "Custom form layouts", free = "yes", ent = "yes" },
+  { label = "Auto-refresh in the background", free = "yes", ent = "yes" },
+  { label = "Push-style instant refresh", free = "SurrealDB, PostgreSQL", ent = "+ CDC: Kafka, Debezium, custom listeners" },
+  { label = "Your AI agent builds it over MCP", free = "yes", ent = "yes" },
+  { label = "MCP debugging — query preview, error check", free = "yes", ent = "+ BDD suite, run at build" },
+
+  { group = "Custom tables" },
+  { label = "Custom queries & aggregates", free = "Rhai", ent = "Rhai + Rust" },
+  { label = "Actions", free = "Rhai", ent = "Rhai + Rust" },
+  { label = "Internal API", free = "Rhai", ent = "Rhai + Rust" },
+  { label = "Custom datasources", free = "OSS, community", free_href = "https://github.com/romaninsh/vantage", ent = "yours or ours", href = "https://romaninsh.github.io/vantage/new-persistence.html" },
+  { label = "UI widgets", free = "21 built in", ent = "+ your own in Rust" },
+  { label = "Third-party WASM plugins", free = "no", ent = "yes" },
+
+  { group = "Internal distribution control" },
+  { label = "Application distribution", free = "vantage-ui.com, or clone by hand", ent = "internal catalog, apps auto-update" },
+  { label = "Platforms", free = "macOS, Linux", ent = "+ API/MCP" },
+  { label = "Verifiable builds, on demand", free = "no", ent = "your components in the binary" },
+  { label = "Your name, icon and About box", free = "no", ent = "yes" },
+  { label = "Turn off what you don't need", free = "no", ent = "yes" },
+  { label = "Your own release channel", free = "no", ent = "signed & notarised" },
+  { label = "vantage:// install allowlist", free = "no", ent = "your apps only" },
+  { label = "Central credentials & SSO sign-in", free = "no", ent = "yes" },
+  { label = "Crash telemetry", free = "optional", ent = "your own Sentry account" },
+
+  { group = "What you're standing on" },
+  { label = "MIT framework underneath", free = "forever", ent = "forever" },
+  { label = "Architecture partner & training", free = "no", ent = "yes" },
+  { label = "Support", free = "community", ent = "Slack Connect", ent_href = "https://slack.com/intl/en-gb/blog/collaboration/slack-shared-channels" },
+  { label = "Price for personal and commercial use", free = "$0 forever", ent = "talk to us", ent_href = "/solutions/enterprise/#ent-form" },
+]
+
 # Roadmap deck — click to flip through. Order here is the initial stack order.
 roadmap = [
-  { icon = "conversion_path", title = "Wizards", body = "Multi-step flows for guided data entry and operations — collect input across screens, then commit in one go." },
-  { icon = "api", title = "Server-side facade APIs", body = "Turn the same config — data sources plus Rhai logic — into real backend APIs your own frontend or mobile app can call. Start in the console; graduate to code." },
-  { icon = "deployed_code", title = "Export to real code", body = "No lock-in: export your console to a code repository or container image you own and run anywhere. Start in low-code, leave with real code." },
-  { icon = "sensors", title = "Live tables everywhere", body = "SurrealDB tables already update themselves. Next: subscribe to the change-data-capture stream you already run, so Postgres, MySQL and Oracle go live the same way." },
+  { icon = "desktop_windows", title = "Windows", body = "macOS and Linux today. A signed Windows build brings the same app to the laptops most of your colleagues actually use — no VM, no remote desktop." },
+  { icon = "language", title = "The web", body = "The same YAML and Rhai, rendered in a browser. Hand someone a link instead of an install, and put a screen in front of people who will never open a terminal." },
+  { icon = "api", title = "Server-side facade APIs", body = "Turn the same config — data sources plus Rhai logic — into real backend APIs your own frontend or mobile app can call. Start in the app; graduate to code." },
+  { icon = "deployed_code", title = "Export to real code", body = "No lock-in: export your app to a code repository or container image you own and run anywhere. Start in low-code, leave with real code." },
 ]
 
 # UI gallery — `image` paths are placeholders; swap each for a real screenshot of
