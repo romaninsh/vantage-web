@@ -59,6 +59,17 @@ model.get_ref("clients", row.id)
         <p class="mt-4 text-text-2">Vantage needs a <strong class="font-semibold text-text-1">DataSource</strong> to read data. Each DataSource has a unique set of <strong class="font-semibold text-text-1">capabilities</strong>. Once a connection is established, Vantage reads <strong class="font-semibold text-text-1">tables</strong> to learn about columns, record types and relations. <strong class="font-semibold text-text-1">Enterprise</strong> builds can also define strongly typed tables in <strong class="font-semibold text-text-1">Rust</strong>.</p>
     </div>
 
+    {# The shipped driver set, synced from vantage-ui's driver registry on
+       every release (static/drivers.json — the release workflow rewrites
+       it beside the changelog). required=true is the drift check: a
+       malformed or missing export fails this build, not the reader. #}
+    {% set drivers = load_data(path="static/drivers.json", required=true) %}
+    <div class="mx-auto mt-6 flex max-w-3xl flex-wrap justify-center gap-2">
+        {% for d in drivers %}{% if d.enabled and d.tier == "community" %}
+        <span class="badge-now" title="{{ d.capabilities }}">{{ d.label }}</span>
+        {% endif %}{% endfor %}
+    </div>
+
     <div class="backend-explorer mt-10">
         <div class="backend-list" role="tablist">
             {% for b in page.extra.backends %}
