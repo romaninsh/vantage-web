@@ -1,0 +1,145 @@
+[
+  {
+    "capabilities": "Point at .csv files and get browsable, searchable tables with paging — no server at all. Column types are declared once and remembered.",
+    "class": "file",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "file-text",
+    "id": "csv",
+    "label": "CSV files",
+    "order": 5,
+    "tier": "community"
+  },
+  {
+    "capabilities": "A single-file database inside your project. Full CRUD grids, forms, relations and query-sourced dashboard tables.",
+    "class": "file",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "database",
+    "id": "sqlite",
+    "label": "SQLite",
+    "order": 10,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Full CRUD, relations, search, paging and query-sourced dashboard tables over any Postgres — including cloud warehouses.",
+    "class": "service",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "database",
+    "id": "postgres",
+    "label": "PostgreSQL",
+    "order": 20,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Full CRUD, relations, search and paging over MySQL and MariaDB.",
+    "class": "service",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "database",
+    "id": "mysql",
+    "label": "MySQL",
+    "order": 30,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Live queries that update grids in real time, graph relations, record links, search, paging, import — and query-sourced tables with observation args for filtered dashboards.",
+    "class": "service",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "database-zap",
+    "id": "surrealdb",
+    "label": "SurrealDB",
+    "order": 40,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Documents as drillable tables: browse, search, page and edit collections without writing an aggregation pipeline.",
+    "class": "service",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "leaf",
+    "id": "mongo",
+    "label": "MongoDB",
+    "order": 50,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Any JSON REST API as browsable tables — auth headers from your secrets, drill-downs across endpoints, resilient to flaky servers.",
+    "class": "api",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "globe",
+    "id": "rest",
+    "label": "REST API",
+    "order": 60,
+    "tier": "community"
+  },
+  {
+    "capabilities": "A GraphQL endpoint as related, drillable tables — queries are built for you from what the page needs.",
+    "class": "api",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "share-2",
+    "id": "graphql",
+    "label": "GraphQL",
+    "order": 70,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Wrap any JSON-emitting CLI (aws, kubectl, gh, your own tool) as tables — the command runs on demand, rows appear like any other datasource.",
+    "class": "api",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "square-terminal",
+    "id": "cmd",
+    "label": "CLI command",
+    "order": 80,
+    "tier": "community"
+  },
+  {
+    "capabilities": "A native Kubernetes datasource: nodes, namespaces and workloads as related tables with drill-downs — no kubectl, no proxy.",
+    "class": "api",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "boxes",
+    "id": "kubernetes",
+    "label": "Kubernetes",
+    "order": 85,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Browse AWS resources as tables through a native datasource using your local credentials and profiles.",
+    "class": "api",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "cloud",
+    "id": "aws",
+    "label": "AWS",
+    "order": 90,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Generated, optionally live-mutating sample data — the zero-setup playground behind the demo dashboards.",
+    "class": "api",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "sparkles",
+    "id": "faker",
+    "label": "Sample data",
+    "order": 95,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Parked: not wired to a vista yet.",
+    "class": "api",
+    "doc_url": null,
+    "enabled": false,
+    "icon": "cloud",
+    "id": "aws-dynamodb",
+    "label": "DynamoDB",
+    "order": 96,
+    "tier": "community"
+  }
+]
