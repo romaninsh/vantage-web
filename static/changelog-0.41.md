@@ -23,6 +23,21 @@ Connecting your data is now a guided path, not a leap of faith.
   form remains for editing what exists.
 - **Skills stay in sync by themselves.** Every project gets the full skill set,
   installed on create and refreshed on every open — no per-backend picking.
+
+## 0.41.1
+
+- **Rebuilt AI skills.** Your coding agent gets a new skill set checked against
+  Vantage itself: a build order that puts real data on screen within minutes,
+  a quality checklist (colours, money, dates, icons), verification and debugging
+  guides, dashboards, actions, Rhai, and a skill for each of the 13 data
+  sources — packed with working examples. Agents now tell you plainly when
+  something can't be built, and note it in `FEEDBACK.md` for you to send.
+- **Watch your agent work.** The agent opens the page it's changing in your
+  Vantage window, so you see every edit land as it happens.
+- Fix: a project with its own database could open to "datasource offline" right
+  after Vantage started or resumed the stack — the app could reach the
+  container's port a moment before the database inside it was ready. It now
+  waits for the service's own health check.
 - **"Verify your setup."** The AI setup screen is now three honest steps:
   configure data (the wizard), open the folder in your agent, and watch the
   three signals confirm it all works.
