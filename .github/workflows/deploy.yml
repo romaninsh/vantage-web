@@ -64,7 +64,9 @@ jobs:
         # vantage-ui-examples build-example-zips workflow (the vantage://
         # one-click installer downloads them from /examples/). They aren't in
         # public/, so without this exclude `--delete` would wipe them.
-        run: aws s3 sync public/ "s3://${SITE_BUCKET}" --delete --exclude 'examples/*.zip'
+        # Exclude book/*: the framework mdBook, published to /book/ by
+        # vantage-ui's book.yaml workflow — same reasoning.
+        run: aws s3 sync public/ "s3://${SITE_BUCKET}" --delete --exclude 'examples/*.zip' --exclude 'book/*'
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"
