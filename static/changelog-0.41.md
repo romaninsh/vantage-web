@@ -24,6 +24,15 @@ Connecting your data is now a guided path, not a leap of faith.
 - **Skills stay in sync by themselves.** Every project gets the full skill set,
   installed on create and refreshed on every open — no per-backend picking.
 
+## 0.41.2
+
+- **Sidebar sections fold.** One section open at a time, the first by default; click a
+  heading to switch. The page list scrolls, so a long menu no longer runs under Project
+  Settings.
+- **Menu bar navigation.** Set `menu: { placement: native }` in `application.yaml` and your
+  pages move into the macOS menu bar — one menu per section, submenus for nested ones — and
+  the sidebar goes away.
+
 ## 0.41.1
 
 - **Rebuilt AI skills.** Your coding agent gets a new skill set checked against
