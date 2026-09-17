@@ -1,13 +1,14 @@
 # Vantage 0.25
 
+A SurrealDB data source used one shared database password. It can now reach a hosted instance and
+sign you in through your browser instead.
+
 ## What's new
 
-- **Sign in to a cloud data source.** A SurrealDB data source can now reach a hosted (cloud)
-  instance and log you in through your browser — you sign in with your identity provider (for
-  example Google, via Auth0) and Vantage connects using the token it hands back, instead of a
-  shared database password. Your login is remembered, so the next launch reconnects on its own.
+- Signing in goes through your own identity provider, Google via Auth0 for example, and the data
+  source connects with the token that comes back. The login is remembered and the next launch
+  reconnects on its own.
 
 ## 0.25.1
 
-- Fix: SurrealDB record IDs and timestamps could show up blank or as raw numbers instead of
-  their real value.
+- Fix: SurrealDB record IDs and timestamps could show up blank or as raw numbers.

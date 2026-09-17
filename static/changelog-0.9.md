@@ -1,19 +1,14 @@
 # Vantage 0.9
 
-Tables handle a million rows without breaking a sweat. A new reactive caching layer lazy-loads only
-what's on screen, keeps multiple views in sync, and refreshes in the background.
+Tables handle a million rows. Only the rows you can see are fetched and the rest wait in a backing
+cache; sequential and cursor-based pagination are picked per backend, so scrolling stays smooth
+whatever the size of the data, and sorting falls back to in-memory where the backend can't do it.
 
 ## What's new
 
-- **Big tables feel instant.** Only the rows you can see are fetched; the rest wait in a backing
-  cache. Sequential and cursor-based pagination are picked automatically per backend, so scrolling
-  is smooth regardless of dataset size. Sorting falls back to in-memory when the backend doesn't
-  support it.
-- **Background refresh.** Tables refresh without flicker — on file change, on a schedule, or when
-  you hit the button explicitly. Refresh strategy depends on the data source.
-- **Dirty-record tracking.** The cache layer tracks pending changes; UI indicators will follow.
-- **Shared cache across views.** Open the same table in two tabs, or a master grid plus a detail
-  sheet — they share one cache, and edits in one view appear in the other instantly. Individual
-  record lookups and aggregate counts are cached separately.
-- **Mixed-backend tables.** Read rows from DynamoDB, write them through a REST API call.
-  Per-operation backend configuration lets you combine any read source with any write target.
+- Tables refresh without flicker — on file change, on a schedule, or when you press the button. The
+  strategy depends on the data source.
+- Open the same table in two tabs, or a master grid plus a detail sheet, and they share one cache,
+  so an edit in one view appears in the other instantly.
+- Read rows from DynamoDB and write them through a REST API call: the read source and the write
+  target are configured per operation.
