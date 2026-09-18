@@ -19,15 +19,6 @@ named volume and starting it from the Services panel. Nothing is written until y
 - The AI setup screen is three steps: configure data, open the folder in your agent, and watch the
   three signals confirm it works.
 
-## 0.41.2
-
-- **Sidebar sections fold.** One section open at a time, the first by default; click a
-  heading to switch. The page list scrolls, so a long menu no longer runs under Project
-  Settings.
-- **Menu bar navigation.** Set `menu: { placement: native }` in `application.yaml` and your
-  pages move into the macOS menu bar — one menu per section, submenus for nested ones — and
-  the sidebar goes away.
-
 ## 0.41.1
 
 - The bundled skill set was rebuilt against Vantage itself: a build order that puts real data on
