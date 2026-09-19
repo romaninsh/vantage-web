@@ -16,3 +16,16 @@ down. Going down and coming back earns one toast each, rather than an error per 
 - Fix: actions run after switching projects used the previous project.
 - Fix: a terminal action pointed at a missing folder says so, rather than opening in your home
   directory.
+- Fix: some coloured labels showed raw text like `#{"color": "danger", …}` instead of the label.
+
+## 0.42.2
+
+- A project switch, Quit or Ctrl-C with services running shows them stopping while the window
+  stays usable. A datasource that is slow to connect no longer freezes the window either.
+- An `http_request` URL can name a `composer.yaml` service (`http://api:8080/…`), as a datasource
+  URL already could.
+
+## 0.42.3
+
+- Hover the Update button in the title bar to read the release notes of the version it offers.
+- Fix: markdown broke a line wherever its source wrapped, in the release notes and on pages.
