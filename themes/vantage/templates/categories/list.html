@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Categories | Blog | {{ config.title }}{% endblock title %}
+
+{% block content %}
+{{<nav.header />}}
+
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-10 text-center sm:px-6 md:pt-24 md:pb-14">
+        <p class="kicker mb-4">Blog</p>
+        <h1 class="text-display mx-auto max-w-3xl">Categories</h1>
+    </div>
+</section>
+
+<section class="mx-auto max-w-3xl px-4 sm:px-6">
+    <div class="flex flex-col gap-1.5">
+        {% for term in terms %}
+        <a href="{{ term.permalink }}" class="blog-filter">
+            {{ term.name }}<span class="ms-auto text-text-3">{{ term.pages | length }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    <p class="mt-10 text-center text-sm text-text-3"><a class="link" href="{{ get_url(path='blog/') }}">← All posts</a></p>
+</section>
+
+{{<nav.footer />}}
+{% endblock content %}

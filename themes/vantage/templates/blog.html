@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+{{<nav.header />}}
+
+{# Posts marked `featured = true` head the page in a strip; everything else,
+   including any featured post past `featured_limit`, falls through to the
+   archive list. The engine has no `filter` filter and cannot build arrays, so
+   the strip is sized by a counting pass and the archive skips the same posts
+   again. #}
+{% set featured_limit = 3 %}
+{% set_global featured_count = 0 %}
+{% for page in section.pages %}
+    {% if page.extra.featured %}{% set_global featured_count = featured_count + 1 %}{% endif %}
+{% endfor %}
+
+<!-- Section hero -->
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-10 text-center sm:px-6 md:pt-24 md:pb-14">
+        {% if section.extra.kicker %}<p class="kicker mb-4">{{ section.extra.kicker }}</p>{% endif %}
+        <h1 class="text-display mx-auto max-w-3xl">{{ section.title }}</h1>
+        {% if section.description %}<p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ section.description }}</p>{% endif %}
+    </div>
+</section>
+
+<!-- Featured -->
+{% if featured_count > 0 %}
+<section class="mx-auto max-w-6xl px-4 sm:px-6">
+    {# Always a three-column grid, so a lone featured post sits at one third
+       rather than stretching across the page. #}
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {% set_global shown = 0 %}
+        {% for page in section.pages %}
+        {% if page.extra.featured and shown < featured_limit %}
+            {{<blog.featured_card page={page} />}}
+            {% set_global shown = shown + 1 %}
+        {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Archive, with the category filter alongside -->
+<section class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+    {{<blog.archive pages={section.pages} skip_featured={featured_limit} />}}
+
+    <p class="mt-12 text-center text-sm text-text-3">
+        <a class="link" href="{{ get_url(path='blog/atom.xml') }}">Subscribe by Atom feed</a>
+    </p>
+</section>
+
+{{<nav.footer />}}
+{% endblock content %}

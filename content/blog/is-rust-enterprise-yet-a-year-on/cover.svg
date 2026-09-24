@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 563" width="1000" height="563" role="img"
+     aria-label="Eight stacked drawers, one per Vantage layer: types and queries at the bottom, then model, vista, lens, dio, scenery and servo. Most Rust data crates stop after the second drawer.">
+  <defs>
+    <linearGradient id="up" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="563" fill="#0b0b10"/>
+
+  <!-- The six layers above a query builder -->
+  <g fill="url(#up)">
+    <rect x="430" y="44"  width="400" height="48" rx="11"/>
+    <rect x="430" y="104" width="400" height="48" rx="11"/>
+    <rect x="430" y="164" width="400" height="48" rx="11"/>
+    <rect x="430" y="224" width="400" height="48" rx="11"/>
+    <rect x="430" y="284" width="400" height="48" rx="11"/>
+    <rect x="430" y="344" width="400" height="48" rx="11"/>
+  </g>
+  <g fill="#181a26" stroke="#ffffff" stroke-opacity="0.14" stroke-width="2">
+    <rect x="430" y="404" width="400" height="48" rx="11"/>
+    <rect x="430" y="464" width="400" height="48" rx="11"/>
+  </g>
+
+  <!-- Drawer handles -->
+  <g fill="#ffffff" fill-opacity="0.5">
+    <rect x="780" y="64"  width="36" height="8" rx="4"/>
+    <rect x="780" y="124" width="36" height="8" rx="4"/>
+    <rect x="780" y="184" width="36" height="8" rx="4"/>
+    <rect x="780" y="244" width="36" height="8" rx="4"/>
+    <rect x="780" y="304" width="36" height="8" rx="4"/>
+    <rect x="780" y="364" width="36" height="8" rx="4"/>
+  </g>
+  <g fill="#6e7186">
+    <rect x="780" y="424" width="36" height="8" rx="4"/>
+    <rect x="780" y="484" width="36" height="8" rx="4"/>
+  </g>
+
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="21">
+    <g fill="#ffffff">
+      <text x="462" y="75">servo</text>
+      <text x="462" y="135">scenery</text>
+      <text x="462" y="195">dio</text>
+      <text x="462" y="255">lens</text>
+      <text x="462" y="315">vista</text>
+      <text x="462" y="375">model</text>
+    </g>
+    <g fill="#a0a3b5">
+      <text x="462" y="435">queries</text>
+      <text x="462" y="495">types</text>
+    </g>
+  </g>
+
+  <!-- Brackets: the six layers Vantage adds, and the two the ecosystem has -->
+  <path d="M410 44 L 392 44 L 392 392 L 410 392" fill="none" stroke="#818cf8" stroke-width="2.5"/>
+  <path d="M410 404 L 392 404 L 392 512 L 410 512" fill="none" stroke="#6e7186" stroke-width="2.5"/>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="20" text-anchor="end">
+    <text x="366" y="225" fill="#a5b4fc">Vantage (OSS)</text>
+    <text x="366" y="465" fill="#a0a3b5">Rust ecosystem today</text>
+  </g>
+</svg>

@@ -1,0 +1,110 @@
+{# ===== Blog building blocks =====
+
+   Each post is a folder (`content/blog/<slug>/index.md` plus its images), so
+   `page.permalink` is the base URL for every asset the post carries. #}
+
+
+{# Cover art, or an icon panel for a post that has none. #}
+{% component blog.cover(page, ratio = "aspect-[16/9]") %}
+{% if page.extra.cover %}
+<img src="{{ page.permalink }}{{ page.extra.cover }}" alt="" loading="lazy"
+     class="block {{ ratio }} w-full bg-surface-2 object-cover">
+{% else %}
+<div class="flex {{ ratio }} w-full items-center justify-center bg-gradient-to-br from-surface-2 to-surface-1">
+    <span class="material-symbols-outlined !text-[2.6rem] text-accent-500/60">{{ page.extra.icon | default(value="article") }}</span>
+</div>
+{% endif %}
+{% endcomponent blog.cover %}
+
+
+{# Category chips, each linking to that category's archive. On a card they sit
+   above the stretched overlay (z-[1]) so they stay clickable. #}
+{% component blog.chips(page) %}
+{% if page.taxonomies.categories %}
+<div class="flex flex-wrap items-center gap-1.5">
+    {% for category in page.taxonomies.categories %}
+    <a href="{{ get_taxonomy_url(kind='categories', name=category) }}"
+       class="relative z-[2] inline-flex rounded-full border border-line bg-white/5 px-2.5 py-0.5 font-mono text-[0.66rem] font-medium tracking-wider text-text-2 uppercase no-underline hover:border-line-strong hover:text-text-1">{{ category }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+{% endcomponent blog.chips %}
+
+
+{# Date and reading time. `page.date` is required on every post. #}
+{% component blog.byline(page) %}
+<p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8rem] text-text-3">
+    <time datetime="{{ page.date }}">{{ page.date | date(format="%-d %B %Y") }}</time>
+    {% if page.reading_time %}<span aria-hidden="true">·</span><span>{{ page.reading_time }} min read</span>{% endif %}
+</p>
+{% endcomponent blog.byline %}
+
+
+{# Large card for the featured strip at the top of /blog/. #}
+{% component blog.featured_card(page) %}
+<article class="card card-hover relative flex flex-col overflow-hidden">
+    <div class="border-b border-line">{{<blog.cover page={page} />}}</div>
+    <div class="flex grow flex-col p-5">
+        <div class="mb-3">{{<blog.chips page={page} />}}</div>
+        <h3 class="line-clamp-3 text-[1.05rem]">{{ page.title }}</h3>
+        {% if page.description %}<p class="mt-2 line-clamp-3 text-sm leading-relaxed text-text-2">{{ page.description }}</p>{% endif %}
+        <div class="mt-auto pt-4">{{<blog.byline page={page} />}}</div>
+    </div>
+    <a href="{{ page.permalink }}" class="absolute inset-0 z-[1]" aria-label="{{ page.title }}"></a>
+</article>
+{% endcomponent blog.featured_card %}
+
+
+{# Compact row for the archive lists. #}
+{% component blog.list_row(page) %}
+<article class="card card-hover relative flex gap-4 overflow-hidden p-4">
+    <div class="hidden w-40 shrink-0 overflow-hidden rounded-lg border border-line sm:block">
+        {{<blog.cover page={page} ratio="aspect-[16/10]" />}}
+    </div>
+    <div class="flex min-w-0 grow flex-col">
+        <div class="mb-2">{{<blog.chips page={page} />}}</div>
+        <h3 class="text-[1rem]">{{ page.title }}</h3>
+        {% if page.description %}<p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-text-2">{{ page.description }}</p>{% endif %}
+        <div class="mt-auto pt-3">{{<blog.byline page={page} />}}</div>
+    </div>
+    <a href="{{ page.permalink }}" class="absolute inset-0 z-[1]" aria-label="{{ page.title }}"></a>
+</article>
+{% endcomponent blog.list_row %}
+
+
+{# Sidebar filter. `current` is the active term's name, empty on /blog/ itself. #}
+{% component blog.category_nav(current = "") %}
+{% set categories = get_taxonomy(kind="categories") %}
+<nav aria-label="Categories" class="flex flex-row flex-wrap gap-1.5 lg:flex-col">
+    <a href="{{ get_url(path='blog/') }}"
+       class="blog-filter{% if current == '' %} blog-filter--on{% endif %}">All posts</a>
+    {% for term in categories.items %}
+    <a href="{{ term.permalink }}"
+       class="blog-filter{% if current == term.name %} blog-filter--on{% endif %}">
+        {{ term.name }}<span class="ms-auto hidden text-text-3 lg:inline">{{ term.pages | length }}</span>
+    </a>
+    {% endfor %}
+</nav>
+{% endcomponent blog.category_nav %}
+
+
+{# Archive layout: category filter beside a column of post rows. `skip_featured`
+   is how many featured posts the caller already rendered in a strip above; they
+   are dropped from the list so they are not shown twice. #}
+{% component blog.archive(pages, current = "", skip_featured = 0) %}
+<div class="grid gap-8 lg:grid-cols-[13rem_1fr]">
+    <aside class="lg:sticky lg:top-24 lg:self-start">
+        {{<blog.category_nav current={current} />}}
+    </aside>
+    <div class="flex flex-col gap-4">
+        {% set_global skipped = 0 %}
+        {% for page in pages %}
+        {% if page.extra.featured and skipped < skip_featured %}
+            {% set_global skipped = skipped + 1 %}
+        {% else %}
+            {{<blog.list_row page={page} />}}
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endcomponent blog.archive %}

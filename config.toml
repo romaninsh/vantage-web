@@ -17,6 +17,14 @@ minify_html = false
 # Whether to build a search index to be used later on by a JavaScript library
 # build_search_index = true
 
+# Atom feeds: site-wide at /atom.xml, plus one per section that opts in with its
+# own `generate_feeds`. The blog links its section feed at /blog/atom.xml.
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+
+# Terms come from each post's `categories` front matter.
+taxonomies = [{ name = "categories", feed = true }]
+
 
 
 [markdown]
@@ -30,3 +38,8 @@ theme = "monokai"
 
 [extra]
 # Put all your custom variables here
+
+# Byline on blog posts. `blog_author_url` is optional; without it the name is
+# rendered as plain text.
+blog_author = "Romans Malinovskis"
+blog_author_url = "https://bsky.app/profile/nearly.guru"
