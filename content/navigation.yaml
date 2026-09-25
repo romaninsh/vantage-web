@@ -27,6 +27,8 @@ menu:
         url: "/library/"
       - title: "Releases & changelog"
         url: "/download/"
+      - title: "Blog"
+        url: "/blog/"
       - title: "Follow development"
         url: "/follow/"
       - divider: true
@@ -64,6 +66,8 @@ footer:
         url: "/features/"
       - title: "Examples"
         url: "/examples/"
+      - title: "Blog"
+        url: "/blog/"
       - title: "Follow development"
         url: "/follow/"
 

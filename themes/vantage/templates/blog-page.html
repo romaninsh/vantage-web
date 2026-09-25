@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+{{<nav.header />}}
+
+<!-- Post header -->
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    {# 42rem holds roughly 70 characters of the body face — a reading measure,
+       narrower than the 3xl the landing pages use. #}
+    <div class="relative mx-auto max-w-[42rem] px-4 pt-16 pb-8 sm:px-6 md:pt-24">
+        <a class="mb-6 inline-flex items-center gap-1 text-sm text-text-3 no-underline hover:text-text-1" href="{{ get_url(path='blog/') }}">
+            <span class="material-symbols-outlined !text-[1rem]">arrow_back</span>Blog
+        </a>
+        <div class="mb-4">{{<blog.chips page={page} />}}</div>
+        <h1 class="text-display">{{ page.title }}</h1>
+        {% if page.description %}<p class="mt-5 font-serif text-[1.25rem] leading-relaxed text-text-2">{{ page.description }}</p>{% endif %}
+        <div class="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-line pt-5 text-[0.8rem] text-text-3">
+            {% if config.extra.blog_author_url %}
+            <a class="text-text-2 no-underline hover:text-text-1" href="{{ config.extra.blog_author_url }}" target="_blank" rel="noopener">{{ config.extra.blog_author }}</a>
+            {% else %}<span class="text-text-2">{{ config.extra.blog_author }}</span>{% endif %}
+            <span aria-hidden="true">·</span>
+            {{<blog.byline page={page} />}}
+        </div>
+    </div>
+</section>
+
+<!-- Cover -->
+{% if page.extra.cover %}
+<div class="mx-auto max-w-4xl px-4 sm:px-6">
+    <img src="{{ page.permalink }}{{ page.extra.cover }}" alt="" class="block w-full overflow-hidden rounded-2xl border border-line bg-surface-1">
+</div>
+{% endif %}
+
+<!-- Body -->
+<main class="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
+    <article class="prose blog-prose mx-auto max-w-[42rem]">
+        {{ page.content | safe }}
+    </article>
+
+    <div class="mx-auto mt-14 max-w-[42rem] border-t border-line pt-6">
+        <a class="link text-sm" href="{{ get_url(path='blog/') }}">← All posts</a>
+    </div>
+</main>
+
+{{<nav.footer />}}
+{% endblock content %}
