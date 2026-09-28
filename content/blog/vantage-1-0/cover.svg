@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 563" width="1000" height="563" role="img"
+     aria-label="A thick base of generic UI and generic data, a thin layer of custom structure above it, and an even thinner layer of code on top.">
+  <rect width="1000" height="563" fill="#0b0b10"/>
+
+  <!-- Code: the thinnest layer -->
+  <rect x="400" y="134" width="440" height="20" rx="7" fill="#f43f5e"/>
+
+  <!-- Custom structure: what you declare -->
+  <rect x="400" y="168" width="440" height="48" rx="11" fill="#f59e0b"/>
+
+  <!-- Generic base: what Vantage provides -->
+  <rect x="400" y="230" width="216" height="200" rx="16" fill="#3b82f6"/>
+  <rect x="624" y="230" width="216" height="200" rx="16" fill="#10b981"/>
+
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="22" text-anchor="end">
+    <text x="370" y="151" fill="#fb7185">custom code</text>
+    <text x="370" y="199" fill="#fbbf24">custom structure</text>
+  </g>
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="22" font-weight="600" fill="#ffffff" text-anchor="middle">
+    <text x="508" y="337">generic UI</text>
+    <text x="732" y="337">generic data</text>
+  </g>
+</svg>

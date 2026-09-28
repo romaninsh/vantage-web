@@ -108,3 +108,35 @@
     </div>
 </div>
 {% endcomponent blog.archive %}
+
+
+{# An icon beside a block of prose, for walking through a stack one layer at a
+   time. Used from post markdown; `icon` is a file in the post's own folder and
+   `side` puts it "left" or "right". The heading stays in the markdown above,
+   so it keeps its anchor link. #}
+{# The blank lines around `body` matter: they end the HTML block, so the
+   markdown parser treats the body's first paragraph as markdown too. #}
+{% component blog.layer(icon, side = "left") %}
+<div class="layer-row{% if side == 'right' %} layer-row--right{% endif %}">
+<img class="layer-icon" src="{{ icon }}" alt="">
+<div class="layer-body">
+
+{{ body }}
+
+</div>
+</div>
+{% endcomponent blog.layer %}
+
+
+{# A highlighted box for a post's running example, set apart from the prose
+   that describes the product. `title` names the example; it reads
+   "Example · <title>" in the box's label. Blank lines around `body` keep its
+   first paragraph parsed as markdown, as in `blog.layer`. #}
+{% component blog.example(title = "") %}
+<aside class="example-box">
+<p class="example-box__label"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h9v13l-2.25-1.5-2.25 1.5-2.25-1.5-2.25 1.5z M5.5 5h5 M5.5 8h5 M5.5 11h3"/></svg>Example{% if title %} · {{ title }}{% endif %}</p>
+
+{{ body }}
+
+</aside>
+{% endcomponent blog.example %}

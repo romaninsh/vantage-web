@@ -27,10 +27,12 @@
     </div>
 </section>
 
-<!-- Cover -->
-{% if page.extra.cover %}
+<!-- Header image: `hero` when a post has a detailed version of its art, else
+     the card `cover`. -->
+{% set hero = page.extra.hero | default(value=page.extra.cover | default(value="")) %}
+{% if hero %}
 <div class="mx-auto max-w-4xl px-4 sm:px-6">
-    <img src="{{ page.permalink }}{{ page.extra.cover }}" alt="" class="block w-full overflow-hidden rounded-2xl border border-line bg-surface-1">
+    <img src="{{ page.permalink }}{{ hero }}" alt="{{ page.extra.hero_alt | default(value='') }}" class="block w-full overflow-hidden rounded-2xl border border-line bg-surface-1">
 </div>
 {% endif %}
 

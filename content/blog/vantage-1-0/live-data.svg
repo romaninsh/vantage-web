@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 460" width="1000" height="460" role="img"
+     aria-label="A change starts in the database: invoice INV-1042 is marked paid. The database notifies the Lens, the Lens updates the Dio's local copy, and the Dio passes the change only to the sceneries showing INV-1042: a grid of Acme's invoices and the INV-1042 form both redraw. A web client viewing Beta Corp's invoices is not affected and does not repaint.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#a0a3b5"/>
+    </marker>
+    <marker id="arrow-dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4b4e5e"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="460" fill="#0e0f16"/>
+
+  <!-- 1. Infrastructure: where the change happens -->
+  <rect x="24" y="170" width="140" height="110" rx="12" fill="#12131c" stroke="#3b82f6" stroke-width="2"/>
+  <g fill="none" stroke="#3b82f6" stroke-width="2">
+    <ellipse cx="94" cy="196" rx="16" ry="5"/>
+    <path d="M78 196 v16 a16 5 0 0 0 32 0 v-16"/>
+  </g>
+  <text x="94" y="244" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#ecedf2" text-anchor="middle">PostgreSQL</text>
+  <text x="94" y="263" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a0a3b5" text-anchor="middle">your infrastructure</text>
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="11" fill="#6e7186" text-anchor="middle">
+    <text x="94" y="302">NOTIFY · LIVE SELECT</text>
+    <text x="94" y="318">CDC · custom listener</text>
+  </g>
+
+  <!-- The change itself -->
+  <path d="M164 225 H246" stroke="#a0a3b5" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="169" y="186" width="72" height="30" rx="8" fill="#f59e0b" fill-opacity="0.18" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="205" y="199" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" fill="#fbbf24" text-anchor="middle">INV-1042</text>
+  <text x="205" y="211" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10.5" fill="#fbbf24" text-anchor="middle">now paid</text>
+
+  <!-- 2. Lens: receives the notification -->
+  <rect x="250" y="180" width="130" height="90" rx="12" fill="#12131c" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="315" y="220" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#ecedf2" text-anchor="middle">Lens</text>
+  <text x="315" y="241" font-family="JetBrains Mono, ui-monospace, monospace" font-size="12" fill="#a0a3b5" text-anchor="middle">on_event</text>
+
+  <path d="M380 225 H456" stroke="#a0a3b5" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 3. Dio: the local copy, with the changed row -->
+  <rect x="460" y="130" width="190" height="190" rx="12" fill="#12131c" stroke="#f43f5e" stroke-width="2"/>
+  <text x="555" y="160" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#ecedf2" text-anchor="middle">Dio</text>
+  <text x="555" y="178" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#a0a3b5" text-anchor="middle">local copy</text>
+  <g fill="#181a26">
+    <rect x="476" y="194" width="158" height="26" rx="6"/>
+    <rect x="476" y="258" width="158" height="26" rx="6"/>
+  </g>
+  <rect x="476" y="226" width="158" height="26" rx="6" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.5"/>
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="12">
+    <text x="488" y="211" fill="#a0a3b5">INV-1041</text>
+    <text x="488" y="243" fill="#fbbf24">INV-1042</text>
+    <text x="488" y="275" fill="#a0a3b5">INV-1043</text>
+  </g>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" text-anchor="end">
+    <text x="624" y="211" fill="#6e7186">Acme</text>
+    <text x="624" y="243" fill="#fbbf24">Acme · paid</text>
+    <text x="624" y="275" fill="#6e7186">Beta Corp</text>
+  </g>
+
+  <!-- 4. Selective delivery to sceneries -->
+  <g fill="none" stroke-width="2">
+    <path d="M650 225 C 705 225, 705 110, 756 110" stroke="#a0a3b5" marker-end="url(#arrow)"/>
+    <path d="M650 225 C 705 225, 705 230, 756 230" stroke="#a0a3b5" marker-end="url(#arrow)"/>
+    <path d="M650 225 C 705 225, 705 350, 756 350" stroke="#4b4e5e" stroke-dasharray="5 5" marker-end="url(#arrow-dim)"/>
+  </g>
+
+  <rect x="760" y="70" width="216" height="80" rx="12" fill="#12131c" stroke="#10b981" stroke-width="2"/>
+  <rect x="760" y="190" width="216" height="80" rx="12" fill="#12131c" stroke="#10b981" stroke-width="2"/>
+  <rect x="760" y="310" width="216" height="80" rx="12" fill="#0e0f16" stroke="#4b4e5e" stroke-width="2" stroke-dasharray="5 5"/>
+
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600">
+    <text x="778" y="102" fill="#ecedf2">Grid: Acme invoices</text>
+    <text x="778" y="222" fill="#ecedf2">Form: INV-1042</text>
+    <text x="778" y="342" fill="#6e7186">Web client: Beta Corp</text>
+  </g>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12">
+    <text x="778" y="124" fill="#34d399">shows INV-1042, redraws</text>
+    <text x="778" y="244" fill="#34d399">shows INV-1042, redraws</text>
+    <text x="778" y="364" fill="#6e7186">not affected, no repaint</text>
+  </g>
+
+  <!-- Caption -->
+  <text x="500" y="436" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#6e7186" text-anchor="middle">A change reaches only the sceneries that show the changed record.</text>
+</svg>
