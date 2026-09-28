@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 540" width="1000" height="540" role="img"
+     aria-label="The same stack as the cover, annotated. The thick base is Vantage UI, free to use, and the Vantage Framework, open source. The thin layers of custom structure and code above it are the part you maintain — about twenty times less code than the same app built as a React frontend and a Python backend.">
+  <rect width="1000" height="540" fill="#0b0b10"/>
+
+  <!-- Code and custom structure: the part you maintain -->
+  <rect x="330" y="80" width="440" height="20" rx="7" fill="#f43f5e"/>
+  <rect x="330" y="114" width="440" height="48" rx="11" fill="#f59e0b"/>
+
+  <!-- Generic base -->
+  <rect x="330" y="176" width="216" height="200" rx="16" fill="#3b82f6"/>
+  <rect x="554" y="176" width="216" height="200" rx="16" fill="#10b981"/>
+
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="22" text-anchor="end">
+    <text x="300" y="97" fill="#fb7185">custom code</text>
+    <text x="300" y="145" fill="#fbbf24">custom structure</text>
+  </g>
+
+  <!-- What each half of the base is -->
+  <g font-family="JetBrains Mono, ui-monospace, monospace" text-anchor="middle">
+    <text x="438" y="272" font-size="20" font-weight="600" fill="#ffffff">Vantage UI</text>
+    <text x="438" y="302" font-size="16" fill="#ffffff" fill-opacity="0.85">free to use</text>
+    <text x="662" y="272" font-size="19" font-weight="600" fill="#ffffff">Vantage Framework</text>
+    <text x="662" y="302" font-size="16" fill="#ffffff" fill-opacity="0.85">open source</text>
+  </g>
+
+  <!-- Bracket over the two custom layers -->
+  <path d="M790 80 L 808 80 L 808 162 L 790 162" fill="none" stroke="#e5e7eb" stroke-opacity="0.7" stroke-width="2.5"/>
+  <text x="826" y="128" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="21" font-weight="600" fill="#ecedf2">you maintain</text>
+
+  <!-- Comparison -->
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">
+    <text x="500" y="440" font-size="20" fill="#a0a3b5">The same app as a React frontend and a Python backend:</text>
+    <text x="500" y="476" font-size="24" font-weight="600" fill="#ecedf2">about <tspan fill="#f43f5e">20×</tspan> the code to maintain</text>
+  </g>
+</svg>

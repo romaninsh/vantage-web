@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 290" width="880" height="290" role="img"
+     aria-label="Three linked records. A customer, Acme Ltd, has many invoices, such as INV-1042 for £312.00. Each invoice has many lines, such as 12 muffins for £156.00.">
+  <rect width="880" height="290" fill="#0e0f16"/>
+
+  <!-- Stacked copies: there are many invoices and many lines -->
+  <g fill="#12131c" stroke-width="2" stroke-opacity="0.35">
+    <rect x="350" y="54" width="210" height="170" rx="12" stroke="#f59e0b"/>
+    <rect x="342" y="62" width="210" height="170" rx="12" stroke="#f59e0b"/>
+    <rect x="660" y="54" width="210" height="170" rx="12" stroke="#10b981"/>
+    <rect x="652" y="62" width="210" height="170" rx="12" stroke="#10b981"/>
+  </g>
+
+  <!-- Cards -->
+  <g fill="#12131c" stroke-width="2">
+    <rect x="24" y="70" width="210" height="170" rx="12" stroke="#3b82f6"/>
+    <rect x="334" y="70" width="210" height="170" rx="12" stroke="#f59e0b"/>
+    <rect x="644" y="70" width="210" height="170" rx="12" stroke="#10b981"/>
+  </g>
+
+  <!-- Header bands -->
+  <path d="M36 70 h186 a12 12 0 0 1 12 12 v28 h-210 v-28 a12 12 0 0 1 12 -12 z" fill="#3b82f6" fill-opacity="0.22"/>
+  <path d="M346 70 h186 a12 12 0 0 1 12 12 v28 h-210 v-28 a12 12 0 0 1 12 -12 z" fill="#f59e0b" fill-opacity="0.22"/>
+  <path d="M656 70 h186 a12 12 0 0 1 12 12 v28 h-210 v-28 a12 12 0 0 1 12 -12 z" fill="#10b981" fill-opacity="0.22"/>
+
+  <!-- Header icons -->
+  <g fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke="#3b82f6">
+      <circle cx="48" cy="86" r="5"/>
+      <path d="M39 101 a9 7 0 0 1 18 0"/>
+    </g>
+    <g stroke="#f59e0b">
+      <path d="M351 79 h13 l4 4 v19 h-17 z"/>
+      <path d="M355 88 h9 M355 93 h9 M355 98 h6"/>
+    </g>
+    <g stroke="#10b981">
+      <path d="M661 84 h18 M661 90 h18 M661 96 h18"/>
+      <circle cx="685" cy="84" r="1.2" fill="#10b981"/>
+      <circle cx="685" cy="90" r="1.2" fill="#10b981"/>
+      <circle cx="685" cy="96" r="1.2" fill="#10b981"/>
+    </g>
+  </g>
+
+  <!-- Titles -->
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="17" font-weight="600" fill="#ecedf2">
+    <text x="66" y="96">Customer</text>
+    <text x="376" y="96">Invoice</text>
+    <text x="698" y="96">Invoice line</text>
+  </g>
+
+  <!-- Field names -->
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="13" fill="#6e7186">
+    <text x="40" y="142">name</text>
+    <text x="40" y="176">email</text>
+    <text x="40" y="210">balance</text>
+    <text x="350" y="142">number</text>
+    <text x="350" y="176">date</text>
+    <text x="350" y="210">total</text>
+    <text x="660" y="142">product</text>
+    <text x="660" y="176">qty</text>
+    <text x="660" y="210">amount</text>
+  </g>
+
+  <!-- Sample values -->
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#ecedf2" text-anchor="end">
+    <text x="218" y="142">Acme Ltd</text>
+    <text x="218" y="176">billing@acme.co</text>
+    <text x="218" y="210">£1,240.00</text>
+    <text x="528" y="142">INV-1042</text>
+    <text x="528" y="176">12 Sep 2026</text>
+    <text x="528" y="210">£312.00</text>
+    <text x="838" y="142">Muffins</text>
+    <text x="838" y="176">12</text>
+    <text x="838" y="210">£156.00</text>
+  </g>
+
+  <!-- One-to-many links, with a crow's foot at the "many" end -->
+  <g fill="none" stroke="#a0a3b5" stroke-width="2" stroke-linecap="round">
+    <path d="M234 155 H334"/>
+    <path d="M322 155 L334 147 M322 155 L334 163"/>
+    <path d="M241 149 V161"/>
+    <path d="M560 155 H644"/>
+    <path d="M632 155 L644 147 M632 155 L644 163"/>
+    <path d="M567 149 V161"/>
+  </g>
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="12" fill="#a0a3b5" text-anchor="middle">
+    <text x="284" y="143">has many</text>
+    <text x="602" y="143">has many</text>
+  </g>
+
+  <!-- Caption line -->
+  <text x="440" y="272" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#6e7186" text-anchor="middle">One customer has many invoices; each invoice has many lines.</text>
+</svg>

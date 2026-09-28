@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Two arrows circling a point: data kept live">
+  <rect x="4" y="4" width="88" height="88" rx="22" fill="#f43f5e" fill-opacity="0.14" stroke="#f43f5e" stroke-opacity="0.4" stroke-width="2"/>
+  <g fill="none" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M28.3 44.5 A20 20 0 0 1 65.3 38"/>
+    <polyline points="57.5,34.4 65.3,38 66.1,29.4"/>
+    <path d="M67.7 51.5 A20 20 0 0 1 30.7 58"/>
+    <polyline points="38.5,61.6 30.7,58 29.9,66.6"/>
+  </g>
+  <circle cx="48" cy="48" r="6" fill="#f43f5e"/>
+</svg>

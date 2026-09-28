@@ -197,6 +197,43 @@
         img {
             @apply my-7 block w-full rounded-xl border border-line bg-surface-1;
         }
+
+        /* `blog.layer` component: the icon floats, so the prose wraps beside it
+           and continues underneath once it runs past. `flow-root` keeps the
+           float inside its own section. */
+        .layer-row {
+            @apply my-5 flow-root;
+        }
+        .layer-icon {
+            @apply float-left me-5 mt-1 mb-2 size-16 rounded-none border-0 bg-transparent sm:me-6 sm:size-20;
+        }
+        .layer-row--right .layer-icon {
+            @apply float-right ms-5 me-0 sm:ms-6;
+        }
+        /* `blog.example` component: the post's running example, boxed off
+           from the prose describing the product. */
+        .example-box {
+            @apply my-7 rounded-xl border border-s-4 border-accent-500/30 border-s-accent-400 bg-accent-500/[0.07] px-5 py-4;
+
+            > :last-child {
+                @apply mb-0;
+            }
+        }
+        .example-box__label {
+            @apply mt-0 mb-2 flex items-center gap-2 font-mono text-[0.72rem] font-medium tracking-wider text-accent-300 uppercase;
+
+            svg {
+                @apply size-4 fill-none stroke-current stroke-[1.4];
+                stroke-linejoin: round;
+                stroke-linecap: round;
+            }
+        }
+        .layer-body > :first-child {
+            @apply mt-0;
+        }
+        .layer-body > :last-child {
+            @apply mb-0;
+        }
         table {
             @apply my-7 w-full border-collapse font-sans text-[0.95rem];
         }
@@ -205,6 +242,10 @@
         }
         td {
             @apply border-b border-line py-2.5 align-top;
+        }
+        /* The first column of a post's table is its row label; keep it whole. */
+        td:first-child {
+            @apply whitespace-nowrap;
         }
         th:not(:last-child),
         td:not(:last-child) {
