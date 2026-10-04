@@ -28,9 +28,10 @@
 </section>
 
 <!-- Header image: `hero` when a post has a detailed version of its art, else
-     the card `cover`. -->
+     the card `cover`. `show_cover = false` keeps the cover for cards and link
+     previews only. -->
 {% set hero = page.extra.hero | default(value=page.extra.cover | default(value="")) %}
-{% if hero %}
+{% if hero and page.extra.show_cover | default(value=true) %}
 <div class="mx-auto max-w-4xl px-4 sm:px-6">
     <img src="{{ page.permalink }}{{ hero }}" alt="{{ page.extra.hero_alt | default(value='') }}" class="block w-full overflow-hidden rounded-2xl border border-line bg-surface-1">
 </div>

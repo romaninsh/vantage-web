@@ -1,0 +1,22 @@
+{# ===== Glossary =====
+
+   Definitions live in `data/glossary.toml`, so a term reads the same on every
+   page. #}
+
+
+{# A framework term with its definition on hover or keyboard focus, linking to
+   its docs page when the glossary has one. `id` is the term's key in the
+   glossary; `text` overrides the wording shown in the sentence, such as a
+   plural; `code` sets the term as code, for file and key names. The output is
+   used inside a sentence, so the whitespace control keeps it on one line: a
+   newline around it would split the paragraph. #}
+{% component glossary.term(id, text = "", code = false) -%}
+{%- set entry = load_data(path="data/glossary.toml")[id] -%}
+{%- set shown = text or entry.name -%}
+{%- set tip -%}<span class="term__tip" role="tooltip"><strong>{{ entry.name }}</strong> {{ entry.definition }}{% if entry.docs %}<span class="term__more">Read the docs →</span>{% endif %}</span>{%- endset -%}
+{%- if entry.docs -%}
+<a class="term" href="{{ entry.docs }}">{% if code %}<code>{{ shown }}</code>{% else %}{{ shown }}{% endif %}{{ tip | safe }}</a>
+{%- else -%}
+<span class="term" tabindex="0">{% if code %}<code>{{ shown }}</code>{% else %}{{ shown }}{% endif %}{{ tip | safe }}</span>
+{%- endif -%}
+{%- endcomponent glossary.term %}

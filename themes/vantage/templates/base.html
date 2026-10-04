@@ -7,6 +7,22 @@
         {% if page and page.description %}<meta name="description" content="{{ page.description }}">
         {% elif section and section.description %}<meta name="description" content="{{ section.description }}">{% endif %}
 
+        <!-- Link previews (WhatsApp, Slack, social): a page's `cover` image,
+             title and description. An unlisted page asks search engines to
+             stay away, so it is found only through its link. -->
+        {% if page %}
+        <meta property="og:type" content="article">
+        <meta property="og:url" content="{{ page.permalink }}">
+        <meta property="og:title" content="{{ page.title }}">
+        <meta property="og:site_name" content="{{ config.title }}">
+        {% if page.description %}<meta property="og:description" content="{{ page.description }}">{% endif %}
+        {% if page.extra.cover %}
+        <meta property="og:image" content="{{ page.permalink }}{{ page.extra.cover }}">
+        <meta name="twitter:card" content="summary_large_image">
+        {% endif %}
+        {% if page.extra.unlisted %}<meta name="robots" content="noindex">{% endif %}
+        {% endif %}
+
         <!-- Google Fonts: Inter (UI) + JetBrains Mono (code, kickers) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

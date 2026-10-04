@@ -134,6 +134,39 @@
         a:not(.btn) {
             @apply font-medium text-accent-300 underline decoration-accent-300/40 underline-offset-3 hover:text-accent-400 hover:decoration-accent-400;
         }
+        /* `glossary.term` component: a dotted underline marks the term, and
+           its definition opens above it on hover or keyboard focus. The tip
+           sits inside the link, so moving onto it keeps it open; a strip
+           below the tip bridges the gap to the word, and the tip lingers
+           briefly before closing so the pointer can reach its docs link. */
+        .term,
+        a.term {
+            @apply relative cursor-help font-normal text-inherit underline decoration-text-3 decoration-dotted decoration-1 underline-offset-3 hover:text-text-1 hover:decoration-accent-400;
+        }
+        a.term {
+            @apply cursor-pointer;
+        }
+        .term__tip {
+            @apply pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-80 -translate-x-1/2 rounded-lg border border-line-strong bg-surface-2 px-4 py-3 font-sans text-[0.92rem] leading-relaxed font-normal text-text-2 no-underline opacity-0 shadow-xl;
+            transition:
+                opacity 150ms 250ms,
+                visibility 0s 400ms;
+
+            &::after {
+                @apply absolute inset-x-0 top-full h-3 content-[''];
+            }
+            strong {
+                @apply text-text-1;
+            }
+        }
+        .term:hover .term__tip,
+        .term:focus-visible .term__tip {
+            @apply pointer-events-auto visible opacity-100;
+            transition: opacity 150ms;
+        }
+        .term__more {
+            @apply mt-2 block text-[0.85rem] text-accent-300 underline decoration-accent-300/40 underline-offset-3;
+        }
         strong,
         b {
             @apply font-semibold text-text-1;
@@ -233,6 +266,125 @@
         }
         .layer-body > :last-child {
             @apply mb-0;
+        }
+
+        /* `blog.pledge` component: promises set like a signed note. A title
+           in small capitals, an italic address line, the promises as a list
+           with large roman numerals hanging in the margin, and a signature. */
+        .pledge {
+            @apply relative my-10 rounded-2xl border border-accent-500/25 bg-gradient-to-br from-accent-500/[0.09] to-transparent px-6 pt-7 pb-6 sm:px-9;
+        }
+        .pledge__title {
+            @apply my-0 text-center font-mono text-[0.85rem] font-medium tracking-[0.3em] text-accent-300 uppercase;
+        }
+        .pledge__to {
+            @apply mt-2 mb-7 text-center text-[1.15rem] text-text-2 italic;
+        }
+        .pledge ol {
+            @apply my-0 list-none space-y-6 ps-0 text-[1.3rem] leading-snug text-text-1;
+            counter-reset: pledge;
+
+            li {
+                @apply relative ps-14;
+                counter-increment: pledge;
+
+                &::before {
+                    @apply absolute top-[-0.05em] left-0 w-10 text-right font-serif text-[2rem] leading-none text-accent-400/70 italic;
+                    content: counter(pledge, upper-roman);
+                }
+            }
+            strong {
+                @apply text-accent-300;
+            }
+        }
+        .pledge__signed {
+            @apply mt-8 mb-0 text-end font-serif text-[1.2rem] text-text-2 italic;
+        }
+
+        /* `blog.kit` component: a row of counted cards that breaks out of the
+           reading column. Each card is a label, a large count and a line
+           saying what is counted. */
+        .kit {
+            --bleed: min(calc(100vw - 2rem), 60rem);
+            @apply my-9 font-sans;
+            width: var(--bleed);
+            margin-inline-start: calc(50% - var(--bleed) / 2);
+        }
+        .kit__title {
+            @apply mb-4 text-center text-[0.95rem] text-text-2;
+        }
+        .kit__cards {
+            @apply grid gap-4 sm:grid-cols-3;
+        }
+        .kit-card {
+            @apply flex flex-col rounded-xl border border-line bg-surface-1 px-5 pt-4 pb-5;
+        }
+        .kit-card__label {
+            @apply my-0 font-mono text-[0.72rem] font-medium tracking-wider text-accent-300 uppercase;
+        }
+        .kit-card__count {
+            @apply my-1 text-[2.6rem] leading-none font-semibold text-text-1 tabular-nums;
+        }
+        .kit-card__what {
+            @apply mt-1 mb-0 text-[0.88rem] leading-snug text-text-2;
+        }
+
+        /* `blog.carousel` component: cards on a 3D ring, moved by
+           `static/js/carousel.js`. These rules give the still layout (each
+           card in its slot) that the script then animates, and that readers
+           without JavaScript or with reduced motion see. The viewport breaks
+           out of the reading column, looks down from near the top of the
+           cards, and fades out at the bottom, where a grown card runs past. */
+        .carousel {
+            --card: clamp(15rem, 40vw, 30rem);
+            --r: calc(var(--card) / 2 / tan(180deg / var(--count)) + var(--card) * 0.2);
+            --bleed: min(calc(100vw - 2rem), 76rem);
+            @apply my-10 overflow-hidden;
+            width: var(--bleed);
+            margin-inline-start: calc(50% - var(--bleed) / 2);
+            height: calc(var(--card) * 0.77);
+            perspective: 1800px;
+            perspective-origin: 50% 15%;
+            mask-image: linear-gradient(to bottom, #000 60%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent);
+        }
+        .carousel-ring {
+            @apply relative mx-auto;
+            width: var(--card);
+            height: calc(var(--card) * 0.75);
+            margin-top: calc(var(--card) * 0.04);
+            transform-style: preserve-3d;
+        }
+        /* Screenshots are window captures on a transparent canvas, with
+           their own shadow, so they get no frame of their own. The label sits
+           above the image and names the toolkit in capitals. */
+        .carousel-ring > figure {
+            @apply absolute inset-0 m-0 flex flex-col-reverse justify-end;
+            backface-visibility: hidden;
+            transform-origin: 50% 0;
+            transform: rotateY(calc(var(--k) * 360deg / var(--count))) translateZ(var(--r));
+
+            img {
+                @apply my-0 rounded-none border-0 bg-transparent shadow-none;
+            }
+            figcaption {
+                @apply mb-1 px-3 text-center text-[0.66rem] leading-snug text-text-2;
+
+                b {
+                    @apply font-mono text-[0.8rem] font-semibold tracking-wider text-text-1 uppercase;
+                }
+            }
+        }
+        .carousel-ring > figure:nth-child(1) { --k: 0; }
+        .carousel-ring > figure:nth-child(2) { --k: 1; }
+        .carousel-ring > figure:nth-child(3) { --k: 2; }
+        .carousel-ring > figure:nth-child(4) { --k: 3; }
+        .carousel-ring > figure:nth-child(5) { --k: 4; }
+        .carousel-ring > figure:nth-child(6) { --k: 5; }
+        .carousel-ring > figure:nth-child(7) { --k: 6; }
+        .carousel-ring > figure:nth-child(8) { --k: 7; }
+        .carousel-caption {
+            @apply -mt-4 text-center text-[0.82rem] text-text-3;
         }
         table {
             @apply my-7 w-full border-collapse font-sans text-[0.95rem];
