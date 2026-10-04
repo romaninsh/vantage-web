@@ -1,0 +1,28 @@
+# Site-wide glossary for the `glossary.term` component. Each key is the id a
+# page passes in; `definition` shows on hover and `docs`, when set, is where a
+# click goes.
+# Keep definitions to one plain sentence: they are read in a small tooltip by
+# readers who may not write code.
+
+[vista]
+name = "Vista"
+definition = "A universal handle on one table from any data source. It knows the columns, their types and what the source can do, so a generic grid or form can work with it without knowing your database."
+docs = "https://romaninsh.github.io/vantage/intro/step4-vista.html"
+
+[diorama]
+name = "Diorama"
+definition = "A live local copy of part of your data, kept between a Vista and the screen. Reads come from the copy instead of the network, and it can add sorting or search the source itself lacks."
+docs = "https://romaninsh.github.io/vantage/intro/step5-dio-lens.html"
+
+[table]
+name = "table"
+definition = "A YAML file describing one table from a data source: its columns, their types, how it relates to other tables and how to query it. Vantage turns it into a Vista."
+docs = "https://romaninsh.github.io/vantage/config-driven-vistas.html"
+
+[page]
+name = "page"
+definition = "A YAML file describing one screen of the app: the grids, charts, forms and other components on it, and the tables they show."
+
+[action]
+name = "action"
+definition = "A YAML file describing something a user can do from a grid or a record, such as filling in a form, confirming a change, calling an API or running a command."

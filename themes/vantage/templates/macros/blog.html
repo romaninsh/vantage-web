@@ -90,7 +90,8 @@
 
 {# Archive layout: category filter beside a column of post rows. `skip_featured`
    is how many featured posts the caller already rendered in a strip above; they
-   are dropped from the list so they are not shown twice. #}
+   are dropped from the list so they are not shown twice. Posts with
+   `unlisted = true` are reachable only by their link, so they never appear. #}
 {% component blog.archive(pages, current = "", skip_featured = 0) %}
 <div class="grid gap-8 lg:grid-cols-[13rem_1fr]">
     <aside class="lg:sticky lg:top-24 lg:self-start">
@@ -99,7 +100,8 @@
     <div class="flex flex-col gap-4">
         {% set_global skipped = 0 %}
         {% for page in pages %}
-        {% if page.extra.featured and skipped < skip_featured %}
+        {% if page.extra.unlisted %}
+        {% elif page.extra.featured and skipped < skip_featured %}
             {% set_global skipped = skipped + 1 %}
         {% else %}
             {{<blog.list_row page={page} />}}
@@ -128,15 +130,65 @@
 {% endcomponent blog.layer %}
 
 
-{# A highlighted box for a post's running example, set apart from the prose
-   that describes the product. `title` names the example; it reads
-   "Example · <title>" in the box's label. Blank lines around `body` keep its
-   first paragraph parsed as markdown, as in `blog.layer`. #}
-{% component blog.example(title = "") %}
+{# A highlighted box set apart from the surrounding prose, such as a post's
+   running example. The box's label reads "<label> · <title>", or just
+   "<label>" without a title. Blank lines around `body` keep its first
+   paragraph parsed as markdown, as in `blog.layer`. #}
+{% component blog.example(title = "", label = "Example") %}
 <aside class="example-box">
-<p class="example-box__label"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h9v13l-2.25-1.5-2.25 1.5-2.25-1.5-2.25 1.5z M5.5 5h5 M5.5 8h5 M5.5 11h3"/></svg>Example{% if title %} · {{ title }}{% endif %}</p>
+<p class="example-box__label"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h9v13l-2.25-1.5-2.25 1.5-2.25-1.5-2.25 1.5z M5.5 5h5 M5.5 8h5 M5.5 11h3"/></svg>{{ label }}{% if title %} · {{ title }}{% endif %}</p>
 
 {{ body }}
 
 </aside>
 {% endcomponent blog.example %}
+
+
+{# A short set of promises, set like a signed note: a title, who it is
+   addressed to, the promises as a markdown ordered list in the body, and a
+   signature. Blank lines around `body` keep the list parsed as markdown. #}
+{% component blog.pledge(title = "Our pledge", to = "", signed = "") %}
+<aside class="pledge">
+<p class="pledge__title">{{ title }}</p>
+{% if to %}<p class="pledge__to">{{ to }}</p>{% endif %}
+
+{{ body }}
+
+{% if signed %}<p class="pledge__signed">{{ signed }}</p>{% endif %}
+</aside>
+{% endcomponent blog.pledge %}
+
+
+{# A row of cards wider than the reading column, each counting one kind of
+   thing a product gives you. `title` heads the row. The body is raw `.kit-card` elements, one HTML block each; see the
+   `.kit` rules in main.css for the card's parts. #}
+{% component blog.kit(title = "") %}
+<div class="kit">
+{% if title %}<p class="kit__title">{{ title }}</p>{% endif %}
+<div class="kit__cards">
+
+{{ body }}
+
+</div>
+</div>
+{% endcomponent blog.kit %}
+
+
+{# Cards on a 3D ring, shown one at a time; `static/js/carousel.js` moves them
+   (see its header for the motion). Without that script, or with reduced
+   motion requested, the cards stand still on the ring. The body is a list of
+   raw `<figure>` elements; `count` must match how many there are, since the
+   still layout uses it for the slot angle and radius. Blank lines around
+   `body` keep each figure its own HTML block, so they land as direct children
+   of the ring. #}
+{% component blog.carousel(count = 6, caption = "") %}
+<script src="{{ get_url(path='js/carousel.js') }}" defer></script>
+<div class="carousel" style="--count: {{ count }}">
+<div class="carousel-ring">
+
+{{ body }}
+
+</div>
+</div>
+{% if caption %}<p class="carousel-caption">{{ caption }}</p>{% endif %}
+{% endcomponent blog.carousel %}
