@@ -2,7 +2,8 @@
 # page passes in; `definition` shows on hover and `docs`, when set, is where a
 # click goes.
 # Keep definitions to one plain sentence: they are read in a small tooltip by
-# readers who may not write code.
+# readers who may not write code. An optional `example` shows a short Rhai or
+# YAML snippet under the definition.
 
 [vista]
 name = "Vista"
@@ -26,3 +27,89 @@ definition = "A YAML file describing one screen of the app: the grids, charts, f
 [action]
 name = "action"
 definition = "A YAML file describing something a user can do from a grid or a record, such as filling in a form, confirming a change, calling an API or running a command."
+
+# ----- Data source capabilities (features page). A driver either advertises a
+# capability or it doesn't; the UI shows only the controls a table supports.
+
+[cap-filter]
+name = "Filter by conditions"
+definition = "Narrow a table to the rows whose field equals a value. Drill-downs, filter dropdowns and scripts all build on it, and the condition runs in the data source."
+example = "table(\"order\").where(\"status\", \"open\")"
+
+[cap-filter-ops]
+name = "Comparison filters"
+definition = "Filters beyond equality — greater or less than, in a list, contains — run by the data source. Without it, the app loads the rows and filters them locally."
+example = "table(\"order\").where(\"total\", \">=\", 100)"
+
+[cap-sort]
+name = "Server-side sort"
+definition = "Clicking a column header asks the data source for the rows in that order, so sorting works on tables far larger than one screen."
+
+[cap-search]
+name = "Quick search"
+definition = "The search box above a grid matches text across the columns marked searchable, and the data source does the matching."
+example = "columns:\n  name: { flags: [searchable] }"
+
+[cap-count]
+name = "Count"
+definition = "The data source reports how many rows a table holds, so grids show a total and size their scrollbar without loading everything."
+
+[cap-aggregate]
+name = "Aggregate"
+definition = "Totals, averages, minimums and maximums computed by the data source, for KPI cards, chart series and summary tables."
+
+[cap-page-size]
+name = "Custom page size"
+definition = "The app chooses how many rows each request returns. Some APIs fix the page size, and then grids follow theirs."
+
+[cap-fetch-page]
+name = "Random-access pages"
+definition = "Jump straight to page 40 without reading pages 1 to 39 — the data source supports offset-style paging."
+
+[cap-fetch-next]
+name = "Progressive load"
+definition = "Rows arrive one batch after another by following a cursor, which is how most paginated APIs and DynamoDB work."
+
+[cap-fetch-window]
+name = "Load rows as you scroll"
+definition = "The grid asks for exactly the range of rows coming into view, so even a very large table opens instantly and scrolls smoothly."
+
+[cap-traverse-record]
+name = "Drill to related record"
+definition = "Open the record a row points to, or the rows that point back at it, from the row's context menu in a child tab."
+example = "references:\n  client: { table: client, kind: has_one }"
+
+[cap-traverse-set]
+name = "Drill across a dataset"
+definition = "Go from a whole filtered set to its related rows in one step — the orders of every client in the current view — without listing the clients first."
+example = "table(\"client\").where(\"country\", \"UK\").ref(\"orders\")"
+
+[cap-traverse-columns]
+name = "Columns from related tables"
+definition = "A column named after a relation shows the related table's field in place, resolved by the data source as a join or subquery. It is read-only."
+example = "columns:\n  client.name: { type: string }"
+
+[cap-ref-script]
+name = "Relations defined in Rhai"
+definition = "A relation can be a short Rhai script instead of a plain foreign key, for links a single field cannot express."
+example = "table(\"order\").where(\"client_id\", me._id)"
+
+[cap-watch]
+name = "Live updates"
+definition = "The data source pushes changes as they happen, and open grids update in place with no refresh and no polling."
+
+[cap-insert]
+name = "Add records"
+definition = "Create rows from a form dialog. In a filtered view, new rows are filled in to belong to it."
+
+[cap-update]
+name = "Update records"
+definition = "Edit rows in a form dialog. A write through a filtered view can never change a row outside it."
+
+[cap-delete]
+name = "Delete records"
+definition = "Remove rows, after a confirmation step, from a grid or a record view."
+
+[cap-import]
+name = "Bulk import"
+definition = "A CSV or wizard import lands in one transaction: either every new row is stored or none is, and existing rows are left untouched."

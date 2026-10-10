@@ -115,6 +115,43 @@
         @apply font-mono text-[0.72rem] font-medium uppercase tracking-[0.18em] text-accent-400;
     }
 
+    /* `glossary.term` component: a dotted underline marks the term, and its
+       definition opens above it on hover or keyboard focus. The tip sits
+       inside the link, so moving onto it keeps it open; a strip below the tip
+       bridges the gap to the word, and the tip lingers briefly before closing
+       so the pointer can reach its docs link. */
+    .term,
+    a.term {
+        @apply relative cursor-help font-normal text-inherit underline decoration-text-3 decoration-dotted decoration-1 underline-offset-3 hover:text-text-1 hover:decoration-accent-400;
+    }
+    a.term {
+        @apply cursor-pointer;
+    }
+    .term__tip {
+        @apply pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-80 -translate-x-1/2 rounded-lg border border-line-strong bg-surface-2 px-4 py-3 text-left font-sans text-[0.92rem] leading-relaxed font-normal text-text-2 no-underline opacity-0 shadow-xl;
+        transition:
+            opacity 150ms 250ms,
+            visibility 0s 400ms;
+
+        &::after {
+            @apply absolute inset-x-0 top-full h-3 content-[''];
+        }
+        strong {
+            @apply text-text-1;
+        }
+    }
+    .term:hover .term__tip,
+    .term:focus-visible .term__tip {
+        @apply pointer-events-auto visible opacity-100;
+        transition: opacity 150ms;
+    }
+    .term__code {
+        @apply mt-2 block rounded-md bg-surface-1 px-2.5 py-1.5 font-mono text-[0.8rem] whitespace-pre-wrap text-accent-300;
+    }
+    .term__more {
+        @apply mt-2 block text-[0.85rem] text-accent-300 underline decoration-accent-300/40 underline-offset-3;
+    }
+
     /* Rendered-markdown bodies (page content, changelog entries) */
     .prose {
         @apply text-text-2;
@@ -131,41 +168,8 @@
         p {
             @apply my-4;
         }
-        a:not(.btn) {
+        a:not(.btn, .term) {
             @apply font-medium text-accent-300 underline decoration-accent-300/40 underline-offset-3 hover:text-accent-400 hover:decoration-accent-400;
-        }
-        /* `glossary.term` component: a dotted underline marks the term, and
-           its definition opens above it on hover or keyboard focus. The tip
-           sits inside the link, so moving onto it keeps it open; a strip
-           below the tip bridges the gap to the word, and the tip lingers
-           briefly before closing so the pointer can reach its docs link. */
-        .term,
-        a.term {
-            @apply relative cursor-help font-normal text-inherit underline decoration-text-3 decoration-dotted decoration-1 underline-offset-3 hover:text-text-1 hover:decoration-accent-400;
-        }
-        a.term {
-            @apply cursor-pointer;
-        }
-        .term__tip {
-            @apply pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-80 -translate-x-1/2 rounded-lg border border-line-strong bg-surface-2 px-4 py-3 font-sans text-[0.92rem] leading-relaxed font-normal text-text-2 no-underline opacity-0 shadow-xl;
-            transition:
-                opacity 150ms 250ms,
-                visibility 0s 400ms;
-
-            &::after {
-                @apply absolute inset-x-0 top-full h-3 content-[''];
-            }
-            strong {
-                @apply text-text-1;
-            }
-        }
-        .term:hover .term__tip,
-        .term:focus-visible .term__tip {
-            @apply pointer-events-auto visible opacity-100;
-            transition: opacity 150ms;
-        }
-        .term__more {
-            @apply mt-2 block text-[0.85rem] text-accent-300 underline decoration-accent-300/40 underline-offset-3;
         }
         strong,
         b {
@@ -929,6 +933,10 @@
 
     .cap-no {
         @apply !text-[1.15rem] text-text-3/50;
+    }
+
+    .backend-extras {
+        @apply list-disc space-y-1.5 ps-5 text-[0.86rem] leading-relaxed text-text-2 marker:text-accent-400;
     }
 
     /* ---------- Build routes: choose how you'd build it (internal-tools page) ---------- */

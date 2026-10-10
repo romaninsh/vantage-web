@@ -97,7 +97,7 @@ model.get_ref("clients", row.id)
                             <tbody>
                             {% for r in page.extra.retrieve_rows %}
                                 <tr>
-                                    <td class="cap-label">{{ r.label }}</td>
+                                    <td class="cap-label">{{<glossary.term id={r.term} text={r.label} />}}</td>
                                     <td class="cap-val">
                                         {% if b.caps[r.key] %}
                                         <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
@@ -116,7 +116,7 @@ model.get_ref("clients", row.id)
                             <tbody>
                             {% for r in page.extra.edit_rows %}
                                 <tr>
-                                    <td class="cap-label">{{ r.label }}</td>
+                                    <td class="cap-label">{{<glossary.term id={r.term} text={r.label} />}}</td>
                                     <td class="cap-val">
                                         {% if b.caps[r.key] %}
                                         <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
@@ -128,6 +128,12 @@ model.get_ref("clients", row.id)
                             {% endfor %}
                             </tbody>
                         </table>
+                        {% if b.extras %}
+                        <p class="kicker mt-6 mb-2 !text-[0.66rem]">What stands out</p>
+                        <ul class="backend-extras">
+                            {% for e in b.extras %}<li>{{ e | markdown(inline=true) | safe }}</li>{% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
                 </div>
             </div>

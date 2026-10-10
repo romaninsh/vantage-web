@@ -6,26 +6,32 @@ template = "features.html"
 [extra]
 kicker = "Vantage UI"
 
-# Capability rows, grouped. `key` matches a field on each backend's `caps`.
+# Capability rows, grouped. `key` matches a field on each backend's `caps`;
+# `term` is the row's entry in data/glossary.toml, shown as a tooltip.
 # Reading/listing rows is baseline for every source, so it isn't listed here —
 # only the capabilities drivers differ on.
 retrieve_rows = [
-  { key = "filter", label = "Filter by conditions" },
-  { key = "sort", label = "Server-side sort" },
-  { key = "search", label = "Quick search" },
-  { key = "count", label = "Count" },
-  { key = "aggregate", label = "Aggregate — sum / avg / min / max" },
-  { key = "page_size", label = "Custom page size" },
-  { key = "fetch_page", label = "Random-access pages" },
-  { key = "fetch_next", label = "Progressive (cursor) load" },
-  { key = "traverse_record", label = "Drill to related record" },
-  { key = "traverse_set", label = "Drill across a dataset (subquery)" },
-  { key = "watch", label = "Live updates — the source pushes changes" },
+  { key = "filter", term = "cap-filter", label = "Filter by conditions" },
+  { key = "filter_ops", term = "cap-filter-ops", label = "Comparison filters — >, <, in, contains" },
+  { key = "sort", term = "cap-sort", label = "Server-side sort" },
+  { key = "search", term = "cap-search", label = "Quick search" },
+  { key = "count", term = "cap-count", label = "Count" },
+  { key = "aggregate", term = "cap-aggregate", label = "Aggregate — sum / avg / min / max" },
+  { key = "page_size", term = "cap-page-size", label = "Custom page size" },
+  { key = "fetch_page", term = "cap-fetch-page", label = "Random-access pages" },
+  { key = "fetch_next", term = "cap-fetch-next", label = "Progressive (cursor) load" },
+  { key = "fetch_window", term = "cap-fetch-window", label = "Load rows as you scroll" },
+  { key = "traverse_record", term = "cap-traverse-record", label = "Drill to related record" },
+  { key = "traverse_set", term = "cap-traverse-set", label = "Drill across a dataset" },
+  { key = "traverse_columns", term = "cap-traverse-columns", label = "Columns from related tables — client.name" },
+  { key = "ref_script", term = "cap-ref-script", label = "Relations defined in Rhai" },
+  { key = "watch", term = "cap-watch", label = "Live updates — the source pushes changes" },
 ]
 edit_rows = [
-  { key = "insert", label = "Add records" },
-  { key = "update", label = "Update records" },
-  { key = "delete", label = "Delete records" },
+  { key = "insert", term = "cap-insert", label = "Add records" },
+  { key = "update", term = "cap-update", label = "Update records" },
+  { key = "delete", term = "cap-delete", label = "Delete records" },
+  { key = "import", term = "cap-import", label = "Bulk import in one transaction" },
 ]
 
 # Free build vs. enterprise distribution. Each row is one capability; `free` and
@@ -41,7 +47,7 @@ compare = [
   { label = "Multi-step wizards & CSV import", free = "yes", ent = "yes" },
   { label = "Custom form layouts", free = "yes", ent = "yes" },
   { label = "Auto-refresh in the background", free = "yes", ent = "yes" },
-  { label = "Push-style instant refresh", free = "SurrealDB, PostgreSQL", ent = "+ CDC: Kafka, Debezium, custom listeners" },
+  { label = "Push-style instant refresh", free = "SurrealDB, MongoDB", ent = "+ CDC: Kafka, Debezium, custom listeners" },
   { label = "Your AI agent builds it over MCP", free = "yes", ent = "yes" },
   { label = "MCP debugging — query preview, error check", free = "yes", ent = "+ BDD suite, run at build" },
 
@@ -148,8 +154,16 @@ name = "SurrealDB"
 icon = "hub"
 mode = "Read / write"
 wire = "CBOR"
-note = "The most complete driver — full querying, aggregation, pagination and dataset-level traversal. It is also the one source that pushes: tables update themselves when data changes, with nothing to set up."
-caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true, watch = true }
+note = "Full querying, aggregation, pagination, related columns and dataset-level traversal, with relations you can define in Rhai. Tables update themselves when data changes, through LIVE queries — nothing to set up."
+caps = { filter = true, filter_ops = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, fetch_window = true, traverse_record = true, traverse_set = true, traverse_columns = true, ref_script = true, insert = true, update = true, delete = true, import = false, watch = true }
+extras = [
+  "Tables refresh themselves through LIVE queries — no triggers, no polling.",
+  "Related columns follow record links natively, several hops deep: `batch.course.name`.",
+  "Views built from a Rhai query, or derived from another table with `base:`, taking arguments from the page.",
+  "`modify:` scripts add SurrealQL conditions that YAML can't express.",
+  "Embedded objects and arrays open as their own editable tables.",
+  "Record ids, datetimes, durations and decimals keep their native types.",
+]
 
 [[extra.backends]]
 slug = "sqlite"
@@ -157,8 +171,14 @@ name = "SQLite"
 icon = "database"
 mode = "Read / write"
 wire = "Native (sqlx)"
-note = "Full SQL driver via sqlx — sort, search, aggregation, offset pagination and subquery traversal."
-caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true, watch = false }
+note = "Full SQL driver via sqlx — sort, search, aggregation, pagination, subquery traversal and columns from related tables."
+caps = { filter = true, filter_ops = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, fetch_window = true, traverse_record = true, traverse_set = true, traverse_columns = true, ref_script = false, insert = true, update = true, delete = true, import = false, watch = false }
+extras = [
+  "One file on disk — no server to run or credentials to manage.",
+  "Related columns become correlated subqueries, so `client.name` sorts and filters like any column.",
+  "Views built from a Rhai query, or derived from another table with `base:`, taking arguments from the page.",
+  "JSON columns open as their own editable tables.",
+]
 
 [[extra.backends]]
 slug = "postgres"
@@ -166,8 +186,14 @@ name = "PostgreSQL"
 icon = "database"
 mode = "Read / write"
 wire = "Native (sqlx)"
-note = "CRUD, aggregation and dataset traversal via the SQL query builder; interactive sort/search push-down is being wired up. The framework can also read live changes from a NOTIFY trigger you install — connecting that up from the console is next."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = true, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true, watch = false }
+note = "Full SQL driver via sqlx — sort, search, aggregation, pagination, subquery traversal and columns from related tables. The framework can also read live changes from a NOTIFY trigger you install; turning that on from the app is next."
+caps = { filter = true, filter_ops = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, fetch_window = true, traverse_record = true, traverse_set = true, traverse_columns = true, ref_script = false, insert = true, update = true, delete = true, import = false, watch = false }
+extras = [
+  "Related columns become correlated subqueries, so `client.name` sorts and filters like any column.",
+  "Views built from a Rhai query, or derived from another table with `base:`, taking arguments from the page.",
+  "JSON columns open as their own editable tables.",
+  "The framework reads live changes from a `LISTEN/NOTIFY` trigger you install.",
+]
 
 [[extra.backends]]
 slug = "mysql"
@@ -175,8 +201,13 @@ name = "MySQL"
 icon = "database"
 mode = "Read / write"
 wire = "Native (sqlx)"
-note = "CRUD, aggregation and dataset traversal via the SQL query builder; interactive sort/search push-down is being wired up."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = true, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = true, insert = true, update = true, delete = true, watch = false }
+note = "CRUD, aggregation, comparison filters, subquery traversal and columns from related tables. Server-side sort, search and pagination are not wired up yet."
+caps = { filter = true, filter_ops = true, sort = false, search = false, count = true, aggregate = true, page_size = false, fetch_page = false, fetch_next = false, fetch_window = false, traverse_record = true, traverse_set = true, traverse_columns = true, ref_script = false, insert = true, update = true, delete = true, import = false, watch = false }
+extras = [
+  "Related columns become correlated subqueries.",
+  "Views built from a Rhai query, or derived from another table with `base:`, taking arguments from the page.",
+  "JSON columns open as their own editable tables.",
+]
 
 [[extra.backends]]
 slug = "mongodb"
@@ -184,8 +215,18 @@ name = "MongoDB"
 icon = "data_object"
 mode = "Read / write"
 wire = "BSON"
-note = "Native aggregation pipeline with sort, search and pagination; record-level traversal."
-caps = { filter = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, traverse_record = true, traverse_set = false, insert = true, update = true, delete = true, watch = false }
+note = "Filters, sort and search push down to the server, including nested fields. Related columns run as $lookup joins, read-only views come from aggregation pipelines in YAML, and edits keep ObjectId, date and decimal types. On a replica set, tables update live through change streams and bulk imports run in one transaction."
+caps = { filter = true, filter_ops = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, fetch_window = true, traverse_record = true, traverse_set = true, traverse_columns = true, ref_script = true, insert = true, update = true, delete = true, import = true, watch = true }
+extras = [
+  "On a replica set, tables update live through change streams — edits from any client appear in place.",
+  "Read-only views from an aggregation pipeline written in YAML, or built by a Rhai script.",
+  "`client.name` columns joined server-side with `$lookup`, several hops deep.",
+  "Nested fields as columns — `nested_path: address.city` — searchable and filterable like any other.",
+  "Embedded objects and arrays open as their own editable tables.",
+  "Edits keep ObjectId, date and decimal types; `datetime` and `decimal` columns check what you type.",
+  "Bulk imports run in one transaction and fire the same hooks as a single insert.",
+  "Rhai filters are plain maps: `self.with_condition(#{price: #{\"$gt\": 100}})`.",
+]
 
 [[extra.backends]]
 slug = "dynamodb"
@@ -194,7 +235,7 @@ icon = "table"
 mode = "Read-focused"
 wire = "JSON"
 note = "Key and scan-filter queries with cursor pagination. Often paired as a read source with writes routed elsewhere."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = true, fetch_page = false, fetch_next = true, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false, watch = false }
+caps = { filter = true, filter_ops = false, sort = false, search = false, count = true, aggregate = false, page_size = true, fetch_page = false, fetch_next = true, fetch_window = false, traverse_record = true, traverse_set = false, traverse_columns = false, ref_script = false, insert = false, update = false, delete = false, import = false, watch = false }
 
 [[extra.backends]]
 slug = "graphql"
@@ -203,7 +244,7 @@ icon = "polyline"
 mode = "Read-only"
 wire = "JSON"
 note = "Generic and Hasura dialects. Read rows, filter, and drill into related records."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false, watch = false }
+caps = { filter = true, filter_ops = false, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, fetch_window = false, traverse_record = true, traverse_set = false, traverse_columns = false, ref_script = false, insert = false, update = false, delete = false, import = false, watch = false }
 
 [[extra.backends]]
 slug = "rest"
@@ -212,7 +253,7 @@ icon = "api"
 mode = "Read-only"
 wire = "JSON"
 note = "Paginated REST endpoints as tables, with filtering and record-level drill-down."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false, watch = false }
+caps = { filter = true, filter_ops = false, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, fetch_window = false, traverse_record = true, traverse_set = false, traverse_columns = false, ref_script = false, insert = false, update = false, delete = false, import = false, watch = false }
 
 [[extra.backends]]
 slug = "aws"
@@ -221,7 +262,7 @@ icon = "cloud"
 mode = "Read-only"
 wire = "JSON"
 note = "Infrastructure (CloudWatch, IAM, S3 and more) browsed as tables, with equality filters pushed down to the API."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = false, update = false, delete = false, watch = false }
+caps = { filter = true, filter_ops = false, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, fetch_window = false, traverse_record = false, traverse_set = false, traverse_columns = false, ref_script = false, insert = false, update = false, delete = false, import = false, watch = false }
 
 [[extra.backends]]
 slug = "cli"
@@ -230,7 +271,7 @@ icon = "terminal"
 mode = "Read-only"
 wire = "JSON"
 note = "Wrap a command (aws, kubectl, gh…) and read the JSON it prints as rows."
-caps = { filter = false, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = false, update = false, delete = false, watch = false }
+caps = { filter = false, filter_ops = false, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, fetch_window = false, traverse_record = false, traverse_set = false, traverse_columns = false, ref_script = false, insert = false, update = false, delete = false, import = false, watch = false }
 
 [[extra.backends]]
 slug = "csv"
@@ -239,7 +280,7 @@ icon = "table_view"
 mode = "Read-only"
 wire = "Typed text"
 note = "Local files as tables, with in-memory filtering and record-level traversal."
-caps = { filter = true, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = true, traverse_set = false, insert = false, update = false, delete = false, watch = false }
+caps = { filter = true, filter_ops = false, sort = false, search = false, count = true, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, fetch_window = false, traverse_record = true, traverse_set = false, traverse_columns = false, ref_script = false, insert = false, update = false, delete = false, import = false, watch = false }
 
 [[extra.backends]]
 slug = "logs"
@@ -248,5 +289,5 @@ icon = "receipt_long"
 mode = "Append-only"
 wire = "JSONL"
 note = "Append-only JSONL log files — write structured entries that the log viewer picks up on its next refresh."
-caps = { filter = false, sort = false, search = false, count = false, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, traverse_record = false, traverse_set = false, insert = true, update = false, delete = false, watch = false }
+caps = { filter = false, filter_ops = false, sort = false, search = false, count = false, aggregate = false, page_size = false, fetch_page = false, fetch_next = false, fetch_window = false, traverse_record = false, traverse_set = false, traverse_columns = false, ref_script = false, insert = true, update = false, delete = false, import = false, watch = false }
 +++
