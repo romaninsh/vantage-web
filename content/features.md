@@ -197,16 +197,19 @@ extras = [
 
 [[extra.backends]]
 slug = "mysql"
-name = "MySQL"
+name = "MySQL / MariaDB"
 icon = "database"
 mode = "Read / write"
 wire = "Native (sqlx)"
-note = "CRUD, aggregation, comparison filters, subquery traversal and columns from related tables. Server-side sort, search and pagination are not wired up yet."
-caps = { filter = true, filter_ops = true, sort = false, search = false, count = true, aggregate = true, page_size = false, fetch_page = false, fetch_next = false, fetch_window = false, traverse_record = true, traverse_set = true, traverse_columns = true, ref_script = false, insert = true, update = true, delete = true, import = false, watch = false }
+note = "Full SQL driver via sqlx — sort, search, aggregation, pagination, subquery traversal, columns from related tables, transactional imports and relations scripted in Rhai. Tested on MySQL 8 and MariaDB 11."
+caps = { filter = true, filter_ops = true, sort = true, search = true, count = true, aggregate = true, page_size = true, fetch_page = true, fetch_next = true, fetch_window = true, traverse_record = true, traverse_set = true, traverse_columns = true, ref_script = true, insert = true, update = true, delete = true, import = true, watch = false }
 extras = [
-  "Related columns become correlated subqueries.",
+  "Related columns become correlated subqueries, so `client.name` sorts and filters like any column.",
+  "Bulk imports run in one transaction, match ids the way the column's collation does, and fire the same hooks as a single insert.",
   "Views built from a Rhai query, or derived from another table with `base:`, taking arguments from the page.",
+  "`modify:` scripts add SQL conditions that YAML can't express: `self.with_condition(ident(\"total\") > 100)`.",
   "JSON columns open as their own editable tables.",
+  "No live updates: MySQL has no push channel short of reading the binlog.",
 ]
 
 [[extra.backends]]
