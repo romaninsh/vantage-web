@@ -89,17 +89,29 @@ model.get_ref("clients", row.id)
                     <span class="{% if b.mode == 'Read-only' or b.mode == 'Read-focused' or b.mode == 'Append-only' %}badge-soon{% else %}badge-now{% endif %}">{{ b.mode }}</span>
                     <span class="badge-soon !text-accent-300 !border-accent-500/25 !bg-accent-500/10">{{ b.wire }}</span>
                 </div>
+                {% if b.vendor_url or b.driver_url or b.query_url %}
+                <p class="backend-links">
+                    {% if b.vendor_url %}<a href="{{ b.vendor_url }}" target="_blank" rel="noopener">{{ b.name }} <span class="material-symbols-outlined">open_in_new</span></a>{% endif %}
+                    {% if b.driver_url %}<a href="{{ b.driver_url }}" target="_blank" rel="noopener">Vantage driver <span class="material-symbols-outlined">open_in_new</span></a>{% endif %}
+                    {% if b.query_url %}<a href="{{ b.query_url }}" target="_blank" rel="noopener">{{ b.query_name | default(value="Query language") }} <span class="material-symbols-outlined">open_in_new</span></a>{% endif %}
+                </p>
+                {% endif %}
                 <p class="mt-3 text-sm leading-relaxed text-text-2">{{ b.note }}</p>
                 <div class="mt-5 grid gap-6 lg:grid-cols-2 lg:gap-8">
+                    {% for side in ["left", "right"] %}
                     <div>
-                        <p class="kicker mb-2 !text-[0.66rem]">Retrieving data</p>
+                        {% for s in page.extra.cap_sections %}{% if s.side == side %}
+                        <p class="kicker {% if loop.first %}mb-2{% else %}mt-6 mb-2{% endif %} !text-[0.66rem]">{{ s.title }}</p>
                         <table class="cap-table">
                             <tbody>
-                            {% for r in page.extra.retrieve_rows %}
+                            {% for r in s.rows %}
+                                {% set v = b.caps[r.key] | default(value=false) %}
                                 <tr>
                                     <td class="cap-label">{{<glossary.term id={r.term} text={r.label} />}}</td>
                                     <td class="cap-val">
-                                        {% if b.caps[r.key] %}
+                                        {% if v is string %}
+                                        <span class="term cap-partial" tabindex="0"><span class="cap-part" aria-label="Partly supported">~</span><span class="term__tip" role="tooltip"><span class="term__def"><strong>Partly supported</strong> {{ v | markdown(inline=true) | safe }}</span></span></span>
+                                        {% elif v %}
                                         <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
                                         {% else %}
                                         <span class="material-symbols-outlined cap-no" title="Not supported">remove</span>
@@ -109,32 +121,15 @@ model.get_ref("clients", row.id)
                             {% endfor %}
                             </tbody>
                         </table>
-                    </div>
-                    <div>
-                        <p class="kicker mb-2 !text-[0.66rem]">Editing data</p>
-                        <table class="cap-table">
-                            <tbody>
-                            {% for r in page.extra.edit_rows %}
-                                <tr>
-                                    <td class="cap-label">{{<glossary.term id={r.term} text={r.label} />}}</td>
-                                    <td class="cap-val">
-                                        {% if b.caps[r.key] %}
-                                        <span class="material-symbols-outlined cap-yes" title="Supported">check_circle</span>
-                                        {% else %}
-                                        <span class="material-symbols-outlined cap-no" title="Not supported">remove</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        {% if b.extras %}
+                        {% endif %}{% endfor %}
+                        {% if side == "right" and b.extras %}
                         <p class="kicker mt-6 mb-2 !text-[0.66rem]">What stands out</p>
                         <ul class="backend-extras">
                             {% for e in b.extras %}<li>{{ e | markdown(inline=true) | safe }}</li>{% endfor %}
                         </ul>
                         {% endif %}
                     </div>
+                    {% endfor %}
                 </div>
             </div>
             {% endfor %}

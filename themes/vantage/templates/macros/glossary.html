@@ -9,12 +9,13 @@
    glossary; `text` overrides the wording shown in the sentence, such as a
    plural; `code` sets the term as code, for file and key names. The output is
    used inside a sentence, so the whitespace control keeps it on one line: a
-   newline around it would split the paragraph. An entry's `example` shows as
-   a code snippet under the definition. #}
+   newline around it would split the paragraph. The definition is inline
+   markdown, so `backticks` mark identifiers; an entry's `example` shows as a
+   code snippet under it. #}
 {% component glossary.term(id, text = "", code = false) -%}
 {%- set entry = load_data(path="data/glossary.toml")[id] -%}
 {%- set shown = text or entry.name -%}
-{%- set tip -%}<span class="term__tip" role="tooltip"><strong>{{ entry.name }}</strong> {{ entry.definition }}{% if entry.example %}<code class="term__code">{{ entry.example }}</code>{% endif %}{% if entry.docs %}<span class="term__more">Read the docs →</span>{% endif %}</span>{%- endset -%}
+{%- set tip -%}<span class="term__tip" role="tooltip"><span class="term__def"><strong>{{ entry.name }}</strong> {{ entry.definition | markdown(inline=true) | safe }}</span>{% if entry.example %}<code class="term__code">{{ entry.example }}</code>{% endif %}{% if entry.docs %}<span class="term__more">Read the docs →</span>{% endif %}</span>{%- endset -%}
 {%- if entry.docs -%}
 <a class="term" href="{{ entry.docs }}">{% if code %}<code>{{ shown }}</code>{% else %}{{ shown }}{% endif %}{{ tip | safe }}</a>
 {%- else -%}

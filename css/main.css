@@ -127,8 +127,11 @@
     a.term {
         @apply cursor-pointer;
     }
+    /* The tip is as wide as its example needs (at least w-80, at most 42rem
+       or the viewport); `.term__def` takes no part in that sizing, so a long
+       definition wraps to whatever width the example sets. */
     .term__tip {
-        @apply pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-80 -translate-x-1/2 rounded-lg border border-line-strong bg-surface-2 px-4 py-3 text-left font-sans text-[0.92rem] leading-relaxed font-normal text-text-2 no-underline opacity-0 shadow-xl;
+        @apply pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-max min-w-80 max-w-[min(42rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-line-strong bg-surface-2 px-4 py-3 text-left font-sans text-[0.92rem] leading-relaxed font-normal text-text-2 no-underline opacity-0 shadow-xl;
         transition:
             opacity 150ms 250ms,
             visibility 0s 400ms;
@@ -145,8 +148,14 @@
         @apply pointer-events-auto visible opacity-100;
         transition: opacity 150ms;
     }
+    .term__tip code:not(.term__code) {
+        @apply rounded bg-surface-1 px-1 py-px font-mono text-[0.82em] text-accent-300;
+    }
+    .term__def {
+        @apply block w-0 min-w-full;
+    }
     .term__code {
-        @apply mt-2 block rounded-md bg-surface-1 px-2.5 py-1.5 font-mono text-[0.8rem] whitespace-pre-wrap text-accent-300;
+        @apply mt-2 block overflow-x-auto rounded-md bg-surface-1 px-2.5 py-1.5 font-mono text-[0.8rem] whitespace-pre text-accent-300;
     }
     .term__more {
         @apply mt-2 block text-[0.85rem] text-accent-300 underline decoration-accent-300/40 underline-offset-3;
@@ -933,6 +942,27 @@
 
     .cap-no {
         @apply !text-[1.15rem] text-text-3/50;
+    }
+
+    /* Vendor, driver and query-language links under a backend's name. */
+    .backend-links {
+        @apply mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[0.82rem];
+
+        a {
+            @apply inline-flex items-center gap-1 text-accent-300 no-underline hover:text-accent-400;
+        }
+        .material-symbols-outlined {
+            @apply !text-[0.9rem];
+        }
+    }
+
+    /* A partly supported capability: an amber ~ with the explanation in a
+       glossary-style tooltip. */
+    .cap-partial {
+        @apply no-underline;
+    }
+    .cap-part {
+        @apply inline-block w-[1.15rem] text-center text-[1.2rem] leading-none font-bold text-amber-400;
     }
 
     .backend-extras {
