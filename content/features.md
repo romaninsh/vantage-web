@@ -27,7 +27,7 @@ compare = [
   { label = "Custom queries & aggregates", free = "Rhai", ent = "Rhai + Rust" },
   { label = "Actions", free = "Rhai", ent = "Rhai + Rust" },
   { label = "Internal API", free = "Rhai", ent = "Rhai + Rust" },
-  { label = "Custom datasources", free = "OSS, community", free_href = "https://github.com/romaninsh/vantage", ent = "yours or ours", href = "https://romaninsh.github.io/vantage/new-persistence.html" },
+  { label = "Custom datasources", free = "OSS, community", free_href = "https://github.com/romaninsh/vantage", ent = "yours or ours", href = "https://vantage-ui.com/book/new-persistence.html" },
   { label = "UI widgets", free = "21 built in", ent = "+ your own in Rust" },
   { label = "Third-party WASM plugins", free = "no", ent = "yes" },
 

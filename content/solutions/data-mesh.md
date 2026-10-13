@@ -221,7 +221,7 @@ You don't cut over all at once. Stand a facade up in front of the databases you 
 ## Start here
 
 <div class="my-4">
-    <a href="https://romaninsh.github.io/vantage/intro/step5-sql-dio.html" class="btn btn-primary me-2" target="_blank" rel="noopener">
+    <a href="https://vantage-ui.com/book/intro/step5-sql-dio.html" class="btn btn-primary me-2" target="_blank" rel="noopener">
         <span class="material-symbols-outlined align-middle me-1">menu_book</span>
         Read the guide
     </a>
