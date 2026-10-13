@@ -21,6 +21,7 @@ dev:
 
 build: css
 	zola build
+	python3 -I script/llms.py public
 
 # Capture page snapshots. BASE_URL/OUT_DIR are honoured, e.g.
 #   BASE_URL=http://127.0.0.1:1111 OUT_DIR=snapshots/local make snapshots

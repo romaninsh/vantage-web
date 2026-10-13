@@ -2,6 +2,8 @@
 
 {% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
 
+{% block head_extra %}{{<seo.software_application author={config.extra.blog_author} />}}{% endblock head_extra %}
+
 {% block content %}
 {{<nav.header />}}
 

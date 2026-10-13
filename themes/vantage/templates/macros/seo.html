@@ -1,0 +1,30 @@
+{#- schema.org SoftwareApplication for Vantage UI, used on the home and download
+    pages. Search engines and AI crawlers read it as the product's facts:
+    what it is, what it runs on, what it costs, the current version. -#}
+{% component seo.software_application(author) %}
+{%- set home = get_section(path="_index.md") -%}
+{%- set manifest = load_data(
+    url="https://vantage-releases.s3.eu-west-2.amazonaws.com/stable/latest.json",
+    format="json",
+    required=false
+) -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Vantage UI",
+  "url": {{ get_url(path="/") | json_encode | safe }},
+  "description": {{ home.description | json_encode | safe }},
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "macOS 13+",
+  "image": {{ get_url(path="images/vantage-ui-app.png") | json_encode | safe }},
+  {%- if manifest %}
+  "softwareVersion": {{ manifest.version | json_encode | safe }},
+  "downloadUrl": {{ manifest.url | json_encode | safe }},
+  {%- endif %}
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": {{ author | json_encode | safe }} },
+  "sameAs": ["https://github.com/romaninsh/vantage"]
+}
+</script>
+{% endcomponent seo.software_application %}

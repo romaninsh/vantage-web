@@ -1,5 +1,6 @@
 +++
 title = "Vantage UI"
+description = "AI-first low-code app builder: custom, real-time, data-heavy apps — forms, grids, dashboards — over your existing databases, APIs and infrastructure. Runs on your hardware."
 template = "index.html"
 
 [extra]
