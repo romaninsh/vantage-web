@@ -57,6 +57,9 @@ jobs:
           SITE_ENV: production
         run: zola build
 
+      - name: Generate llms.txt and markdown pages
+        run: python3 -I script/llms.py public
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.AWS_ROLE_ARN }}
@@ -70,6 +73,15 @@ jobs:
         # Exclude book/*: the framework mdBook, published to /book/ by
         # vantage-ui's book.yaml workflow — same reasoning.
         run: aws s3 sync public/ "s3://${SITE_BUCKET}" --delete --exclude 'examples/*.zip' --exclude 'book/*'
+
+      - name: Set UTF-8 content types on llms files
+        # The sync guesses text/markdown and text/plain with no charset, and
+        # browsers then mangle the em dashes. Re-upload these few with one.
+        run: |
+          aws s3 cp public/ "s3://${SITE_BUCKET}" --recursive --exclude '*' --include '*.html.md' \
+            --content-type 'text/markdown; charset=utf-8'
+          aws s3 cp public/ "s3://${SITE_BUCKET}" --recursive --exclude '*' --include 'llms*.txt' \
+            --content-type 'text/plain; charset=utf-8'
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"

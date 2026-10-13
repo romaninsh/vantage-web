@@ -7,21 +7,29 @@
         {% if page and page.description %}<meta name="description" content="{{ page.description }}">
         {% elif section and section.description %}<meta name="description" content="{{ section.description }}">{% endif %}
 
-        <!-- Link previews (WhatsApp, Slack, social): a page's `cover` image,
-             title and description. An unlisted page asks search engines to
-             stay away, so it is found only through its link. -->
-        {% if page %}
-        <meta property="og:type" content="article">
-        <meta property="og:url" content="{{ page.permalink }}">
-        <meta property="og:title" content="{{ page.title }}">
+        <!-- Link previews (WhatsApp, Slack, social) and search: canonical URL,
+             title, description and image, for pages and sections alike. A
+             page's `cover` wins over the app screenshot. An unlisted page asks
+             search engines to stay away, so it is found only through its link. -->
+        {% if page %}{% set doc = page %}{% elif section %}{% set doc = section %}{% endif %}
+        {% if doc is defined %}
+        <link rel="canonical" href="{{ doc.permalink }}">
+        <!-- Markdown twin of this page for AI agents (script/llms.py, run on deploy) -->
+        <link rel="alternate" type="text/markdown" href="{{ doc.permalink }}index.html.md">
+        <meta property="og:type" content="{% if page and page.date %}article{% else %}website{% endif %}">
+        <meta property="og:url" content="{{ doc.permalink }}">
+        <meta property="og:title" content="{{ doc.title }}">
         <meta property="og:site_name" content="{{ config.title }}">
-        {% if page.description %}<meta property="og:description" content="{{ page.description }}">{% endif %}
-        {% if page.extra.cover %}
-        <meta property="og:image" content="{{ page.permalink }}{{ page.extra.cover }}">
+        {% if doc.description %}<meta property="og:description" content="{{ doc.description }}">{% endif %}
+        {% if doc.extra.cover %}
+        <meta property="og:image" content="{{ doc.permalink }}{{ doc.extra.cover }}">
+        {% else %}
+        <meta property="og:image" content="{{ get_url(path='images/vantage-ui-app.png') }}">
+        {% endif %}
         <meta name="twitter:card" content="summary_large_image">
+        {% if doc.extra.unlisted %}<meta name="robots" content="noindex">{% endif %}
         {% endif %}
-        {% if page.extra.unlisted %}<meta name="robots" content="noindex">{% endif %}
-        {% endif %}
+        {% block head_extra %}{% endblock head_extra %}
 
         <!-- Google Fonts: Inter (UI) + JetBrains Mono (code, kickers) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -2,7 +2,7 @@
 
 Generated 2026-06-10 by an automated multi-agent review. Each file contains a snippet, severity, and recommendation.
 
-**Total: 16** (security: 1 · bugs: 2 · inconsistencies: 8 · omissions: 4 · suggestions: 1)
+**Total: 15** (security: 1 · bugs: 2 · inconsistencies: 8 · omissions: 3 · suggestions: 1)
 
 ## Security (1)
 
@@ -30,11 +30,10 @@ Generated 2026-06-10 by an automated multi-agent review. Each file contains a sn
 | medium | [SpaceX example pitched as "see it in action" but is tagged Coming soon and not in the repo](inconsistencies/web-spacex-example-present-tense.md) | `content/solutions/developers.md:73` |
 | low | ["Six-step process" disagrees with the book's nine-step persistence guide](inconsistencies/web-persistence-six-steps-vs-book-nine.md) | `themes/vantage/templates/framework.html:692` |
 
-## Omissions (4)
+## Omissions (3)
 
 | Severity | Finding | Location |
 |---|---|---|
-| high | [No meta descriptions, Open Graph/Twitter tags, or canonical URLs anywhere](omissions/web-missing-meta-description-og-tags.md) | `themes/vantage/templates/base.html:3` |
 | medium | [Features gallery shows the same placeholder screenshot for all six UI elements](omissions/web-gallery-placeholder-screenshots.md) | `content/features.md:40` |
 | medium | [Pages from the positioning site map are missing: How it works, Why Vantage, Roadmap](omissions/web-missing-sitemap-pages.md) | `content/` |
 | low | [Download page shows a truncated sha256 that can't be used to verify anything](omissions/web-download-checksum-unverifiable.md) | `themes/vantage/templates/download.html:47` |
