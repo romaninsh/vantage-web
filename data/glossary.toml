@@ -2,7 +2,8 @@
 # page passes in; `definition` shows on hover and `docs`, when set, is where a
 # click goes.
 # Keep definitions to one plain sentence: they are read in a small tooltip by
-# readers who may not write code.
+# readers who may not write code. An optional `example` shows a short Rhai or
+# YAML snippet under the definition.
 
 [vista]
 name = "Vista"
@@ -26,3 +27,144 @@ definition = "A YAML file describing one screen of the app: the grids, charts, f
 [action]
 name = "action"
 definition = "A YAML file describing something a user can do from a grid or a record, such as filling in a form, confirming a change, calling an API or running a command."
+
+# ----- Data source capabilities (features page). A driver either advertises a
+# capability or it doesn't; the UI shows only the controls a table supports.
+
+[cap-filter]
+name = "Filter by conditions"
+definition = "Narrow the available table rows by applying one or more conditions."
+example = "table(\"order\").where(\"status\", \"open\")"
+
+[cap-filter-ops]
+name = "Conditional operators"
+definition = "Non-exact matching with basic operators such as `>`, `<` or `!=`. Full support also needs matching against a set of values (`in`) and fuzzy text matching (`contains`)."
+example = "table(\"order\").where(\"total\", \">=\", 100)"
+
+[cap-sort]
+name = "Server-side sort"
+definition = "The server re-arranges the results, respecting each column's data type, ascending or descending, on several columns in a set priority."
+example = "table(\"order\").sort(\"total\", \"desc\")"
+
+[cap-search]
+name = "Quick search"
+definition = "A text search across several columns, performed on the server, so it can cover the entire table."
+example = "table(\"client\").search(\"smith\")"
+
+[cap-count]
+name = "Count"
+definition = "The server can say exactly how many rows remain in the set once the conditions are applied."
+example = "table(\"order\").where(\"status\", \"due\").count()"
+
+[cap-aggregate]
+name = "Column aggregates"
+definition = "Aggregate functions applied to a column of a filtered set. The backend supports at least some of them, such as `max`, `avg`, `median` or a string concatenation (`group_concat`)."
+example = "select().from(\"order\")\n  .expression(avg(ident(\"total\")).alias(\"avg_total\"))\n  .expression(max(ident(\"total\")).alias(\"max_total\"))"
+
+[cap-fetch-page]
+name = "Random-access pages"
+definition = "Skip any number of rows in a filtered set without a performance penalty, and request any number of records up to a maximum."
+example = "select().from(\"order\")\n  .order_by(ident(\"id\"), \"asc\")\n  .limit(50, 1000)"
+
+[cap-fetch-next]
+name = "Progressive load"
+definition = "A fall-back way to paginate: pages are sequential, and the next page can be fetched only after the previous one."
+
+[cap-one-to-many]
+name = "One-to-many relations"
+definition = "Only needs a filter by condition whose value comes from a record loaded from another table — in the same data source or a different one."
+example = "table(\"client\").where(\"id\", \"c1\").ref(\"orders\")"
+
+[cap-many-to-many]
+name = "Many-to-many relations"
+definition = "A condition can be an expression over another set, such as a subquery or a join. Partial support when the `in` operator can match against a set of values."
+example = "table(\"client\").where(\"country\", \"UK\").ref(\"orders\")"
+
+[cap-rel-aggregate]
+name = "Relation aggregation"
+definition = "A column can be defined as an aggregate of a field or expression in a related table, calculated on the server. The classic example is `account.balance` as the sum of `transaction.amount`."
+example = "// invoice.paid: the sum of its payments\ncoalesce(\n  select().value().from(\"payment\")\n    .expression(sum(ident(\"amount\")))\n    .where(ident(\"invoice\") == parent(\"id\"))\n    .group_all().subquery()[0],\n  0)"
+
+[cap-expressions]
+name = "Arbitrary expressions"
+definition = "Per-row operations on the server, over stored values or relation aggregates — for example `invoice_line.total` as `qty * item.price`."
+example = "mul(ident(\"qty\"), ident(\"price\")).alias(\"total\")"
+
+[cap-traverse-columns]
+name = "Column from related table"
+definition = "Import a field through a one-to-one relation, such as `country_id.name`, as a read-only column."
+example = "columns:\n  client.name: { type: string }"
+
+[cap-contained-expr]
+name = "Contained record expressions"
+definition = "A condition can iterate over sub-records stored inside a record — invoices whose JSON `lines` field contains item `123`."
+example = "self.with_condition(#{\"lines.item_id\": 123})"
+
+[cap-ref-script]
+name = "Relations defined in Rhai"
+definition = "Executes arbitrary code after a row is retrieved from the table, in the context of the entire row — a Rhai `lazy:` script in YAML, or a Rust closure that can also do I/O."
+example = "badge:\n  lazy: |\n    if row.vip { \"★ \" + row.name } else { row.name }"
+
+[cap-watch-record]
+name = "Record changed"
+definition = "An open record updates in place when someone else changes it — the source pushes the change, no polling."
+
+[cap-watch-set]
+name = "Record set changed"
+definition = "A filtered grid updates when rows matching its condition change, and a row that stops matching leaves the grid."
+
+[cap-watch-table]
+name = "Table changed"
+definition = "Any insert, update or delete in the table reaches open grids as it happens."
+
+[cap-watch-related]
+name = "Related record changed"
+definition = "A change in a related table — an `invoice_line` — reaches the parent's view, such as `invoice.total`."
+
+[cap-insert]
+name = "Add records"
+definition = "Create rows from a form dialog. In a filtered view, new rows are filled in to belong to it."
+example = "table(\"order\")\n  .insert(#{ id: \"o10\", client: \"c3\", total: 55 })"
+
+[cap-update]
+name = "Update records"
+definition = "Edit rows in a form dialog. A write through a filtered view can never change a row outside it."
+example = "table(\"order\").patch(\"o1\", #{ status: \"paid\" })"
+
+[cap-delete]
+name = "Delete records"
+definition = "Remove rows, after a confirmation step, from a grid or a record view."
+example = "table(\"order\").where(\"status\", \"paid\").delete(\"o2\")"
+
+[cap-import]
+name = "Atomic import"
+definition = "A CSV or wizard import lands in one transaction: either every new row is stored or none is, and existing rows are left untouched."
+example = "let paid = table(\"order\").where(\"status\", \"paid\");\ntable(\"archive\").import_from(paid)"
+
+[cap-bulk-modify]
+name = "Bulk modify"
+definition = "Change every row of a filtered set in one operation — mark all open orders as shipped — without loading them first."
+
+[cap-custom-query]
+name = "Tables from custom queries"
+definition = "A table can be defined by a query instead of a stored table — a Rhai script or a native query — and is read-only."
+example = "select().from(\"order\")\n  .inner_join(\"client\", \"c\", expr(\"c.id = order.client_id\"))"
+
+[cap-table-aggregate]
+name = "Table aggregate"
+definition = "A table defined through another table — sales grouped by month, built on orders — inheriting its columns and relations."
+example = "name: category_totals\nid_column: category_id\ncolumns:\n  total_price: { type: int }\nsqlite:\n  base: product\n  inherit:\n    columns: [category_id]\n  rhai: |\n    base.clear_fields().field(\"category_id\")\n      .expression(expr(\"SUM(price) AS total_price\"))\n      .group_by(expr(\"category_id\"))"
+
+[cap-server-actions]
+name = "Server-side actions"
+definition = "An action runs inside the data source, such as a stored procedure or function, instead of in the app."
+
+[cap-auto-id]
+name = "Auto-ID"
+definition = "When the id column is flagged `auto`, an insert without an `id` asks the data source to assign one — auto-increment, a generated record id, an ObjectId — and returns it. Without the flag the app mints a UUIDv7 instead, so retries stay idempotent."
+example = "# order.yaml\ncolumns:\n  id: { type: int, flags: [id, auto] }\n\n// Rhai — no id, so the data source makes one\nlet id = table(\"order\")\n  .insert(#{ client: \"c2\", total: 30 });"
+
+[cap-idempotent]
+name = "Idempotency"
+definition = "By default, every write can be retried safely: a repeated insert or delete changes nothing, and writes through a filtered view stay inside it. An insert that relies on Auto-ID is the exception — retrying it adds a second row."
+example = "// run twice: same result\ntable(\"order\")\n  .upsert(\"o10\", #{ client: \"c3\", total: 60 })"

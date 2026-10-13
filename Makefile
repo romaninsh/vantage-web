@@ -12,10 +12,12 @@ css-watch:
 	tailwindcss -i css/main.css -o static/main.css --watch
 
 # Run Tailwind in watch mode alongside zola serve; Ctrl-C stops both.
+# `data/` holds files templates read with load_data (the glossary), which zola
+# doesn't watch by default.
 dev:
 	tailwindcss -i css/main.css -o static/main.css --watch & \
 	trap "kill $$!" EXIT; \
-	zola serve
+	zola serve --extra-watch-path data
 
 build: css
 	zola build
