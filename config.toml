@@ -43,3 +43,7 @@ theme = "monokai"
 # rendered as plain text.
 blog_author = "Romans Malinovskis"
 blog_author_url = "https://bsky.app/profile/nearly.guru"
+
+# Google Analytics measurement ID. The tag is only emitted when the build runs
+# with SITE_ENV=production (the S3 deploy workflow), never in `zola serve`.
+google_tag_id = "G-R3BJYDRX24"

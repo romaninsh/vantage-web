@@ -36,6 +36,19 @@
 
         <!-- Favicon -->
         <link rel="icon" type="image/svg+xml" href="{{ get_url(path='favicon.svg') }}">
+
+        <!-- Google tag: production deploys only (deploy.yml sets SITE_ENV),
+             so `zola serve` and local builds don't pollute analytics. -->
+        {% if get_env(name="SITE_ENV", default="") == "production" %}
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.extra.google_tag_id }}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '{{ config.extra.google_tag_id }}');
+        </script>
+        {% endif %}
     </head>
 
     <body class="{% block body_class %}{% endblock body_class %}">
