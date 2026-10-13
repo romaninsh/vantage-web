@@ -52,6 +52,9 @@ jobs:
         run: tailwindcss -i css/main.css -o static/main.css --minify
 
       - name: Build with Zola
+        # SITE_ENV=production turns on the Google tag in base.html.
+        env:
+          SITE_ENV: production
         run: zola build
 
       - uses: aws-actions/configure-aws-credentials@v4
