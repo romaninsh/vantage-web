@@ -138,7 +138,7 @@ let invoices: Table<PostgresDB, Invoice> =
 
 `Table` is defined in [`vantage-table`](https://docs.rs/vantage-table). It is generic, but must be paired with a persistence, in this case `PostgresDB`.
 
-A table typically holds [columns](https://romaninsh.github.io/vantage/intro/step2-tables.html#defining-a-table), [relations](https://romaninsh.github.io/vantage/relations.html) and [conditions](https://romaninsh.github.io/vantage/intro/step1-first-query.html#adding-conditions), but can be extended with [hooks](https://romaninsh.github.io/vantage/record-lifecycle.html#lifecycle-hooks), [sorting](https://romaninsh.github.io/vantage/intro/step4-vista.html#search-and-ordering) and [expressions](https://romaninsh.github.io/vantage/intro/step2-tables.html#computed-fields-with-expressions). A table's source can be a physical table or a [query](https://docs.rs/vantage-table/latest/vantage_table/table/base/struct.Table.html#method.from_select). A table may also have [pagination](https://romaninsh.github.io/vantage/intro/step4-vista.html#pagination), knows its [ID and title](https://romaninsh.github.io/vantage/intro/step4-vista.html#reading-schema) columns, and supports [invariants](https://romaninsh.github.io/vantage/record-lifecycle.html#set-invariants) for new records.
+A table typically holds [columns](https://vantage-ui.com/book/intro/step2-tables.html#defining-a-table), [relations](https://vantage-ui.com/book/relations.html) and [conditions](https://vantage-ui.com/book/intro/step1-first-query.html#adding-conditions), but can be extended with [hooks](https://vantage-ui.com/book/record-lifecycle.html#lifecycle-hooks), [sorting](https://vantage-ui.com/book/intro/step4-vista.html#search-and-ordering) and [expressions](https://vantage-ui.com/book/intro/step2-tables.html#computed-fields-with-expressions). A table's source can be a physical table or a [query](https://docs.rs/vantage-table/latest/vantage_table/table/base/struct.Table.html#method.from_select). A table may also have [pagination](https://vantage-ui.com/book/intro/step4-vista.html#pagination), knows its [ID and title](https://vantage-ui.com/book/intro/step4-vista.html#reading-schema) columns, and supports [invariants](https://vantage-ui.com/book/record-lifecycle.html#set-invariants) for new records.
 
 On top of this, a table can emit queries. [`select()`](https://docs.rs/vantage-table/latest/vantage_table/table/base/struct.Table.html#method.select) returns a query that fetches all its matching rows, in case you want to add a [join](https://docs.rs/vantage-sql/latest/vantage_sql/sqlite/statements/select/struct.SqliteSelect.html#method.with_join) or an [aggregate](https://docs.rs/vantage-expressions/latest/vantage_expressions/traits/selectable/trait.Selectable.html#method.with_group_by) before you run it. [`get_count_query()`](https://docs.rs/vantage-table/latest/vantage_table/table/base/struct.Table.html#method.get_count_query) and [`get_sum_query(col)`](https://docs.rs/vantage-table/latest/vantage_table/table/base/struct.Table.html#method.get_sum_query) return count and sum queries over the same rows.
 
@@ -148,7 +148,7 @@ On top of this, a table can emit queries. [`select()`](https://docs.rs/vantage-t
 What does that mean for your invoices? Declaring them as a `Table` gives them three layers of methods:
 
 1. Every generic method, such as `list()`, `get(id)`, `insert()`, `get_count()` and `with_condition()`, works on invoices with no extra code.
-2. Because you own `Invoice`, you can add methods of your own through an [extension trait](https://romaninsh.github.io/vantage/intro/step2-tables.html#extension-traits).
+2. Because you own `Invoice`, you can add methods of your own through an [extension trait](https://vantage-ui.com/book/intro/step2-tables.html#extension-traits).
 3. Drivers add their own too: SurrealDB tables, for example, gain [`SurrealTableExt`](https://docs.rs/vantage-surrealdb/latest/vantage_surrealdb/ext/trait.SurrealTableExt.html).
 
 ```rust
@@ -229,13 +229,13 @@ A table is strongly typed and can be extended, but that limits where it can be u
 That is what [Vista](https://docs.rs/vantage-vista) is for. There are two ways to create one:
 
 1. build a table, then wrap it in a Vista;
-2. use a Vista factory to turn a [YAML/Rhai table definition](https://romaninsh.github.io/vantage/config-driven-vistas.html) into a Vista.
+2. use a Vista factory to turn a [YAML/Rhai table definition](https://vantage-ui.com/book/config-driven-vistas.html) into a Vista.
 
 The first suits code you control, where the table definition is fixed at compile time. The second is what Vantage UI uses: it is a static binary, so your tables can't be compiled into it, yet it shouldn't lose anything your persistence supports.
 
 Every Vista carries a capability check: flags such as `can_count`, `can_order`, `can_search`, `can_insert` and `can_subscribe` that say what the source behind it [supports](https://docs.rs/vantage-vista/latest/vantage_vista/capabilities/struct.VistaCapabilities.html). A generic UI widget reads them to decide what to draw: a sort header only where sorting works, a New button only where inserts work, live updates only where the source can push them.
 
-Vista also suits a [generic command-line tool](https://github.com/romaninsh/vantage/blob/main/bakery_model3/examples/cli-vista.rs) over arbitrary data sources, or an [API endpoint](https://romaninsh.github.io/vantage/intro/step8-axum-dio.html) that serves an arbitrary set of tables.
+Vista also suits a [generic command-line tool](https://github.com/romaninsh/vantage/blob/main/bakery_model3/examples/cli-vista.rs) over arbitrary data sources, or an [API endpoint](https://vantage-ui.com/book/intro/step8-axum-dio.html) that serves an arbitrary set of tables.
 {% </blog.layer> %}
 
 {% <blog.example title="Customers and invoices"> %}
@@ -271,11 +271,11 @@ Vantage has a rich mechanism for this. It can integrate with [change data captur
 
 Three concepts matter here:
 
-- **[Diorama](https://romaninsh.github.io/vantage/intro/step5-dio-lens.html)**: a partial reflection of server-side data, kept locally.
+- **[Diorama](https://vantage-ui.com/book/intro/step5-dio-lens.html)**: a partial reflection of server-side data, kept locally.
 - **Lens**: the universal mechanism through which your infrastructure delivers change notifications, along with the caching policy around them.
-- **[Scenery](https://romaninsh.github.io/vantage/intro/step7-scenery.html)**: an active view into the data, held by a UI element or a web client.
+- **[Scenery](https://vantage-ui.com/book/intro/step7-scenery.html)**: an active view into the data, held by a UI element or a web client.
 
-The book's [live data](https://romaninsh.github.io/vantage/live-data.html) chapter covers how changes arrive from each kind of source. Crate: [`vantage-diorama`](https://docs.rs/vantage-diorama).
+The book's [live data](https://vantage-ui.com/book/live-data.html) chapter covers how changes arrive from each kind of source. Crate: [`vantage-diorama`](https://docs.rs/vantage-diorama).
 {% </blog.layer> %}
 
 ![A change starts in the database: invoice INV-1042 is marked paid. The Lens receives the notification and updates the Dio's local copy, and the Dio passes the change only to the sceneries showing INV-1042: a grid of Acme's invoices and the INV-1042 form both redraw. A web client viewing Beta Corp's invoices is not affected and does not repaint.](live-data.svg)

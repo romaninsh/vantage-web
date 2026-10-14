@@ -8,17 +8,17 @@
 [vista]
 name = "Vista"
 definition = "A universal handle on one table from any data source. It knows the columns, their types and what the source can do, so a generic grid or form can work with it without knowing your database."
-docs = "https://romaninsh.github.io/vantage/intro/step4-vista.html"
+docs = "https://vantage-ui.com/book/intro/step4-vista.html"
 
 [diorama]
 name = "Diorama"
 definition = "A live local copy of part of your data, kept between a Vista and the screen. Reads come from the copy instead of the network, and it can add sorting or search the source itself lacks."
-docs = "https://romaninsh.github.io/vantage/intro/step5-dio-lens.html"
+docs = "https://vantage-ui.com/book/intro/step5-dio-lens.html"
 
 [table]
 name = "table"
 definition = "A YAML file describing one table from a data source: its columns, their types, how it relates to other tables and how to query it. Vantage turns it into a Vista."
-docs = "https://romaninsh.github.io/vantage/config-driven-vistas.html"
+docs = "https://vantage-ui.com/book/config-driven-vistas.html"
 
 [page]
 name = "page"

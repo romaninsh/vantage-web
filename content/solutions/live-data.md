@@ -538,7 +538,7 @@ Vantage will take advantage of databases or APIs that support "push updates" wit
 
 ## Vantage live API export
 
-Vantage can export APIs that support live protocols — WebSocket, or a [Kubernetes-style](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes) `?watch=true` stream delivered as [NDJSON](https://en.wikipedia.org/wiki/JSON_streaming). Read more about how to make one in [The Vantage Book](https://romaninsh.github.io/vantage/intro/step5-sql-dio.html).
+Vantage can export APIs that support live protocols — WebSocket, or a [Kubernetes-style](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes) `?watch=true` stream delivered as [NDJSON](https://en.wikipedia.org/wiki/JSON_streaming). Read more about how to make one in [The Vantage Book](https://vantage-ui.com/book/intro/step5-sql-dio.html).
 
 ## Built for a bumpy ride
 

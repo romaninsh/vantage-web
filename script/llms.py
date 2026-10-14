@@ -41,8 +41,8 @@ SECTIONS = [
 ]
 
 DOCS = [
-    ("Vantage framework book", "https://romaninsh.github.io/vantage/",
-     "concepts and guides for the Rust framework under Vantage UI"),
+    ("Vantage framework book", "https://vantage-ui.com/book/llms.txt",
+     "the Rust framework under Vantage UI; its own llms.txt indexes every chapter as markdown"),
     ("Framework source", "https://github.com/romaninsh/vantage",
      "the vantage-* crates on GitHub"),
     ("Crates on crates.io", "https://crates.io/search?q=vantage",

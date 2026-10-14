@@ -592,7 +592,7 @@
                         agent reads the guide and builds the right variants, so
                         <code>"16331752Ki"</code> becomes a real number you can sort and chart, and
                         <code>"250m"</code> a quarter of a CPU — not text.</p>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step1-types.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step1-types.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
 
@@ -631,7 +631,7 @@
                         <p><em>Not needed for Kubernetes</em> — the API has no query language to
                         build against, so the agent skips this step and filters the fetched list
                         instead.</p>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step2-expressions.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step2-expressions.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
 
@@ -667,7 +667,7 @@ table.add_condition(price.gt(100));</code></pre>
                         <p><em>Not needed for Kubernetes</em> — the API has no general query language
                         to push a condition into, so the agent filters the fetched list in memory
                         instead. Skipped.</p>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step3-operators.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step3-operators.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
 
@@ -705,7 +705,7 @@ table.add_condition(price.gt(100));</code></pre>
                         </div>
                         <p><em>Not needed for Kubernetes</em> — a resource list comes back whole,
                         with no SELECT to build, so the agent filters it in memory. Skipped.</p>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step4-query-builder.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step4-query-builder.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
 
@@ -762,7 +762,7 @@ for (_, pod) in pods.list_values().await? {
     let name  = pod.get("name");
     let ready = pod.get("ready");   // "1/1", "2/2", …
 }</code></pre>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step5-table-crud.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step5-table-crud.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
 
@@ -826,7 +826,7 @@ for (_, pod) in pods.list_values().await? {
                                 </div>
                             </div>
                         </div>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step6-relationships.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step6-relationships.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
 
@@ -859,7 +859,7 @@ for (_, pod) in pods.list_values().await? {
                         <p>Exactly the three pods that deployment owns — fetched, filtered and
                         drilled, with no Kubernetes-specific code in the CLI at all. The checkpoint
                         passes.</p>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step7-multi-backend.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step7-multi-backend.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
 
@@ -915,7 +915,7 @@ for (_, pod) in pods.list_values().await? {
                         — a live <code>watch</code>, server-side field selectors. They can be added
                         later to make the driver more powerful, and swapped in <strong>without
                         touching a line of code that uses Vantage</strong> — Vantage UI included.</p>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step8-vista-integration.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step8-vista-integration.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
 
@@ -982,7 +982,7 @@ references:
                         <p>The Kubernetes driver itself shipped in <strong>Vantage 0.20</strong> and
                         stays a built-in capability — so a cluster works out of the box, and YAML or
                         Rhai is for the custom types you layer on top.</p>
-                        <p class="ps-step__further"><a href="https://romaninsh.github.io/vantage/new-persistence/step9-contained-relations.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
+                        <p class="ps-step__further"><a href="https://vantage-ui.com/book/new-persistence/step9-contained-relations.html" target="_blank" rel="noopener">Read further<span class="material-symbols-outlined">arrow_forward</span></a></p>
                         </div>
                     </details>
                 </div>

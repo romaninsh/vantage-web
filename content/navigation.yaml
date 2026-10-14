@@ -35,7 +35,7 @@ menu:
       - title: "The Vantage Framework"
         url: "/framework/"
       - title: "The Book"
-        url: "https://romaninsh.github.io/vantage/"
+        url: "https://vantage-ui.com/book/"
         external: true
       - title: "crates.io"
         url: "https://crates.io/search?q=vantage-"
@@ -76,7 +76,7 @@ footer:
       - title: "Overview"
         url: "/framework/"
       - title: "The Book"
-        url: "https://romaninsh.github.io/vantage/"
+        url: "https://vantage-ui.com/book/"
         external: true
       - title: "crates.io"
         url: "https://crates.io/search?q=vantage-"
