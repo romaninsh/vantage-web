@@ -113,3 +113,9 @@
     alt:    "Clients build up orders, invoices and balances live, while background jobs report on the Services sheet"
     width:  480
     height: 298
+"0.42":
+  - thumb:  images/changelog/0.42/01.webp
+    full:   images/changelog/0.42/01-full.webp
+    alt:    "Signal bars for each API in the title bar — hover for the rate, requests in flight, latency, failures in the last minute and the last error, while a flaky server keeps the grid filled"
+    width:  480
+    height: 313
