@@ -121,7 +121,7 @@
     "tier": "community"
   },
   {
-    "capabilities": "Generated, optionally live-mutating sample data — the zero-setup playground behind the demo dashboards.",
+    "capabilities": "Seeded tables, optionally mutated by Rhai sims — the zero-setup playground behind the demo dashboards.",
     "class": "api",
     "doc_url": null,
     "enabled": true,
@@ -140,6 +140,17 @@
     "id": "aws-dynamodb",
     "label": "DynamoDB",
     "order": 96,
+    "tier": "community"
+  },
+  {
+    "capabilities": "Editable in-memory tables, optionally started from seed files. Everything written is lost when the app closes.",
+    "class": "api",
+    "doc_url": null,
+    "enabled": true,
+    "icon": "layers",
+    "id": "memory",
+    "label": "In-memory tables",
+    "order": 97,
     "tier": "community"
   }
 ]
