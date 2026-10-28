@@ -9,10 +9,20 @@ kicker = "Free download"
 # `static/changelog-<minor>.md` and is rendered inline on this page.
 # The vantage-ui release workflow prepends a new minor here whenever it
 # syncs `static/changelog-<minor>.md` for a release in a new line.
-changelog_minors = ["0.42", "0.41", "0.40", "0.39", "0.38", "0.37", "0.36", "0.35", "0.34", "0.33", "0.32", "0.31", "0.30", "0.29", "0.28", "0.27", "0.26", "0.25", "0.24", "0.23", "0.22", "0.21", "0.20", "0.19", "0.18", "0.17", "0.16", "0.15", "0.14", "0.13", "0.12", "0.11", "0.10", "0.9", "0.8", "0.7", "0.6", "0.5", "0.4"]
+changelog_minors = ["1.9", "1.8", "1.7", "1.6", "1.5", "1.4", "1.3", "1.2", "1.1", "1.0", "0.42", "0.41", "0.40", "0.39", "0.38", "0.37", "0.36", "0.35", "0.34", "0.33", "0.32", "0.31", "0.30", "0.29", "0.28", "0.27", "0.26", "0.25", "0.24", "0.23", "0.22", "0.21", "0.20", "0.19", "0.18", "0.17", "0.16", "0.15", "0.14", "0.13", "0.12", "0.11", "0.10", "0.9", "0.8", "0.7", "0.6", "0.5", "0.4"]
 
 # Release dates, keyed by minor (from the vantage-ui git tags).
 [extra.changelog_dates]
+"1.9" = "21 October 2026"
+"1.8" = "21 October 2026"
+"1.7" = "19 October 2026"
+"1.6" = "18 October 2026"
+"1.5" = "12 October 2026"
+"1.4" = "12 October 2026"
+"1.3" = "11 October 2026"
+"1.2" = "10 October 2026"
+"1.1" = "3 October 2026"
+"1.0" = "27 September 2026"
 "0.42" = "17 September 2026"
 "0.41" = "14 September 2026"
 "0.40" = "14 September 2026"

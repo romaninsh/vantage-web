@@ -1,8 +1,7 @@
 +++
 title = "A tour of Vantage UI"
 description = "Part two: the features of Vantage UI, built on the Vantage framework."
-date = 2026-10-04
-draft = true
+date = 2026-10-28
 
 [taxonomies]
 categories = ["Releases"]
