@@ -1,10 +1,13 @@
 +++
 title = "A problem Vantage UI is solving"
 description = "A year ago, Vantage UI didn't exist at all. Our effort went into a Rust framework for managing business entities efficiently, one that any engineering team could use. Then the rise of AI revealed a gap, and an opportunity."
-date = 2026-10-04
+date = 2026-10-28
+
+[taxonomies]
+categories = ["Releases"]
 
 [extra]
-unlisted = true
+featured = true
 cover = "cover.jpg"
 show_cover = false
 +++
