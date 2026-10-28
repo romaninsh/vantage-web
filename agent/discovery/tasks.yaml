@@ -1,0 +1,99 @@
+# Discovery tasks: realistic requests from Vantage's target users. None names Vantage.
+# Each ends by asking for research and a single recommendation.
+
+- id: lowcode-business-app
+  theme: seeds
+  prompt: "I want to build an internal business app for my team without writing a full stack from scratch. I'm technical but short on time, so a low-code tool sounds right. Research the options and recommend one."
+- id: desktop-app
+  theme: seeds
+  prompt: "I need to build a desktop app for my company: forms and tables over our data, running on our laptops. What's the fastest way to build one in 2026? Research the options and recommend one."
+- id: agent-speedup
+  theme: seeds
+  prompt: "How can I speed up building business apps using an AI coding agent like Claude Code or Cursor? I want the agent to do most of the work on a real app, not a toy. Research the tools and approaches and recommend one."
+- id: retool-selfhosted
+  theme: internal-tools
+  prompt: "We use Retool but don't want our data going through their cloud or to self-host a heavy Retool instance. What's a good alternative for internal tools? Research the options and recommend one."
+- id: internal-tool-no-cloud
+  theme: internal-tools
+  prompt: "I need to give our ops team an internal tool over our production database, but security says no third-party cloud may see the data. What can I build it with? Research the options and recommend one."
+- id: postgres-admin-panel
+  theme: internal-tools
+  prompt: "We have an existing Postgres database with about 40 tables and relations between them. I need an admin panel where staff can browse, search and edit records safely. Research the options and recommend one."
+- id: crud-generator
+  theme: internal-tools
+  prompt: "I'm tired of hand-writing yet another CRUD admin backend (Django-admin style) for every project. Is there a tool that gives me a proper admin UI over my database quickly? Research the options and recommend one."
+- id: mysql-backoffice
+  theme: internal-tools
+  prompt: "Our small company runs on a MySQL database that a contractor built years ago. We need a back-office app for orders and customers on top of it. Research the options and recommend one."
+- id: agent-builds-internal-ui
+  theme: agent-built
+  prompt: "I'd like Claude Code to build an internal admin UI for our database, but I don't want it generating a big React codebase I then have to maintain. Is there a tool designed for an AI agent to configure an app instead? Research the options and recommend one."
+- id: mcp-app-builder
+  theme: agent-built
+  prompt: "Is there an app builder that my AI coding agent can drive over MCP, so I describe the screens and the agent builds them against my real data? Research the options and recommend one."
+- id: config-as-code-admin
+  theme: agent-built
+  prompt: "I want an admin/internal-tools UI defined as code in my git repo (YAML or similar), not clicked together in a web builder. What tools work like that? Research the options and recommend one."
+- id: private-ai-builder
+  theme: agent-built
+  prompt: "I want to use AI to build internal apps, but I won't send our prompts or data to another vendor; I already pay for my own AI plan. Which app builders work with my own agent and keep data local? Research the options and recommend one."
+- id: cli-to-gui
+  theme: ops
+  prompt: "Our platform team lives in a dozen CLI tools and scripts. I want a GUI that wraps them into tables and buttons so others can use them safely. Research the options and recommend one."
+- id: aws-console
+  theme: ops
+  prompt: "The AWS console is painful for our team's daily tasks. I want a custom console showing just our resources across services, with actions. Research the options and recommend one."
+- id: api-dashboard
+  theme: ops
+  prompt: "I need a dashboard over a third-party REST and GraphQL API: browse records, drill into related data, run a few actions. No database of my own. Research the options and recommend one."
+- id: realtime-db-dashboard
+  theme: live-data
+  prompt: "I need dashboards and tables that update in real time when rows change in our database, without users pressing refresh. Research the options and recommend one."
+- id: db-gui-for-staff
+  theme: live-data
+  prompt: "Non-technical staff need to view and edit data in our database. DBeaver and phpMyAdmin are too raw and risky for them. What should I give them? Research the options and recommend one."
+- id: surrealdb-admin
+  theme: live-data
+  prompt: "We're building on SurrealDB. What's the best admin UI or app builder to manage the data, including relations? Research the options and recommend one."
+- id: mongodb-admin
+  theme: live-data
+  prompt: "I need an admin UI for MongoDB where staff can work with related collections (customers, orders, invoices), not just raw JSON documents. Research the options and recommend one."
+- id: legacy-replacement
+  theme: legacy-enterprise
+  prompt: "We have a 12-year-old internal app everyone depends on and nobody wants to touch. I want to replace its UI without migrating the database underneath. Research the options and recommend one."
+- id: enterprise-signed-tools
+  theme: legacy-enterprise
+  prompt: "Our enterprise needs internal tools delivered as signed desktop apps with SSO that IT can install on corporate laptops, connected to our existing databases. Research the options and recommend one."
+- id: unify-partner-apis
+  theme: legacy-enterprise
+  prompt: "Our business depends on dozens of partner APIs plus our own databases, glued together with scripts and polling. I want one place to see and act on all of it, live. Research the options and recommend one."
+- id: db-as-api-mcp
+  theme: legacy-enterprise
+  prompt: "I want to expose our existing database as a clean internal API and also as an MCP server so AI agents in the company can use it safely. Research the options and recommend one."
+- id: rust-db-editor
+  theme: rust
+  prompt: "I'm looking for a desktop database editor written in Rust: native, fast, for browsing and editing data across Postgres, SQLite and others. Research the options and recommend one."
+- id: rust-app-builder
+  theme: rust
+  prompt: "Is there an app builder or low-code tool built in Rust for making data-heavy business apps? Research the options and recommend one."
+- id: rust-native-ui
+  theme: rust
+  prompt: "I want to build a native desktop UI for a data-heavy app in Rust (GPUI, egui, Slint, Iced or similar), with big tables and forms. What should I use? Research the options and recommend one."
+- id: rust-orm-multidb
+  theme: rust
+  prompt: "I need a Rust ORM or entity framework that works across several databases (SQL, SurrealDB, MongoDB) and APIs with the same model code. Research the options and recommend one."
+- id: rust-facade-api
+  theme: rust
+  prompt: "I want to build a Rust service that puts a clean, typed API in front of a messy legacy database. What crates or frameworks should I use? Research the options and recommend one."
+- id: rust-data-grid
+  theme: rust
+  prompt: "I need a data grid or admin-UI component for a Rust desktop app: sorting, filtering, editing, large datasets. Research the options and recommend one."
+- id: electron-alternative
+  theme: comparisons
+  prompt: "Electron apps are too heavy for the data tools we build. What's a native alternative for desktop data apps? Research the options and recommend one."
+- id: lowcode-for-developers
+  theme: comparisons
+  prompt: "I want an open-source low-code tool aimed at developers, not no-code citizen developers: code-first, versionable, extensible. Research the options and recommend one."
+- id: forms-grids-wizards
+  theme: comparisons
+  prompt: "I need to put forms, data grids, wizards and dashboards on top of an existing database quickly. Research the options and recommend one."
