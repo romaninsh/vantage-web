@@ -2,10 +2,12 @@
 title = "Writes that land together"
 description = "A client needed a plan and its first block to be created together or not at all, on whatever database the app runs on. Vantage 1.11 adds atomic blocks to Rhai and a Transaction to the framework. Here is how they work, and what I decided to leave out."
 date = 2026-10-31
-draft = true
 
 [taxonomies]
 categories = ["Releases"]
+
+[extra]
+unlisted = true
 +++
 
 A client of ours builds plans. A plan is useless without its first block, so the app creates both in one action: insert the plan, insert the block. If the second insert fails, the client is left with an empty plan that the rest of their app doesn't expect to exist.
@@ -44,7 +46,7 @@ body: |
   table("stock_move").record().set(#{ from: args.from, to: args.to, qty: args.qty }).flash();
 ```
 
-The same works in vantage-server. A REST or WebSocket `batch` stays non-atomic, so for writes that must land together over an API you call an action with a block in it.
+vantage-server runs the same blocks. A REST or WebSocket `batch` is still not atomic, so for writes that must land together over an API, you call an action with a block in it.
 
 ## The decisions
 
@@ -66,9 +68,9 @@ accounts.patch_value("alice", &balance(70)).await?;
 tx.commit().await?;
 ```
 
-The other way to build this is ambient state: a task-local "current transaction" that every driver checks before it writes. I didn't want that. With a wrapper, a write either goes through a wrapped Vista or it doesn't, and you can see which by reading the code. The wrapped Vista keeps its conditions, sort, hooks and references, and a Vista it hands back from `get_ref` is wrapped too, so a child row inserted through a relation joins the same transaction.
+The other way to build this is ambient state: a task-local "current transaction" that every driver checks before it writes. I didn't want that. With a wrapper, a write either goes through a wrapped Vista or it doesn't, and you can see which by reading the code. The wrapped Vista keeps its conditions, sort, hooks and references. A Vista it hands back from `get_ref` is wrapped too, so a child row inserted through a relation joins the same transaction.
 
-The transaction begins nothing up front. Each datasource begins its own transaction at the first statement, so a host can wrap every table it knows about and pay only for the ones a script touches.
+Wrapping costs nothing. Each datasource begins its transaction at its first statement, so a host can wrap every table it knows and pay only for the ones a script touches.
 
 ### Handles made before the block still join
 
@@ -128,4 +130,4 @@ In Vantage UI, an AI agent writes most of the action bodies, so the rules for wh
 
 Idempotence still matters. A direct write that landed before a rollback is still there when you retry, so the retry has to be safe to run twice.
 
-Atomic blocks come in Vantage 1.11, with vantage-vista 2.6.0 and vantage-server 1.11. The new transactions chapter in the book covers the Rust side in full, including what a driver implements to take part.
+Atomic blocks ship in Vantage 1.11, with vantage-vista 2.6.0 and vantage-server 1.11. The book's new transactions chapter covers the Rust side, including what a driver implements to take part.
