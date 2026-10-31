@@ -26,7 +26,23 @@ definition = "A YAML file describing one screen of the app: the grids, charts, f
 
 [action]
 name = "action"
-definition = "A YAML file describing something a user can do from a grid or a record, such as filling in a form, confirming a change, calling an API or running a command."
+definition = "A YAML file describing something that can be done from the UI (a grid or a record) or called through an API, such as filling in a form, confirming a change, calling an API or running a command."
+
+# ----- Rust API terms: these link to the crate docs, not the book.
+[vista_rust]
+name = "Vista"
+definition = "A universal handle on one table from any data source. It knows the columns, their types and what the source can do, so a generic grid or form can work with it without knowing your database."
+docs = "https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html"
+
+[transaction]
+name = "Transaction"
+definition = "Wraps Vistas so their reads and writes land together on commit, or not at all. Dropping it without committing rolls it back."
+docs = "https://docs.rs/vantage-vista/latest/vantage_vista/struct.Transaction.html"
+
+[vista_factory]
+name = "Factory"
+definition = "Builds the Vistas for a data source's tables from their YAML definitions."
+docs = "https://docs.rs/vantage-vista/latest/vantage_vista/trait.VistaFactory.html"
 
 # ----- Data source capabilities (features page). A driver either advertises a
 # capability or it doesn't; the UI shows only the controls a table supports.
