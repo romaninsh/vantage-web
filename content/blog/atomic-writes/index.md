@@ -79,21 +79,11 @@ accounts.patch_value("alice", &balance(70)).await?;
 tx.commit().await?;
 ```
 
-Dropping a `Transaction` without committing rolls it back.
-
-Unlike a task-local "current transaction" that every driver checks, a wrapper shows in the code which writes are in the transaction. A wrapped Vista keeps its conditions, sort, hooks and references, and `get_ref` returns a wrapped Vista. Each datasource begins its transaction at its first statement, so wrapping an unused table costs nothing.
+Dropping a `Transaction` without committing rolls it back. A Vista returned by [`get_ref()`](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.get_ref) is wrapped too.
 
 ### Implementing fenced `atomic {}` block
 
 Rust has no identical mechanism. When Rhai execution enters a fenced block, all the Vistas are wrapped, and since the wrapper implements Vista itself, this works transparently. Any new Vistas received from the {{<glossary.term id="vista_factory" />}} within the block are wrapped too.
-
-### A caught error fails the commit
-
-After a failed statement, Postgres turns `COMMIT` into a rollback; MySQL, SQLite and SurrealDB commit the rest. Vantage fails the commit on every database with `a statement failed inside the transaction; rolled back`. Move writes that may fail out of the block.
-
-### One test suite for every driver
-
-Every driver passes `contract::check_transactions` and its Rhai counterpart, `contract::check_atomic_rhai`. They cover commit, rollback, drop, lazy begin, isolation from outside readers, a failed statement, use after finish, crossed writers, `lock()` and two datasources at once.
 
 ## What each database does
 
