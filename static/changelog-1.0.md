@@ -1,10 +1,8 @@
 # Vantage 1.0
 
-Along with the first major version comes a new layout engine. Until now every app looked much the
-same: a menu on the left and pages in tabs on the right. Layouts are far more flexible. Elements
-can be placed where you want them, more zones are available, and any of them can be hidden
-entirely. A dedicated blog post will follow once the engine settles. Apps can also sign in to an
-API for you through `oauth2_login`, keeping the tokens in the project's `.env`.
+Every app used to look the same: a menu on the left, pages in tabs on the right. The new layout
+engine lets an app place its menu, panels, status bar and title row where it wants, or hide them.
+Apps can also sign in to an API for you through `oauth2_login`, keeping the tokens in `.env`.
 
 ## What's new
 

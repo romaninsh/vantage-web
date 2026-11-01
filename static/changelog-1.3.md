@@ -1,10 +1,7 @@
 # Vantage 1.3
 
-An app can now know who is using it. A `user:` block in `application.yaml` names a table of
-people, and the title bar shows a picker in place of the role icon. The choice is remembered per
-project, and when the app is signed in, the person with the matching email is picked for you.
-Pages read the choice as `${user.id}` and `${user.label}`, so a grid can show only the rows
-assigned to the person at the keyboard.
+An app can know who is using it: `user:` in `application.yaml` adds a person picker to the title
+bar, and pages read the choice as `${user.id}`, so a grid can show only your rows.
 
 ## What's new
 

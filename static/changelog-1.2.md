@@ -1,10 +1,7 @@
 # Vantage 1.2
 
-Pages can show a table as a kanban board. `kind: kanban` puts each row on a card in a lane chosen
-by one column, such as an order's status, and dragging a card to another lane writes that column
-back to the datasource. The lanes follow the column's `enum:` values unless the page lists them.
-With a numeric `rank:` column, cards can be reordered inside a lane as well. On a datasource that
-takes no writes the board is read-only.
+Pages can show a table as a kanban board: `kind: kanban` puts rows on cards in lanes by the value
+of a column, and dragging a card to another lane writes that column back.
 
 ## What's new
 

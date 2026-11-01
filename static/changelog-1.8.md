@@ -1,9 +1,8 @@
 # Vantage 1.8
 
-One project can now run against your local database and your production one without editing a
-file. Each profile in `application.yaml` names its own env file, and a selector next to the
-settings cog switches between them; the window reconnects and every page reloads under the new
-profile.
+The same project can run against your local database and your production one: each profile in
+`application.yaml` names its own env file, and a selector by the settings cog switches between
+them. A later patch taught agents to put the API and its web frontend online.
 
 ## What's new
 

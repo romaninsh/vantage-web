@@ -1,11 +1,8 @@
 # Vantage 1.6
 
-The app now runs on version 2.0 of the Vantage data framework, and project scripts follow its
-vocabulary. A Rhai script saves a row with `row.flash()` in place of `row.save()`, faker datasources
-list their `capabilities:` under the 2.0 names, and `expr:` columns build queries through `sql::`,
-`surreal::` or `mongo::`. The bundled agent skills already use the new names, so an agent editing a
-project writes them for you. A form or a select label opened on a row the table hasn't loaded yet
-fetches it instead of showing an empty record.
+The app runs on version 2.0 of the Vantage data framework, and a few script names changed with it:
+`row.flash()` saves a row, faker `capabilities:` use the 2.0 names, and `expr:` builds queries
+through `sql::`, `surreal::` or `mongo::`. The agent skills already use the new names.
 
 ## What's new
 

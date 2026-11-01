@@ -1,12 +1,9 @@
 # Vantage 1.5
 
-A record page can show what happened to it in one place. `kind: activity` merges several tables
-(comments, a history of field changes, work logs) into one timeline, oldest at the top and newest
-at the bottom, and keeps following as new entries arrive. Each table gets its own tab, long runs of
-changes fold away, and an optional box under the timeline posts a comment as the person picked in
-the title bar. A gauge button in the title bar cycles a profiler that outlines slow widgets;
-hovering one shows its cost and why it repainted: its own data, a resize, input, an animation or a
-neighbour's data.
+A record page can show its history in one place: `kind: activity` merges comments, field changes
+and work logs into one live timeline, with a box to post a comment. A gauge button in the title bar
+outlines slow widgets and says why each one repainted. Later patches added web frontends for APIs,
+built in a container with no Node on your machine.
 
 ## What's new
 

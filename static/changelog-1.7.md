@@ -1,12 +1,12 @@
 # Vantage 1.7
 
-A project can now sign people in through its own session table: your web app and API clients sign
-in, and the desktop app doesn't have to. It opens with a session of its own and full access, and
-can step into anyone's shoes to check what they would see. Each client's rows stay apart by one
-rule on the datasource, which every page, relation, script, MCP read and API call gets; a table the
-rule misses stops the project from loading. Every new, edit and delete, and every action run, is
-written to an audit table you choose, with who did it and what changed, so a record's history is
-an ordinary page.
+A project can sign people in through its own session table. Your web app and API clients sign in;
+the desktop doesn't have to, opens with full access, and can switch to anyone's session to see what
+they see.
+
+A rule on the datasource keeps each client's rows apart, on every page, script, MCP read and API
+call; a table the rule misses stops the project from loading. Every change and action run can be
+written to an audit table, so a record's history is an ordinary page.
 
 ## What's new
 
@@ -24,7 +24,7 @@ an ordinary page.
   refused it. A narrowed table shows one locked chip per rule beside its filter chips.
 - `invariants:` on a datasource (or opting out on a table) keeps each client's rows apart, with
   `exceptions:` for shared tables, operator pages, actions and apps. A rule's `script:` can check
-  writes and remove columns, so one table serves readers and editors.
+  writes and remove columns, so the same table serves readers and editors.
 - Over MCP, `explain_access` says what the rules do to a table, `run_data_script` reads as any app
   and session you name, and `ui_tree` reports the session and each page's access.
 - `log_changes:` and `log_events:` in `application.yaml` log row changes and action runs into a

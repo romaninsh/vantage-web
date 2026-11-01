@@ -1,11 +1,13 @@
 # Vantage 1.9
 
-A preview of an agent chat panel now docks at the right of the window, so you can ask a coding
-agent about your project without leaving it. Claude Agent is there by default: the first time you
-open the panel, Vantage downloads what the agent needs, with nothing to install yourself. If the
-agent asks you to log in, the login runs inside the panel. The agent starts in the project folder
-and can read the page you have open, run data scripts and read logs through Vantage's own MCP
-server.
+An agent chat panel (a preview) docks at the right of the window, so you can ask a coding agent
+about your project without leaving it. Claude Agent is the default and downloads itself on first
+open; it starts in the project folder and reads the open page, data and logs through Vantage's own
+MCP server.
+
+Later patches tied the panel to its project and made leaving a project stop everything it started.
+The agent also learned to set up a GitHub and Google Cloud pipeline and to move a SurrealDB project
+to SurrealDB Cloud.
 
 ## What's new
 

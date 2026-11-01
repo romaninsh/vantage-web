@@ -1,10 +1,8 @@
 # Vantage 1.4
 
-Pages can show a table as a tree. `kind: tree` nests each row under the row its `parent:` column
-names, so epics hold their stories and stories their sub-tasks, and rows fold and unfold by
-clicking or with the arrow keys. Extra columns can total each subtree: a sum of points, a count,
-or the share of rows that are done. With `reparent:` or a `rank:` column, rows can be dragged
-under another row or into a new order, and a refused write puts the row back.
+Pages can show a table as a tree: `kind: tree` nests each row under its `parent:`, totals each
+subtree, and lets you drag rows to re-parent or re-order them. A later patch runs a project's APIs
+while it is open, in the Services panel.
 
 ## What's new
 

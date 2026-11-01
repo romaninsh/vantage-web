@@ -1,11 +1,11 @@
 # Vantage 1.1
 
-A major rewrite of the Rhai engine. Until now Vantage ran several separate Rhai implementations,
-and they disagreed on many things, including the language itself. The language is now one and the
-same everywhere. Each place a script can appear in your app turns on only the parts it needs, so a
-form's options can read tables, while an action body can also write to them. This makes
-background jobs sturdier and greatly extends what the Faker backend can do with sims: live data
-that changes while you watch. A blog post about it is coming soon.
+Vantage used to run several Rhai implementations that disagreed on the language itself; now there
+is one. Each place a script appears turns on only what it needs, so a form's options can read
+tables while an action body can also write them.
+
+The faker backend gained sims, data that changes while you watch, and a new `type: memory`
+datasource holds editable tables inside the app.
 
 ## What's new
 
