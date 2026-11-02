@@ -17,7 +17,7 @@
     <div class="flex flex-col gap-1.5">
         {% for term in terms %}
         <a href="{{ term.permalink }}" class="blog-filter">
-            {{ term.name }}<span class="ms-auto text-text-3">{{ term.pages | length }}</span>
+            {{ term.name }}<span class="ms-auto text-text-3">{{<blog.listed_count pages={term.pages} />}}</span>
         </a>
         {% endfor %}
     </div>

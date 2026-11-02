@@ -22,8 +22,14 @@ minify_html = false
 generate_feeds = true
 feed_filenames = ["atom.xml"]
 
-# Terms come from each post's `categories` front matter.
-taxonomies = [{ name = "categories", feed = true }]
+# Terms come from each post's front matter: `categories` (Releases,
+# Engineering), `series` (a run of posts such as Deep Dive) and `tags`
+# (keywords).
+taxonomies = [
+    { name = "categories", feed = true },
+    { name = "series", feed = true },
+    { name = "tags" },
+]
 
 
 

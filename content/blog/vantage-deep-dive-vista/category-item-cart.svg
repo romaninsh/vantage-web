@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="296" viewBox="0 34 960 296" role="img" aria-label="UML class diagram of three tables. Category (id, name, parent_id) nests under an optional parent category and has zero or more child categories. One category groups zero or more items. Item (id, name, price, category_id). Cart (id, owner, derived total) relates to Item many-to-many, and the link between them is marked with a question mark: it is not resolved yet.">
+  <style>
+    .t { font-family: "Balsamiq Sans", "Comic Neue", "Comic Sans MS", "Chalkboard SE", "Segoe Print", cursive; }
+    .c { text-anchor: middle; }
+    .h { font-size: 21px; font-weight: 700; fill: #f2f0ea; }
+    .st { font-size: 12px; fill: #8f8c84; letter-spacing: .04em; }
+    .a { font-size: 14.5px; fill: #c9c6bd; }
+    .ak { font-size: 14.5px; fill: #f2d48a; }
+    .m { font-size: 15px; font-weight: 700; fill: #e8e5dc; }
+    .l { font-size: 14px; fill: #9c9a93; font-style: italic; }
+    .ink { fill: none; stroke: #ece9e1; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+    .ink2 { fill: none; stroke: #ece9e1; stroke-width: 1; stroke-linecap: round; opacity: .3; }
+    .rule { fill: none; stroke: #ece9e1; stroke-width: 1.4; stroke-linecap: round; opacity: .55; }
+    .shadow { fill: #0b0b0f; opacity: .55; }
+  </style>
+  <rect y="34" width="960" height="296" rx="14" fill="#1c1d22"/>
+
+  <!-- Category -->
+  <path class="shadow" d="M40.5 70.2 Q155.8 66.9 270.1 69.8 Q272.9 160.4 270.6 252.3 Q154.9 255.6 40.9 252.0 Q37.6 161.2 40.5 70.2 Z" transform="translate(5 6)"/>
+  <path d="M40.5 70.2 Q155.8 66.9 270.1 69.8 Q272.9 160.4 270.6 252.3 Q154.9 255.6 40.9 252.0 Q37.6 161.2 40.5 70.2 Z" fill="#33263d"/>
+  <path class="ink" d="M40.5 70.2 Q155.8 66.9 270.1 69.8 Q272.9 160.4 270.6 252.3 Q154.9 255.6 40.9 252.0 Q37.6 161.2 40.5 70.2 Z"/>
+  <path class="ink2" d="M44.6 73.9 Q156.4 71.2 266.8 73.4 Q268.6 160.9 267.1 248.6 Q155.6 251.7 44.1 248.3 Q42.0 160.6 44.6 73.9 Z"/>
+  <text class="t c st" x="155" y="94">«table»</text>
+  <text class="t c h" x="155" y="117">Category</text>
+  <path class="rule" d="M41.5 130.5 Q155.9 128.2 270.4 130.9"/>
+  <text class="t ak" x="62" y="160">id: string</text>
+  <text class="t a" x="62" y="185">name: string</text>
+  <text class="t a" x="62" y="210">parent_id: string</text>
+
+  <!-- Category 0..1 ── 0..* Category: a category nests under a parent -->
+  <path class="ink" d="M100 254 Q98.6 285.4 102 300 Q155.4 304.2 208 300.6 Q211.2 284.7 210 254.5"/>
+  <text class="t m" x="91" y="276" text-anchor="end">0..*</text>
+  <text class="t l" x="91" y="293" text-anchor="end">children</text>
+  <text class="t m" x="219" y="276">0..1</text>
+  <text class="t l" x="219" y="293">parent</text>
+
+  <!-- Item -->
+  <path class="shadow" d="M365.4 69.6 Q480.6 67.1 595.3 70.4 Q598.1 161.3 595.7 252.6 Q480.2 255.1 365.8 252.1 Q362.7 160.7 365.4 69.6 Z" transform="translate(5 6)"/>
+  <path d="M365.4 69.6 Q480.6 67.1 595.3 70.4 Q598.1 161.3 595.7 252.6 Q480.2 255.1 365.8 252.1 Q362.7 160.7 365.4 69.6 Z" fill="#1f2f45"/>
+  <path class="ink" d="M365.4 69.6 Q480.6 67.1 595.3 70.4 Q598.1 161.3 595.7 252.6 Q480.2 255.1 365.8 252.1 Q362.7 160.7 365.4 69.6 Z"/>
+  <path class="ink2" d="M369.8 73.5 Q481.0 70.9 591.6 74.0 Q593.9 160.2 592.0 248.9 Q480.4 251.0 369.3 248.4 Q367.1 161.5 369.8 73.5 Z"/>
+  <text class="t c st" x="480" y="94">«table»</text>
+  <text class="t c h" x="480" y="117">Item</text>
+  <path class="rule" d="M366.2 130.8 Q480.3 128.6 595.6 130.3"/>
+  <text class="t ak" x="387" y="160">id: string</text>
+  <text class="t a" x="387" y="185">name: string</text>
+  <text class="t a" x="387" y="210">price: int</text>
+  <text class="t a" x="387" y="235">category_id: string</text>
+
+  <!-- Cart -->
+  <path class="shadow" d="M690.2 70.3 Q805.5 67.4 920.4 69.9 Q923.0 161.0 920.8 252.1 Q805.3 255.4 690.6 252.5 Q687.8 160.4 690.2 70.3 Z" transform="translate(5 6)"/>
+  <path d="M690.2 70.3 Q805.5 67.4 920.4 69.9 Q923.0 161.0 920.8 252.1 Q805.3 255.4 690.6 252.5 Q687.8 160.4 690.2 70.3 Z" fill="#203a30"/>
+  <path class="ink" d="M690.2 70.3 Q805.5 67.4 920.4 69.9 Q923.0 161.0 920.8 252.1 Q805.3 255.4 690.6 252.5 Q687.8 160.4 690.2 70.3 Z"/>
+  <path class="ink2" d="M694.3 74.1 Q805.9 71.5 916.6 73.6 Q918.9 160.3 917.1 248.4 Q805.0 251.2 694.0 248.7 Q692.1 161.0 694.3 74.1 Z"/>
+  <text class="t c st" x="805" y="94">«table»</text>
+  <text class="t c h" x="805" y="117">Cart</text>
+  <path class="rule" d="M691.0 130.4 Q805.6 128.9 920.6 130.7"/>
+  <text class="t ak" x="712" y="160">id: string</text>
+  <text class="t a" x="712" y="185">owner: string</text>
+  <text class="t a" x="712" y="210">/total: decimal</text>
+
+  <!-- Category 1 ── 0..* Item: an association, read "Category groups Item" -->
+  <path class="ink" d="M272 162 Q318.4 160.6 363 162.5"/>
+  <text class="t m" x="282" y="150">1</text>
+  <text class="t m" x="352" y="150" text-anchor="end">0..*</text>
+  <text class="t c l" x="317" y="187">groups ▸</text>
+
+  <!-- Item 0..* ── ? ── 0..* Cart: many-to-many, left unresolved on purpose -->
+  <path class="ink" d="M598 162.4 Q610.2 161.6 622 162"/>
+  <path class="ink" d="M666 162.2 Q677.8 161.5 688 162"/>
+  <text class="t c h" x="644" y="170">?</text>
+  <text class="t m" x="603" y="150">0..*</text>
+  <text class="t m" x="684" y="150" text-anchor="end">0..*</text>
+</svg>
