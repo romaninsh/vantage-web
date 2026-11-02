@@ -23,6 +23,7 @@ description = "Classic \"low-code\" is designed for a human operator with a bolt
 title = "No migration required"
 icon = "database"
 status = "now"
+link = "/blog/vantage-deep-dive-vista/"
 description = "The competition wants your data moved into their managed store — killing your initiative with a painful migration. Vantage works with your existing databases instead: structure, types and relations respected. Launch today."
 
 [[extra.features]]
@@ -40,7 +41,7 @@ description = "Rust is the safest, most secure and most scalable of the modern l
 [[extra.features]]
 title = "From GUI to API/MCP backend"
 icon = "api"
-status = "soon"
+status = "now"
 description = "You work with the UI, your agent does the tweaking. One decision — publish — turns the result into an internal API or MCP service, for the rest of your company: humans and agents alike."
 
 [[extra.features]]
