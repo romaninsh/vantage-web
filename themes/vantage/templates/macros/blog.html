@@ -17,18 +17,35 @@
 {% endcomponent blog.cover %}
 
 
-{# Category chips, each linking to that category's archive. On a card they sit
-   above the stretched overlay (z-[1]) so they stay clickable. #}
+{# Category and series chips, each linking to its archive; a series chip is
+   tinted with the accent. On a card they sit above the stretched overlay
+   (z-[1]) so they stay clickable. #}
 {% component blog.chips(page) %}
-{% if page.taxonomies.categories %}
+{% if page.taxonomies.categories or page.taxonomies.series %}
 <div class="flex flex-wrap items-center gap-1.5">
-    {% for category in page.taxonomies.categories %}
+    {% for category in page.taxonomies.categories | default(value=[]) %}
     <a href="{{ get_taxonomy_url(kind='categories', name=category) }}"
        class="relative z-[2] inline-flex rounded-full border border-line bg-white/5 px-2.5 py-0.5 font-mono text-[0.66rem] font-medium tracking-wider text-text-2 uppercase no-underline hover:border-line-strong hover:text-text-1">{{ category }}</a>
+    {% endfor %}
+    {% for series in page.taxonomies.series | default(value=[]) %}
+    <a href="{{ get_taxonomy_url(kind='series', name=series) }}"
+       class="relative z-[2] inline-flex rounded-full border border-accent-500/40 bg-accent-500/10 px-2.5 py-0.5 font-mono text-[0.66rem] font-medium tracking-wider text-accent-300 uppercase no-underline hover:border-accent-400 hover:text-accent-200">{{ series }}</a>
     {% endfor %}
 </div>
 {% endif %}
 {% endcomponent blog.chips %}
+
+
+{# A post's keywords, each linking to the posts that share it. #}
+{% component blog.tags(page) %}
+{% if page.taxonomies.tags %}
+<p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.72rem] text-text-3">
+    {% for tag in page.taxonomies.tags %}
+    <a class="no-underline hover:text-text-1" href="{{ get_taxonomy_url(kind='tags', name=tag) }}">#{{ tag }}</a>
+    {% endfor %}
+</p>
+{% endif %}
+{% endcomponent blog.tags %}
 
 
 {# Date and reading time. `page.date` is required on every post. #}
@@ -58,7 +75,7 @@
 {# Compact row for the archive lists. #}
 {% component blog.list_row(page) %}
 <article class="card card-hover relative flex gap-4 overflow-hidden p-4">
-    <div class="hidden w-40 shrink-0 overflow-hidden rounded-lg border border-line sm:block">
+    <div class="hidden w-40 shrink-0 self-start overflow-hidden rounded-lg border border-line sm:block">
         {{<blog.cover page={page} ratio="aspect-[16/10]" />}}
     </div>
     <div class="flex min-w-0 grow flex-col">
@@ -72,6 +89,15 @@
 {% endcomponent blog.list_row %}
 
 
+{# How many of `pages` are listed, leaving out posts with `unlisted = true`
+   and drafts. The engine has no `filter` filter, so it counts in a loop. #}
+{% component blog.listed_count(pages) -%}
+{%- set_global listed = 0 -%}
+{%- for p in pages -%}{%- if not p.extra.unlisted and not p.draft -%}{%- set_global listed = listed + 1 -%}{%- endif -%}{%- endfor -%}
+{{ listed }}
+{%- endcomponent blog.listed_count %}
+
+
 {# Sidebar filter. `current` is the active term's name, empty on /blog/ itself. #}
 {% component blog.category_nav(current = "") %}
 {% set categories = get_taxonomy(kind="categories") %}
@@ -81,7 +107,7 @@
     {% for term in categories.items %}
     <a href="{{ term.permalink }}"
        class="blog-filter{% if current == term.name %} blog-filter--on{% endif %}">
-        {{ term.name }}<span class="ms-auto hidden text-text-3 lg:inline">{{ term.pages | length }}</span>
+        {{ term.name }}<span class="ms-auto hidden text-text-3 lg:inline">{{<blog.listed_count pages={term.pages} />}}</span>
     </a>
     {% endfor %}
 </nav>
@@ -91,7 +117,8 @@
 {# Archive layout: category filter beside a column of post rows. `skip_featured`
    is how many featured posts the caller already rendered in a strip above; they
    are dropped from the list so they are not shown twice. Posts with
-   `unlisted = true` are reachable only by their link, so they never appear. #}
+   `unlisted = true`, and drafts, are reachable only by their link, so they
+   never appear. #}
 {% component blog.archive(pages, current = "", skip_featured = 0) %}
 <div class="grid gap-8 lg:grid-cols-[13rem_1fr]">
     <aside class="lg:sticky lg:top-24 lg:self-start">
@@ -100,7 +127,7 @@
     <div class="flex flex-col gap-4">
         {% set_global skipped = 0 %}
         {% for page in pages %}
-        {% if page.extra.unlisted %}
+        {% if page.extra.unlisted or page.draft %}
         {% elif page.extra.featured and skipped < skip_featured %}
             {% set_global skipped = skipped + 1 %}
         {% else %}
@@ -142,6 +169,34 @@
 
 </aside>
 {% endcomponent blog.example %}
+
+
+{# Side-by-side columns for comparing a few options, wider than the reading
+   column like `blog.kit`. The body is a series of
+   `<div class="cols__col">` blocks with markdown inside (a blank line after
+   the opening tag and before `</div>` keeps it parsed as markdown): a bold
+   title, a code block, and a `<p class="cols__tags">` row of `<span>`
+   notes. #}
+{% component blog.columns() %}
+<div class="cols">
+
+{{ body }}
+
+</div>
+{% endcomponent blog.columns %}
+
+
+{# An indented tree: each step nests under the one before, joined to it by
+   an elbow line, for ideas that build on each other. The body is a
+   markdown ordered list; each item opens with a bold label naming its
+   step. Blank lines around `body` keep the list parsed as markdown. #}
+{% component blog.tree() %}
+<div class="tree">
+
+{{ body }}
+
+</div>
+{% endcomponent blog.tree %}
 
 
 {# A short set of promises, set like a signed note: a title, who it is

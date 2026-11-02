@@ -243,6 +243,16 @@
         img {
             @apply my-7 block w-full rounded-xl border border-line bg-surface-1;
         }
+        /* A diagram drawn at 960px: break out of the reading column so it
+           shows at its own size instead of shrinking. Used as raw
+           `<img class="wide">`, since markdown images take no class. */
+        img.wide {
+            --bleed: min(calc(100vw - 2rem), 60rem);
+            width: var(--bleed);
+            max-width: none;
+            margin-inline-start: calc(50% - var(--bleed) / 2);
+            @apply border-0 bg-transparent;
+        }
 
         /* `blog.layer` component: the icon floats, so the prose wraps beside it
            and continues underneath once it runs past. `flow-root` keeps the
@@ -312,6 +322,72 @@
         }
         .pledge__signed {
             @apply mt-8 mb-0 text-end font-serif text-[1.2rem] text-text-2 italic;
+        }
+
+        /* `blog.columns` component: a few options side by side, each a card
+           with a title, a code block and a row of note chips at the foot.
+           Breaks out of the reading column so the code has room; stacks on
+           narrow screens. */
+        .cols {
+            --bleed: min(calc(100vw - 2rem), 64rem);
+            @apply my-9 grid gap-4 font-sans md:grid-cols-3;
+            width: var(--bleed);
+            margin-inline-start: calc(50% - var(--bleed) / 2);
+        }
+        .cols__col {
+            @apply flex min-w-0 flex-col rounded-xl border border-line bg-surface-1 px-4 pt-4 pb-4;
+
+            > p:first-child {
+                @apply mt-0 mb-3 text-[1.02rem];
+            }
+            pre {
+                @apply my-0 grow overflow-x-auto rounded-lg text-[0.74rem] leading-relaxed;
+            }
+        }
+        .cols__tags {
+            @apply mt-3 mb-0 flex flex-wrap gap-1.5;
+
+            span {
+                @apply rounded-full border border-line bg-white/5 px-2.5 py-0.5 font-mono text-[0.66rem] tracking-wide text-text-2;
+            }
+        }
+
+        /* `blog.tree` component: an ordered list drawn as an indented tree.
+           Each step sits one indent further in than the step before, and an
+           elbow line runs from the parent's lower edge into the child's
+           heading. The bold label at the start of each item becomes the
+           step's heading; the last step carries the accent. */
+        .tree {
+            @apply my-8 font-sans;
+
+            ol {
+                @apply my-0 flex list-none flex-col gap-3 ps-0;
+            }
+            li {
+                @apply relative my-0 rounded-xl border border-line bg-surface-1 px-5 py-4 text-[0.95rem] leading-relaxed text-text-2;
+
+                > p {
+                    @apply my-0;
+                }
+                strong {
+                    @apply mb-1 block text-[1.05rem] text-text-1;
+                }
+            }
+            li + li::before {
+                @apply absolute -left-6 w-6 rounded-bl-lg border-b-[1.5px] border-l-[1.5px] border-text-3;
+                top: -0.8rem;
+                height: 2.6rem;
+                content: "";
+            }
+            li:nth-child(2) {
+                @apply ms-12;
+            }
+            li:nth-child(3) {
+                @apply ms-24;
+            }
+            li:last-child {
+                @apply border-accent-500/45 bg-accent-500/[0.08];
+            }
         }
 
         /* `blog.kit` component: a row of counted cards that breaks out of the
@@ -1878,6 +1954,11 @@
     .token.function,
     .token.class-name {
         color: #c4b5fd;
+    }
+    /* Zola's Monokai highlighting underlines type names with an inline
+       style, which reads as a link; keep the colour, drop the line. */
+    pre span[style*="underline"] {
+        text-decoration: none !important;
     }
     .token.regex,
     .token.important,

@@ -29,6 +29,8 @@
         <meta name="twitter:card" content="summary_large_image">
         {% if doc.extra.unlisted %}<meta name="robots" content="noindex">{% endif %}
         {% endif %}
+        {% if page and page.taxonomies.tags %}<meta name="keywords" content="{{ page.taxonomies.tags | join(sep=', ') }}">
+        {% for tag in page.taxonomies.tags %}<meta property="article:tag" content="{{ tag }}">{% endfor %}{% endif %}
         {% block head_extra %}{% endblock head_extra %}
 
         <!-- Google Fonts: Inter (UI) + JetBrains Mono (code, kickers) -->

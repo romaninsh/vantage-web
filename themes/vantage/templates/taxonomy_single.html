@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{#- One term of the `series` or `tags` taxonomy: its posts, newest first.
+    Categories have their own templates under `categories/`. -#}
+
+{% block title %}{{ term.name }} | Blog | {{ config.title }}{% endblock title %}
+
+{% block content %}
+{{<nav.header />}}
+
+<section class="relative overflow-hidden">
+    <div class="glow -top-40 left-1/2 h-80 w-[36rem] -translate-x-1/2 opacity-70"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-10 text-center sm:px-6 md:pt-24 md:pb-14">
+        <p class="kicker mb-4">{% if taxonomy.name == "series" %}Series{% else %}Tag{% endif %}</p>
+        <h1 class="text-display mx-auto max-w-3xl">{% if taxonomy.name == "tags" %}#{% endif %}{{ term.name }}</h1>
+        {# No `pluralize` or `filter` filter in this engine: count the listed
+           posts in a loop, skipping `unlisted = true` and drafts. #}
+        {% set_global post_count = 0 %}
+        {% for p in term.pages %}{% if not p.extra.unlisted and not p.draft %}{% set_global post_count = post_count + 1 %}{% endif %}{% endfor %}
+        <p class="mx-auto mt-5 max-w-2xl text-lg text-text-2">{{ post_count }} post{% if post_count != 1 %}s{% endif %}.</p>
+    </div>
+</section>
+
+<section class="mx-auto max-w-6xl px-4 sm:px-6">
+    {{<blog.archive pages={term.pages} />}}
+</section>
+
+{{<nav.footer />}}
+{% endblock content %}

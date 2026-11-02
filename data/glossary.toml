@@ -34,6 +34,16 @@ name = "Vista"
 definition = "A universal handle on one table from any data source. It knows the columns, their types and what the source can do, so a generic grid or form can work with it without knowing your database."
 docs = "https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html"
 
+[react]
+name = "React"
+definition = "A frontend framework for web apps. Vantage supports it natively, both locally and when you deploy your app to the cloud."
+docs = "https://react.dev/"
+
+[table_rust]
+name = "Table"
+definition = "One entity type bound to one data source. It describes a remote set of records, with its conditions and relations, and reads or writes them as typed values, without fetching them up front."
+docs = "https://docs.rs/vantage-table/latest/vantage_table/table/base/struct.Table.html"
+
 [transaction]
 name = "Transaction"
 definition = "Wraps Vistas so their reads and writes land together on commit, or not at all. Dropping it without committing rolls it back."

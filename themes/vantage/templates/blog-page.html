@@ -24,16 +24,22 @@
             <span aria-hidden="true">·</span>
             {{<blog.byline page={page} />}}
         </div>
+        {% if page.taxonomies.tags %}<div class="mt-3">{{<blog.tags page={page} />}}</div>{% endif %}
     </div>
 </section>
 
 <!-- Header image: `hero` when a post has a detailed version of its art, else
      the card `cover`. `show_cover = false` keeps the cover for cards and link
-     previews only. -->
+     previews only. `hero_caption` is inline markdown shown under the image.
+     The src is relative to the post's folder: right after a content edit,
+     `zola serve` briefly renders permalinks with the production base_url,
+     and a live reload in that moment would load the image from the live
+     site. -->
 {% set hero = page.extra.hero | default(value=page.extra.cover | default(value="")) %}
 {% if hero and page.extra.show_cover | default(value=true) %}
 <div class="mx-auto max-w-4xl px-4 sm:px-6">
-    <img src="{{ page.permalink }}{{ hero }}" alt="{{ page.extra.hero_alt | default(value='') }}" class="block w-full overflow-hidden rounded-2xl border border-line bg-surface-1">
+    <img src="{{ hero }}" alt="{{ page.extra.hero_alt | default(value='') }}" class="block w-full overflow-hidden rounded-2xl border border-line bg-surface-1">
+    {% if page.extra.hero_caption %}<p class="mt-3 text-center text-[0.82rem] text-text-3 [&_a]:text-text-2 [&_a]:underline [&_a]:decoration-line-strong [&_a]:underline-offset-2 hover:[&_a]:text-text-1">{{ page.extra.hero_caption | markdown(inline=true) | safe }}</p>{% endif %}
 </div>
 {% endif %}
 
