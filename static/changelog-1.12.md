@@ -49,3 +49,17 @@ pages closed with "policies need Vantage Enterprise" rather than show the data w
 - Fix: a count-only stat refused to show over a table with a masked column.
 - Fix: a form showed a column the role's rule had removed.
 - Fix: a grid footer said "1 rows".
+
+## 1.12.2
+
+- Fix: a project whose table has a column read through a reference back to the same table (an
+  employee's `manager.name`) closed the app as it opened.
+- A column read through a reference (`customer.name`) sorts on SurrealDB, and an API's schema
+  offers only the sorts the table can do.
+- The SurrealDB skill builds totals and counts over child rows from record references (`<~`),
+  which keeps such pages fast on large tables.
+
+## 1.12.3
+
+- Security updates in bundled libraries: XML parsing for AWS datasources, zip handling when
+  installing an app, compression, TLS certificate checks and the async runtime.
