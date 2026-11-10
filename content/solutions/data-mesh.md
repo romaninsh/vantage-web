@@ -221,14 +221,14 @@ You don't cut over all at once. Stand a facade up in front of the databases you 
 ## Start here
 
 <div class="my-4">
-    <a href="https://vantage-ui.com/book/intro/step5-sql-dio.html" class="btn btn-primary me-2" target="_blank" rel="noopener">
+    <a href="https://vantage-ui.com/book/intro/step5-sql-dio.html" class="btn btn-primary me-2" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="book" data-track-location="section">
         <span class="material-symbols-outlined align-middle me-1">menu_book</span>
         Read the guide
     </a>
-    <a href="/framework/" class="btn btn-outline-primary me-2">
+    <a href="/framework/" class="btn btn-outline-primary me-2" data-track="cta_click" data-track-cta="framework" data-track-location="section">
         Framework overview
     </a>
-    <a href="/examples/" class="btn btn-outline-primary">
+    <a href="/examples/" class="btn btn-outline-primary" data-track="cta_click" data-track-cta="examples" data-track-location="section">
         Browse the examples
     </a>
 </div>

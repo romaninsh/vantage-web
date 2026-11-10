@@ -20,7 +20,12 @@ if (form) form.addEventListener("submit", async (e) => {
     config_url: location.href,
   };
 
+  // Picked up by analytics.js as `generate_lead`.
+  const leadEvent = (method) =>
+    document.dispatchEvent(new CustomEvent("vantage:lead", { detail: { method } }));
+
   const mailtoFallback = () => {
+    leadEvent("mailto_fallback");
     const body =
       `Organisation: ${lead.organisation}\nEmail: ${lead.email}\nPhone: ${lead.phone || "-"}\n\n` +
       `Notes:\n${lead.notes || "-"}`;
@@ -43,6 +48,7 @@ if (form) form.addEventListener("submit", async (e) => {
     thanks.className = "ent-form-thanks";
     thanks.textContent = "Thank you — we'll come back with a proposed stack.";
     form.replaceChildren(thanks);
+    leadEvent("form");
   } catch (err) {
     if (btn) btn.disabled = false;
     mailtoFallback();

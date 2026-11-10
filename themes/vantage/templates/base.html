@@ -1,5 +1,8 @@
 <!doctype html>
-<html lang="en">
+{# Analytics content group: the first path segment ("home" for the root). #}
+{% set content_group = current_path | default(value="/") | split(pat="/") | nth(n=1) %}
+{% if not content_group %}{% set content_group = "home" %}{% endif %}
+<html lang="en" data-content-group="{{ content_group }}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -56,9 +59,11 @@
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', '{{ config.extra.google_tag_id }}');
+          gtag('config', '{{ config.extra.google_tag_id }}', { content_group: '{{ content_group }}' });
         </script>
         {% endif %}
+        <!-- Site events (README "Analytics"); without the tag above they only log to the console -->
+        <script src="{{ get_url(path='js/analytics.js') }}" defer></script>
     </head>
 
     <body class="{% block body_class %}{% endblock body_class %}">
