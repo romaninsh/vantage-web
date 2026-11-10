@@ -34,7 +34,10 @@
             <div class="glow -top-24 left-1/2 h-48 w-96 -translate-x-1/2 opacity-60"></div>
             <div class="relative">
                 {% if manifest %}
-                <a href="{{ manifest.url | safe }}" class="btn btn-lg btn-primary">
+                {# The manifest has no os field; the build's arch is the last part of the file name. #}
+                {% set stable_os = manifest.os | default(value="macos-" ~ (manifest.url | split(pat="-") | last | split(pat=".") | first)) %}
+                <a href="{{ manifest.url | safe }}" class="btn btn-lg btn-primary"
+                   data-track="download_click" data-track-channel="stable" data-track-version="{{ manifest.version }}" data-track-os="{{ stable_os }}">
                     <span class="material-symbols-outlined">download</span>
                     Download for Mac
                 </a>
@@ -69,7 +72,7 @@
                 {% set changelog = load_data(path="static/changelog-" ~ minor ~ ".md", format="plain", required=false) %}
                 {% if changelog %}
                 {% set released = page.extra.changelog_dates[minor] | default(value="") %}
-                <details open id="vantage-{{ minor | replace(from='.', to='-') }}" class="changelog-entry">
+                <details open id="vantage-{{ minor | replace(from='.', to='-') }}" class="changelog-entry" data-version="{{ minor }}">
                     <summary class="changelog-summary">
                         <span class="flex items-baseline gap-3">
                             <h3 class="text-h3 text-text-1 !my-0">Vantage {{ minor }}</h3>
@@ -107,7 +110,9 @@
                 notarized, and shipped. Expect rough edges; the in-app updater
                 keeps you on the nightly channel automatically.
             </p>
-            <a href="{{ nightly.url | safe }}" class="btn btn-outline-secondary mt-5">
+            {% set nightly_os = nightly.os | default(value="macos-" ~ (nightly.url | split(pat="-") | last | split(pat=".") | first)) %}
+            <a href="{{ nightly.url | safe }}" class="btn btn-outline-secondary mt-5"
+               data-track="download_click" data-track-channel="nightly" data-track-version="{{ nightly.version }}" data-track-os="{{ nightly_os }}">
                 <span class="material-symbols-outlined">science</span>
                 Download nightly
             </a>

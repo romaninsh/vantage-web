@@ -558,8 +558,8 @@ The resilience, and the ability to produce live API endpoints, make Vantage idea
 - WASM @ edge support (early access)
 
 <div class="my-4">
-    <a href="/examples/launch-control/" class="btn btn-primary me-2">Tour Launch Control</a>
-    <a href="/examples/" class="btn btn-outline-primary">Browse the examples</a>
+    <a href="/examples/launch-control/" class="btn btn-primary me-2" data-track="example_open" data-track-example="launch-control">Tour Launch Control</a>
+    <a href="/examples/" class="btn btn-outline-primary" data-track="cta_click" data-track-cta="examples" data-track-location="section">Browse the examples</a>
 </div>
 
 <p class="journey-note"><span class="material-symbols-outlined">arrow_forward</span><span><b>Next rung:</b> one console is live — now wire every system and partner your business runs on into the same fabric. <a href="/solutions/data-mesh/">Wire in a real-time data mesh →</a></span></p>

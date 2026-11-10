@@ -36,14 +36,14 @@
     {% if catalog and catalog.apps %}
     {{<blocks.example_grid apps={catalog.apps} repo={examples_repo} />}}
     {% else %}
-    <p class="text-center text-text-2">The example catalog couldn't be loaded right now. Browse them directly on <a href="{{ examples_repo }}" class="text-accent-300 underline hover:text-accent-400" target="_blank" rel="noopener">GitHub</a>.</p>
+    <p class="text-center text-text-2">The example catalog couldn't be loaded right now. Browse them directly on <a href="{{ examples_repo }}" class="text-accent-300 underline hover:text-accent-400" target="_blank" rel="noopener" data-track="example_open" data-track-link-url="{{ examples_repo }}">GitHub</a>.</p>
     {% endif %}
 
     <div class="prose mx-auto mt-14 max-w-2xl text-center text-sm">
         <p>
             <span class="material-symbols-outlined me-1 !text-[1.1rem] text-accent-400">bolt</span>
             One-click <code>vantage://</code> open straight from this page is on the way. For now, clone the
-            <a href="{{ examples_repo }}" target="_blank" rel="noopener">examples repo</a> and point Vantage UI at an app's <code>inventory/</code> folder.
+            <a href="{{ examples_repo }}" target="_blank" rel="noopener" data-track="example_open" data-track-link-url="{{ examples_repo }}">examples repo</a> and point Vantage UI at an app's <code>inventory/</code> folder.
         </p>
     </div>
 </main>

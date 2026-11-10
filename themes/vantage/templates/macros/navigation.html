@@ -29,7 +29,7 @@
             </li>
             {% elif item.cta %}
             <li class="ms-2">
-                <a href="{{ get_url(path=item.url) }}" class="btn btn-sm btn-primary">
+                <a href="{{ get_url(path=item.url) }}" class="btn btn-sm btn-primary" data-track="cta_click" data-track-cta="{{ item.title | slugify }}" data-track-location="nav">
                     <span class="material-symbols-outlined">download</span>{{ item.title }}
                 </a>
             </li>
@@ -52,7 +52,7 @@
         <!-- Mobile: CTA + hamburger -->
         <div class="flex items-center gap-2 lg:hidden">
             {% for item in nav_data.menu %}{% if item.cta %}
-            <a href="{{ get_url(path=item.url) }}" class="btn btn-sm btn-primary">
+            <a href="{{ get_url(path=item.url) }}" class="btn btn-sm btn-primary" data-track="cta_click" data-track-cta="{{ item.title | slugify }}" data-track-location="nav">
                 <span class="material-symbols-outlined">download</span>{{ item.title }}
             </a>
             {% endif %}{% endfor %}
@@ -109,7 +109,7 @@
                     <img class="invert" src="{{ get_url(path='vantage-logo.svg') }}" alt="Vantage" height="24" style="height: 24px; width: auto;">
                 </a>
                 <p class="mt-4 max-w-xs text-sm leading-relaxed text-text-3">An AI-native, config-as-code console for the databases, APIs, cloud infrastructure and CLI tools you operate — native, local-first, built on the open-source Vantage Framework.</p>
-                <a href="{{ get_url(path='download/') }}" class="btn btn-sm btn-soft-primary mt-5">
+                <a href="{{ get_url(path='download/') }}" class="btn btn-sm btn-soft-primary mt-5" data-track="cta_click" data-track-cta="download" data-track-location="footer">
                     <span class="material-symbols-outlined">download</span>Download for Mac
                 </a>
             </div>
@@ -132,7 +132,7 @@
     </div>
 
     <div class="border-t border-line py-6">
-        <p class="mx-auto max-w-6xl px-4 text-center font-mono text-xs text-text-3 sm:px-6">© {{ now() | date(format="%Y") }} Vantage. <a href="https://github.com/romaninsh/vantage" class="text-text-2 hover:text-text-1" target="_blank" rel="noopener"><strong class="font-semibold">Vantage Framework</strong> is open source, MIT licensed</a>.</p>
+        <p class="mx-auto max-w-6xl px-4 text-center font-mono text-xs text-text-3 sm:px-6">© {{ now() | date(format="%Y") }} Vantage. <a href="https://github.com/romaninsh/vantage" class="text-text-2 hover:text-text-1" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="github_framework" data-track-location="footer"><strong class="font-semibold">Vantage Framework</strong> is open source, MIT licensed</a>.</p>
     </div>
 </footer>
 {% endcomponent nav.footer %}

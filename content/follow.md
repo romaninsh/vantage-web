@@ -20,11 +20,11 @@ Vantage UI is a one-person project, shipping a release every few weeks. There's 
 Every release is written up for end users. The full, dated changelog — newest first — lives on the **[Download page](/download/)**, synced straight from the app on each release.
 
 <div class="text-center my-5">
-    <a href="/download/" class="btn btn-lg btn-primary me-2">
+    <a href="/download/" class="btn btn-lg btn-primary me-2" data-track="cta_click" data-track-cta="changelog" data-track-location="section">
         <span class="material-symbols-outlined align-middle me-1">history</span>
         Latest changes
     </a>
-    <a href="https://bsky.app/profile/nearly.guru" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
+    <a href="https://bsky.app/profile/nearly.guru" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="bluesky" data-track-location="section">
         <span class="material-symbols-outlined align-middle me-1">cloud</span>
         Follow on Bluesky
     </a>

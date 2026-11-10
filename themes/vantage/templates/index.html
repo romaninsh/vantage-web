@@ -41,18 +41,18 @@
 
     <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pt-16 pb-16 sm:px-6 md:pt-24 lg:grid-cols-[2fr_1fr] lg:gap-10 lg:pb-32">
         <div>
-            <a href="{{ get_url(path='download/') }}" class="inline-flex items-center gap-2 rounded-full border border-accent-500/30 bg-accent-500/10 px-3 py-1 font-mono text-[0.72rem] font-medium text-accent-300 no-underline transition-colors hover:border-accent-400/50">
+            <a href="{{ get_url(path='download/') }}" data-track="cta_click" data-track-cta="release_badge" data-track-location="hero" class="inline-flex items-center gap-2 rounded-full border border-accent-500/30 bg-accent-500/10 px-3 py-1 font-mono text-[0.72rem] font-medium text-accent-300 no-underline transition-colors hover:border-accent-400/50">
                 <span class="size-1.5 rounded-full bg-ok"></span>{{ hero_version }} — out now
             </a>
             <h1 class="text-display mt-5">{{ section.extra.hero_headline }}</h1>
             <p class="mt-5 max-w-xl text-lg leading-relaxed text-text-2">{{ section.extra.hero_subhead }}</p>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="{{ get_url(path='download/') }}" class="btn btn-lg btn-primary">
+                <a href="{{ get_url(path='download/') }}" class="btn btn-lg btn-primary" data-track="cta_click" data-track-cta="download" data-track-location="hero">
                     <span class="material-symbols-outlined">download</span>
                     Download — free
                 </a>
-                <a href="{{ get_url(path='framework/') }}" class="btn btn-lg btn-outline-primary">
+                <a href="{{ get_url(path='framework/') }}" class="btn btn-lg btn-outline-primary" data-track="cta_click" data-track-cta="framework" data-track-location="hero">
                     <span class="material-symbols-outlined">deployed_code</span>
                     Explore the framework
                 </a>
@@ -68,7 +68,7 @@
              the video lifts to the centre lightbox it becomes `position: fixed`,
              so a placeholder (added by site.js) holds this box's size and
              mouseleave stays stable. -->
-        <a id="heroShot" href="{{ get_url(path='examples/launch-control/') }}" class="relative block min-w-0 no-underline">
+        <a id="heroShot" href="{{ get_url(path='examples/launch-control/') }}" class="relative block min-w-0 no-underline" data-track="example_open">
             <!-- The screen capture already includes the app's own window chrome,
                  so no `.window-frame` wrapper here — that would double the border. -->
             <div class="lg:w-[58rem] lg:max-w-none">
@@ -102,7 +102,7 @@
     <div id="heroDim" class="hero-dim" aria-hidden="true"></div>
     <!-- Lightbox CTA (text + href swapped per clip by site.js). Clicking the
          video itself also navigates; this is the visible affordance. -->
-    <a id="heroCap" class="hero-cap" href="{{ get_url(path='examples/launch-control/') }}">Explore the Launch Control example →</a>
+    <a id="heroCap" class="hero-cap" href="{{ get_url(path='examples/launch-control/') }}" data-track="example_open">Explore the Launch Control example →</a>
 </section>
 
 <!-- Feature tour -->
@@ -115,7 +115,7 @@
 </section>
 {{<components.feature_grid features={section.extra.features} content="" />}}
 <div class="text-center">
-    <a href="{{ get_url(path='features/') }}" class="btn btn-outline-primary">
+    <a href="{{ get_url(path='features/') }}" class="btn btn-outline-primary" data-track="cta_click" data-track-cta="features" data-track-location="section">
         See all features
         <span class="material-symbols-outlined !text-[1rem]">arrow_forward</span>
     </a>
@@ -151,7 +151,7 @@
     <h2 class="text-h2">Where Vantage fits</h2>
     <p class="mx-auto mt-4 max-w-2xl text-text-2">Adoption happens in stages — one console over the data you already have, everything live, then a real-time data mesh across your organisation.</p>
     <div class="mt-6">
-        <a href="/solutions/" class="btn btn-lg btn-outline-primary">Explore solutions</a>
+        <a href="/solutions/" class="btn btn-lg btn-outline-primary" data-track="cta_click" data-track-cta="solutions" data-track-location="section">Explore solutions</a>
     </div>
 </section>
 
@@ -166,7 +166,7 @@
         </div>
         {{<blocks.example_grid apps={catalog.apps} repo={examples_repo} limit={3} />}}
         <div class="mt-10 text-center">
-            <a href="{{ get_url(path='examples/') }}" class="btn btn-outline-primary">
+            <a href="{{ get_url(path='examples/') }}" class="btn btn-outline-primary" data-track="cta_click" data-track-cta="examples" data-track-location="section">
                 Browse all examples
                 <span class="material-symbols-outlined !text-[1rem]">arrow_forward</span>
             </a>
@@ -185,11 +185,11 @@
             {{ section.extra.framework_callout.body | markdown | safe }}
         </div>
         <div class="mt-7 flex flex-wrap justify-center gap-3">
-            <a href="{{ get_url(path='framework/') }}" class="btn btn-primary">
+            <a href="{{ get_url(path='framework/') }}" class="btn btn-primary" data-track="cta_click" data-track-cta="framework" data-track-location="section">
                 <span class="material-symbols-outlined">menu_book</span>
                 Framework overview
             </a>
-            <a href="https://crates.io/search?q=vantage-" class="btn btn-outline-primary" target="_blank" rel="noopener">
+            <a href="https://crates.io/search?q=vantage-" class="btn btn-outline-primary" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="crates_io" data-track-location="section">
                 <span class="material-symbols-outlined">deployed_code</span>
                 crates.io
             </a>

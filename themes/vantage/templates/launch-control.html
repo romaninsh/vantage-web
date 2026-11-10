@@ -171,11 +171,11 @@
             </p>
 
             <div class="lc-actions">
-                <a href="{{ install_url | safe }}" class="btn btn-lg btn-primary">
+                <a href="{{ install_url | safe }}" class="btn btn-lg btn-primary" data-track="example_open" data-track-example="launch-control" data-track-link-url="{{ install_url }}">
                     <span class="material-symbols-outlined">rocket_launch</span>
                     Open Launch Control
                 </a>
-                <a href="{{ app }}" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener">
+                <a href="{{ app }}" class="btn btn-lg btn-outline-primary" target="_blank" rel="noopener" data-track="example_open" data-track-example="launch-control" data-track-link-url="{{ app }}">
                     <span class="material-symbols-outlined">code</span>
                     See "Launch Control" source
                 </a>
@@ -785,19 +785,19 @@ total_key: count</code></pre>
                 <h3 class="text-h3">Ready for launch</h3>
                 <p class="lc-body !mt-3">Open this example in one click, dig into the source, or start building your own.</p>
                 <div class="lc-actions">
-                    <a href="{{ install_url | safe }}" class="btn btn-primary">
+                    <a href="{{ install_url | safe }}" class="btn btn-primary" data-track="example_open" data-track-example="launch-control" data-track-link-url="{{ install_url }}">
                         <span class="material-symbols-outlined">rocket_launch</span>
                         Open Launch Control
                     </a>
-                    <a href="{{ app }}/inventory" class="btn btn-outline-primary" target="_blank" rel="noopener">
+                    <a href="{{ app }}/inventory" class="btn btn-outline-primary" target="_blank" rel="noopener" data-track="example_open" data-track-example="launch-control" data-track-link-url="{{ app }}/inventory">
                         <span class="material-symbols-outlined">description</span>
                         The YAML inventory
                     </a>
-                    <a href="{{ app }}/server" class="btn btn-outline-secondary" target="_blank" rel="noopener">
+                    <a href="{{ app }}/server" class="btn btn-outline-secondary" target="_blank" rel="noopener" data-track="example_open" data-track-example="launch-control" data-track-link-url="{{ app }}/server">
                         <span class="material-symbols-outlined">dns</span>
                         The Rust server
                     </a>
-                    <a href="/solutions/" class="btn btn-outline-secondary">
+                    <a href="/solutions/" class="btn btn-outline-secondary" data-track="cta_click" data-track-cta="solutions" data-track-location="section">
                         <span class="material-symbols-outlined">explore</span>
                         Where Vantage fits
                     </a>

@@ -213,8 +213,8 @@ If a database client on a cleared laptop passes your security review, Vantage ha
 **Periscope** shows this shape for Kubernetes — a full control room written entirely in YAML, drilling from namespaces to workloads to pods. The **AWS control console example** wraps the `aws` CLI to surface exactly the resources you operate, nothing more — it lands in the examples repo soon.
 
 <div class="my-4">
-    <a href="/examples/" class="btn btn-primary me-2">Browse the examples</a>
-    <a href="/download/" class="btn btn-outline-primary">Download — free</a>
+    <a href="/examples/" class="btn btn-primary me-2" data-track="cta_click" data-track-cta="examples" data-track-location="section">Browse the examples</a>
+    <a href="/download/" class="btn btn-outline-primary" data-track="cta_click" data-track-cta="download" data-track-location="section">Download — free</a>
 </div>
 
 <p class="journey-note"><span class="material-symbols-outlined">arrow_forward</span><span><b>Next rung:</b> your console is already live — open screens update by themselves. <a href="/solutions/live-data/">Here's what that means →</a></span></p>

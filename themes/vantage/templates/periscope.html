@@ -441,7 +441,7 @@
             </div>
 
             <div class="ps-actions">
-                <a href="{{ install_url | safe }}" class="btn btn-lg btn-primary">
+                <a href="{{ install_url | safe }}" class="btn btn-lg btn-primary" data-track="example_open" data-track-example="periscope" data-track-link-url="{{ install_url }}">
                     <span class="material-symbols-outlined">rocket_launch</span>
                     Open Periscope App
                 </a>
@@ -1012,11 +1012,11 @@ references:
                 source — and a real, browsable UI — with a single prompt, today.
                 <strong>PR&nbsp;#323 is exactly that, in action.</strong></p>
                 <div class="ps-actions">
-                    <a href="{{ crate_pr }}" class="btn btn-primary" target="_blank" rel="noopener">
+                    <a href="{{ crate_pr }}" class="btn btn-primary" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="crate_pr" data-track-location="section">
                         <span class="material-symbols-outlined">merge</span>
                         Read PR #323
                     </a>
-                    <a href="/follow/" class="btn btn-outline-primary">
+                    <a href="/follow/" class="btn btn-outline-primary" data-track="cta_click" data-track-cta="follow" data-track-location="section">
                         <span class="material-symbols-outlined">forum</span>
                         Bring your API to Vantage
                     </a>
@@ -1182,19 +1182,19 @@ references:
                 <h3 class="text-h3">Surface with it</h3>
                 <p class="ps-body !mt-3">Read the source, follow the three prompts that built it, open it in Vantage 0.20 to drive your own cluster, or ask for a custom build for your own data sources.</p>
                 <div class="ps-actions">
-                    <a href="{{ repo }}/issues" class="btn btn-primary" target="_blank" rel="noopener">
+                    <a href="{{ repo }}/issues" class="btn btn-primary" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="custom_build" data-track-location="section">
                         <span class="material-symbols-outlined">sailing</span>
                         Request a custom build
                     </a>
-                    <a href="{{ app }}" class="btn btn-outline-primary" target="_blank" rel="noopener">
+                    <a href="{{ app }}" class="btn btn-outline-primary" target="_blank" rel="noopener" data-track="example_open" data-track-example="periscope" data-track-link-url="{{ app }}">
                         <span class="material-symbols-outlined">description</span>
                         The YAML inventory
                     </a>
-                    <a href="{{ crate_src }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">
+                    <a href="{{ crate_src }}" class="btn btn-outline-secondary" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="kubernetes_crate" data-track-location="section">
                         <span class="material-symbols-outlined">dns</span>
                         The Kubernetes crate
                     </a>
-                    <a href="/solutions/" class="btn btn-outline-secondary">
+                    <a href="/solutions/" class="btn btn-outline-secondary" data-track="cta_click" data-track-cta="solutions" data-track-location="section">
                         <span class="material-symbols-outlined">explore</span>
                         Where Vantage fits
                     </a>

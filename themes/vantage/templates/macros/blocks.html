@@ -40,7 +40,7 @@
                 <div class="mt-auto pt-4">
                     <span class="inline-flex items-center gap-1 text-sm font-medium text-accent-300">Take the tour<span class="material-symbols-outlined !text-[1rem]">arrow_forward</span></span>
                 </div>
-                <a href="{{ get_url(path=app.tour_url) }}" class="absolute inset-0 z-[1]" aria-label="Take the tour: {{ app.title }}"></a>
+                <a href="{{ get_url(path=app.tour_url) }}" class="absolute inset-0 z-[1]" aria-label="Take the tour: {{ app.title }}" data-track="example_open" data-track-example="{{ app.slug }}"></a>
                 {% elif app.status == "available" %}
                 <div class="mt-auto pt-4">
                     <p class="mb-2 text-[0.78rem] text-text-3">Open it from a checkout of the examples repo:</p>
@@ -50,7 +50,8 @@ vantage-ui --config vantage-ui-examples/{{ app.repo_path }}</code></pre>
                         <button class="btn btn-sm btn-soft-primary cursor-not-allowed opacity-60" aria-disabled="true" title="One-click open is coming soon (vantage:// handler)">
                             <span class="material-symbols-outlined">open_in_new</span>Open in Vantage UI
                         </button>
-                        <a href="{{ repo }}/tree/main/{{ app.repo_path | split(pat='/inventory') | first }}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener">View source</a>
+                        {% set source_url = repo ~ "/tree/main/" ~ (app.repo_path | split(pat='/inventory') | first) %}
+                        <a href="{{ source_url }}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener" data-track="example_open" data-track-example="{{ app.slug }}" data-track-link-url="{{ source_url }}">View source</a>
                     </div>
                 </div>
                 {% else %}
@@ -77,16 +78,16 @@ vantage-ui --config vantage-ui-examples/{{ app.repo_path }}</code></pre>
             channels where the work actually happens. New version out? You'll hear about it here.
         </p>
         <div class="mt-7 flex flex-wrap justify-center gap-3">
-            <a href="https://bsky.app/profile/nearly.guru" class="btn btn-primary" target="_blank" rel="noopener">
+            <a href="https://bsky.app/profile/nearly.guru" class="btn btn-primary" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="bluesky" data-track-location="section">
                 <span class="material-symbols-outlined">cloud</span>Bluesky
             </a>
-            <a href="https://www.linkedin.com/in/romansmalinovskis" class="btn btn-outline-primary" target="_blank" rel="noopener">
+            <a href="https://www.linkedin.com/in/romansmalinovskis" class="btn btn-outline-primary" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="linkedin" data-track-location="section">
                 <span class="material-symbols-outlined">work</span>LinkedIn
             </a>
-            <a href="https://github.com/romaninsh/vantage" class="btn btn-outline-secondary" target="_blank" rel="noopener">
+            <a href="https://github.com/romaninsh/vantage" class="btn btn-outline-secondary" target="_blank" rel="noopener" data-track="cta_click" data-track-cta="github_framework" data-track-location="section">
                 <span class="material-symbols-outlined">code</span>GitHub — Framework
             </a>
-            <a href="/download/" class="btn btn-outline-secondary">
+            <a href="/download/" class="btn btn-outline-secondary" data-track="cta_click" data-track-cta="changelog" data-track-location="section">
                 <span class="material-symbols-outlined">history</span>Latest changes
             </a>
         </div>
