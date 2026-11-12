@@ -11,14 +11,22 @@
    used inside a sentence, so the whitespace control keeps it on one line: a
    newline around it would split the paragraph. The definition is inline
    markdown, so `backticks` mark identifiers; an entry's `example` shows as a
-   code snippet under it. #}
+   code snippet under it.
+   An entry with a `post` (an `@/` path to a blog post) gets two links in the
+   tip, the post and the docs, so the term itself is not a link; the tip stays
+   open while the pointer or keyboard focus is inside it. #}
 {% component glossary.term(id, text = "", code = false) -%}
 {%- set entry = load_data(path="data/glossary.toml")[id] -%}
 {%- set shown = text or entry.name -%}
+{%- if entry.post -%}
+{%- set tip -%}<span class="term__tip" role="tooltip"><span class="term__def"><strong>{{ entry.name }}</strong> {{ entry.definition | markdown(inline=true) | safe }}</span>{% if entry.example %}<code class="term__code">{{ entry.example }}</code>{% endif %}<span class="term__links"><a class="term__more" href="{{ get_url(path=entry.post) }}">Read the blog post →</a>{% if entry.docs %}<a class="term__more" href="{{ entry.docs }}">Read the docs →</a>{% endif %}</span></span>{%- endset -%}
+<span class="term" tabindex="0">{% if code %}<code>{{ shown }}</code>{% else %}{{ shown }}{% endif %}{{ tip | safe }}</span>
+{%- else -%}
 {%- set tip -%}<span class="term__tip" role="tooltip"><span class="term__def"><strong>{{ entry.name }}</strong> {{ entry.definition | markdown(inline=true) | safe }}</span>{% if entry.example %}<code class="term__code">{{ entry.example }}</code>{% endif %}{% if entry.docs %}<span class="term__more">Read the docs →</span>{% endif %}</span>{%- endset -%}
 {%- if entry.docs -%}
 <a class="term" href="{{ entry.docs }}">{% if code %}<code>{{ shown }}</code>{% else %}{{ shown }}{% endif %}{{ tip | safe }}</a>
 {%- else -%}
 <span class="term" tabindex="0">{% if code %}<code>{{ shown }}</code>{% else %}{{ shown }}{% endif %}{{ tip | safe }}</span>
+{%- endif -%}
 {%- endif -%}
 {%- endcomponent glossary.term %}

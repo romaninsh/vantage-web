@@ -144,7 +144,8 @@
         }
     }
     .term:hover .term__tip,
-    .term:focus-visible .term__tip {
+    .term:focus-visible .term__tip,
+    .term:focus-within .term__tip {
         @apply pointer-events-auto visible opacity-100;
         transition: opacity 150ms;
     }
@@ -159,6 +160,14 @@
     }
     .term__more {
         @apply mt-2 block text-[0.85rem] text-accent-300 underline decoration-accent-300/40 underline-offset-3;
+    }
+    /* Two real links (blog post, docs) side by side; the selector outranks
+       the prose link style so they keep the tip's look. */
+    .term__links {
+        @apply mt-2 flex flex-wrap gap-x-4;
+    }
+    .term .term__tip a.term__more {
+        @apply mt-0 inline-block text-accent-300 decoration-accent-300/40 hover:text-accent-400 hover:decoration-accent-400;
     }
 
     /* Rendered-markdown bodies (page content, changelog entries) */
@@ -387,6 +396,196 @@
             }
             li:last-child {
                 @apply border-accent-500/45 bg-accent-500/[0.08];
+            }
+        }
+
+        /* `blog.fork` component: a requirement splits into two branches, a
+           later requirement sends both into one heavier rewrite. Elbow lines
+           drawn with borders join the pieces on wide screens; on narrow ones
+           the pieces stack and the lines are dropped. Each card ends in a
+           `fork__meter` whose bar width (`--w`) compares code size. */
+        .fork {
+            --bleed: min(calc(100vw - 2rem), 52rem);
+            --fork-line: 1.5px solid var(--color-text-3);
+            @apply my-10 font-sans;
+            width: var(--bleed);
+            margin-inline-start: calc(50% - var(--bleed) / 2);
+        }
+        .fork__ticket {
+            @apply relative mx-auto max-w-md rounded-lg border border-dashed border-line-strong bg-surface-2 px-5 py-3 text-center text-[0.95rem] leading-snug text-text-1;
+
+            > p {
+                @apply my-0;
+            }
+        }
+        .fork__label {
+            @apply mb-1.5 block font-mono text-[0.66rem] tracking-[0.14em] text-accent-300 uppercase;
+        }
+        .fork__ticket--change {
+            @apply border-violet/60 bg-violet/[0.08];
+
+            .fork__label {
+                @apply text-violet;
+            }
+        }
+        /* The stem above the branches, then a bracket opening down to them. */
+        .fork__split,
+        .fork__join {
+            @apply relative hidden h-8 md:block;
+        }
+        .fork__split::before,
+        .fork__join::after {
+            @apply absolute left-1/2 h-4;
+            border-left: var(--fork-line);
+            content: "";
+        }
+        .fork__split::before {
+            top: 0;
+        }
+        .fork__split::after,
+        .fork__join::before {
+            @apply absolute right-1/4 left-1/4 h-4;
+            border: var(--fork-line);
+            content: "";
+        }
+        .fork__split::after {
+            @apply top-4 rounded-t-lg border-b-0;
+        }
+        .fork__join::before {
+            @apply top-0 rounded-b-lg border-t-0;
+        }
+        .fork__join::after {
+            @apply top-4;
+        }
+        .fork__stem {
+            @apply mx-auto hidden h-6 w-0 md:block;
+            border-left: var(--fork-line);
+        }
+        .fork__branches {
+            @apply my-4 grid gap-4 md:my-0 md:grid-cols-2;
+        }
+        .fork__card {
+            @apply flex min-w-0 flex-col rounded-xl border border-line bg-surface-1 px-4 pt-3.5 pb-4;
+
+            > p:first-child {
+                @apply mt-0 mb-2.5 text-[1rem] text-text-1;
+            }
+            pre {
+                @apply my-0 grow overflow-x-auto rounded-lg text-[0.74rem] leading-relaxed;
+            }
+        }
+        .fork__card--rewrite {
+            @apply mt-4 border-violet/45 md:mt-0;
+            box-shadow: 0 0 48px -16px color-mix(in srgb, var(--color-violet) 45%, transparent);
+        }
+        /* A path that stays straight: narrower cards on the centre line, in
+           the success colour, so it reads against the rewrite above. */
+        .fork__card--vantage {
+            @apply mx-auto max-w-2xl border-ok/35;
+            box-shadow: 0 0 48px -20px color-mix(in srgb, var(--color-ok) 40%, transparent);
+
+            pre + pre {
+                @apply mt-2;
+            }
+            .fork__meter::before {
+                @apply bg-ok;
+            }
+        }
+        .fork__chips {
+            @apply mt-1.5 mb-0 flex list-none flex-wrap gap-1.5 ps-0;
+
+            li {
+                @apply my-0 rounded-full border border-ok/30 bg-ok/[0.08] px-2.5 py-0.5 font-mono text-[0.68rem] text-text-1;
+            }
+        }
+        /* The rewrite drawn as a pipeline: chips joined by arrows. */
+        .fork__pipe {
+            @apply my-1 flex list-none flex-wrap items-center gap-x-1 gap-y-2 ps-0;
+
+            li {
+                @apply my-0 flex items-center ps-0 font-mono text-[0.72rem] text-text-1;
+            }
+            li > span {
+                @apply rounded-md border border-line-strong bg-white/5 px-2 py-1;
+            }
+            li + li::before {
+                @apply me-1 text-text-3;
+                content: "\2192";
+            }
+        }
+        .fork__extra {
+            @apply mt-3 mb-0 text-[0.8rem] leading-snug text-text-3;
+        }
+        .fork__meter {
+            @apply mt-3 mb-0 flex items-center gap-2.5 font-mono text-[0.66rem] tracking-wide text-text-2;
+
+            &::before {
+                @apply h-1.5 rounded-full bg-accent-400/70;
+                @apply shrink-0;
+                width: calc(var(--w, 10%) * 0.5);
+                content: "";
+            }
+        }
+        .fork__card--rewrite .fork__meter::before {
+            @apply bg-violet;
+        }
+
+        /* `blog.lifespan` component: one codebase followed across a few
+           requirements. A grid of a lane label plus one column per step;
+           each segment carries its colour in `--c`, and a segment that
+           spans every step is code that survived them all. The grid keeps
+           a minimum width and scrolls inside its own box on phones. */
+        .life {
+            --bleed: min(calc(100vw - 2rem), 56rem);
+            @apply my-10 font-sans;
+            width: var(--bleed);
+            margin-inline-start: calc(50% - var(--bleed) / 2);
+        }
+        .life__scroll {
+            @apply overflow-x-auto rounded-xl border border-line bg-surface-1 px-4 py-4;
+        }
+        .life__grid {
+            @apply grid items-stretch gap-x-2 gap-y-2.5;
+            grid-template-columns: 6.5rem repeat(4, minmax(7rem, 1fr));
+            min-width: 36rem;
+        }
+        .life__step {
+            @apply border-b border-line pb-2 text-[0.8rem] font-medium text-text-1;
+
+            small {
+                @apply mt-0.5 block text-[0.68rem] font-normal text-text-3;
+            }
+        }
+        .life__lane {
+            @apply self-center font-mono text-[0.66rem] tracking-[0.12em] text-text-2 uppercase;
+        }
+        .life__seg {
+            @apply flex items-center rounded-md px-2.5 py-2.5 font-mono text-[0.72rem] leading-tight text-text-1;
+            background: color-mix(in srgb, var(--c) 18%, transparent);
+            border-left: 3px solid var(--c);
+        }
+        .life__seg--new::before {
+            @apply me-1.5 text-[0.85rem];
+            color: var(--c);
+            content: "\21BB";
+        }
+        .life__seg--keep {
+            --c: var(--color-ok);
+            @apply justify-center;
+            grid-column: span 4;
+            box-shadow: 0 0 32px -14px color-mix(in srgb, var(--color-ok) 60%, transparent);
+        }
+        .life__note {
+            @apply text-center font-mono text-[0.66rem] text-text-3;
+        }
+        .life__stats {
+            @apply mt-4 grid gap-3 sm:grid-cols-3;
+        }
+        .life__stat {
+            @apply my-0 rounded-xl border border-line bg-surface-1 px-4 py-3 text-[0.8rem] leading-snug text-text-2;
+
+            b {
+                @apply mb-1 block text-[1.7rem] leading-none font-semibold text-text-1;
             }
         }
 
