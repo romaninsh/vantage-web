@@ -5,10 +5,25 @@
 # readers who may not write code. An optional `example` shows a short Rhai or
 # YAML snippet under the definition.
 
+[vantage_ui]
+name = "Vantage UI"
+definition = "The desktop app builder: you and your LLM describe tables, pages and actions in YAML and Rhai, and it turns them into a working app."
+docs = "https://vantage-ui.com/download/"
+
+[vantage_server]
+name = "Vantage Server"
+definition = "Serves the same YAML and Rhai project as an API, with live WebSocket updates, REST, MCP, sessions and access rules, for web apps and other clients."
+
+[tco]
+name = "TCO"
+definition = "Total cost of ownership: everything a system costs over its whole life, not just to build it, including running, maintaining, staffing and changing it."
+docs = "https://en.wikipedia.org/wiki/Total_cost_of_ownership"
+
 [vista]
 name = "Vista"
 definition = "A universal handle on one table from any data source. It knows the columns, their types and what the source can do, so a generic grid or form can work with it without knowing your database."
 docs = "https://vantage-ui.com/book/intro/step4-vista.html"
+post = "@/blog/vantage-deep-dive-vista/index.md"
 
 [diorama]
 name = "Diorama"

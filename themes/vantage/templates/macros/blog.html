@@ -186,6 +186,33 @@
 {% endcomponent blog.columns %}
 
 
+{# A story drawn as a path: a requirement splits into two branches, then a
+   later requirement sends both into one heavier rewrite. The body is raw
+   HTML using the `fork__*` classes (see the deep dive on sets for the
+   full shape); markdown inside a block needs a blank line after its
+   opening tag and before its closing tag. #}
+{% component blog.fork() %}
+<div class="fork">
+
+{{ body }}
+
+</div>
+{% endcomponent blog.fork %}
+
+
+{# The life of one codebase across a few requirements: a header row of
+   steps, then one lane per approach made of `life__seg` spans (each with a
+   `--c` colour; a new colour reads as a rewrite), an optional row of
+   `life__note`s, and a `life__stats` row of figures. Raw HTML body. #}
+{% component blog.lifespan() %}
+<div class="life">
+
+{{ body }}
+
+</div>
+{% endcomponent blog.lifespan %}
+
+
 {# An indented tree: each step nests under the one before, joined to it by
    an elbow line, for ideas that build on each other. The body is a
    markdown ordered list; each item opens with a bold label naming its
