@@ -25,7 +25,7 @@ Vantage is a solution for business apps: it operates across a large number of di
 
 Vista is the answer to this complexity. Vistas enable you and your LLM to define a complex database structure in minutes and have it visualised in Vantage UI as a series of pages and CRUD screens, making backend architecture transparent and scalable.
 
-Not sure what should replace the `?` between `Item` and `Cart`? That's fine. In Vantage, a relation is easy to change later, and changing it doesn't ripple through the rest of your codebase.
+Not sure what should replace the `?` between `Item` and `Cart`? That's fine. In Vantage, a [relation](@/blog/vantage-deep-dive-sets/index.md) is easy to change later, and changing it doesn't ripple through the rest of your codebase.
 
 ## What is Vista?
 
@@ -129,7 +129,7 @@ When Vantage UI builds your application, it works with UI widgets (tables, grids
 2. [Capabilities](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.capabilities): can we sort, search, page through or watch for changes?
 3. [Permissions](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.denials): can the source be written to, and do any rules forbid it?
 4. [Data](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.list_values): specific records, or a list of them.
-5. [Relations](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.get_ref): follow a reference to a related Vista, wherever it is stored.
+5. [Relations](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.get_ref): follow a reference to a related Vista, wherever it is stored (see [Thinking in Sets](@/blog/vantage-deep-dive-sets/index.md)).
 6. [Narrowing](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.with_condition): filter, search, sort and page, without touching the original.
 7. [Writes](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.insert_value): insert, update and delete, never landing outside the current view.
 8. [Live changes](https://docs.rs/vantage-vista/latest/vantage_vista/struct.Vista.html#method.watch): updates pushed by the source, where it supports them.
@@ -137,14 +137,75 @@ When Vantage UI builds your application, it works with UI widgets (tables, grids
 
 ## Conclusion
 
-Vantage gives you two ways to build out your extensive data model without modifying your data structure or moving data into a different database: either through type-safe Rust code, or by using Vantage UI with YAML and Rhai. Both options cost you nothing:
+Vantage gives you ways to build out your extensive data model without modifying your data structure or moving data into a different database: through type-safe Rust code, or by using Vantage UI with YAML and Rhai. Both options cost you nothing:
 
 1. [Download Vantage UI](@/download.md).
 2. Grant access to your non-production database.
 3. Have your LLM build out table definitions based on your existing physical structure.
 
-This also builds all the data-editing pages for you automatically: you can observe data, traverse relations and define which columns you want to see, all in minutes.
+This also builds all the data-editing pages for you automatically: you can observe data, [traverse relations](@/blog/vantage-deep-dive-sets/index.md) and define which columns you want to see, all in minutes.
 
-To see Vistas at work, look at [Launch Control](@/examples/launch-control.md) and [unleash-vg](https://github.com/romaninsh/unleash-vg). Both use Vista to define the structure of their source data and present it in the UI. For how Vistas are defined in YAML specifically, browse the [table definitions of the Space example](https://github.com/romaninsh/vantage-ui-examples/tree/main/apps/space/table).
+To see Vistas at work, open the [ERP demo](https://erp.demo.vantage-ui.com/): sales, purchasing, stock, accounting and HR, built in Vantage on SurrealDB. Its source is [sap-vg](https://github.com/romaninsh/sap-vg), and every Vista is a YAML file in its [`table` folder](https://github.com/romaninsh/sap-vg/tree/main/table). Two of them, abridged:
 
-Once you're happy with your data model, you can define API endpoints, secure access and permissions, and define custom actions, but that will be my next deep dive.
+{% <blog.columns> %}
+<div class="cols__col">
+
+**[Sales orders](https://github.com/romaninsh/sap-vg/blob/main/table/sales_order.yaml)**
+
+```yaml
+datasource: surrealdb
+title: Sales orders
+columns:
+  id: { type: string, flags: [id] }
+  number: { type: string, label: Order,
+            flags: [title, searchable] }
+  customer: { type: string,
+    references: { table: customer,
+      kind: has_one, name: customer } }
+  customer.name: { type: string }
+  status: { type: string, enum:
+    [draft, confirmed, shipped, cancelled] }
+  total: { type: int,
+    unit: { currency: "$", minor_units: true },
+    expr: 'surreal::expr(
+      "math::sum(<~sales_order_line.amount)")' }
+references:
+  lines: { table: sales_order_line,
+    kind: has_many, foreign_key: sales_order }
+  invoices: { table: invoice,
+    kind: has_many, foreign_key: sales_order }
+```
+
+<p class="cols__tags"><span>relations</span><span>computed total</span></p>
+
+</div>
+<div class="cols__col">
+
+**[Top customers](https://github.com/romaninsh/sap-vg/blob/main/table/top_customers.yaml)**
+
+```yaml
+datasource: surrealdb
+title: Top customers
+columns:
+  id: { type: string, flags: [id] }
+  customer: { type: string, flags: [title] }
+  display: { type: string, label: Revenue }
+surreal:
+  rhai: |
+    surreal::select()
+      .expression(surreal::expr(
+        "customer.name").alias("customer"))
+      .expression(surreal::expr(
+        "math::sum(amount)").alias("amount"))
+      .from("invoice")
+      .where(surreal::expr(
+        "status = 'issued'"))
+      .group_by(surreal::ident("customer"))
+```
+
+<p class="cols__tags"><span>query-sourced</span><span>read-only</span></p>
+
+</div>
+{% </blog.columns> %}
+
+With Vistas in place, the next step is to work with them: follow relations from one set of records to another, and keep that code unchanged as requirements grow. That is the subject of the next deep dive, [Thinking in Sets](@/blog/vantage-deep-dive-sets/index.md). API endpoints, access rules and custom actions will follow later in the series.
