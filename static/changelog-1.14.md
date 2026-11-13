@@ -72,3 +72,25 @@ engine writes follow the column's declared type: a `date` or `timestamp` column 
 - Skills: `request_from_user` with `uses:`, driving dialogs through `ui_interact`, `lib/*.rhai`,
   dates, `nested_path` for embedded MongoDB fields, `link_page:`, "buttons call actions, actions
   write", and `api: { list: false }` for records served only by id.
+
+## 1.14.1
+
+- Fix: a `kind: label` over a `table#aggregate` failed to mount with "unknown scenery" unless a stat
+  on the same page used the same aggregate.
+- Fix: a service row's **Restart** restarted the whole stack; it restarts only that service.
+- Fix: the status bar kept the previous page's row count when a page failed to mount.
+- Fix: a kanban board's `on_open` found no row on a table whose id column isn't `id`.
+- Fix: closing a project or quitting left its compose network behind; volumes stay.
+- Security updates in the bundled web server and DNS resolver (actix-web 4.19, hickory 0.26.3).
+
+## 1.14.2
+
+- Fix: an API datasource whose `${secret.*}` credential didn't resolve sent its requests without
+  credentials; it now stays unconnected with an error naming the secret.
+- Fix: an API key set to go in a named header (`X-Api-Key`) was sent in the wrong header.
+- Fix: log tables offered add, edit and delete.
+- Fix: a cached table kept serving rows cached under its old YAML after the table was edited.
+- Fix: an API's `/v1/schema` reported `search: true` for entities whose search it refuses, and
+  `$title` in `@vantage-ui/client` ignored the table's title column.
+- Security update in the MCP library (rmcp 3.10). Tool output schemas now list exactly the fields
+  each tool returns.
