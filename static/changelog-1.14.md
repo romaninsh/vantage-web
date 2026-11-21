@@ -181,3 +181,9 @@ engine writes follow the column's declared type: a `date` or `timestamp` column 
   them in it; the database keeps UTC. Dates and times of day never shift.
 - Fix: saving a form after editing a date or a time could be refused by the database.
 - Fix: a `time` column showed six fraction digits (`20:26:13.000000`) instead of its precision.
+
+## 1.14.8
+
+- Skills: the database skills describe dates as they work now. Postgres `date`, `time` and
+  `timestamp` columns save from forms with no cast, and SQLite, MongoDB, MySQL, SurrealDB and CSV
+  list the one form each kind reads in.
