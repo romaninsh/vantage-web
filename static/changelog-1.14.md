@@ -187,3 +187,33 @@ engine writes follow the column's declared type: a `date` or `timestamp` column 
 - Skills: the database skills describe dates as they work now. Postgres `date`, `time` and
   `timestamp` columns save from forms with no cast, and SQLite, MongoDB, MySQL, SurrealDB and CSV
   list the one form each kind reads in.
+
+## 1.14.9
+
+- People can sign in with the logins of an existing database, such as Odoo's: `session:` with
+  `identity:` and no `table:` keeps sign-ins in memory, so nothing is added to that database,
+  and `password_schemes: [pbkdf2_sha512, argon2id]` accepts Odoo's passwords. An API with
+  `auth: session` takes these sign-ins.
+- `desktop:` reads `user_id`, the person picked in the title bar, so the desktop shows exactly
+  what that person sees.
+
+## 1.14.10
+
+- Skills: the agent now checks performance before it hands an app over. It opens every page and
+  web screen with `query_log` and `query_stats` running, and holds each one to budgets: one
+  query per list, nothing repeated, no queries while idle, sign-in under a second. The numbers
+  go in `NOTES.md`.
+- Skills: `vantage-rebuild` guides rebuilding an existing product from its source code or demo,
+  one feature at a time: a feature inventory that records every gap, side-by-side comparisons
+  of the same data, and one pull request per feature.
+
+## 1.14.11
+
+- Postgres tables update live when the database sends `NOTIFY`: `notify: true` on the datasource
+  makes tables listen on `<table>_changed`, and `postgres: { listen: [...] }` lets a query table
+  follow the tables it reads. The refresh timers they replace can go.
+- The datasource dialog keeps a file's `notify:` when it saves.
+- Served web apps show a row changed outside the app as soon as the re-read lands, not on the
+  next change (vantage-server 1.14.9).
+- Dev builds check a password in about 0.3 s instead of about 2 s: password hashing is optimised
+  even in debug builds, as vantage-lib already does.
