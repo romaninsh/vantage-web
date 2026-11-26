@@ -1,43 +1,27 @@
 # Vantage 1.16
 
-A column can now read a relation of its own table: `expr: 'table.ref("tags").order_by("name")
-.join_concat("name", ", ")'` lists a project's tags, `.count()`, `.exists()` and `.first(col)`
-work the same way, on SQLite, Postgres, MySQL and SurrealDB. A link table (tags on projects) gets
-an id the database computes from the pair, so tags can be linked and unlinked without hand-written
-SQL.
+A new Mac goes from download to a first app without leaving Vantage. On first launch a setup
+panel installs Claude and signs you in, checks that Docker runs, and asks you to agree to the
+terms once. A short intro then shows where the pages, the User UI and the agent panel are. Start
+a new app by describing it, dropping spreadsheets or SQL files, or picking the database you
+already have. While it has no pages yet, the window shows the build plan.
+
+Columns can now read their related rows on SQLite, Postgres, MySQL and SurrealDB, such as a
+project's tags: `expr: 'table.ref("tags").order_by("name").join_concat("name", ", ")'`.
+Access tests check who can see and change which records against your current profile, from the
+title bar's test badge or by asking the agent.
 
 ## What's new
 
-- `expr:` columns work on SQLite, Postgres and MySQL tables, not only SurrealDB.
-- `type: json` columns hold a list or a map, such as the ids `join_json(col)` returns.
-- An `expr:` that reads `session` shows each signed-in user their own value (`is_favorite`).
-- A rule script can narrow by a relation: `table.where_expr(|t| t.ref("tags").where("tag_id", 5).exists())`.
-- A typo in a relation expression stops the table from loading, naming the table and column.
-- `sql::concat([...])` and `sql::concat_ws(sep, [...])` join columns and text in an `expr:` on
-  every SQL database, such as `sql::concat(["INV-", sql::ident("number")])`.
-- Skills: agents can set up workers that run on a schedule (cron or a Cloud Run job) to do
-  follow-up work after a save, such as notes, followers or emails.
-- Ask the agent to run your access tests: it checks who can see and change which records on your
-  current profile, and leaves the data as it was.
-- The test badge in the title bar has an Access section: run your access tests against the current
-  profile, and watch the count and failures there.
-- Skills: agents write an access-test file for each table with rules in `tests/access/`, and go
-  through the outcomes they captured with you before keeping them.
-- Skills: the agent can give one table an access rule of its own when a column means something
-  different there, while the datasource's rule keeps covering every other table.
-- Fix: an action called from another action's body ignored its own access exceptions, so it saw
-  only your rows; it now sees what it sees when you run it directly.
-- Fix: an action that kept calling itself could hang the app; it now stops after 256 levels with
-  "actions nest deeper than 256".
-- Fix: a policy that denies the actions of a table now also refuses them when another action calls
-  them. An entry whose action has no table of its own stays on the page. The refusal reads as the
-  server's: ``action `submit_expense` is denied``, with the rule. A rule with `tables:` now matches
-  only an action's own `table:`, so a form action without `table:`, or a page's own row or toolbar
-  button, is no longer matched by it; name those with `names:` instead.
-- A policy can lock session fields in a project without a session table: a rule on
-  `tables: [session]` names the declared `session.fields`, and `session.set("uid", …)` is
-  refused with the rule.
-- `html::sanitize(text)` in a `normalise` hook cleans rich text before it's saved (scripts, event
-  handlers and `javascript:` links go; the rest is kept as written), and `html::text(text)` turns
-  HTML into plain text, which still needs escaping before it goes back into HTML. The default keeps
-  `style`, `data-*` and `id`; pass your own allow-list for stricter fields.
+- A User UI button in the title bar opens your app's web frontend.
+- An agent's request for a secret is one shorter form with **Answer differently**, for when it
+  asked in the wrong form. The agent waits for your answer.
+- A row or toolbar action that fails shows its own message; a broken body shows the script error
+  with a Copy button.
+- A kanban without `lanes:` takes its lanes from the table its lane column references.
+- `html::sanitize` cleans rich text in a hook before it's saved; `html::text` gives plain text.
+- A policy can lock session fields, and a table can have an access rule of its own.
+- Removed: "Set up with AI", "Try with sample data" and the Community/Enterprise connect dialog.
+- Fix: an action called from another action now runs with its own access, refuses what a policy
+  denies, and stops after 256 nested calls instead of hanging.
+- Fix: Docker Desktop installed without admin rights is found.
