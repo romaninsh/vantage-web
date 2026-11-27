@@ -25,3 +25,25 @@ title bar's test badge or by asking the agent.
 - Fix: an action called from another action now runs with its own access, refuses what a policy
   denies, and stops after 256 nested calls instead of hanging.
 - Fix: Docker Desktop installed without admin rights is found.
+
+## 1.16.13
+
+- An `expr:` column can be filtered, searched and used in an access rule, such as "tasks assigned
+  to me".
+- `where("paid_on", "is", null())` finds empty values; `"is_not"` is its opposite. A condition on
+  an empty value, such as an unset session field, now fails naming the column instead of matching
+  nothing.
+- A quick filter chip that compares with an empty value, such as `user.id` before anyone signs
+  in, is switched off until the value is set, rather than failing.
+- `nested_path: name.en_US` shows one key of a JSON column as its own column; editing it keeps the
+  other keys.
+- `lazy:` columns can use `html::text` and the other standard functions, and `import` from `lib/`.
+- Fix: adding a row to a link table whose id is made from its two keys no longer fails.
+- Translated text: each person reads a JSON column's text in their session's language, falling
+  back to English, and lists sort, search and filter on it.
+- A table's `build:` script adds per-reader columns: `table.nested_column("name_localised",
+  "name", session.lang)` edits the reader's own language beside the English text.
+- An `expr:` column can use another column with `table.column(..)`, and a related table's
+  computed column reads in the same language.
+- Language codes such as `sr@latin` work in JSON keys; saving `null` into a translation
+  removes it.
