@@ -88,7 +88,7 @@
     "tier": "community"
   },
   {
-    "capabilities": "Wrap any JSON-emitting CLI (aws, kubectl, gh, your own tool) as tables — the command runs on demand, rows appear like any other datasource.",
+    "capabilities": "Wrap any JSON-emitting CLI (aws, gh, your own tool) as tables — the command runs on demand, rows appear like any other datasource.",
     "class": "api",
     "doc_url": null,
     "enabled": true,
@@ -96,17 +96,6 @@
     "id": "cmd",
     "label": "CLI command",
     "order": 80,
-    "tier": "community"
-  },
-  {
-    "capabilities": "A native Kubernetes datasource: nodes, namespaces and workloads as related tables with drill-downs — no kubectl, no proxy.",
-    "class": "api",
-    "doc_url": null,
-    "enabled": true,
-    "icon": "boxes",
-    "id": "kubernetes",
-    "label": "Kubernetes",
-    "order": 85,
     "tier": "community"
   },
   {

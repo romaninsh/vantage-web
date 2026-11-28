@@ -47,3 +47,17 @@ title bar's test badge or by asking the agent.
   computed column reads in the same language.
 - Language codes such as `sr@latin` work in JSON keys; saving `null` into a translation
   removes it.
+
+## 1.16.14
+
+- Fix: the Services button works after closing a dialog opened from the feeds menu.
+- Fix: quick-filter chips have the date functions, so `today().add_days(7)` works in a chip.
+- Fix: the agent's container tools (`web_dev_start`, `web_dev_stop`, `web_run`, `services_control`) no longer need the "Allow MCP agents to read/write data" switches, since they build or run containers, not data. A policy that locks agent reads or writes still blocks them.
+- The web scaffold depends on `@vantage-ui/client` from npm at the exact version `web_dev_status` reports, with no committed `vendor/` tarball. The vantage-web skill says how to move an older frontend over.
+- Kubernetes datasources moved to Vantage Enterprise. The community build has no Kubernetes datasource type, driver or skill, and the other skills no longer mention Kubernetes or `kubectl`.
+- Fix: SurrealDB tables with number record ids (`CREATE todo:7`) show their rows again. A text id
+  made only of digits (`todo:⟨7⟩`), as Vantage used to write for an id like "7", can't be opened
+  by id.
+- Fix: a date quick-filter chip on a `date` column works on SurrealDB, Postgres, MySQL and SQLite.
+- An API entity name the web client reserves, such as `models` or `then`, now fails the load with
+  a hint to rename it. This applies to WebSocket APIs; `kind: rest` APIs are exempt.
