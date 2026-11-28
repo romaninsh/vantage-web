@@ -61,3 +61,26 @@ title bar's test badge or by asking the agent.
 - Fix: a date quick-filter chip on a `date` column works on SurrealDB, Postgres, MySQL and SQLite.
 - An API entity name the web client reserves, such as `models` or `then`, now fails the load with
   a hint to rename it. This applies to WebSocket APIs; `kind: rest` APIs are exempt.
+
+## 1.16.15
+
+- Ask the agent for a copy of an app you already run, and it asks for the sources, studies each
+  feature with the original open in a visible browser, and shows a working prototype on your real
+  data first, then improves it in rounds. It can run on the original's database without changing
+  its structure.
+- The agent compares the old and new screens for ease of use and polishes the weaker one.
+- The agent answers "how do I…" questions that look like missing features with what Vantage
+  already has, such as refusing to delete a record that is still in use.
+- Scenario tests stay on your app's own rules, not on sign-in or loading data.
+
+## 1.16.16
+
+- An access rule such as "projects I'm a member of" reads the related records with
+  `table.where(|t| t.ref("members").where("user_id", session.user_id).exists())`, and scenario
+  tests run it too.
+- Access tests count a change to a record outside the person's rows as refused.
+- An API entity's `writable:` lists the columns clients may change; the rest stay readable.
+- A scenario step's `clock:` takes seconds, such as `+15s`.
+- Fix: a new web frontend uses the 1.16 dev image and `@vantage-ui/client` 0.7.4, the client
+  the agent's instructions describe, so `useCount` and the other documented functions are there.
+- Fix: the Web row no longer shows "building" after a save that left the API schema unchanged.
